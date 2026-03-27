@@ -4,7 +4,7 @@
 
 A free, searchable directory of scholarships, financial aid, and study loans available to Malaysian students — from SPM leavers to postgraduates.
 
-🔗 **Live site:** [yourusername.github.io/myscholar](https://yourusername.github.io/myscholar)
+🔗 **Live site:** [yourusername.github.io/myscholar](https://ANRACollective.github.io/myscholar)
 
 ---
 
