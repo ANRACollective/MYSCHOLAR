@@ -4,572 +4,550 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MyScholar — Malaysia Scholarship Finder 2025/2026</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-:root {
-  /* ── Option 3 palette ── */
-  --midnight: #0f1f3d;
-  --navy:     #1e3a6e;
-  --navy-light: #2a4f8f;
-  --coral:    #e8551e;
-  --coral-light: #fdeee8;
-  --ice:      #f0f4ff;
-  --ice-mid:  #e4ebfa;
-  --white:    #ffffff;
-  --teal:     #00a878;
-  --teal-light: #e0f7f1;
-  --border:   #dde4f5;
-  --border-mid: #c8d3ee;
-  --muted:    #6b7899;
-  --ink:      #0f1f3d;
-
-  /* category colours */
-  --c-gov:    #1e3a6e;
-  --c-glc:    #00a878;
-  --c-bank:   #c07a00;
-  --c-corp:   #7c3aed;
-  --c-loan:   #0891b2;
-  --c-state:  #b45309;
-  --c-media:  #be185d;
-
-  --serif: 'Playfair Display', Georgia, serif;
-  --sans:  'DM Sans', system-ui, sans-serif;
-  --r: 6px;
-}
-
-* { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-body { font-family: var(--sans); background: var(--ice); color: var(--midnight); font-size: 15px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
-
-/* ── NAV ── */
-nav {
-  position: sticky; top: 0; z-index: 200;
-  background: var(--midnight);
-  padding: 0 32px;
-  display: flex; align-items: center; justify-content: space-between;
-  height: 52px;
-  border-bottom: 2px solid var(--coral);
-}
-.nav-logo { font-family: var(--serif); color: #fff; font-size: 20px; letter-spacing: -.3px; text-decoration: none; }
-.nav-logo span { color: var(--coral); }
-.nav-r { display: flex; align-items: center; gap: 20px; }
-.nav-r a { color: rgba(255,255,255,.5); font-size: 12px; text-decoration: none; letter-spacing: .04em; transition: color .2s; }
-.nav-r a:hover { color: #fff; }
-.nav-pill { font-size: 11px; color: rgba(255,255,255,.4); background: rgba(255,255,255,.09); padding: 3px 10px; border-radius: 20px; white-space: nowrap; }
-
-/* ── HERO ── */
-.hero {
-  background: var(--midnight);
-  padding: 60px 32px 76px;
-  text-align: center;
-  position: relative; overflow: hidden;
-}
-.hero::before {
-  content: '';
-  position: absolute; inset: 0;
-  background:
-    repeating-linear-gradient(90deg, rgba(255,255,255,.014) 0, rgba(255,255,255,.014) 1px, transparent 1px, transparent 80px),
-    repeating-linear-gradient(0deg,  rgba(255,255,255,.014) 0, rgba(255,255,255,.014) 1px, transparent 1px, transparent 80px);
-  pointer-events: none;
-}
-.hero::after {
-  content: '';
-  position: absolute;
-  bottom: -1px; left: 0; right: 0;
-  height: 40px;
-  background: linear-gradient(to bottom, transparent, var(--ice));
-}
-.eyebrow { font-size: 10px; letter-spacing: .18em; color: var(--coral); text-transform: uppercase; font-weight: 600; margin-bottom: 14px; }
-.hero h1 { font-family: var(--serif); font-size: clamp(40px, 6vw, 74px); color: #fff; line-height: 1.06; margin-bottom: 18px; font-weight: 900; }
-.hero h1 em { color: var(--coral); font-style: normal; }
-.hero-sub { font-size: 15px; color: rgba(255,255,255,.45); max-width: 480px; margin: 0 auto 44px; font-weight: 300; line-height: 1.75; }
-.hero-stats { display: flex; justify-content: center; gap: 52px; flex-wrap: wrap; }
-.hs-num { font-family: var(--serif); font-size: 38px; color: #fff; font-weight: 700; line-height: 1; }
-.hs-lbl { font-size: 10px; color: rgba(255,255,255,.32); margin-top: 4px; letter-spacing: .08em; text-transform: uppercase; }
-
-/* ── SEARCH ── */
-.search-section { background: var(--coral); padding: 20px 32px; }
-.search-wrap { max-width: 720px; margin: 0 auto; position: relative; }
-.search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); pointer-events: none; }
-#si {
-  width: 100%; padding: 14px 16px 14px 50px;
-  border: none; border-radius: 8px;
-  font-family: var(--sans); font-size: 15px;
-  background: #fff; color: var(--midnight);
-  outline: none;
-  box-shadow: 0 2px 12px rgba(0,0,0,.15);
-}
-#si::placeholder { color: #aab; }
-
-/* ── TABS ── */
-.tabs-wrap {
-  background: var(--white);
-  border-bottom: 1px solid var(--border);
-  padding: 0 32px;
-  position: sticky; top: 52px; z-index: 100;
-}
-.tabs { display: flex; overflow-x: auto; scrollbar-width: none; }
-.tabs::-webkit-scrollbar { display: none; }
-.tab {
-  font-size: 12.5px; padding: 14px 18px;
-  border: none; background: transparent; cursor: pointer;
-  color: var(--muted); white-space: nowrap;
-  border-bottom: 2px solid transparent;
-  transition: all .15s; font-family: var(--sans); font-weight: 500;
-}
-.tab:hover { color: var(--midnight); }
-.tab.active { color: var(--midnight); border-bottom-color: var(--midnight); font-weight: 600; }
-.tab.gov.active  { color: var(--c-gov);   border-bottom-color: var(--c-gov); }
-.tab.glc.active  { color: var(--c-glc);   border-bottom-color: var(--c-glc); }
-.tab.bank.active { color: var(--c-bank);  border-bottom-color: var(--c-bank); }
-.tab.corp.active { color: var(--c-corp);  border-bottom-color: var(--c-corp); }
-.tab.loan.active { color: var(--c-loan);  border-bottom-color: var(--c-loan); }
-.tab.state.active{ color: var(--c-state); border-bottom-color: var(--c-state); }
-.tab.media.active{ color: var(--c-media); border-bottom-color: var(--c-media); }
-
-/* ── CHIPS ── */
-.chips-wrap {
-  background: var(--white); border-bottom: 1px solid var(--border);
-  padding: 10px 32px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
-}
-.chips-lbl { font-size: 10px; color: var(--muted); letter-spacing: .1em; text-transform: uppercase; font-weight: 600; margin-right: 4px; }
-.chip {
-  font-size: 11.5px; padding: 5px 13px; border-radius: 20px;
-  border: 1px solid var(--border); background: var(--white);
-  cursor: pointer; color: var(--muted);
-  transition: all .12s; white-space: nowrap; font-weight: 500;
-  user-select: none;
-}
-.chip:hover { border-color: var(--border-mid); color: var(--midnight); }
-.chip.on { background: var(--midnight); color: #fff; border-color: var(--midnight); }
-.chip[data-f="Overseas"].on { background: var(--coral); border-color: var(--coral); }
-.chip[data-f="B40"].on { background: var(--c-bank); border-color: var(--c-bank); }
-.chip[data-f="Bumi"].on { background: var(--c-gov); border-color: var(--c-gov); }
-.chip[data-f="NoBond"].on { background: var(--c-glc); border-color: var(--c-glc); }
-.chip[data-f="Full"].on { background: var(--midnight); border-color: var(--midnight); }
-
-/* ── RESULTS BAR ── */
-.results-bar { max-width: 1280px; margin: 0 auto; padding: 16px 32px 4px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
-.results-count { font-size: 13px; color: var(--muted); }
-.results-count strong { color: var(--midnight); font-weight: 600; }
-.sort-wrap { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); }
-.sort-wrap select { font-size: 12px; border: 1px solid var(--border); border-radius: 4px; padding: 5px 10px; background: var(--white); color: var(--midnight); font-family: var(--sans); cursor: pointer; outline: none; }
-
-/* ── GRID ── */
-.grid-wrap { max-width: 1280px; margin: 0 auto; padding: 12px 32px 80px; }
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
-
-/* ── CARD ── */
-.card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  overflow: hidden; cursor: pointer;
-  display: flex; flex-direction: column;
-  transition: transform .18s, box-shadow .18s, border-color .18s;
-  animation: fadeUp .3s ease both;
-}
-.card:hover { transform: translateY(-3px); box-shadow: 0 10px 32px rgba(15,31,61,.12); border-color: var(--border-mid); }
-@keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
-
-.card-stripe { height: 3px; }
-.cs-gov   { background: var(--c-gov); }
-.cs-glc   { background: var(--c-glc); }
-.cs-bank  { background: var(--c-bank); }
-.cs-corp  { background: var(--c-corp); }
-.cs-loan  { background: var(--c-loan); }
-.cs-state { background: var(--c-state); }
-.cs-media { background: var(--c-media); }
-
-.card-body { padding: 20px 20px 16px; flex: 1; display: flex; flex-direction: column; gap: 13px; }
-
-.card-top { display: flex; flex-direction: column; gap: 7px; }
-.card-badges { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
-
-.badge { font-size: 10px; padding: 2px 8px; border-radius: 3px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; }
-.bg-gov   { background: #e0e8f8; color: var(--c-gov); }
-.bg-glc   { background: var(--teal-light); color: #007a57; }
-.bg-bank  { background: #fef3c7; color: #92400e; }
-.bg-corp  { background: #ede9fe; color: #5b21b6; }
-.bg-loan  { background: #e0f2fe; color: #075985; }
-.bg-state { background: #fef3c7; color: #92400e; }
-.bg-media { background: #fce7f3; color: #9d174d; }
-.bg-full  { background: var(--midnight); color: #fff; }
-.bg-ov    { background: var(--coral-light); color: var(--coral); }
-.bg-lo    { background: #e0e8f8; color: var(--c-gov); }
-.bg-nb    { background: var(--teal-light); color: #007a57; }
-.bg-b40   { background: #fef3c7; color: #92400e; }
-.bg-bumi  { background: #e0e8f8; color: var(--c-gov); }
-
-.card-name { font-family: var(--serif); font-size: 17px; font-weight: 700; color: var(--midnight); line-height: 1.25; }
-.card-provider { font-size: 12px; color: var(--muted); }
-
-.card-amount {
-  font-size: 13px; font-weight: 500; color: var(--navy);
-  background: var(--ice); border-radius: 5px;
-  padding: 10px 12px; line-height: 1.4;
-  border-left: 3px solid var(--border-mid);
-}
-
-.card-tags { display: flex; gap: 5px; flex-wrap: wrap; }
-.tag { font-size: 11px; padding: 3px 8px; border-radius: 4px; background: var(--ice-mid); color: var(--muted); border: 1px solid var(--border); font-weight: 500; }
-
-.card-foot {
-  padding: 12px 20px;
-  border-top: 1px solid var(--border);
-  background: var(--ice);
-  display: flex; justify-content: space-between; align-items: center;
-}
-.card-deadline { font-size: 11.5px; color: var(--muted); }
-.card-deadline strong { color: var(--coral); font-weight: 600; }
-.card-cta { font-size: 12px; font-weight: 600; color: var(--navy); display: flex; align-items: center; gap: 4px; }
-.card-cta svg { transition: transform .15s; }
-.card:hover .card-cta svg { transform: translateX(3px); }
-
-/* ── NO RESULTS ── */
-.no-results { grid-column: 1/-1; text-align: center; padding: 80px 20px; color: var(--muted); }
-.no-results h3 { font-family: var(--serif); font-size: 24px; color: var(--midnight); margin-bottom: 8px; }
-
-/* ── MODAL ── */
-.modal-overlay {
-  display: none; position: fixed; inset: 0;
-  background: rgba(15,31,61,.65); z-index: 999;
-  align-items: center; justify-content: center;
-  padding: 20px; backdrop-filter: blur(3px);
-}
-.modal-overlay.open { display: flex; }
-.modal {
-  background: var(--white); border-radius: 12px;
-  max-width: 640px; width: 100%; max-height: 90vh;
-  overflow-y: auto; position: relative;
-  box-shadow: 0 32px 80px rgba(15,31,61,.25);
-}
-.modal-close {
-  position: absolute; top: 16px; right: 16px;
-  background: var(--ice); border: none;
-  width: 32px; height: 32px; border-radius: 50%;
-  cursor: pointer; font-size: 15px; color: var(--muted);
-  display: flex; align-items: center; justify-content: center;
-  z-index: 10; transition: background .15s;
-}
-.modal-close:hover { background: var(--border); }
-.modal-stripe { height: 5px; border-radius: 12px 12px 0 0; }
-.modal-inner { padding: 24px 28px 32px; }
-.modal-badges { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
-.modal-title { font-family: var(--serif); font-size: 23px; font-weight: 700; color: var(--midnight); line-height: 1.2; margin-bottom: 4px; }
-.modal-provider { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
-.modal-amount { background: var(--ice); border-left: 3px solid var(--border-mid); border-radius: 5px; padding: 12px 16px; font-size: 14px; font-weight: 600; color: var(--navy); margin-bottom: 18px; line-height: 1.5; }
-.modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px; }
-.modal-field { background: var(--ice); border-radius: 6px; padding: 12px 14px; }
-.modal-field-label { font-size: 10px; text-transform: uppercase; letter-spacing: .09em; color: var(--muted); margin-bottom: 4px; font-weight: 700; }
-.modal-field-val { font-size: 13px; color: var(--midnight); line-height: 1.4; font-weight: 500; }
-.modal-field-val.urgent { color: var(--coral); }
-.modal-section { margin-bottom: 16px; }
-.modal-section-label { font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
-.modal-tag-wrap { display: flex; flex-wrap: wrap; gap: 5px; }
-.modal-tag { font-size: 11px; padding: 3px 9px; border-radius: 4px; background: var(--ice-mid); color: var(--muted); border: 1px solid var(--border); }
-.modal-notes { background: var(--ice); border-radius: 6px; padding: 14px 16px; font-size: 13px; color: #4a5568; line-height: 1.8; border-left: 3px solid var(--border-mid); }
-.modal-actions { display: flex; gap: 10px; margin-top: 22px; }
-.modal-actions a { flex: 1; text-align: center; padding: 12px 16px; border-radius: 7px; font-size: 13.5px; font-weight: 600; text-decoration: none; transition: opacity .15s, transform .1s; }
-.modal-actions a:active { transform: scale(.98); }
-.modal-actions a:hover { opacity: .88; }
-.btn-primary { background: var(--midnight); color: #fff; }
-.btn-secondary { background: var(--ice); color: var(--midnight); border: 1px solid var(--border); }
-
-/* ── ABOUT ── */
-.about-section { background: var(--midnight); padding: 60px 32px; text-align: center; }
-.about-inner { max-width: 560px; margin: 0 auto; }
-.about-eyebrow { font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--coral); margin-bottom: 12px; font-weight: 600; }
-.about-inner h2 { font-family: var(--serif); font-size: 30px; margin-bottom: 14px; color: #fff; }
-.about-inner p { color: rgba(255,255,255,.5); font-size: 14px; line-height: 1.85; font-weight: 300; }
-
-/* ── FOOTER ── */
-footer { background: #080f1e; color: rgba(255,255,255,.28); text-align: center; padding: 28px 32px; font-size: 12px; line-height: 2.2; }
-footer strong { color: rgba(255,255,255,.6); }
-footer a { color: rgba(255,255,255,.35); text-decoration: none; }
-footer a:hover { color: rgba(255,255,255,.7); }
-
-/* ── RESPONSIVE ── */
-@media (max-width: 680px) {
-  nav, .search-section, .chips-wrap, .results-bar, .grid-wrap { padding-left: 16px; padding-right: 16px; }
-  .tabs-wrap { padding: 0 16px; }
-  .about-section, footer { padding-left: 16px; padding-right: 16px; }
-  .grid { grid-template-columns: 1fr; }
-  .modal-grid { grid-template-columns: 1fr; }
-  .hero-stats { gap: 28px; }
-  .hero { padding: 44px 16px 60px; }
-}
+:root{--midnight:#0f1f3d;--navy:#1e3a6e;--coral:#e8551e;--ice:#f0f4ff;--ice-mid:#e4ebfa;--white:#ffffff;--teal:#00a878;--border:#dde4f5;--border-mid:#c8d3ee;--muted:#6b7899;--c-gov:#1e3a6e;--c-glc:#00a878;--c-bank:#c07a00;--c-corp:#7c3aed;--c-loan:#0891b2;--c-state:#b45309;--c-media:#be185d;--c-intl:#0f766e;--c-uni:#374151;--serif:'Playfair Display',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--ice);color:var(--midnight);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+nav{position:sticky;top:0;z-index:200;background:var(--midnight);padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:52px;border-bottom:2px solid var(--coral)}
+.nav-logo{font-family:var(--serif);color:#fff;font-size:20px;letter-spacing:-.3px;text-decoration:none}.nav-logo span{color:var(--coral)}
+.nav-r{display:flex;align-items:center;gap:20px}
+.nav-r a{color:rgba(255,255,255,.5);font-size:12px;text-decoration:none;letter-spacing:.04em;transition:color .2s}.nav-r a:hover{color:#fff}
+.nav-pill{font-size:11px;color:rgba(255,255,255,.4);background:rgba(255,255,255,.09);padding:3px 10px;border-radius:20px;white-space:nowrap}
+.hero{background:var(--midnight);padding:60px 32px 76px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(255,255,255,.013) 0,rgba(255,255,255,.013) 1px,transparent 1px,transparent 80px),repeating-linear-gradient(0deg,rgba(255,255,255,.013) 0,rgba(255,255,255,.013) 1px,transparent 1px,transparent 80px);pointer-events:none}
+.hero::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:40px;background:linear-gradient(to bottom,transparent,var(--ice))}
+.eyebrow{font-size:10px;letter-spacing:.18em;color:var(--coral);text-transform:uppercase;font-weight:600;margin-bottom:14px}
+.hero h1{font-family:var(--serif);font-size:clamp(40px,6vw,74px);color:#fff;line-height:1.06;margin-bottom:18px;font-weight:900}
+.hero h1 em{color:var(--coral);font-style:normal}
+.hero-sub{font-size:15px;color:rgba(255,255,255,.45);max-width:480px;margin:0 auto 44px;font-weight:300;line-height:1.75}
+.hero-stats{display:flex;justify-content:center;gap:52px;flex-wrap:wrap}
+.hs-num{font-family:var(--serif);font-size:38px;color:#fff;font-weight:700;line-height:1}
+.hs-lbl{font-size:10px;color:rgba(255,255,255,.32);margin-top:4px;letter-spacing:.08em;text-transform:uppercase}
+/* search */
+.search-section{background:var(--coral);padding:20px 32px}
+.search-wrap{max-width:720px;margin:0 auto;position:relative}
+.search-icon{position:absolute;left:16px;top:50%;transform:translateY(-50%);pointer-events:none}
+#si{width:100%;padding:14px 16px 14px 50px;border:none;border-radius:8px;font-family:var(--sans);font-size:15px;background:#fff;color:var(--midnight);outline:none;box-shadow:0 2px 12px rgba(0,0,0,.15)}
+#si::placeholder{color:#aab}
+/* category tabs */
+.tabs-wrap{background:var(--white);border-bottom:1px solid var(--border);padding:0 32px;position:sticky;top:52px;z-index:100}
+.tabs{display:flex;overflow-x:auto;scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}
+.tab{font-size:12px;padding:13px 16px;border:none;background:transparent;cursor:pointer;color:var(--muted);white-space:nowrap;border-bottom:2px solid transparent;transition:all .15s;font-family:var(--sans);font-weight:500}
+.tab:hover{color:var(--midnight)}.tab.active{color:var(--midnight);border-bottom-color:var(--midnight);font-weight:600}
+.tab.gov.active{color:var(--c-gov);border-bottom-color:var(--c-gov)}.tab.glc.active{color:var(--c-glc);border-bottom-color:var(--c-glc)}
+.tab.bank.active{color:var(--c-bank);border-bottom-color:var(--c-bank)}.tab.corp.active{color:var(--c-corp);border-bottom-color:var(--c-corp)}
+.tab.loan.active{color:var(--c-loan);border-bottom-color:var(--c-loan)}.tab.state.active{color:var(--c-state);border-bottom-color:var(--c-state)}
+.tab.media.active{color:var(--c-media);border-bottom-color:var(--c-media)}.tab.intl.active{color:var(--c-intl);border-bottom-color:var(--c-intl)}
+.tab.uni.active{color:var(--c-uni);border-bottom-color:var(--c-uni)}
+/* filter panel */
+.filter-panel{background:var(--white);border-bottom:1px solid var(--border);padding:14px 32px}
+.filter-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px}
+.filter-row:last-child{margin-bottom:0}
+.filter-label{font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;font-weight:700;min-width:90px;flex-shrink:0}
+.chip{font-size:11.5px;padding:5px 13px;border-radius:20px;border:1px solid var(--border);background:var(--white);cursor:pointer;color:var(--muted);transition:all .12s;white-space:nowrap;font-weight:500;user-select:none}
+.chip:hover{border-color:var(--border-mid);color:var(--midnight)}.chip.on{background:var(--midnight);color:#fff;border-color:var(--midnight)}
+/* deadline chips */
+.chip.deadline-on{background:#dc2626;color:#fff;border-color:#dc2626}
+.chip.soon-on{background:#ea580c;color:#fff;border-color:#ea580c}
+/* qual chips */
+.chip[data-f="PostSPM"].on{background:var(--c-gov);border-color:var(--c-gov)}
+.chip[data-f="PreU"].on{background:var(--c-glc);border-color:var(--c-glc)}
+.chip[data-f="Undergrad"].on{background:var(--c-bank);border-color:var(--c-bank)}
+.chip[data-f="Postgrad"].on{background:var(--c-corp);border-color:var(--c-corp)}
+/* field chips */
+.chip[data-f="fSTEM"].on,.chip[data-f="fEngineering"].on,.chip[data-f="fMedicine"].on,.chip[data-f="fBusiness"].on,.chip[data-f="fIT"].on,.chip[data-f="fLaw"].on,.chip[data-f="fAny"].on{background:var(--midnight);border-color:var(--midnight)}
+/* grade chips */
+.chip[data-f="gStraight"].on{background:#7c3aed;border-color:#7c3aed}
+.chip[data-f="g7"].on{background:#0891b2;border-color:#0891b2}
+.chip[data-f="g5"].on{background:var(--c-glc);border-color:var(--c-glc)}
+.chip[data-f="gAny"].on{background:#374151;border-color:#374151}
+/* other chips */
+.chip[data-f="Overseas"].on{background:var(--coral);border-color:var(--coral)}.chip[data-f="B40"].on{background:var(--c-bank);border-color:var(--c-bank)}.chip[data-f="Bumi"].on{background:var(--c-gov);border-color:var(--c-gov)}.chip[data-f="NoBond"].on{background:var(--c-glc);border-color:var(--c-glc)}
+/* active filter count */
+.filter-toggle{display:flex;align-items:center;gap:8px;padding:0 32px 0;background:var(--white);border-bottom:1px solid var(--border)}
+.filter-toggle-btn{font-size:12px;padding:10px 0;border:none;background:transparent;cursor:pointer;color:var(--navy);font-family:var(--sans);font-weight:600;display:flex;align-items:center;gap:6px}
+.active-count{background:var(--coral);color:#fff;font-size:10px;padding:1px 6px;border-radius:20px;font-weight:700}
+.filter-panel{display:none}.filter-panel.open{display:block}
+.clear-btn{font-size:11px;color:var(--coral);cursor:pointer;border:none;background:transparent;font-family:var(--sans);font-weight:600;padding:0;margin-left:auto}
+/* results */
+.results-bar{max-width:1280px;margin:0 auto;padding:14px 32px 4px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.results-count{font-size:13px;color:var(--muted)}.results-count strong{color:var(--midnight);font-weight:600}
+.sort-wrap{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+.sort-wrap select{font-size:12px;border:1px solid var(--border);border-radius:4px;padding:5px 10px;background:var(--white);color:var(--midnight);font-family:var(--sans);cursor:pointer;outline:none}
+.grid-wrap{max-width:1280px;margin:0 auto;padding:12px 32px 80px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+/* card */
+.card{background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden;cursor:pointer;display:flex;flex-direction:column;transition:transform .18s,box-shadow .18s,border-color .18s;animation:fadeUp .3s ease both}
+.card:hover{transform:translateY(-3px);box-shadow:0 10px 32px rgba(15,31,61,.12);border-color:var(--border-mid)}
+.card.urgent-card{border-color:#fca5a5}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.card-stripe{height:3px}
+.cs-gov{background:var(--c-gov)}.cs-glc{background:var(--c-glc)}.cs-bank{background:var(--c-bank)}.cs-corp{background:var(--c-corp)}.cs-loan{background:var(--c-loan)}.cs-state{background:var(--c-state)}.cs-media{background:var(--c-media)}.cs-intl{background:var(--c-intl)}.cs-uni{background:var(--c-uni)}
+.card-body{padding:20px 20px 16px;flex:1;display:flex;flex-direction:column;gap:13px}
+.card-top{display:flex;flex-direction:column;gap:7px}
+.card-badges{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.badge{font-size:10px;padding:2px 8px;border-radius:3px;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+.bg-gov{background:#e0e8f8;color:var(--c-gov)}.bg-glc{background:#e0f5ef;color:#007a57}.bg-bank{background:#fef3c7;color:#92400e}.bg-corp{background:#ede9fe;color:#5b21b6}.bg-loan{background:#e0f2fe;color:#075985}.bg-state{background:#fef3c7;color:#92400e}.bg-media{background:#fce7f3;color:#9d174d}.bg-intl{background:#e0f5ef;color:#0f766e}.bg-uni{background:#f3f4f6;color:#374151}
+.bg-full{background:var(--midnight);color:#fff}.bg-ov{background:#fdeee8;color:var(--coral)}.bg-lo{background:#e0e8f8;color:var(--c-gov)}.bg-nb{background:#e0f5ef;color:#007a57}.bg-b40{background:#fef3c7;color:#92400e}.bg-bumi{background:#e0e8f8;color:var(--c-gov)}.bg-pg{background:#ede9fe;color:#5b21b6}
+.bg-urgent{background:#fef2f2;color:#dc2626}.bg-soon{background:#fff7ed;color:#ea580c}
+.card-name{font-family:var(--serif);font-size:17px;font-weight:700;color:var(--midnight);line-height:1.25}
+.card-provider{font-size:12px;color:var(--muted)}
+.card-amount{font-size:13px;font-weight:500;color:var(--navy);background:var(--ice);border-radius:5px;padding:10px 12px;line-height:1.4;border-left:3px solid var(--border-mid)}
+.card-tags{display:flex;gap:5px;flex-wrap:wrap}
+.tag{font-size:11px;padding:3px 8px;border-radius:4px;background:var(--ice-mid);color:var(--muted);border:1px solid var(--border);font-weight:500}
+.card-foot{padding:12px 20px;border-top:1px solid var(--border);background:var(--ice);display:flex;justify-content:space-between;align-items:center}
+.card-deadline{font-size:11.5px;color:var(--muted)}.card-deadline strong{color:var(--coral);font-weight:600}
+.card-deadline.urgent-dl strong{color:#dc2626;font-weight:700}
+.card-cta{font-size:12px;font-weight:600;color:var(--navy);display:flex;align-items:center;gap:4px}
+.card-cta svg{transition:transform .15s}.card:hover .card-cta svg{transform:translateX(3px)}
+.no-results{grid-column:1/-1;text-align:center;padding:80px 20px;color:var(--muted)}
+.no-results h3{font-family:var(--serif);font-size:24px;color:var(--midnight);margin-bottom:8px}
+/* modal */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(15,31,61,.65);z-index:999;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(3px)}
+.modal-overlay.open{display:flex}
+.modal{background:var(--white);border-radius:12px;max-width:640px;width:100%;max-height:90vh;overflow-y:auto;position:relative;box-shadow:0 32px 80px rgba(15,31,61,.25)}
+.modal-close{position:absolute;top:16px;right:16px;background:var(--ice);border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:15px;color:var(--muted);display:flex;align-items:center;justify-content:center;z-index:10;transition:background .15s}.modal-close:hover{background:var(--border)}
+.modal-stripe{height:5px;border-radius:12px 12px 0 0}
+.modal-inner{padding:24px 28px 32px}
+.modal-badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.modal-title{font-family:var(--serif);font-size:23px;font-weight:700;color:var(--midnight);line-height:1.2;margin-bottom:4px}
+.modal-provider{font-size:13px;color:var(--muted);margin-bottom:20px}
+.modal-amount{background:var(--ice);border-left:3px solid var(--border-mid);border-radius:5px;padding:12px 16px;font-size:14px;font-weight:600;color:var(--navy);margin-bottom:18px;line-height:1.5}
+.modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.modal-field{background:var(--ice);border-radius:6px;padding:12px 14px}
+.modal-field-label{font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);margin-bottom:4px;font-weight:700}
+.modal-field-val{font-size:13px;color:var(--midnight);line-height:1.4;font-weight:500}.modal-field-val.urgent{color:var(--coral)}
+.modal-section{margin-bottom:16px}
+.modal-section-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.modal-tag-wrap{display:flex;flex-wrap:wrap;gap:5px}
+.modal-tag{font-size:11px;padding:3px 9px;border-radius:4px;background:var(--ice-mid);color:var(--muted);border:1px solid var(--border)}
+.modal-notes{background:var(--ice);border-radius:6px;padding:14px 16px;font-size:13px;color:#4a5568;line-height:1.8;border-left:3px solid var(--border-mid)}
+.modal-actions{display:flex;gap:10px;margin-top:22px}
+.modal-actions a{flex:1;text-align:center;padding:12px 16px;border-radius:7px;font-size:13.5px;font-weight:600;text-decoration:none;transition:opacity .15s,transform .1s}
+.modal-actions a:active{transform:scale(.98)}.modal-actions a:hover{opacity:.88}
+.btn-primary{background:var(--midnight);color:#fff}.btn-secondary{background:var(--ice);color:var(--midnight);border:1px solid var(--border)}
+.about-section{background:var(--midnight);padding:60px 32px;text-align:center}
+.about-inner{max-width:560px;margin:0 auto}
+.about-eyebrow{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--coral);margin-bottom:12px;font-weight:600}
+.about-inner h2{font-family:var(--serif);font-size:30px;margin-bottom:14px;color:#fff}
+.about-inner p{color:rgba(255,255,255,.5);font-size:14px;line-height:1.85;font-weight:300}
+footer{background:#080f1e;color:rgba(255,255,255,.28);text-align:center;padding:28px 32px;font-size:12px;line-height:2.2}
+footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);text-decoration:none}footer a:hover{color:rgba(255,255,255,.7)}
+@media(max-width:680px){nav,.search-section,.filter-toggle,.results-bar,.grid-wrap,.about-section,footer{padding-left:16px;padding-right:16px}.tabs-wrap,.filter-panel{padding-left:16px;padding-right:16px}.grid{grid-template-columns:1fr}.modal-grid{grid-template-columns:1fr}.hero-stats{gap:28px}.hero{padding:44px 16px 60px}.filter-row{flex-wrap:wrap}.filter-label{min-width:100%;margin-bottom:2px}}
 </style>
 </head>
 <body>
-
 <nav>
   <a class="nav-logo" href="#">My<span>Scholar</span></a>
-  <div class="nav-r">
-    <a href="#about">About</a>
-    <div class="nav-pill" id="navPill">35 programmes</div>
-  </div>
+  <div class="nav-r"><a href="#about">About</a><div class="nav-pill" id="navPill">70 programmes</div></div>
 </nav>
-
 <section class="hero">
   <div class="eyebrow">Malaysia · 2025 / 2026 Academic Year</div>
   <h1>Find Your<br><em>Scholarship.</em></h1>
   <p class="hero-sub">A free directory of scholarships, financial aid, and study loans for Malaysian students — SPM to postgraduate.</p>
   <div class="hero-stats">
-    <div><div class="hs-num" id="heroCount">35</div><div class="hs-lbl">Programmes</div></div>
-    <div><div class="hs-num">7</div><div class="hs-lbl">Categories</div></div>
+    <div><div class="hs-num" id="heroCount">70</div><div class="hs-lbl">Programmes</div></div>
+    <div><div class="hs-num">9</div><div class="hs-lbl">Categories</div></div>
     <div><div class="hs-num">6</div><div class="hs-lbl">Exam Pathways</div></div>
     <div><div class="hs-num">100%</div><div class="hs-lbl">Free</div></div>
   </div>
 </section>
-
 <div class="search-section">
   <div class="search-wrap">
     <svg class="search-icon" width="18" height="18" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
     <input type="text" id="si" placeholder="Search by name, provider, field, keyword…" oninput="render()">
   </div>
 </div>
-
 <div class="tabs-wrap">
   <div class="tabs">
-    <button class="tab active" data-cat="all"        onclick="setTab(this)">All</button>
-    <button class="tab gov"    data-cat="Government" onclick="setTab(this)">🏛 Government</button>
-    <button class="tab glc"    data-cat="GLC"        onclick="setTab(this)">🏢 GLC / Yayasan</button>
-    <button class="tab bank"   data-cat="Banking"    onclick="setTab(this)">🏦 Banking</button>
-    <button class="tab corp"   data-cat="Corporate"  onclick="setTab(this)">🏭 Corporate</button>
-    <button class="tab loan"   data-cat="Loan"       onclick="setTab(this)">📋 Loans</button>
-    <button class="tab state"  data-cat="State"      onclick="setTab(this)">📍 State</button>
-    <button class="tab media"  data-cat="Media"      onclick="setTab(this)">📰 Media / Foundation</button>
+    <button class="tab active" data-cat="all" onclick="setTab(this)">All</button>
+    <button class="tab gov" data-cat="Government" onclick="setTab(this)">🏛 Government</button>
+    <button class="tab glc" data-cat="GLC" onclick="setTab(this)">🏢 GLC / Yayasan</button>
+    <button class="tab bank" data-cat="Banking" onclick="setTab(this)">🏦 Banking</button>
+    <button class="tab corp" data-cat="Corporate" onclick="setTab(this)">🏭 Corporate</button>
+    <button class="tab loan" data-cat="Loan" onclick="setTab(this)">📋 Loans</button>
+    <button class="tab state" data-cat="State" onclick="setTab(this)">📍 State</button>
+    <button class="tab media" data-cat="Media" onclick="setTab(this)">📰 Media / Foundation</button>
+    <button class="tab intl" data-cat="International" onclick="setTab(this)">🌍 International</button>
+    <button class="tab uni" data-cat="University" onclick="setTab(this)">🎓 University</button>
   </div>
 </div>
-
-<div class="chips-wrap">
-  <span class="chips-lbl">Filter:</span>
-  <div class="chip" data-f="SPM"      onclick="toggleChip(this)">SPM Leavers</div>
-  <div class="chip" data-f="STPM"     onclick="toggleChip(this)">STPM / A-Level</div>
-  <div class="chip" data-f="UEC"      onclick="toggleChip(this)">UEC / O-Level / IGCSE</div>
-  <div class="chip" data-f="Diploma"  onclick="toggleChip(this)">Diploma</div>
-  <div class="chip" data-f="Overseas" onclick="toggleChip(this)">✈ Overseas</div>
-  <div class="chip" data-f="Full"     onclick="toggleChip(this)">★ Full Scholarship</div>
-  <div class="chip" data-f="B40"      onclick="toggleChip(this)">B40 / Income-based</div>
-  <div class="chip" data-f="Bumi"     onclick="toggleChip(this)">Bumiputera</div>
-  <div class="chip" data-f="NoBond"   onclick="toggleChip(this)">✓ No Bond</div>
-  <div class="chip" data-f="Postgrad" onclick="toggleChip(this)">Postgrad / Masters / PhD</div>
+<div class="filter-toggle">
+  <button class="filter-toggle-btn" onclick="toggleFilters()">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 6h18M7 12h10M11 18h2"/></svg>
+    Filters
+    <span class="active-count" id="activeCount" style="display:none">0</span>
+  </button>
+  <button class="clear-btn" id="clearBtn" onclick="clearAll()" style="display:none">Clear all</button>
 </div>
-
+<div class="filter-panel" id="filterPanel">
+  <div class="filter-row">
+    <span class="filter-label">⏰ Deadline</span>
+    <div class="chip" data-f="OpenNow" onclick="toggleChip(this)">🟢 Open Now</div>
+    <div class="chip" data-f="Soon" onclick="toggleChip(this)">🟡 Closing Soon (60 days)</div>
+    <div class="chip" data-f="Rolling" onclick="toggleChip(this)">🔄 Rolling / Ongoing</div>
+  </div>
+  <div class="filter-row">
+    <span class="filter-label">🎓 Entry Level</span>
+    <div class="chip" data-f="PostSPM" onclick="toggleChip(this)">Post-SPM</div>
+    <div class="chip" data-f="PreU" onclick="toggleChip(this)">Pre-University</div>
+    <div class="chip" data-f="Undergrad" onclick="toggleChip(this)">Undergraduate</div>
+    <div class="chip" data-f="Postgrad" onclick="toggleChip(this)">Postgraduate</div>
+  </div>
+  <div class="filter-row">
+    <span class="filter-label">📚 Field</span>
+    <div class="chip" data-f="fAny" onclick="toggleChip(this)">Any Field</div>
+    <div class="chip" data-f="fSTEM" onclick="toggleChip(this)">STEM / Science</div>
+    <div class="chip" data-f="fEngineering" onclick="toggleChip(this)">Engineering</div>
+    <div class="chip" data-f="fMedicine" onclick="toggleChip(this)">Medicine / Health</div>
+    <div class="chip" data-f="fBusiness" onclick="toggleChip(this)">Business / Finance</div>
+    <div class="chip" data-f="fIT" onclick="toggleChip(this)">IT / Computer Science</div>
+    <div class="chip" data-f="fLaw" onclick="toggleChip(this)">Law</div>
+  </div>
+  <div class="filter-row">
+    <span class="filter-label">📊 Min Grade</span>
+    <div class="chip" data-f="gStraight" onclick="toggleChip(this)">Straight As (9A+)</div>
+    <div class="chip" data-f="g7" onclick="toggleChip(this)">7–8 As</div>
+    <div class="chip" data-f="g5" onclick="toggleChip(this)">5–6 As</div>
+    <div class="chip" data-f="gAny" onclick="toggleChip(this)">Any / No Minimum</div>
+  </div>
+  <div class="filter-row">
+    <span class="filter-label">✦ More</span>
+    <div class="chip" data-f="Overseas" onclick="toggleChip(this)">✈ Overseas</div>
+    <div class="chip" data-f="Full" onclick="toggleChip(this)">★ Full Scholarship</div>
+    <div class="chip" data-f="B40" onclick="toggleChip(this)">B40 / Income-based</div>
+    <div class="chip" data-f="Bumi" onclick="toggleChip(this)">Bumiputera</div>
+    <div class="chip" data-f="NoBond" onclick="toggleChip(this)">✓ No Bond</div>
+    <div class="chip" data-f="UEC" onclick="toggleChip(this)">UEC / O-Level / IGCSE</div>
+    <div class="chip" data-f="SPM" onclick="toggleChip(this)">SPM Leavers</div>
+    <div class="chip" data-f="STPM" onclick="toggleChip(this)">STPM / A-Level</div>
+  </div>
+</div>
 <div class="results-bar">
-  <div class="results-count">Showing <strong id="countDisplay">35</strong> programmes</div>
-  <div class="sort-wrap">
-    Sort:
-    <select id="sortSelect" onchange="render()">
-      <option value="default">Default</option>
-      <option value="name">A – Z</option>
-    </select>
-  </div>
+  <div class="results-count">Showing <strong id="countDisplay">70</strong> programmes</div>
+  <div class="sort-wrap">Sort: <select id="sortSelect" onchange="render()"><option value="default">Default</option><option value="deadline">By deadline</option><option value="name">A – Z</option></select></div>
 </div>
-
-<div class="grid-wrap">
-  <div class="grid" id="cardGrid"></div>
-</div>
-
+<div class="grid-wrap"><div class="grid" id="cardGrid"></div></div>
 <section class="about-section" id="about">
   <div class="about-inner">
     <div class="about-eyebrow">About MyScholar</div>
     <h2>Built for Malaysian students</h2>
-    <p>No student should miss out on a scholarship because they didn't know it existed. This directory covers government, GLC, corporate, banking, state-level, and media scholarships for SPM, STPM, O-Level, UEC, and IGCSE graduates. Always verify deadlines and requirements at the official website before applying.</p>
+    <p>No student should miss out on a scholarship because they didn't know it existed. This directory covers government, GLC, corporate, banking, state-level, international, and university scholarships for SPM, STPM, O-Level, UEC, and IGCSE graduates. Always verify deadlines and requirements at the official website before applying.</p>
   </div>
 </section>
-
 <footer>
-  <strong>MyScholar Malaysia</strong> · Scholarship Directory 2025/2026<br>
+  <strong>MyScholar Malaysia</strong> · myscholar.my · Scholarship Directory 2025/2026<br>
   Data sourced from official portals · Always verify before applying · Free for all Malaysian students<br>
   <a href="https://www.jpa.gov.my">JPA</a> · <a href="https://www.mara.gov.my">MARA</a> · <a href="https://www.yayasankhazanah.com.my">Khazanah</a> · <a href="https://www.petronas.com">Petronas</a> · <a href="https://www.bnm.gov.my">Bank Negara</a> · <a href="https://www.ptptn.gov.my">PTPTN</a>
 </footer>
-
 <div class="modal-overlay" id="modal" onclick="closeModal(event)">
   <div class="modal" id="modalBox">
     <button class="modal-close" onclick="document.getElementById('modal').classList.remove('open')">✕</button>
     <div id="modalInner"></div>
   </div>
 </div>
-
 <script>
-const DATA = [
-  {id:1,name:"JPA Program Penajaan Nasional (PPN)",prov:"Jabatan Perkhidmatan Awam (JPA)",cat:"Government",amt:"Full scholarship — tuition, allowances, flights to US/UK",cov:"Full",dest:"Overseas",fields:["Any field","STEM","Law","Medicine","Economics"],quals:["SPM"],elig:["Open to all","Top 20 SPM graduates nationally"],school:["Open to all"],grade:"Min 9A+ in SPM incl. BM, BI, Math, History, Add Math, Physics, Chemistry, Moral/Islamic Ed + 1 other. All other subjects min A-",dl:"March–April",opens:"January",bond:"Yes — government service bond",nb:false,b40:false,bumi:false,pg:false,notes:"Only for top 20 SPM students nationwide. Covers pre-university through undergraduate at top US/UK universities. Age below 19 on 31 Dec of SPM year. One of Malaysia's most prestigious government scholarships.",url:"https://www.jpa.gov.my/pelajar/program-penajaan"},
-  {id:2,name:"JPA Program Khas Lepasan SPM (Dalam Negara)",prov:"Jabatan Perkhidmatan Awam (JPA)",cat:"Government",amt:"Full scholarship — tuition + living allowance",cov:"Full",dest:"Local",fields:["STEM","Medicine","Law","Business","Education","Engineering"],quals:["SPM"],elig:["Open to all"],school:["Open to all"],grade:"Min 9A+ SPM (same core subjects as PPN)",dl:"May–June",opens:"April",bond:"Yes — government service bond",nb:false,b40:false,bumi:false,pg:false,notes:"For local public university studies. Also offered as Pinjaman Boleh Ubah (PBU) convertible loan under Program Khas JPA-MARA (PKJM) — joint programme between JPA and MARA.",url:"https://www.jpa.gov.my"},
-  {id:3,name:"JPA Program Khas JKPJ (Japan/Korea/France/Germany)",prov:"Jabatan Perkhidmatan Awam (JPA)",cat:"Government",amt:"Full scholarship — tuition, living, intensive language training",cov:"Full",dest:"Overseas",fields:["STEM","Engineering","Sciences","Technology"],quals:["SPM"],elig:["Open to all"],school:["Open to all"],grade:"Outstanding SPM — typically 9A+; aptitude for target language/country",dl:"April–May",opens:"March",bond:"Yes — government service bond",nb:false,b40:false,bumi:false,pg:false,notes:"Covers studies in Japan, Korea, France or Germany. Includes intensive language training in-country before degree. Very limited seats — national-level selection process.",url:"https://www.jpa.gov.my"},
-  {id:4,name:"JPA Dermasiswa B40 / PIDN",prov:"Jabatan Perkhidmatan Awam (JPA)",cat:"Government",amt:"Full or partial — income-tiered",cov:"Partial",dest:"Local",fields:["Any field"],quals:["SPM","STPM","Matriculation","Foundation","Diploma"],elig:["B40 / income-based"],school:["Open to all"],grade:"Min 3.50 CGPA pre-university or min 8A SPM; income verification required",dl:"Varies by programme",opens:"Varies",bond:"Yes — government service bond",nb:false,b40:true,bumi:false,pg:false,notes:"Targets B40 household income group. PIDN covers undergraduate degree at public universities. Dermasiswa is need-based financial assistance. Strict income ceiling. EA Form / salary slips required.",url:"https://www.jpa.gov.my"},
-  {id:5,name:"MARA Young Talent Development Programme (YTP)",prov:"Majlis Amanah Rakyat (MARA)",cat:"Government",amt:"Full scholarship — tuition, allowances, flights",cov:"Full",dest:"Overseas",fields:["STEM","Engineering","Business","Sciences","Technology"],quals:["SPM"],elig:["Bumiputera only"],school:["Sekolah Kebangsaan","Open to all"],grade:"Min 8A+ SPM; strong co-curricular and leadership record",dl:"March–May",opens:"January",bond:"Yes — MARA service/repayment bond",nb:false,b40:false,bumi:true,pg:false,notes:"Exclusively for Bumiputera students. Pre-university (A-Level/Foundation at MARA colleges) through undergraduate at prestigious local and overseas universities. Competitive selection process including interviews.",url:"https://www.mara.gov.my"},
-  {id:6,name:"MARA Tertiary Education Sponsorship (TESP)",prov:"Majlis Amanah Rakyat (MARA)",cat:"Government",amt:"Full scholarship — tuition + allowances",cov:"Full",dest:"Local",fields:["Any field","Business","STEM","Education","Arts"],quals:["SPM","STPM","UEC","Diploma"],elig:["Bumiputera only"],school:["Open to all"],grade:"Min 5 credits SPM (Diploma) / CGPA 3.00 STPM (Degree)",dl:"May–June",opens:"April",bond:"Yes",nb:false,b40:false,bumi:true,pg:false,notes:"Diploma and degree at MARA colleges: MRSM, Kolej MARA, UniKL etc. Convertible loan element for some tracks. Includes MICPA-MARA-STES Sponsorship for accounting.",url:"https://www.mara.gov.my"},
-  {id:7,name:"Khazanah Global Scholarship Programme",prov:"Yayasan Khazanah",cat:"GLC",amt:"Full scholarship — tuition, stipend, flights, leadership programme",cov:"Full",dest:"Overseas",fields:["Any field","Arts","STEM","Business","Law","Medicine","Computer Science"],quals:["SPM","IGCSE","O-Level","A-Level","STPM","Postgrad"],elig:["Open to all"],school:["Open to all"],grade:"Min 8As (A/A+) in SPM or IGCSE. A/A+ in BM, English, History, Math (SPM). Postgrad: Distinction / CGPA 3.50",dl:"June",opens:"March",bond:"Yes — job attachment at Khazanah-linked organisations",nb:false,b40:false,bumi:false,pg:true,notes:"Three levels: (1) A-Level at KYUEM (age ≤18) → overseas degree; (2) Direct undergraduate; (3) Masters/PhD. IGCSE mock results accepted. Cannot apply for both Global and Watan in same cycle.",url:"https://www.yayasankhazanah.com.my/scholarship-programmes/khazanah-global-scholarship-programme"},
-  {id:8,name:"Khazanah Watan Scholarship Programme",prov:"Yayasan Khazanah",cat:"GLC",amt:"Full scholarship — tuition, living, accommodation, development",cov:"Full",dest:"Local",fields:["Any field","Business","Engineering","IT","Finance","Social Sciences"],quals:["SPM","IGCSE","A-Level","STPM","Postgrad"],elig:["Open to all"],school:["Open to all"],grade:"Min 8As (A/A+) SPM or IGCSE for undergrad; CGPA 3.50 for postgrad; age ≤21 at enrolment",dl:"June",opens:"March",bond:"Yes — bond at Khazanah GLC companies",nb:false,b40:false,bumi:false,pg:true,notes:"Local counterpart to Khazanah Global. Studies at Khazanah-approved Malaysian universities. Personal statement required: 'Why Khazanah and how you can contribute to good governance in Malaysia'. Cannot apply for both Global and Watan in same cycle.",url:"https://www.yayasankhazanah.com.my/scholarship-programmes/khazanah-watan-scholarship-programme"},
-  {id:9,name:"PETRONAS Education Sponsorship Programme (PESP)",prov:"Petroliam Nasional Berhad (PETRONAS)",cat:"GLC",amt:"Full scholarship — tuition, living, return flights, books",cov:"Full",dest:"Overseas",fields:["Chemical Engineering","Petroleum Engineering","Mechanical Engineering","Electrical Engineering","STEM","Business","Accounting","Computing"],quals:["SPM"],elig:["Malaysian citizens age 16–19"],school:["Open to all"],grade:"UTP/Local (Sci/Eng): min 8A incl Chem, Physics, Math. Overseas (Sci/Eng): min 4A+ and 4A-. Arts/Computing: min 4A+/4A- incl Math",dl:"March–April",opens:"January",bond:"Yes — employment bond at PETRONAS or subsidiary",nb:false,b40:false,bumi:false,pg:false,notes:"Post-SPM for citizens age 16–19. Studies at UTP (local) or top universities in US, UK, Australia, NZ, China, Japan, South Korea. Competitive selection camp (POW — Powering Knowledge programme). Strong ECA and leadership required.",url:"https://www.petronas.com/sustainability/education-sponsorship"},
-  {id:10,name:"Yayasan UEM Global Scholarship",prov:"Yayasan UEM / UEM Group",cat:"GLC",amt:"Full scholarship — tuition, exam fees, insurance, laptop, allowances",cov:"Full",dest:"Overseas",fields:["Business","Engineering","IT","Environmental Studies","Quantity Surveying"],quals:["SPM"],elig:["Open to all","Age 18–25"],school:["Open to all"],grade:"Min 7As (A+/A) in SPM; excellent Form 4 & Form 5 track record; strong leadership",dl:"May (2025: 12 May)",opens:"March",bond:"Yes — 5 yrs at UEM Group (Global); 3 yrs (Wira)",nb:false,b40:false,bumi:false,pg:false,notes:"A-Level at Kolej Yayasan UEM (KYUEM), then undergraduate at UK/US/Australia universities. Running since 2005. Also offers Wira Scholarship (direct entry, min CGPA 3.50) and Graduate Accountant Programme.",url:"https://www.uem.com.my/yayasan-education-scholarship.html"},
-  {id:11,name:"Yayasan TNB PRIME Scholarship",prov:"Yayasan Tenaga Nasional (TNB)",cat:"GLC",amt:"Full scholarship — tuition + allowances (UNITEN/IPTA/overseas)",cov:"Full",dest:"Local",fields:["Electrical Engineering","Mechanical Engineering","STEM","IT","Business","Power Engineering"],quals:["SPM","STPM","A-Level","Foundation","Matriculation"],elig:["Open to all","Age 17–23"],school:["Open to all"],grade:"Excellent SPM/pre-university results; CGPA 3.50+ recommended",dl:"May (2025: 8 May)",opens:"March",bond:"Yes — bond at TNB / UNITEN",nb:false,b40:false,bumi:false,pg:false,notes:"Three study levels: post-SPM pre-university, undergraduate, and postgraduate. Available for UNITEN, public IPTA, or overseas. Separate TNB Shine Sponsorship for well-rounded students at IPTA/UNITEN only.",url:"https://www.tnb.com.my/about-tnb/scholarships"},
-  {id:12,name:"PNB Global Scholarship Award",prov:"Permodalan Nasional Berhad (PNB)",cat:"GLC",amt:"Full scholarship — tuition, preparatory college, allowances, flights",cov:"Full",dest:"Overseas",fields:["Business","Finance","Economics","Investment Management","Accounting","Actuarial Science"],quals:["SPM"],elig:["Open to all"],school:["Open to all"],grade:"Outstanding SPM results; min 8A+ typically; strong ECA and leadership",dl:"May (2025: 9 May)",opens:"March",bond:"Yes — bond at PNB group companies",nb:false,b40:false,bumi:false,pg:false,notes:"Recent SPM candidates. Successful applicants attend PNB-selected local preparatory college before proceeding to undergraduate studies at top global universities. Covers finance, investment, and business-related fields.",url:"https://scholarship.pnb.com.my"},
-  {id:13,name:"Yayasan Sime Darby Excellence Scholarship",prov:"Yayasan Sime Darby (YSD)",cat:"GLC",amt:"Full scholarship — tuition, board/lodging, laptop, clothing, flights",cov:"Full",dest:"Local",fields:["Any field (EXCEPT Medicine)"],quals:["STPM","A-Level","Foundation","Matriculation","Diploma"],elig:["Open to all","Household income ≤ RM11,000/month"],school:["Open to all"],grade:"Min CGPA 3.30 pre-university or 3As in A-Level; age ≤25",dl:"31 March (2025: 1–31 March)",opens:"1 March",bond:"Yes — 3 years at Sime Darby group",nb:false,b40:false,bumi:false,pg:false,notes:"ALL fields EXCEPT Medicine. YSD THRIVE Future Leaders development programme for all scholars. Separate PWD (Person with Disability) Bursary — no bond required. Contact: yayasan@simedarbyfoundation.com",url:"https://www.yayasansimedarbyfoundation.com"},
-  {id:14,name:"Yayasan Telekom Malaysia Future Leaders Scholarship",prov:"Yayasan Telekom Malaysia (YTM)",cat:"GLC",amt:"Full scholarship — tuition + allowances",cov:"Full",dest:"Local",fields:["Computer Science","IT","Engineering","Telecommunications","Data Science","Business"],quals:["SPM","STPM","Foundation","Matriculation"],elig:["Open to all","Household income ≤ RM20,000/month"],school:["Open to all"],grade:"Min 8A+ SPM (overseas) / min 6As SPM (local) or equivalent pre-university CGPA",dl:"April–May",opens:"March",bond:"Yes — bond at TM group",nb:false,b40:false,bumi:false,pg:false,notes:"UPU channel for public universities. Must have ≥2 academic years remaining. UEC accepted. Cannot combine with other financial aid. Contact: yayasantm.edu@tm.com.my",url:"https://www.tm.com.my"},
-  {id:15,name:"Axiata Foundation All-Star Bestari Scholarship",prov:"Axiata Foundation",cat:"GLC",amt:"Full scholarship — tuition + living + structured development",cov:"Full",dest:"Local",fields:["Any field at public institutions"],quals:["SPM","STPM","Foundation","Matriculation","Diploma"],elig:["B40 / income-based","Marginalised communities (OKU, indigenous, orphans)"],school:["Open to all"],grade:"Excellent results; demonstrated excellence beyond academics",dl:"May (2025: 31 May)",opens:"April",bond:"None stated",nb:true,b40:true,bumi:false,pg:false,notes:"Focuses on underprivileged and marginalised communities (B40, indigenous tribes, persons with disabilities, orphans). Pre-university and undergraduate levels at local public institutions. 4-stage selection process including online assessment. Opens 24 April 2025.",url:"https://www.axiata-foundation.com"},
-  {id:16,name:"Yayasan Peneraju Scholarship",prov:"Yayasan Peneraju Pendidikan Bumiputera",cat:"GLC",amt:"Full scholarship — tuition + allowances",cov:"Full",dest:"Local",fields:["STEM","Business","Education","Vocational/TVET","Professional certifications"],quals:["SPM","STPM","Diploma","Degree"],elig:["Bumiputera only"],school:["Open to all"],grade:"Varies by programme level; min 5 credits SPM for entry levels",dl:"Rolling / varies",opens:"Varies",bond:"Varies by programme",nb:false,b40:false,bumi:true,pg:true,notes:"Established by PM's Department to empower Bumiputera communities. Covers undergraduate, Masters, Doctoral, and vocational/TVET certification. Targets specific Bumiputera talent gaps in high-value sectors.",url:"https://www.yayasanpeneraju.com.my"},
-  {id:17,name:"Bank Negara Malaysia — Kijang Pre-University Scholarship",prov:"Bank Negara Malaysia (BNM)",cat:"Banking",amt:"Full scholarship — tuition, subsistence, related allowances",cov:"Full",dest:"Local",fields:["Economics","Finance","Accounting","Actuarial Science","Mathematics","Statistics","Law","Computer Science","Data Science"],quals:["SPM"],elig:["Open to all","Age ≤19"],school:["Open to all"],grade:"Min 8As (A and A+ only) in SPM; strong leadership, teamwork and ECA record",dl:"April–May (2025: 22 Apr – 4 May)",opens:"April",bond:"Yes — 1 yr study = 2 yrs service at BNM",nb:false,b40:false,bumi:false,pg:false,notes:"Pre-university (A-Level/Foundation) leading to undergraduate at BNM-approved universities in UK, US, Australia or Malaysia. Assessment centre: group activities + panel interview. No documents needed at application stage.",url:"https://www.bnm.gov.my/careers/scholarships"},
-  {id:18,name:"Bank Negara Malaysia — Kijang Undergraduate Scholarship",prov:"Bank Negara Malaysia (BNM)",cat:"Banking",amt:"Full scholarship — tuition, subsistence, return flights",cov:"Full",dest:"Overseas",fields:["Economics","Finance","Accounting","Actuarial Science","Mathematics","Statistics","Law","Computer Science","Data Science"],quals:["A-Level","STPM","Matriculation","Foundation","Diploma"],elig:["Open to all","Age ≤25"],school:["Open to all"],grade:"Min CGPA 3.50 pre-university; strong leadership; offer from BNM-approved university required",dl:"April–May",opens:"April",bond:"Yes — 1 yr study = 2 yrs service at BNM",nb:false,b40:false,bumi:false,pg:false,notes:"Covers Harvard, LSE, Oxford, Cambridge and other top-ranked institutions. Psychometric + video response + assessment centre + panel interview. Bond ratio: 1 year study = 2 years at BNM.",url:"https://www.bnm.gov.my/careers/scholarships"},
-  {id:19,name:"Maybank Group Scholarship (Local Universities)",prov:"Maybank Foundation",cat:"Banking",amt:"Full scholarship — tuition, fees, living allowances",cov:"Full",dest:"Local",fields:["Business","Finance","Accounting","Banking","Economics","Computer Science","Data Science","Digital Tech"],quals:["SPM","STPM","Matriculation","Foundation","Diploma"],elig:["B40 / income-based","Household income ≤ RM120,000/year"],school:["Open to all"],grade:"Must be enrolled Year 1 at UM/UPM/UKM/UiTM/IIUM/USM/UTM/UUM/UniMAP/UMP/UMS/UNIMAS; maintain CGPA ≥3.00",dl:"March–April",opens:"February",bond:"Yes — guaranteed job at Maybank",nb:false,b40:true,bumi:false,pg:false,notes:"Must already be in Year 1 at listed public universities. Household income ≤RM120,000/year. Age ≤22. Maybank staff ineligible; children/relatives may apply. Cannot combine with other scholarships. Running since 1972.",url:"https://maybankfoundation.com"},
-  {id:20,name:"Maybank Group Scholarship (Overseas — UK/US/Australia)",prov:"Maybank Foundation",cat:"Banking",amt:"Full scholarship — tuition, living, accommodation, flights",cov:"Full",dest:"Overseas",fields:["Business","Finance","Accounting","Banking","Economics","Computer Science","Future-ready Tech"],quals:["A-Level","Foundation","Matriculation"],elig:["Household income ≤ RM180,000/year"],school:["Open to all"],grade:"Currently in Foundation; accepted at top-tier UK/US/Australia university; maintain CGPA ≥3.00",dl:"March–April",opens:"February",bond:"Yes — bond at Maybank group",nb:false,b40:false,bumi:false,pg:false,notes:"Must be enrolled in Foundation at time of application. Household income ≤RM180,000/year. Age ≤22. Cannot combine with other scholarships.",url:"https://maybankfoundation.com"},
-  {id:21,name:"CIMB ASEAN Scholarship",prov:"CIMB Group",cat:"Banking",amt:"Full scholarship — tuition + professional development + mentorship",cov:"Full",dest:"Overseas",fields:["Business","Finance","Banking","Economics","Accounting","Law","STEM","Any discipline"],quals:["A-Level","Foundation","STPM","Diploma","Postgrad"],elig:["ASEAN nationals (MY, ID, SG, TH, KH, VN, PH)"],school:["Open to all"],grade:"Min CGPA 3.25/4.00 or equivalent; strong ECA and leadership; banking career aspiration",dl:"June",opens:"April",bond:"Yes — bond at CIMB on graduation",nb:false,b40:false,bumi:false,pg:true,notes:"Open to ALL ASEAN nationals — not just Malaysians. For undergraduate or Masters (min 1 full academic year remaining). Includes professional development programme and mentor support.",url:"https://www.cimb.com/scholarship"},
-  {id:22,name:"Hong Leong Foundation Scholarship",prov:"Hong Leong Foundation",cat:"Banking",amt:"RM8,500/year (Diploma) · RM6,000/year (3+0 degree at private uni)",cov:"Partial",dest:"Local",fields:["Any field"],quals:["SPM","STPM","A-Level","UEC","Diploma"],elig:["Open to all"],school:["Open to all"],grade:"Good results in SPM / STPM / UEC / A-Level; more accessible grade requirements",dl:"May (2025: 31 May)",opens:"March",bond:"None — no bond required",nb:true,b40:false,bumi:false,pg:false,notes:"NO BOND — one of the rare non-bonding scholarships in Malaysia. For Diploma, Advanced Diploma, or 1st undergraduate degree at public or private universities. ANY course or field accepted. Apply: hongleongfoundation.org",url:"https://www.hongleongfoundation.org"},
-  {id:23,name:"Yayasan Bank Rakyat — BRIGHT Programme",prov:"Yayasan Bank Rakyat",cat:"Banking",amt:"Convertible loan — waived based on academic performance",cov:"Full",dest:"Local",fields:["Any field","Business","Finance","Banking","Islamic Finance","Accounting"],quals:["SPM","STPM","A-Level","Matriculation","Foundation","Diploma","UEC"],elig:["Open to all","Preference for B40/M40"],school:["Open to all"],grade:"Min 5As SPM / CGPA 3.00 STPM or equivalent; age ≤25",dl:"April–June (2025: opens 25 April)",opens:"April",bond:"Convertible — no traditional bond",nb:true,b40:true,bumi:false,pg:false,notes:"BRIGHT = Biasiswa Inspirasi Bank Rakyat Memacu Bakat Tertinggi. Variable/convertible loan: partially or fully converted to scholarship annually based on results. UEC accepted.",url:"https://www.bankrakyat.com.my"},
-  {id:24,name:"Bank Pembangunan Malaysia — BAGUS Scholarship",prov:"Bank Pembangunan Malaysia Berhad (BPMB)",cat:"Banking",amt:"Full scholarship — tuition, living, laptop, flights",cov:"Full",dest:"Local",fields:["Banking","Finance","Business","Engineering","Economics","ESG/Sustainability"],quals:["A-Level","STPM","Foundation","Matriculation","Diploma"],elig:["Open to all","Malaysian students"],school:["Open to all"],grade:"Excellent pre-university results; not receiving other scholarships",dl:"June",opens:"April",bond:"Yes — bond at BPMB (up to 6 years for overseas)",nb:false,b40:false,bumi:false,pg:false,notes:"BAGUS = BPMB Award of Group's Undergraduate Scholarship. Covers local and overseas (top 100 QS-ranked; twinning from 2026). Government-owned bank under Ministry of Finance.",url:"https://www.bpmb.com.my/scholarship/"},
-  {id:25,name:"Maxis Scholarship Programme",prov:"Maxis Berhad",cat:"Corporate",amt:"Full scholarship — tuition + living expenses",cov:"Full",dest:"Local",fields:["Engineering (Network/Telecom/Software/Electrical)","AI / Cloud / Cybersecurity / Data Science","Finance","Mathematics"],quals:["SPM","STPM","A-Level","Foundation","Matriculation"],elig:["Open to all","Must NOT hold JPA/Khazanah/BNM/MARA/Petronas/Shell simultaneously"],school:["Open to all"],grade:"Excellent SPM / pre-university results; strong tech/STEM aptitude",dl:"March–April",opens:"February",bond:"Yes — duration varies by study country/duration",nb:false,b40:false,bumi:false,pg:false,notes:"Specific fields only: Finance, Maths, Engineering, Technology (AI, Cloud, Cybersecurity). Mandatory internship at Maxis. Cannot hold other major scholarships concurrently. Contact: scholar@maxis.com.my",url:"https://www.maxis.com.my/en/about-maxis/career/maxis-scholarship-programme/"},
-  {id:26,name:"Gamuda Scholarship Award",prov:"Gamuda Berhad",cat:"Corporate",amt:"Full scholarship — tuition + living + Scholars Development Programme",cov:"Full",dest:"Local",fields:["Civil Engineering","Mechanical Engineering","Electrical Engineering","Construction"],quals:["A-Level","STPM","Foundation","Matriculation","Diploma","UEC"],elig:["Financial need required — must be evidenced"],school:["Open to all"],grade:"Min 3As / CGPA 3.40 in A-Level/STPM or equivalent; 7A+ SPM recommended",dl:"June",opens:"April",bond:"Yes — bond at Gamuda group",nb:false,b40:false,bumi:false,pg:false,notes:"Engineering only. Financial need must be evidenced with supporting documents. Includes Scholars Development Programme and mandatory internship. UEC accepted. Contact: scholarship@gamuda.com.my",url:"https://www.gamuda.com.my/scholarship"},
-  {id:27,name:"Shell Malaysia Scholarship",prov:"Shell Malaysia",cat:"Corporate",amt:"Full scholarship — tuition, living allowance, flights",cov:"Full",dest:"Overseas",fields:["Chemical Engineering","Petroleum Engineering","Mechanical Engineering","Electrical Engineering","Computer Science","Sciences"],quals:["SPM","A-Level","Foundation","STPM"],elig:["Malaysian citizens"],school:["Open to all"],grade:"Post-SPM track: typically 8A+–9A+. Direct degree: strong pre-university CGPA",dl:"March–April",opens:"February",bond:"Yes — bond at Shell Malaysia or affiliates",nb:false,b40:false,bumi:false,pg:false,notes:"Pre-university (A-Level) through undergraduate at top UK/US/Australia universities, or local degree at UTM/UM/UPM. Engineering-focused. Competitive selection: online assessment + interview + assessment centre.",url:"https://www.shell.com.my/careers/students"},
-  {id:28,name:"YTL Foundation Scholarship Programme",prov:"YTL Foundation",cat:"Corporate",amt:"Full scholarship — tuition + living expenses",cov:"Full",dest:"Local",fields:["Any field","Engineering","Construction","Business","Social Sciences","Education"],quals:["STPM","A-Level","Matriculation","Foundation","SPM"],elig:["Open to all","Financial hardship required","Malaysian citizens"],school:["Open to all"],grade:"Strong academic results; financial hardship required; humanitarian + leadership qualities valued",dl:"May (approx)",opens:"March–April",bond:"Yes — 5 yrs (local public) · 6 yrs (local private)",nb:false,b40:true,bumi:false,pg:false,notes:"Up to 30 scholarships per year. Must come from family that finds it challenging to finance education. 3-stage process: online application → assessment centre → final round interview. Apply: ytlfoundation.org/applynow",url:"https://ytlfoundation.org/scholarships/"},
-  {id:29,name:"Penang Future Foundation (PFF) Scholarship",prov:"Penang Future Foundation",cat:"State",amt:"Partial bursary — varies by programme",cov:"Partial",dest:"Local",fields:["Any MQA-accredited field"],quals:["SPM","STPM","Foundation","Diploma","Current undergrad"],elig:["B40 / income-based","Household income ≤ RM15,000/month"],school:["Open to all"],grade:"Min CGPA 3.67 for current undergraduate track; other tracks vary",dl:"Rolling — check PFF website",opens:"Ongoing",bond:"None stated",nb:true,b40:true,bumi:false,pg:false,notes:"Penang state-linked foundation. Targets students from lower-income families pursuing undergraduate at Malaysian IPT. Income ceiling RM15,000/month. Apply: penangfuturefoundation.my",url:"https://penangfuturefoundation.my"},
-  {id:30,name:"Yayasan Tunku Abdul Rahman (YTAR) Scholarship",prov:"Yayasan Tunku Abdul Rahman",cat:"State",amt:"Full scholarship — tuition, living, laptop, flight allowance",cov:"Full",dest:"Local",fields:["Any MQA-accredited undergraduate field"],quals:["SPM","STPM","A-Level","Matriculation","Foundation"],elig:["Open to all","Commitment to positive social impact"],school:["Open to all"],grade:"Strong academic potential; SPM/CGPA results; commitment to national development",dl:"15 April 2025",opens:"8 February 2025",bond:"2-year YTAR THRIVE leadership programme — no traditional bond",nb:true,b40:false,bumi:false,pg:false,notes:"Covers any MQA-accredited undergraduate programme. Includes comprehensive 2-year leadership development programme (YTAR THRIVE). Full coverage: tuition, living, laptop, one-off flight allowance. Apply: yayasantar.org.my",url:"https://yayasantar.org.my"},
-  {id:31,name:"The Star Education Fund Scholarship",prov:"Star Media Group",cat:"Media",amt:"Tuition fee waiver at partner institutions",cov:"Partial",dest:"Local",fields:["Any field at partner institutions","Business","Engineering","IT","Communications","Design"],quals:["SPM","STPM","A-Level","UEC","Diploma"],elig:["Open to all","Age ≤25","Not receiving other financial aid"],school:["Open to all"],grade:"Reasonably good results in SPM/UEC (Foundation/Diploma) or STPM/UEC (Degree); active in ECA/sports",dl:"SPM track: within 2 wks of results. STPM track: 11 July",opens:"After SPM/STPM results",bond:"None",nb:true,b40:false,bumi:false,pg:false,notes:"NOT a cash award — tuition fee waiver directly deducted by partner colleges/universities. Living expenses NOT covered. Apply within 2 weeks of results release — late applications not accepted. Contact: edufund@thestar.com.my",url:"https://www.thestar.com.my/edufund"},
-  {id:32,name:"Sin Chew Daily Education Fund",prov:"Sin Chew Media Corporation",cat:"Media",amt:"Tuition fee waiver at participating institutions",cov:"Partial",dest:"Local",fields:["Any field at partner institutions"],quals:["SPM","STPM","A-Level","UEC"],elig:["Malaysian citizens","Final results required (no trial results)"],school:["Open to all"],grade:"Good final results in SPM / A-Level / STPM / UEC; must have official certificate",dl:"May (2025: 7 May)",opens:"After SPM results",bond:"None",nb:true,b40:false,bumi:false,pg:false,notes:"NOT a cash award — tuition fee waiver at participating institutions. Living expenses excluded. Apply for 1 or 2 courses. Trial/mock results NOT accepted. Apply online: scedufund.sinchew.com.my",url:"https://scedufund.sinchew.com.my"},
-  {id:33,name:"Jeffrey Cheah Foundation (Sunway) Scholarship",prov:"Jeffrey Cheah Foundation / Sunway Education Group",cat:"Media",amt:"Full or partial tuition waiver — multiple tiers",cov:"Partial",dest:"Local",fields:["Any field at Sunway University / Sunway College","Business","Medicine","Engineering","IT","Law","Design"],quals:["SPM","STPM","A-Level","UEC","O-Level","IGCSE"],elig:["Open to all","Merit and/or financial need by tier"],school:["Open to all"],grade:"Min 7As SPM or equivalent; IGCSE/O-Level accepted; lower grades for Community Scholarship tier",dl:"Rolling — after SPM results",opens:"After SPM results",bond:"None",nb:true,b40:false,bumi:false,pg:false,notes:"Sunway-specific — studies at Sunway University or Sunway College only. Multiple tiers: Academic Excellence, Community Scholarship (B40), Sports Scholarship. O-Level/IGCSE students eligible. Contact Sunway admissions for scholarship matching.",url:"https://scholarship.sunway.edu.my"},
-  {id:34,name:"PTPTN National Study Loan",prov:"Perbadanan Tabung Pendidikan Tinggi Nasional",cat:"Loan",amt:"B40: up to 100% · M40: up to 75% · T20: up to 50% of approved amount",cov:"Partial",dest:"Local",fields:["Any MQA-accredited field"],quals:["SPM","STPM","O-Level","UEC","IGCSE","Any pre-university"],elig:["Open to all (tiered by income)","Gross monthly parental income ≤ RM50,000"],school:["Open to all"],grade:"No minimum grade — valid offer letter from accredited institution required",dl:"Rolling each semester",opens:"Ongoing",bond:"None — repayment 12 months after graduation",nb:true,b40:true,bumi:false,pg:false,notes:"Ujrah (admin fee) 1% flat p.a. — very affordable. Covers Diploma and Degree at public and private institutions. Foundation eligible at: MMU, UNITEN, UTP, UNITAR, UNIRAZAK only. First-Class Honours (CGPA ≥3.67) from public universities can apply to convert full loan to scholarship post-graduation (Budget 2026: B40/M40 only).",url:"https://www.ptptn.gov.my"},
-  {id:35,name:"Yayasan Tun Ismail (YTI/PNB) Scholarship",prov:"Yayasan Tun Ismail / PNB Group",cat:"GLC",amt:"Full scholarship — tuition + monthly allowance + development",cov:"Full",dest:"Local",fields:["Business","Finance","Accounting","Economics","Law","IT","Engineering"],quals:["SPM","STPM","A-Level","Foundation","Matriculation","Diploma"],elig:["Open to all","Academic excellence and leadership"],school:["Open to all"],grade:"Excellent pre-university results; strong ECA and leadership record; Malaysian citizen",dl:"Varies — check YTI website",opens:"Varies",bond:"Yes — bond at PNB-related companies",nb:false,b40:false,bumi:false,pg:false,notes:"Foundation under PNB (Permodalan Nasional Berhad). Provides scholarships for undergraduate studies at reputable local universities. Includes personal development programme and exposure to PNB's investment management business. Separate from the PNB Global Scholarship (overseas).",url:"https://www.pnb.com.my"}
+// Today's date for deadline filtering
+const TODAY = new Date();
+
+// dl_months: array of month numbers (1-12) when deadline falls. null = rolling/ongoing
+// dl_open_months: array of months when applications OPEN
+// entry: array of entry levels: "PostSPM","PreU","Undergrad","Postgrad"
+// fieldTags: array: "Any","STEM","Engineering","Medicine","Business","IT","Law","Arts"
+// gradeMin: "Straight","7As","5As","Any"
+
+const DATA=[
+  {id:1,name:"JPA Program Penajaan Nasional (PPN)",prov:"Jabatan Perkhidmatan Awam (JPA)",cat:"Government",amt:"Full — tuition, allowances, flights to US/UK",cov:"Full",dest:"Overseas",fields:["Any field","STEM","Law","Medicine","Economics"],quals:["SPM"],elig:["Open to all","Top 20 SPM graduates nationally"],school:["Open to all"],grade:"Min 9A+ in SPM incl. BM, BI, Math, History, Add Math, Physics, Chemistry, Moral/Islamic Ed + 1 other. All other subjects min A-",dl:"March–April",dl_months:[3,4],dl_open:[1,2],entry:["PostSPM","PreU"],fieldTags:["Any","STEM","Law","Medicine"],gradeMin:"Straight",bond:"Yes — government service bond",nb:false,b40:false,bumi:false,rolling:false,notes:"Only for top 20 SPM students nationwide. Covers pre-university through undergraduate at top US/UK universities. Age below 19 on 31 Dec of SPM year.",url:"https://www.jpa.gov.my/pelajar/program-penajaan"},
+  {id:2,name:"JPA Program Khas Lepasan SPM (Dalam Negara)",prov:"Jabatan Perkhidmatan Awam (JPA)",cat:"Government",amt:"Full — tuition + living allowance",cov:"Full",dest:"Local",fields:["STEM","Medicine","Law","Business","Education","Engineering"],quals:["SPM"],elig:["Open to all"],school:["Open to all"],grade:"Min 9A+ SPM (same core subjects as PPN)",dl:"May–June",dl_months:[5,6],dl_open:[4,5],entry:["PostSPM","Undergrad"],fieldTags:["STEM","Medicine","Law","Business","Engineering"],gradeMin:"Straight",bond:"Yes — government service bond",nb:false,b40:false,bumi:false,rolling:false,notes:"For local public university studies. Also offered as Pinjaman Boleh Ubah (PBU) convertible loan under Program Khas JPA-MARA (PKJM).",url:"https://www.jpa.gov.my"},
+  {id:3,name:"JPA Program Khas JKPJ (Japan/Korea/France/Germany)",prov:"Jabatan Perkhidmatan Awam (JPA)",cat:"Government",amt:"Full — tuition, living, language training",cov:"Full",dest:"Overseas",fields:["STEM","Engineering","Sciences","Technology"],quals:["SPM"],elig:["Open to all"],school:["Open to all"],grade:"Outstanding SPM — typically 9A+",dl:"April–May",dl_months:[4,5],dl_open:[3],entry:["PostSPM","PreU"],fieldTags:["STEM","Engineering"],gradeMin:"Straight",bond:"Yes — government service bond",nb:false,b40:false,bumi:false,rolling:false,notes:"Covers studies in Japan, Korea, France or Germany. Includes intensive language training in-country before degree. Very limited seats — national-level selection.",url:"https://www.jpa.gov.my"},
+  {id:4,name:"JPA Dermasiswa B40 / PIDN",prov:"Jabatan Perkhidmatan Awam (JPA)",cat:"Government",amt:"Full or partial — income-tiered",cov:"Partial",dest:"Local",fields:["Any field"],quals:["SPM","STPM","Matriculation","Foundation","Diploma"],elig:["B40 / income-based"],school:["Open to all"],grade:"Min 3.50 CGPA pre-university or min 8A SPM; income verification required",dl:"Varies",dl_months:[2,3,4],dl_open:[1,2],entry:["PostSPM","PreU","Undergrad"],fieldTags:["Any"],gradeMin:"7As",bond:"Yes — government service bond",nb:false,b40:true,bumi:false,rolling:false,notes:"Targets B40 household income group. PIDN covers undergraduate degree at public universities. EA Form / salary slips required.",url:"https://www.jpa.gov.my"},
+  {id:5,name:"MARA Young Talent Development Programme (YTP)",prov:"Majlis Amanah Rakyat (MARA)",cat:"Government",amt:"Full — tuition, allowances, flights",cov:"Full",dest:"Overseas",fields:["STEM","Engineering","Business","Sciences"],quals:["SPM"],elig:["Bumiputera only"],school:["Sekolah Kebangsaan","Open to all"],grade:"Min 8A+ SPM; strong co-curricular and leadership",dl:"March–May",dl_months:[3,4,5],dl_open:[1,2],entry:["PostSPM","PreU"],fieldTags:["STEM","Engineering","Business"],gradeMin:"7As",bond:"Yes — MARA service bond",nb:false,b40:false,bumi:true,rolling:false,notes:"Exclusively for Bumiputera students. Pre-university (A-Level/Foundation at MARA colleges) through undergraduate at prestigious local and overseas universities.",url:"https://www.mara.gov.my"},
+  {id:6,name:"MARA Tertiary Education Sponsorship (TESP)",prov:"Majlis Amanah Rakyat (MARA)",cat:"Government",amt:"Full — tuition + allowances",cov:"Full",dest:"Local",fields:["Any field","Business","STEM","Education"],quals:["SPM","STPM","UEC","Diploma"],elig:["Bumiputera only"],school:["Open to all"],grade:"Min 5 credits SPM (Diploma) / CGPA 3.00 STPM",dl:"May–June",dl_months:[5,6],dl_open:[4],entry:["PostSPM","PreU","Undergrad"],fieldTags:["Any","Business","STEM"],gradeMin:"5As",bond:"Yes",nb:false,b40:false,bumi:true,rolling:false,notes:"Diploma and degree at MARA colleges: MRSM, Kolej MARA, UniKL etc.",url:"https://www.mara.gov.my"},
+  {id:7,name:"Khazanah Global Scholarship Programme",prov:"Yayasan Khazanah",cat:"GLC",amt:"Full — tuition, stipend, flights, leadership programme",cov:"Full",dest:"Overseas",fields:["Any field","Arts","STEM","Business","Law","Medicine","Computer Science"],quals:["SPM","IGCSE","O-Level","A-Level","STPM","Postgrad"],elig:["Open to all"],school:["Open to all"],grade:"Min 8As (A/A+) in SPM or IGCSE. Postgrad: Distinction / CGPA 3.50",dl:"June",dl_months:[6],dl_open:[3,4],entry:["PostSPM","PreU","Undergrad","Postgrad"],fieldTags:["Any","STEM","Business","Law","Medicine","IT"],gradeMin:"7As",bond:"Yes — job attachment at Khazanah-linked orgs",nb:false,b40:false,bumi:false,rolling:false,notes:"Three levels: (1) A-Level at KYUEM (age ≤18) → overseas degree; (2) Direct undergraduate; (3) Masters/PhD. IGCSE mock results accepted. Cannot apply for both Global and Watan in same cycle.",url:"https://www.yayasankhazanah.com.my/scholarship-programmes/khazanah-global-scholarship-programme"},
+  {id:8,name:"Khazanah Watan Scholarship Programme",prov:"Yayasan Khazanah",cat:"GLC",amt:"Full — tuition, living, accommodation, development",cov:"Full",dest:"Local",fields:["Any field","Business","Engineering","IT","Finance"],quals:["SPM","IGCSE","A-Level","STPM","Postgrad"],elig:["Open to all"],school:["Open to all"],grade:"Min 8As (A/A+) SPM or IGCSE; CGPA 3.50 postgrad; age ≤21",dl:"June",dl_months:[6],dl_open:[3,4],entry:["PostSPM","PreU","Undergrad","Postgrad"],fieldTags:["Any","Business","Engineering","IT"],gradeMin:"7As",bond:"Yes — bond at Khazanah GLC companies",nb:false,b40:false,bumi:false,rolling:false,notes:"Local counterpart to Khazanah Global. Personal statement required: 'Why Khazanah and how you can contribute to good governance in Malaysia'. Cannot apply for both Global and Watan in same cycle.",url:"https://www.yayasankhazanah.com.my/scholarship-programmes/khazanah-watan-scholarship-programme"},
+  {id:9,name:"PETRONAS Education Sponsorship Programme (PESP)",prov:"Petroliam Nasional Berhad (PETRONAS)",cat:"GLC",amt:"Full — tuition, living, return flights, books",cov:"Full",dest:"Overseas",fields:["Chemical Engineering","Petroleum Engineering","Mechanical Engineering","STEM","Business"],quals:["SPM"],elig:["Malaysian citizens age 16–19"],school:["Open to all"],grade:"UTP/Local (Sci/Eng): min 8A incl Chem, Physics, Math. Overseas (Sci/Eng): min 4A+ and 4A-",dl:"March–April",dl_months:[3,4],dl_open:[1,2],entry:["PostSPM","PreU"],fieldTags:["Engineering","STEM","Business"],gradeMin:"7As",bond:"Yes — employment bond at PETRONAS",nb:false,b40:false,bumi:false,rolling:false,notes:"Post-SPM for citizens age 16–19. Studies at UTP (local) or top universities in US, UK, Australia, NZ, China, Japan, South Korea. Competitive selection camp (POW — Powering Knowledge).",url:"https://www.petronas.com/sustainability/education-sponsorship"},
+  {id:10,name:"Yayasan UEM Global Scholarship",prov:"Yayasan UEM / UEM Group",cat:"GLC",amt:"Full — tuition, exam fees, insurance, laptop, allowances",cov:"Full",dest:"Overseas",fields:["Business","Engineering","IT","Environmental Studies","Quantity Surveying"],quals:["SPM"],elig:["Open to all","Age 18–25"],school:["Open to all"],grade:"Min 7As (A+/A) in SPM; excellent Form 4 & 5 track record",dl:"May",dl_months:[5],dl_open:[3],entry:["PostSPM","PreU"],fieldTags:["Business","Engineering","IT"],gradeMin:"7As",bond:"Yes — 5 yrs UEM Group; 3 yrs Wira",nb:false,b40:false,bumi:false,rolling:false,notes:"A-Level at KYUEM, then undergraduate at UK/US/Australia. Running since 2005. Also offers Wira Scholarship (direct entry, min CGPA 3.50) and Graduate Accountant Programme.",url:"https://www.uem.com.my/yayasan-education-scholarship.html"},
+  {id:11,name:"Yayasan TNB PRIME Scholarship",prov:"Yayasan Tenaga Nasional (TNB)",cat:"GLC",amt:"Full — tuition + allowances (UNITEN/IPTA/overseas)",cov:"Full",dest:"Local",fields:["Electrical Engineering","Mechanical Engineering","STEM","IT","Business"],quals:["SPM","STPM","A-Level","Foundation","Matriculation"],elig:["Open to all","Age 17–23"],school:["Open to all"],grade:"Excellent SPM/pre-university results; CGPA 3.50+ recommended",dl:"May",dl_months:[5],dl_open:[3],entry:["PostSPM","PreU","Undergrad"],fieldTags:["Engineering","STEM","Business","IT"],gradeMin:"7As",bond:"Yes — bond at TNB / UNITEN",nb:false,b40:false,bumi:false,rolling:false,notes:"Three study levels: post-SPM pre-university, undergraduate, and postgraduate. Available for UNITEN, public IPTA, or overseas. Separate TNB Shine Sponsorship for well-rounded students at IPTA/UNITEN only.",url:"https://www.tnb.com.my/about-tnb/scholarships"},
+  {id:12,name:"PNB Global Scholarship Award",prov:"Permodalan Nasional Berhad (PNB)",cat:"GLC",amt:"Full — tuition, preparatory college, allowances, flights",cov:"Full",dest:"Overseas",fields:["Business","Finance","Economics","Investment Management","Accounting"],quals:["SPM"],elig:["Open to all"],school:["Open to all"],grade:"Outstanding SPM results; min 8A+ typically",dl:"May",dl_months:[5],dl_open:[3],entry:["PostSPM","PreU"],fieldTags:["Business"],gradeMin:"7As",bond:"Yes — bond at PNB group",nb:false,b40:false,bumi:false,rolling:false,notes:"Recent SPM candidates attend PNB-selected local preparatory college before proceeding to undergraduate at top global universities. Covers finance, investment, and business-related fields.",url:"https://scholarship.pnb.com.my"},
+  {id:13,name:"Yayasan Sime Darby Excellence Scholarship",prov:"Yayasan Sime Darby (YSD)",cat:"GLC",amt:"Full — tuition, board/lodging, laptop, clothing, flights",cov:"Full",dest:"Local",fields:["Any field (EXCEPT Medicine)"],quals:["STPM","A-Level","Foundation","Matriculation","Diploma"],elig:["Open to all","Household income ≤ RM11,000/month"],school:["Open to all"],grade:"Min CGPA 3.30 pre-university or 3As in A-Level; age ≤25",dl:"31 March",dl_months:[3],dl_open:[3],entry:["PreU","Undergrad"],fieldTags:["Any","Business","Engineering","STEM","IT","Law"],gradeMin:"5As",bond:"Yes — 3 years at Sime Darby group",nb:false,b40:false,bumi:false,rolling:false,notes:"ALL fields EXCEPT Medicine. YSD THRIVE Future Leaders programme for all scholars. Separate PWD Bursary — no bond.",url:"https://www.yayasansimedarbyfoundation.com"},
+  {id:14,name:"Yayasan Telekom Malaysia Future Leaders Scholarship",prov:"Yayasan Telekom Malaysia (YTM)",cat:"GLC",amt:"Full — tuition + allowances",cov:"Full",dest:"Local",fields:["Computer Science","IT","Engineering","Telecommunications","Data Science","Business"],quals:["SPM","STPM","Foundation","Matriculation"],elig:["Open to all","Household income ≤ RM20,000/month"],school:["Open to all"],grade:"Min 8A+ SPM (overseas) / min 6As SPM (local)",dl:"April–May",dl_months:[4,5],dl_open:[3],entry:["PostSPM","PreU","Undergrad"],fieldTags:["IT","Engineering","Business"],gradeMin:"7As",bond:"Yes — bond at TM group",nb:false,b40:false,bumi:false,rolling:false,notes:"UPU channel for public universities. Must have ≥2 academic years remaining. UEC accepted. Contact: yayasantm.edu@tm.com.my",url:"https://www.tm.com.my"},
+  {id:15,name:"Axiata Foundation All-Star Bestari Scholarship",prov:"Axiata Foundation",cat:"GLC",amt:"Full — tuition + living + structured development",cov:"Full",dest:"Local",fields:["Any field at public institutions"],quals:["SPM","STPM","Foundation","Matriculation","Diploma"],elig:["B40 / income-based","Marginalised communities (OKU, indigenous, orphans)"],school:["Open to all"],grade:"Excellent results; demonstrated excellence beyond academics",dl:"May",dl_months:[5],dl_open:[4],entry:["PostSPM","PreU","Undergrad"],fieldTags:["Any"],gradeMin:"5As",bond:"None stated",nb:true,b40:true,bumi:false,rolling:false,notes:"Focuses on underprivileged and marginalised communities (B40, indigenous, OKU, orphans). 4-stage selection including online assessment.",url:"https://www.axiata-foundation.com"},
+  {id:16,name:"Yayasan Peneraju Scholarship",prov:"Yayasan Peneraju Pendidikan Bumiputera",cat:"GLC",amt:"Full — tuition + allowances",cov:"Full",dest:"Local",fields:["STEM","Business","Education","Vocational/TVET","Professional certifications"],quals:["SPM","STPM","Diploma","Degree"],elig:["Bumiputera only"],school:["Open to all"],grade:"Varies by programme; min 5 credits SPM for entry levels",dl:"Varies",dl_months:null,dl_open:null,entry:["PostSPM","PreU","Undergrad","Postgrad"],fieldTags:["Any","STEM","Business"],gradeMin:"5As",bond:"Varies",nb:false,b40:false,bumi:true,rolling:true,notes:"Established by PM's Department to empower Bumiputera communities. Covers undergraduate, Masters, Doctoral, and TVET programmes.",url:"https://www.yayasanpeneraju.com.my"},
+  {id:46,name:"Yayasan Tun Ismail (YTI/PNB) Scholarship",prov:"Yayasan Tun Ismail / PNB Group",cat:"GLC",amt:"Full — tuition + monthly allowance + development",cov:"Full",dest:"Local",fields:["Business","Finance","Accounting","Economics","Law","IT","Engineering"],quals:["SPM","STPM","A-Level","Foundation","Matriculation","Diploma"],elig:["Open to all"],school:["Open to all"],grade:"Excellent pre-university results; strong ECA and leadership",dl:"Varies",dl_months:null,dl_open:null,entry:["PostSPM","PreU","Undergrad"],fieldTags:["Business","Law","IT","Engineering"],gradeMin:"7As",bond:"Yes — bond at PNB-related companies",nb:false,b40:false,bumi:false,rolling:true,notes:"Foundation under PNB. Undergraduate at reputable local universities. Includes personal development programme and exposure to PNB's investment management business.",url:"https://www.pnb.com.my"},
+  {id:50,name:"Yayasan Peneraju — Peneraju Profesional (Accounting)",prov:"Yayasan Peneraju Pendidikan Bumiputera",cat:"GLC",amt:"Full — professional accounting fees + allowances",cov:"Full",dest:"Local",fields:["Accounting","ACCA","CIMA","CPA","ICAEW"],quals:["SPM","STPM","Diploma","Degree"],elig:["Bumiputera only"],school:["Open to all"],grade:"Min qualifications required for entry to selected professional accounting programme",dl:"Varies",dl_months:null,dl_open:null,entry:["PostSPM","PreU","Undergrad"],fieldTags:["Business"],gradeMin:"5As",bond:"Varies",nb:false,b40:false,bumi:true,rolling:true,notes:"Specific Peneraju programme for professional accounting qualifications (ACCA, CIMA, CPA, ICAEW). Covers fees for the full professional qualification pathway.",url:"https://www.yayasanpeneraju.com.my"},
+  // BANKING
+  {id:17,name:"Bank Negara Malaysia — Kijang Pre-University Scholarship",prov:"Bank Negara Malaysia (BNM)",cat:"Banking",amt:"Full — tuition, subsistence, related allowances",cov:"Full",dest:"Local",fields:["Economics","Finance","Accounting","Actuarial Science","Mathematics","Statistics","Law","Computer Science","Data Science"],quals:["SPM"],elig:["Open to all","Age ≤19"],school:["Open to all"],grade:"Min 8As (A and A+ only) in SPM; strong leadership and ECA",dl:"April–May",dl_months:[4,5],dl_open:[4],entry:["PostSPM","PreU"],fieldTags:["Business","Law","IT","STEM"],gradeMin:"7As",bond:"Yes — 1 yr study = 2 yrs service at BNM",nb:false,b40:false,bumi:false,rolling:false,notes:"Pre-university (A-Level/Foundation) leading to undergraduate at BNM-approved universities. Assessment centre: group activities + panel interview.",url:"https://www.bnm.gov.my/careers/scholarships"},
+  {id:18,name:"Bank Negara Malaysia — Kijang Undergraduate Scholarship",prov:"Bank Negara Malaysia (BNM)",cat:"Banking",amt:"Full — tuition, subsistence, return flights",cov:"Full",dest:"Overseas",fields:["Economics","Finance","Accounting","Actuarial Science","Mathematics","Statistics","Law","Computer Science","Data Science"],quals:["A-Level","STPM","Matriculation","Foundation","Diploma"],elig:["Open to all","Age ≤25"],school:["Open to all"],grade:"Min CGPA 3.50 pre-university; offer from BNM-approved university required",dl:"April–May",dl_months:[4,5],dl_open:[4],entry:["PreU","Undergrad"],fieldTags:["Business","Law","IT","STEM"],gradeMin:"7As",bond:"Yes — 1 yr study = 2 yrs service at BNM",nb:false,b40:false,bumi:false,rolling:false,notes:"Covers Harvard, LSE, Oxford, Cambridge. Psychometric + video response + assessment centre + panel interview.",url:"https://www.bnm.gov.my/careers/scholarships"},
+  {id:19,name:"Maybank Group Scholarship (Local Universities)",prov:"Maybank Foundation",cat:"Banking",amt:"Full — tuition, fees, living allowances",cov:"Full",dest:"Local",fields:["Business","Finance","Accounting","Banking","Economics","Computer Science"],quals:["SPM","STPM","Matriculation","Foundation","Diploma"],elig:["B40 / income-based","Household income ≤ RM120,000/year"],school:["Open to all"],grade:"Must be enrolled Year 1 at UM/UPM/UKM/UiTM/IIUM/USM/UTM/UUM etc; maintain CGPA ≥3.00",dl:"March–April",dl_months:[3,4],dl_open:[2],entry:["Undergrad"],fieldTags:["Business","IT"],gradeMin:"5As",bond:"Yes — guaranteed job at Maybank",nb:false,b40:true,bumi:false,rolling:false,notes:"Must already be in Year 1 at listed public universities. Household income ≤RM120,000/year. Age ≤22. Running since 1972.",url:"https://maybankfoundation.com"},
+  {id:20,name:"Maybank Group Scholarship (Overseas — UK/US/Australia)",prov:"Maybank Foundation",cat:"Banking",amt:"Full — tuition, living, accommodation, flights",cov:"Full",dest:"Overseas",fields:["Business","Finance","Accounting","Banking","Economics","Computer Science"],quals:["A-Level","Foundation","Matriculation"],elig:["Household income ≤ RM180,000/year"],school:["Open to all"],grade:"Currently in Foundation; accepted at top-tier UK/US/Australia university; CGPA ≥3.00",dl:"March–April",dl_months:[3,4],dl_open:[2],entry:["PreU","Undergrad"],fieldTags:["Business","IT"],gradeMin:"5As",bond:"Yes — bond at Maybank group",nb:false,b40:false,bumi:false,rolling:false,notes:"Must be enrolled in Foundation at time of application. Household income ≤RM180,000/year. Age ≤22.",url:"https://maybankfoundation.com"},
+  {id:21,name:"CIMB ASEAN Scholarship",prov:"CIMB Group",cat:"Banking",amt:"Full — tuition + professional development + mentorship",cov:"Full",dest:"Overseas",fields:["Business","Finance","Banking","Economics","Accounting","Law","STEM"],quals:["A-Level","Foundation","STPM","Diploma","Postgrad"],elig:["ASEAN nationals (MY, ID, SG, TH, KH, VN, PH)"],school:["Open to all"],grade:"Min CGPA 3.25/4.00 or equivalent; strong ECA and leadership",dl:"June",dl_months:[6],dl_open:[4],entry:["PreU","Undergrad","Postgrad"],fieldTags:["Business","Law","STEM"],gradeMin:"5As",bond:"Yes — bond at CIMB on graduation",nb:false,b40:false,bumi:false,rolling:false,notes:"Open to ALL ASEAN nationals. For undergraduate or Masters (min 1 full academic year remaining). Includes professional development and mentor support.",url:"https://www.cimb.com/scholarship"},
+  {id:22,name:"OCBC Bank Public Scholarship",prov:"OCBC Bank Malaysia",cat:"Banking",amt:"RM15,000 per year (public uni); RM23,000 (private uni)",cov:"Partial",dest:"Local",fields:["Any field relevant to banking","Business","Finance","Accounting","IT"],quals:["STPM","Matriculation","Foundation","A-Level"],elig:["Open to all","Malaysian citizen"],school:["Open to all"],grade:"Excellent STPM or Matriculation results; CGPA ≥3.30 each semester",dl:"June",dl_months:[6],dl_open:[1],entry:["PreU","Undergrad"],fieldTags:["Business","IT"],gradeMin:"5As",bond:"Yes — employment at OCBC Bank on graduation",nb:false,b40:false,bumi:false,rolling:false,notes:"No university admission needed at application. 800-word essay required. Cannot switch courses mid-way. Contact: MYScholarship@ocbc.com",url:"https://www.ocbc.com.my/group/careers/students/public-scholarship"},
+  {id:23,name:"Hong Leong Foundation Scholarship",prov:"Hong Leong Foundation",cat:"Banking",amt:"RM8,500/year (Diploma) · RM6,000/year (3+0 degree private)",cov:"Partial",dest:"Local",fields:["Any field"],quals:["SPM","STPM","A-Level","UEC","Diploma"],elig:["Open to all"],school:["Open to all"],grade:"Good results in SPM / STPM / UEC / A-Level — more accessible bar",dl:"May",dl_months:[5],dl_open:[3],entry:["PostSPM","PreU","Undergrad"],fieldTags:["Any"],gradeMin:"5As",bond:"None — no bond required",nb:true,b40:false,bumi:false,rolling:false,notes:"NO BOND. For Diploma, Advanced Diploma, or 1st undergraduate degree at any Malaysian university. ANY field accepted.",url:"https://www.hongleongfoundation.org"},
+  {id:24,name:"Yayasan Bank Rakyat — BRIGHT Programme",prov:"Yayasan Bank Rakyat",cat:"Banking",amt:"Convertible loan — waived based on academic performance",cov:"Full",dest:"Local",fields:["Any field","Business","Finance","Banking","Islamic Finance"],quals:["SPM","STPM","A-Level","Matriculation","Foundation","Diploma","UEC"],elig:["Open to all","Preference for B40/M40"],school:["Open to all"],grade:"Min 5As SPM / CGPA 3.00 STPM or equivalent; age ≤25",dl:"April–June",dl_months:[4,5,6],dl_open:[4],entry:["PostSPM","PreU","Undergrad"],fieldTags:["Any","Business"],gradeMin:"5As",bond:"Convertible — no traditional bond",nb:true,b40:true,bumi:false,rolling:false,notes:"BRIGHT = Biasiswa Inspirasi Bank Rakyat Memacu Bakat Tertinggi. Loan converted to scholarship based on annual results. UEC accepted.",url:"https://www.bankrakyat.com.my"},
+  {id:25,name:"Bank Pembangunan Malaysia — BAGUS Scholarship",prov:"Bank Pembangunan Malaysia Berhad (BPMB)",cat:"Banking",amt:"Full — tuition, living, laptop, flights",cov:"Full",dest:"Local",fields:["Banking","Finance","Business","Engineering","Economics","ESG/Sustainability"],quals:["A-Level","STPM","Foundation","Matriculation","Diploma"],elig:["Open to all","Malaysian students"],school:["Open to all"],grade:"Excellent pre-university results; not receiving other scholarships",dl:"June",dl_months:[6],dl_open:[4],entry:["PreU","Undergrad"],fieldTags:["Business","Engineering"],gradeMin:"5As",bond:"Yes — bond at BPMB",nb:false,b40:false,bumi:false,rolling:false,notes:"BAGUS = BPMB Award of Group's Undergraduate Scholarship. Covers local and overseas (top 100 QS-ranked; twinning from 2026).",url:"https://www.bpmb.com.my/scholarship/"},
+  {id:26,name:"OSK Foundation Scholarship Programme",prov:"OSK Foundation (OSK Group)",cat:"Banking",amt:"Full — tuition + monthly living allowance",cov:"Full",dest:"Local",fields:["Civil Engineering","Mechanical Engineering","Electrical Engineering","Finance","Accounting","Business","IT","Data Analytics","AI/Cybersecurity","Psychology","Quantity Surveying"],quals:["SPM","STPM","A-Level","UEC","Matriculation","Foundation","Diploma"],elig:["Open to all","Household income ≤ RM8,000/month","Age ≤21"],school:["Open to all"],grade:"Min 6As SPM or O-Levels; min 3As CGPA 3.50 STPM/A-Level equivalent",dl:"November",dl_months:[11],dl_open:[6],entry:["PostSPM","PreU","Undergrad"],fieldTags:["Engineering","Business","IT"],gradeMin:"5As",bond:"Yes — specific term at OSK Group",nb:false,b40:true,bumi:false,rolling:false,notes:"Open to all ethnicities/religions. Focus on challenging socio-economic backgrounds. Household income ≤RM8,000/month. Also open to current undergraduates. Contact: osk.foundation@oskgroup.com",url:"https://www.oskfoundation.com/scholarship/"},
+  {id:51,name:"Great Eastern Supremacy Scholarship Award",prov:"Great Eastern Life Malaysia",cat:"Banking",amt:"Full — tuition + allowances at Malaysian universities",cov:"Full",dest:"Local",fields:["Any approved undergraduate field","Business","Actuarial Science","Finance","IT","Engineering","Science"],quals:["STPM","A-Level","Foundation","Matriculation","Diploma"],elig:["Open to all","Malaysian citizens"],school:["Open to all"],grade:"Excellent STPM/A-Level/Foundation/Matriculation results; confirmed or conditional offer to Malaysian university",dl:"May–June",dl_months:[5,6],dl_open:[3],entry:["PreU","Undergrad"],fieldTags:["Any","Business","Engineering","STEM","IT"],gradeMin:"5As",bond:"Yes — 3-year bond at Great Eastern Life",nb:false,b40:false,bumi:false,rolling:false,notes:"Awarded annually since 1998. Over RM12 million awarded to 180+ recipients. Bond period of 3 years starts from joining date as permanent employee.",url:"https://www.greateasternlife.com/my/en/insurance/corporate/c_Scholarship.htm"},
+  // CORPORATE
+  {id:27,name:"Maxis Scholarship Programme",prov:"Maxis Berhad",cat:"Corporate",amt:"Full — tuition + living expenses",cov:"Full",dest:"Local",fields:["Engineering (Network/Telecom/Software/Electrical)","AI / Cloud / Cybersecurity / Data Science","Finance","Mathematics"],quals:["SPM","STPM","A-Level","Foundation","Matriculation"],elig:["Open to all","Must NOT hold JPA/Khazanah/BNM/MARA/Petronas/Shell simultaneously"],school:["Open to all"],grade:"Excellent SPM / pre-university results; strong tech/STEM aptitude",dl:"March–April",dl_months:[3,4],dl_open:[2],entry:["PostSPM","PreU","Undergrad"],fieldTags:["Engineering","IT","STEM"],gradeMin:"7As",bond:"Yes — duration varies",nb:false,b40:false,bumi:false,rolling:false,notes:"Specific fields only: Finance, Maths, Engineering, Technology. Mandatory internship at Maxis. Contact: scholar@maxis.com.my",url:"https://www.maxis.com.my/en/about-maxis/career/maxis-scholarship-programme/"},
+  {id:28,name:"Gamuda Scholarship Award",prov:"Gamuda Berhad",cat:"Corporate",amt:"Full — tuition + living + Scholars Development Programme",cov:"Full",dest:"Local",fields:["Civil Engineering","Mechanical Engineering","Electrical Engineering","Construction"],quals:["A-Level","STPM","Foundation","Matriculation","Diploma","UEC"],elig:["Financial need required — must be evidenced"],school:["Open to all"],grade:"Min 3As / CGPA 3.40 in A-Level/STPM or equivalent; 7A+ SPM recommended",dl:"June",dl_months:[6],dl_open:[4],entry:["PreU","Undergrad"],fieldTags:["Engineering"],gradeMin:"5As",bond:"Yes — bond at Gamuda group",nb:false,b40:false,bumi:false,rolling:false,notes:"Engineering only. Financial need must be evidenced. Includes Scholars Development Programme and mandatory internship. UEC accepted.",url:"https://www.gamuda.com.my/scholarship"},
+  {id:29,name:"Shell Malaysia Scholarship",prov:"Shell Malaysia",cat:"Corporate",amt:"Full — tuition, living allowance, flights",cov:"Full",dest:"Overseas",fields:["Chemical Engineering","Petroleum Engineering","Mechanical Engineering","Electrical Engineering","Computer Science","Sciences"],quals:["SPM","A-Level","Foundation","STPM"],elig:["Malaysian citizens"],school:["Open to all"],grade:"Post-SPM track: typically 8A+–9A+. Direct degree: strong pre-university CGPA",dl:"March–April",dl_months:[3,4],dl_open:[2],entry:["PostSPM","PreU","Undergrad"],fieldTags:["Engineering","STEM","IT"],gradeMin:"7As",bond:"Yes — bond at Shell Malaysia",nb:false,b40:false,bumi:false,rolling:false,notes:"Pre-university through undergraduate at top UK/US/Australia or local (UTM/UM/UPM). Engineering-focused.",url:"https://www.shell.com.my/careers/students"},
+  {id:30,name:"YTL Foundation Scholarship Programme",prov:"YTL Foundation",cat:"Corporate",amt:"Full — tuition + living expenses",cov:"Full",dest:"Local",fields:["Any field","Engineering","Construction","Business","Social Sciences","Education"],quals:["STPM","A-Level","Matriculation","Foundation","SPM"],elig:["Open to all","Financial hardship required","Malaysian citizens"],school:["Open to all"],grade:"Strong academic results; financial hardship required; humanitarian + leadership qualities valued",dl:"May",dl_months:[5],dl_open:[3],entry:["PostSPM","PreU","Undergrad"],fieldTags:["Any","Engineering","Business"],gradeMin:"5As",bond:"Yes — 5 yrs local public · 6 yrs local private",nb:false,b40:true,bumi:false,rolling:false,notes:"Up to 30 scholarships per year. Must come from family that finds it challenging to finance education. 3-stage: application → assessment centre → final interview.",url:"https://ytlfoundation.org/scholarships/"},
+  {id:31,name:"IOI Foundation Scholarship",prov:"IOI Foundation / Yayasan Tan Sri Lee Shin Cheng",cat:"Corporate",amt:"Full — tuition + monthly living allowance",cov:"Full",dest:"Local",fields:["Engineering","Food Science","Food Technology","Chemistry","Accountancy","Finance","Data Science","Agriculture"],quals:["STPM","A-Level","UEC","Matriculation","Foundation","Diploma"],elig:["Open to all","Malaysian citizens"],school:["Open to all"],grade:"Excellent pre-university results; outstanding co-curricular and leadership; not in Foundation/Pre-Degree",dl:"June",dl_months:[6],dl_open:[4],entry:["PreU","Undergrad"],fieldTags:["Engineering","STEM","Business"],gradeMin:"5As",bond:"Yes — employment bond with IOI Group",nb:false,b40:false,bumi:false,rolling:false,notes:"Foundation/pre-degree students NOT eligible. Established 1985; over RM11.1 million awarded to 337 scholars. Contact: yayasan@ioigroup.com",url:"https://yayasan.ioigroup.com/initiative-programs/scholarships/"},
+  {id:32,name:"IJM Corporation Scholarship",prov:"IJM Corporation Berhad",cat:"Corporate",amt:"Full — tuition + allowances",cov:"Full",dest:"Local",fields:["Civil Engineering","Mechanical Engineering","Electrical Engineering","Construction","Quantity Surveying","Business","Architecture"],quals:["STPM","A-Level","Foundation","Matriculation","Diploma"],elig:["Open to all","Malaysian citizens"],school:["Open to all"],grade:"Min 3As in STPM/Foundation/Matriculation/A-Level/Diploma; CGPA ≥3.60 for current undergrads",dl:"Varies",dl_months:null,dl_open:null,entry:["PreU","Undergrad"],fieldTags:["Engineering","Business"],gradeMin:"5As",bond:"Yes — employment at IJM or subsidiary",nb:false,b40:false,bumi:false,rolling:true,notes:"Over RM6 million supporting 361 scholars since 1994. Engineering and construction focused. Must not hold other scholarship/education loan.",url:"https://www.ijm.com/ijm-scholarship"},
+  {id:33,name:"Yayasan KLK Scholarship",prov:"Kuala Lumpur Kepong Berhad (KLK)",cat:"Corporate",amt:"RM13,000/year (public uni) · RM20,000/year (private uni)",cov:"Partial",dest:"Local",fields:["Any field at Malaysian institutions"],quals:["SPM","STPM","A-Level","UEC","Foundation","Diploma"],elig:["Open to all","Malaysian citizens"],school:["Open to all"],grade:"Excellent SPM / STPM / equivalent results",dl:"Rolling",dl_months:null,dl_open:null,entry:["PostSPM","PreU","Undergrad"],fieldTags:["Any"],gradeMin:"5As",bond:"Yes — 3 years at KLK Group",nb:false,b40:false,bumi:false,rolling:true,notes:"Annual grant. Academic performance monitored; practical training within KLK Group required. Email: yayasan@klk.com.my",url:"https://www.klk.com.my/yayasan-klk-scholarship/"},
+  {id:34,name:"Kuok Foundation Scholarship (Undergraduate Award)",prov:"Kuok Foundation Berhad",cat:"Corporate",amt:"RM15,000–RM18,000 per year",cov:"Partial",dest:"Local",fields:["Any field","Science-based courses preferred"],quals:["SPM","STPM","A-Level","UEC","Matriculation","Foundation"],elig:["Open to all","Malaysian citizens"],school:["Open to all"],grade:"Good academic results; active in school; accepted at Malaysian private university",dl:"Varies",dl_months:null,dl_open:null,entry:["PostSPM","PreU","Undergrad"],fieldTags:["Any","STEM","Business"],gradeMin:"5As",bond:"None stated",nb:true,b40:false,bumi:false,rolling:true,notes:"Loan-grant award — partial funding. Established 1970 by Kuok family. Must be pursuing 1st full-time degree on-campus at selected Malaysian private universities.",url:"https://www.kuokfoundation.com"},
+  {id:52,name:"Sarawak Energy Scholarship Programme",prov:"Sarawak Energy Berhad",cat:"Corporate",amt:"Full — tuition + allowances",cov:"Full",dest:"Local",fields:["Electrical Engineering","Mechanical Engineering","Civil Engineering","Chemical Engineering","IT/Software Engineering/Computer Science/AI"],quals:["SPM","STPM","A-Level","UEC","Foundation","Matriculation"],elig:["Open to all","Sarawakian students preferred"],school:["Open to all"],grade:"Excellent SPM/STPM/pre-university results; SPM trial results accepted",dl:"Varies",dl_months:null,dl_open:null,entry:["PostSPM","PreU","Undergrad"],fieldTags:["Engineering","IT"],gradeMin:"5As",bond:"Yes — bond at Sarawak Energy",nb:false,b40:false,bumi:false,rolling:true,notes:"Covers engineering and IT/digital fields. Medicine, Dentistry, Pharmaceutical NOT covered. EAC-accredited engineering programmes required. Contact: scholarship@sarawakenergy.com",url:"https://www.sarawakenergy.com/careers/scholarship/sarawak-energy-scholarship-programme"},
+  {id:53,name:"Albukhary Foundation Scholarship",prov:"Albukhary Foundation",cat:"Corporate",amt:"Full — tuition + living + accommodation",cov:"Full",dest:"Local",fields:["Any field at Albukhary International University","Business","IT","Social Sciences","Islamic Studies"],quals:["SPM","STPM","A-Level","UEC","Foundation","Matriculation"],elig:["Open to all","Underprivileged/deserving students"],school:["Open to all"],grade:"Good academic results; demonstrated financial need",dl:"Rolling",dl_months:null,dl_open:null,entry:["PostSPM","PreU","Undergrad"],fieldTags:["Any","Business","IT"],gradeMin:"Any",bond:"Varies",nb:false,b40:true,bumi:false,rolling:true,notes:"Established by Tan Sri Syed Mokhtar Al-Bukhary. Covers studies at Albukhary International University (AIU) in Alor Setar, Kedah primarily. Targets deserving students regardless of background.",url:"https://albukharyfoundation.my/creating-opportunity/scholarship-programme"},
+  // LOANS
+  {id:42,name:"PTPTN National Study Loan",prov:"Perbadanan Tabung Pendidikan Tinggi Nasional",cat:"Loan",amt:"B40: up to 100% · M40: up to 75% · T20: up to 50% of approved amount",cov:"Partial",dest:"Local",fields:["Any MQA-accredited field"],quals:["SPM","STPM","O-Level","UEC","IGCSE","Any pre-university"],elig:["Open to all (tiered by income)","Gross monthly parental income ≤ RM50,000"],school:["Open to all"],grade:"No minimum grade — valid offer letter required",dl:"Rolling each semester",dl_months:null,dl_open:null,entry:["PostSPM","PreU","Undergrad","Postgrad"],fieldTags:["Any"],gradeMin:"Any",bond:"None — repayment 12 months after graduation",nb:true,b40:true,bumi:false,rolling:true,notes:"Ujrah 1% flat p.a. Covers Diploma and Degree. Foundation eligible at: MMU, UNITEN, UTP, UNITAR, UNIRAZAK only. First-Class Honours (CGPA ≥3.67) from public universities can apply to convert full loan to scholarship post-graduation (Budget 2026: B40/M40 only).",url:"https://www.ptptn.gov.my"},
+  {id:54,name:"Tabung Pendidikan Selangor (Dana Pendidikan Selangor)",prov:"Selangor State Government",cat:"Loan",amt:"Education loan — amount varies by programme level",cov:"Partial",dest:"Local",fields:["Any field"],quals:["SPM","STPM","Foundation","Diploma","Degree"],elig:["Selangor residents","Born in Selangor or resided ≥3 years"],school:["Open to all"],grade:"Good academic results; Selangor resident; accepted at accredited institution",dl:"Rolling",dl_months:null,dl_open:null,entry:["PostSPM","PreU","Undergrad"],fieldTags:["Any"],gradeMin:"Any",bond:"None — loan repayment required",nb:false,b40:false,bumi:false,rolling:true,notes:"Selangor state education fund for residents. Apply online at danapendidikan.selangor.gov.my.",url:"https://danapendidikan.selangor.gov.my"},
+  // STATE
+  {id:35,name:"Penang Future Foundation (PFF) Scholarship",prov:"Penang Future Foundation",cat:"State",amt:"Partial bursary — varies by programme",cov:"Partial",dest:"Local",fields:["Any MQA-accredited field"],quals:["SPM","STPM","Foundation","Diploma","Current undergrad"],elig:["B40 / income-based","Household income ≤ RM15,000/month"],school:["Open to all"],grade:"Min CGPA 3.67 for current undergraduate track; other tracks vary",dl:"Rolling",dl_months:null,dl_open:null,entry:["PostSPM","PreU","Undergrad"],fieldTags:["Any"],gradeMin:"5As",bond:"None stated",nb:true,b40:true,bumi:false,rolling:true,notes:"Penang state-linked foundation targeting lower-income students. Apply: penangfuturefoundation.my",url:"https://penangfuturefoundation.my"},
+  {id:36,name:"Yayasan Tunku Abdul Rahman (YTAR) Scholarship",prov:"Yayasan Tunku Abdul Rahman",cat:"State",amt:"Full — tuition, living, laptop, flight allowance",cov:"Full",dest:"Local",fields:["Any MQA-accredited undergraduate field"],quals:["SPM","STPM","A-Level","Matriculation","Foundation"],elig:["Open to all","Commitment to positive social impact"],school:["Open to all"],grade:"Strong academic potential; commitment to national development",dl:"April",dl_months:[4],dl_open:[2],entry:["PostSPM","PreU","Undergrad"],fieldTags:["Any"],gradeMin:"5As",bond:"2-year YTAR THRIVE leadership programme — no traditional bond",nb:true,b40:false,bumi:false,rolling:false,notes:"Includes comprehensive 2-year YTAR THRIVE leadership development programme. Full coverage: tuition, living, laptop, one-off flight allowance. Apply: yayasantar.org.my",url:"https://yayasantar.org.my"},
+  {id:37,name:"Yayasan Sarawak Scholarship (BYSTT & YBSTAR)",prov:"Yayasan Sarawak",cat:"State",amt:"Full or partial — varies by track and level",cov:"Full",dest:"Local",fields:["STEM (BYSTT)","Engineering","IT","Medicine","Life Science","Accounting","Finance","Law","Any field (YBSTAR)"],quals:["SPM","STPM","UEC","Foundation","Matriculation","Diploma"],elig:["Sarawakian (at least one parent is Sarawakian)","Malaysian citizen"],school:["Open to all"],grade:"Credit in BM in SPM; CGPA ≥3.00 for STPM/Foundation/Diploma",dl:"August",dl_months:[8],dl_open:[6],entry:["PostSPM","PreU","Undergrad"],fieldTags:["Any","STEM","Engineering","IT","Medicine","Business","Law"],gradeMin:"5As",bond:"Yes — varies",nb:false,b40:false,bumi:false,rolling:false,notes:"Two tracks: BYSTT (STEM and priority fields) and YBSTAR (Non-STEM). Both local and overseas (Top 10 world universities) eligible. Part-time and distance learning NOT eligible. Apply via my-Yayasan system.",url:"https://yayasansarawak.org.my"},
+  {id:55,name:"Yayasan Sabah Scholarship",prov:"Yayasan Sabah Group",cat:"State",amt:"Full or partial — varies by programme",cov:"Partial",dest:"Local",fields:["Any field at public/private Higher Learning Institutions"],quals:["SPM","STPM","Foundation","Matriculation","Diploma"],elig:["Sabahans","Malaysian citizen residing in Sabah"],school:["Open to all"],grade:"Good academic results; Sabah resident; accepted at accredited institution",dl:"Varies",dl_months:null,dl_open:null,entry:["PostSPM","PreU","Undergrad"],fieldTags:["Any"],gradeMin:"5As",bond:"Yes — varies",nb:false,b40:false,bumi:false,rolling:true,notes:"Provided by Sabah Foundation for Sabahan students. Apply at yayasansabahgroup.org.my.",url:"https://www.yayasansabahgroup.org.my"},
+  {id:56,name:"Biasiswa Pendidikan Yayasan Pahang",prov:"Yayasan Pahang",cat:"State",amt:"Varies — check Yayasan Pahang website",cov:"Partial",dest:"Local",fields:["Any field","STEM preferred"],quals:["SPM","STPM","Foundation","Matriculation","Diploma"],elig:["Pahang residents","Malaysian citizen"],school:["Open to all"],grade:"Good academic results; Pahang resident; financial need considered",dl:"Varies",dl_months:null,dl_open:null,entry:["PostSPM","PreU","Undergrad"],fieldTags:["Any","STEM"],gradeMin:"5As",bond:"Varies",nb:false,b40:false,bumi:false,rolling:true,notes:"Pahang state foundation scholarship for Pahang residents. Also offers Skim Pelajar Cemerlang and Biasiswa Tahfiz Profesional. Apply at yp.org.my",url:"https://www.yp.org.my/maklumat-biasiswa/"},
+  {id:57,name:"Yayasan Pelajaran Johor (YPJ) Education Loan",prov:"Yayasan Pelajaran Johor (YPJ)",cat:"State",amt:"Education loan — varies by programme",cov:"Partial",dest:"Local",fields:["Any field at public Higher Learning Institutions"],quals:["SPM","STPM","Foundation","Matriculation","Diploma"],elig:["Johor residents","Malaysian citizen"],school:["Open to all"],grade:"Good academic results; Johor resident; accepted at accredited public university",dl:"Varies",dl_months:null,dl_open:null,entry:["PostSPM","PreU","Undergrad"],fieldTags:["Any"],gradeMin:"Any",bond:"Loan — repayment required",nb:false,b40:false,bumi:false,rolling:true,notes:"Yayasan Pelajaran Johor provides education loans for Johor residents at public higher learning institutions. Apply at portal.ypj.gov.my",url:"https://portal.ypj.gov.my/pinjaman-pelajaran-dalam-negeri/"},
+  {id:58,name:"Yayasan Wilayah Persekutuan — Skim Bantuan Awal IPT",prov:"Yayasan Wilayah Persekutuan",cat:"State",amt:"Initial entry assistance — amount varies",cov:"Partial",dest:"Local",fields:["Any field"],quals:["SPM","STPM","Foundation","Matriculation"],elig:["KL/WP residents","Malaysian citizen"],school:["Open to all"],grade:"Good academic results; WP resident; accepted at accredited institution",dl:"Rolling",dl_months:null,dl_open:null,entry:["PostSPM","PreU","Undergrad"],fieldTags:["Any"],gradeMin:"Any",bond:"None",nb:true,b40:true,bumi:false,rolling:true,notes:"WP (Federal Territory) financial assistance for students entering public/private higher learning institutions. Targets WP residents especially from lower income backgrounds.",url:"https://www.yayasanwp.org/skim-bantuan-awal"},
+  // MEDIA / FOUNDATION
+  {id:38,name:"The Star Education Fund Scholarship",prov:"Star Media Group",cat:"Media",amt:"Tuition fee waiver at partner institutions",cov:"Partial",dest:"Local",fields:["Any field at partner institutions","Business","Engineering","IT","Communications","Design"],quals:["SPM","STPM","A-Level","UEC","Diploma"],elig:["Open to all","Age ≤25","Not receiving other financial aid"],school:["Open to all"],grade:"Reasonably good results in SPM/UEC (Foundation/Diploma) or STPM/UEC (Degree); active in ECA",dl:"Within 2 wks of SPM results / July (STPM)",dl_months:[3,4,7],dl_open:[3,7],entry:["PostSPM","PreU","Undergrad"],fieldTags:["Any","Business","Engineering","IT"],gradeMin:"5As",bond:"None",nb:true,b40:false,bumi:false,rolling:false,notes:"NOT a cash award — tuition fee waiver at partner colleges/universities. Living expenses NOT covered. Apply within 2 weeks of results release. Contact: edufund@thestar.com.my",url:"https://www.thestar.com.my/edufund"},
+  {id:39,name:"Sin Chew Daily Education Fund",prov:"Sin Chew Media Corporation",cat:"Media",amt:"Tuition fee waiver at participating institutions",cov:"Partial",dest:"Local",fields:["Any field at partner institutions"],quals:["SPM","STPM","A-Level","UEC"],elig:["Malaysian citizens","Final results required (no trial results)"],school:["Open to all"],grade:"Good final results in SPM / A-Level / STPM / UEC; official certificate required",dl:"May",dl_months:[5],dl_open:[3],entry:["PostSPM","PreU","Undergrad"],fieldTags:["Any"],gradeMin:"5As",bond:"None",nb:true,b40:false,bumi:false,rolling:false,notes:"NOT a cash award — tuition fee waiver. Living expenses excluded. Apply for 1 or 2 courses. Trial/mock results NOT accepted.",url:"https://scedufund.sinchew.com.my"},
+  {id:40,name:"Jeffrey Cheah Foundation (Sunway) Scholarship",prov:"Jeffrey Cheah Foundation / Sunway Education Group",cat:"Media",amt:"Full or partial tuition waiver — multiple tiers",cov:"Partial",dest:"Local",fields:["Any field at Sunway University / Sunway College","Business","Medicine","Engineering","IT","Law","Design"],quals:["SPM","STPM","A-Level","UEC","O-Level","IGCSE"],elig:["Open to all","Merit and/or financial need by tier"],school:["Open to all"],grade:"Min 7As SPM or equivalent; IGCSE/O-Level accepted; lower grades for Community Scholarship tier",dl:"Rolling after SPM results",dl_months:null,dl_open:null,entry:["PostSPM","PreU","Undergrad"],fieldTags:["Any","Business","Engineering","IT","Law","Medicine"],gradeMin:"5As",bond:"None",nb:true,b40:false,bumi:false,rolling:true,notes:"Sunway-specific. Multiple tiers: Academic Excellence, Community Scholarship (B40), Sports Scholarship. O-Level/IGCSE eligible.",url:"https://scholarship.sunway.edu.my"},
+  // INTERNATIONAL
+  {id:43,name:"Chevening Scholarship (Malaysia)",prov:"UK Foreign, Commonwealth & Development Office (FCDO)",cat:"International",amt:"Full — tuition, living, flights, visa costs",cov:"Full",dest:"Overseas",fields:["Any field — one-year taught Masters at UK university"],quals:["Degree (undergraduate completed)"],elig:["Malaysian citizens","Min 2 years work experience","Plan to return to Malaysia"],school:["Open to all"],grade:"Undergraduate degree permitting UK Masters entry; min 2 years work experience; strong leadership potential",dl:"October",dl_months:[10],dl_open:[8],entry:["Postgrad"],fieldTags:["Any"],gradeMin:"Any",bond:"Must return to Malaysia for min 2 years",nb:false,b40:false,bumi:false,rolling:false,notes:"UK Government global scholarship. One-year taught Masters at any top UK university. Malaysia is 2nd largest recipient in ASEAN. Over 2,000 Chevening alumni in Malaysia. Apply at chevening.org/scholarship/malaysia",url:"https://www.chevening.org/scholarship/malaysia/"},
+  {id:44,name:"Chevening-Khazanah Scholarship",prov:"UK FCDO + Yayasan Khazanah",cat:"International",amt:"Full — tuition, living, flights, visa costs",cov:"Full",dest:"Overseas",fields:["Any field — one-year taught Masters at UK university"],quals:["Degree (undergraduate completed)"],elig:["Malaysian citizens","Min 2 years work experience"],school:["Open to all"],grade:"Undergraduate degree permitting UK Masters entry; min 2 years work experience",dl:"October",dl_months:[10],dl_open:[8],entry:["Postgrad"],fieldTags:["Any"],gradeMin:"Any",bond:"Must return to Malaysia — standard Chevening return requirement",nb:false,b40:false,bumi:false,rolling:false,notes:"Joint Chevening-Khazanah award — additional funding from Yayasan Khazanah. Apply through the Chevening portal and indicate Khazanah partnership interest.",url:"https://www.yayasankhazanah.com.my/scholarship-programmes/chevening-khazanah-scholarship-programme"},
+  {id:45,name:"MyBrainSc Scholarship",prov:"Ministry of Higher Education Malaysia (MOHE)",cat:"International",amt:"Full — tuition + monthly stipend + research expenses",cov:"Full",dest:"Local",fields:["Physics","Chemistry","Biology","Mathematics","STEM","Science and Technology"],quals:["Degree (undergraduate completed)"],elig:["Malaysian citizens","Pursuing postgraduate in STEM at Malaysian universities"],school:["Open to all"],grade:"Strong undergraduate results; CGPA ≥3.50 recommended",dl:"Varies",dl_months:null,dl_open:null,entry:["Postgrad"],fieldTags:["STEM"],gradeMin:"Any",bond:"None stated",nb:true,b40:false,bumi:false,rolling:true,notes:"Supports Malaysian citizens pursuing postgraduate studies (Masters and PhD) in science and mathematics at local universities. Covers tuition, monthly allowance, and research funding.",url:"https://www.mohe.gov.my"},
+  {id:47,name:"British Council GREAT Scholarships Malaysia",prov:"British Council / UK Universities",cat:"International",amt:"Min £10,000 towards tuition fees for one-year Masters",cov:"Partial",dest:"Overseas",fields:["Science & Engineering","Social Sciences","Business","Arts & Humanities","Law","Technology","Education"],quals:["Degree (undergraduate completed)"],elig:["Malaysian citizens","Accepted at participating UK university"],school:["Open to all"],grade:"Undergraduate degree; accepted at participating UK university",dl:"March–May",dl_months:[3,4,5],dl_open:[1,2],entry:["Postgrad"],fieldTags:["Any","STEM","Business","Law","Engineering"],gradeMin:"Any",bond:"None",nb:true,b40:false,bumi:false,rolling:false,notes:"Min £10,000 per scholarship jointly funded by UK Government and UK universities. Each participating university sets its own eligibility criteria.",url:"https://www.britishcouncil.my/study-uk/scholarships/great-scholarships"},
+  {id:59,name:"Japan MEXT Scholarship (Undergraduate)",prov:"Japanese Ministry of Education (MEXT) — Embassy of Japan",cat:"International",amt:"Full — tuition, monthly stipend (~¥117,000), flights, accommodation",cov:"Full",dest:"Overseas",fields:["Any undergraduate field at Japanese universities","Engineering","Science","Humanities","Social Sciences"],quals:["SPM","STPM","A-Level","UEC","O-Level","IGCSE"],elig:["Malaysian citizens","Age 17–24 at time of enrolment","No other scholarships"],school:["Open to all"],grade:"Excellent SPM/equivalent results; written exam + interview at Embassy of Japan KL",dl:"April",dl_months:[4],dl_open:[3],entry:["PostSPM","PreU"],fieldTags:["Any","Engineering","STEM"],gradeMin:"7As",bond:"None — must study in Japan for full degree duration",nb:true,b40:false,bumi:false,rolling:false,notes:"Japanese Government scholarship. Includes 1-year Japanese language training before degree. Monthly stipend ~¥117,000. Full tuition. Return air ticket. 5–7 years total (language + degree). Apply at Embassy of Japan KL.",url:"https://www.my.emb-japan.go.jp/itpr_en/undergraduate.html"},
+  {id:60,name:"Japan MEXT Scholarship (Research/Postgraduate)",prov:"Japanese Ministry of Education (MEXT) — Embassy of Japan",cat:"International",amt:"Full — tuition, monthly stipend (~¥143,000–¥145,000), flights",cov:"Full",dest:"Overseas",fields:["Any postgraduate field at Japanese universities","Engineering","Science","Humanities","Social Sciences","Medicine"],quals:["Degree (undergraduate completed)"],elig:["Malaysian citizens","Age below 35 at time of enrolment"],school:["Open to all"],grade:"Undergraduate degree; research proposal required; interview at Embassy",dl:"April",dl_months:[4],dl_open:[3],entry:["Postgrad"],fieldTags:["Any","Engineering","STEM","Medicine"],gradeMin:"Any",bond:"None",nb:true,b40:false,bumi:false,rolling:false,notes:"For Masters and PhD at Japanese universities. Two tracks: Embassy Recommendation and University Recommendation. Monthly stipend ~¥143,000–¥145,000. Full tuition. Return air ticket. Apply at Embassy of Japan KL.",url:"https://www.my.emb-japan.go.jp/itpr_en/postgraduate.html"},
+  {id:61,name:"Australia Awards Scholarship (Malaysia)",prov:"Australian Government — DFAT",cat:"International",amt:"Full — tuition, living, flights, health cover, establishment allowance",cov:"Full",dest:"Overseas",fields:["Any field aligned with Australia-Malaysia priorities","Agriculture","Business","Education","Environment","Governance","Health","Science"],quals:["Degree (undergraduate completed)"],elig:["Malaysian citizens","Min 2–3 years work experience recommended"],school:["Open to all"],grade:"Strong undergraduate academic record; demonstrated leadership; IELTS 6.5 recommended",dl:"April",dl_months:[4],dl_open:[2],entry:["Postgrad"],fieldTags:["Any","Business","STEM","Medicine"],gradeMin:"Any",bond:"Must return to Malaysia for min 2 years after studies",nb:false,b40:false,bumi:false,rolling:false,notes:"Australian Government's flagship international scholarship for postgraduate studies (Masters primarily) at Australian universities. Covers full tuition, return air travel, living allowance, health cover. Apply via Australia Awards website.",url:"https://www.australiaawardssea.org/malaysia"},
+  {id:62,name:"Fulbright Malaysian Student Program",prov:"US Embassy KL / MACEE",cat:"International",amt:"Full — tuition, living, flights, health insurance, J-1 visa",cov:"Full",dest:"Overseas",fields:["Any field — Masters and PhD at US universities","Arts","Sciences","Social Sciences","Business","Law","Technology","Public Policy"],quals:["Degree (undergraduate completed)"],elig:["Malaysian citizens","Strong academic and professional record"],school:["Open to all"],grade:"Strong undergraduate degree (CGPA ≥3.50 recommended); min 2–3 years work experience; English proficiency (TOEFL/IELTS)",dl:"October",dl_months:[10],dl_open:[7,8],entry:["Postgrad"],fieldTags:["Any","Business","Law","STEM"],gradeMin:"Any",bond:"Must return to Malaysia for min 2 years (J-1 visa requirement)",nb:false,b40:false,bumi:false,rolling:false,notes:"US Government's prestigious international exchange scholarship. For postgraduate (Masters/PhD) at US universities. Typically 20–30 Malaysian Fulbrighters per year. Apply at macee.org.my",url:"https://www.macee.org.my/fulbright-malaysian-student-program/"},
+  // UNIVERSITY
+  {id:41,name:"Taylor's University Scholarship",prov:"Taylor's University",cat:"University",amt:"Partial to full tuition fee waiver — up to 100%",cov:"Partial",dest:"Local",fields:["Any field at Taylor's University","Business","Engineering","Medicine","Law","IT","Design","Arts"],quals:["SPM","STPM","A-Level","UEC","IGCSE","O-Level","Foundation"],elig:["Open to all — Malaysian and international"],school:["Open to all"],grade:"Min 2As STPM / Foundation CGPA 3.50 / A-Level 2As / UEC; current undergrads CGPA ≥3.30",dl:"Rolling",dl_months:null,dl_open:null,entry:["PostSPM","PreU","Undergrad"],fieldTags:["Any","Business","Engineering","IT","Law","Medicine"],gradeMin:"5As",bond:"None",nb:true,b40:false,bumi:false,rolling:true,notes:"Multiple scholarship tiers: Vice Chancellor Award, Merit Scholarship, Sports Scholarship, Talent Scholarship. IGCSE/international qualifications accepted. RM30 million in scholarships available.",url:"https://university.taylors.edu.my/en/study/scholarships-and-financial-aid/undergraduate-scholarships.html"},
+  {id:49,name:"Sunway University Scholarship (Jeffrey Cheah Foundation Excellence)",prov:"Jeffrey Cheah Foundation / Sunway University",cat:"University",amt:"Up to 100% tuition fee waiver — multiple tiers",cov:"Partial",dest:"Local",fields:["Any field at Sunway University","Business","Medicine","Engineering","IT","Law","Design","Actuarial Science"],quals:["SPM","STPM","A-Level","UEC","IGCSE","O-Level","Foundation"],elig:["Open to all — Malaysian and international"],school:["Open to all"],grade:"Outstanding results; SPM 10As / A-Level 4As / IGCSE 8A*s for top tier; lower for other tiers",dl:"Rolling",dl_months:null,dl_open:null,entry:["PostSPM","PreU","Undergrad"],fieldTags:["Any","Business","Engineering","IT","Law","Medicine"],gradeMin:"5As",bond:"None",nb:true,b40:false,bumi:false,rolling:true,notes:"RM570 million awarded as of 2021. Multiple tiers including Community Scholarship (B40). Scholars-in-Residence Programme at Cambridge and Oxford for top scholars.",url:"https://scholarship.sunway.edu.my"},
+  {id:63,name:"Monash University Malaysia Scholarship",prov:"Monash University Malaysia",cat:"University",amt:"Partial to full tuition fee waiver — up to 100%",cov:"Partial",dest:"Local",fields:["Any field at Monash Malaysia","Engineering","Business","Science","IT","Arts","Law","Pharmacy"],quals:["SPM","STPM","A-Level","UEC","IGCSE","Foundation"],elig:["Open to all — Malaysian and international"],school:["Open to all"],grade:"Strong academic results; SPM/STPM/A-Level/UEC/IGCSE; strong leadership and ECA",dl:"Rolling",dl_months:null,dl_open:null,entry:["PostSPM","PreU","Undergrad"],fieldTags:["Any","Engineering","Business","IT","Law","STEM"],gradeMin:"5As",bond:"None",nb:true,b40:false,bumi:false,rolling:true,notes:"Multiple scholarship programmes for undergraduate at Monash Malaysia (Sunway Campus). Merit-based tuition fee waivers. Also offers postgraduate research scholarships.",url:"https://www.monash.edu.my/student-experience/scholarships"},
+  {id:64,name:"HELP University Scholarship",prov:"HELP University",cat:"University",amt:"Partial to full tuition fee waiver",cov:"Partial",dest:"Local",fields:["Any field at HELP University","Business","Law","Psychology","IT","Education","Accounting"],quals:["SPM","STPM","A-Level","UEC","IGCSE","Foundation","Diploma"],elig:["Open to all — Malaysian and international"],school:["Open to all"],grade:"Good academic results; varies by scholarship tier",dl:"Rolling",dl_months:null,dl_open:null,entry:["PostSPM","PreU","Undergrad"],fieldTags:["Any","Business","Law","IT"],gradeMin:"5As",bond:"None",nb:true,b40:false,bumi:false,rolling:true,notes:"HELP University-specific. Merit-based scholarships and bursaries for undergraduate studies. Multiple scholarship categories.",url:"https://www.help.edu.my/scholarships"},
+  {id:65,name:"APU (Asia Pacific University) Scholarship",prov:"Asia Pacific University of Technology & Innovation",cat:"University",amt:"Partial tuition fee waiver — up to 50%+",cov:"Partial",dest:"Local",fields:["Any field at APU","IT","Engineering","Business","Design","Actuarial Science","Mass Communication"],quals:["SPM","STPM","A-Level","UEC","IGCSE","Foundation"],elig:["Open to all — Malaysian and international"],school:["Open to all"],grade:"Good academic results; UEC Merit Scholarship available for UEC students",dl:"Rolling",dl_months:null,dl_open:null,entry:["PostSPM","PreU","Undergrad"],fieldTags:["Any","IT","Engineering","Business"],gradeMin:"5As",bond:"None",nb:true,b40:false,bumi:false,rolling:true,notes:"Multiple scholarship tiers. UEC Merit Scholarship specifically for UEC students (up to 50% off). International student scholarships available.",url:"https://www.apu.edu.my/scholarships"},
+  {id:66,name:"MMU (Multimedia University) Scholarship",prov:"Multimedia University (MMU)",cat:"University",amt:"Partial to full tuition fee waiver",cov:"Partial",dest:"Local",fields:["Any field at MMU","IT","Engineering","Business","Creative Multimedia","Law","Pharmacy"],quals:["SPM","STPM","A-Level","UEC","IGCSE","Foundation"],elig:["Open to all — Malaysian and international"],school:["Open to all"],grade:"Good to excellent academic results; CGPA targets vary by tier",dl:"Rolling",dl_months:null,dl_open:null,entry:["PostSPM","PreU","Undergrad"],fieldTags:["Any","IT","Engineering","Business"],gradeMin:"5As",bond:"None",nb:true,b40:false,bumi:false,rolling:true,notes:"MMU offers merit-based scholarships for undergraduate studies at Cyberjaya and Melaka campuses. MMU is one of the PTPTN-eligible Foundation institutions.",url:"https://www.mmu.edu.my/scholarships"},
+  {id:67,name:"UCSI University Scholarship",prov:"UCSI University",cat:"University",amt:"Partial to full tuition fee waiver — up to 100%",cov:"Partial",dest:"Local",fields:["Any field at UCSI","Medicine","Nursing","Pharmacy","Engineering","Business","IT","Culinary Arts","Music"],quals:["SPM","STPM","A-Level","UEC","IGCSE","Foundation"],elig:["Open to all — Malaysian and international"],school:["Open to all"],grade:"Good to excellent academic results; varies by scholarship tier",dl:"Rolling",dl_months:null,dl_open:null,entry:["PostSPM","PreU","Undergrad"],fieldTags:["Any","Medicine","Engineering","Business","IT"],gradeMin:"5As",bond:"None",nb:true,b40:false,bumi:false,rolling:true,notes:"UCSI-specific scholarships. Strong in health sciences (Medicine, Nursing, Pharmacy) and creative fields (Music, Culinary Arts).",url:"https://www.ucsiuniversity.edu.my/scholarship"},
+  {id:68,name:"INTI International University Scholarship",prov:"INTI International University & Colleges",cat:"University",amt:"Partial tuition fee waiver",cov:"Partial",dest:"Local",fields:["Any field at INTI","Business","Engineering","IT","Design","Foundation","A-Levels"],quals:["SPM","STPM","A-Level","UEC","IGCSE","Foundation"],elig:["Open to all — Malaysian and international"],school:["Open to all"],grade:"Good academic results; varies by scholarship category",dl:"Rolling",dl_months:null,dl_open:null,entry:["PostSPM","PreU","Undergrad"],fieldTags:["Any","Business","Engineering","IT"],gradeMin:"5As",bond:"None",nb:true,b40:false,bumi:false,rolling:true,notes:"INTI-specific tuition fee scholarships. Multiple campuses (Nilai, Subang, Penang, Sabah). Merit-based.",url:"https://www.newinti.edu.my/admissions/scholarships-financial-aid/"},
+  {id:69,name:"Universiti Tunku Abdul Rahman (UTAR) Scholarship",prov:"UTAR Education Foundation",cat:"University",amt:"Partial to full tuition fee waiver",cov:"Partial",dest:"Local",fields:["Any field at UTAR","Engineering","Business","IT","Science","Arts","Architecture"],quals:["SPM","STPM","A-Level","UEC","Foundation","Matriculation"],elig:["Open to all","Malaysian citizens preferred"],school:["Open to all"],grade:"Good to excellent academic results; UEC students especially welcomed",dl:"Rolling",dl_months:null,dl_open:null,entry:["PostSPM","PreU","Undergrad"],fieldTags:["Any","Engineering","Business","IT","STEM"],gradeMin:"5As",bond:"None",nb:true,b40:false,bumi:false,rolling:true,notes:"UTAR is a prominent private university associated with MCA. Strong UEC intake and significant UEC Merit Scholarships available.",url:"https://www.utar.edu.my/scholarship"},
+  {id:70,name:"TAR UMT Scholarship",prov:"Tunku Abdul Rahman University of Management & Technology",cat:"University",amt:"Merit scholarships — partial tuition fee waiver",cov:"Partial",dest:"Local",fields:["Any field at TAR UMT","Accounting","Business","Engineering","IT","Communication","Hospitality"],quals:["SPM","STPM","A-Level","UEC","Foundation","Matriculation"],elig:["Open to all","Malaysian citizens preferred"],school:["Open to all"],grade:"Strong academic results; STPM/A-Level/UEC/Foundation; sports/national athletes also eligible",dl:"Rolling",dl_months:null,dl_open:null,entry:["PostSPM","PreU","Undergrad"],fieldTags:["Any","Business","Engineering","IT"],gradeMin:"5As",bond:"None",nb:true,b40:false,bumi:false,rolling:true,notes:"TAR UMT (formerly Tunku Abdul Rahman College). Strongly associated with MCA/Chinese community education. Separate bursary for state and national athletes. UEC students well-supported.",url:"https://www.tarc.edu.my/scholarships"}
 ];
 
-const CC = {Government:'gov',GLC:'glc',Banking:'bank',Corporate:'corp',Loan:'loan',State:'state',Media:'media'};
-const SC = {Government:'#1e3a6e',GLC:'#00a878',Banking:'#c07a00',Corporate:'#7c3aed',Loan:'#0891b2',State:'#b45309',Media:'#be185d'};
-function cc(cat){ return CC[cat]||'gov'; }
+// ── HELPERS ──
+const CC={Government:'gov',GLC:'glc',Banking:'bank',Corporate:'corp',Loan:'loan',State:'state',Media:'media',International:'intl',University:'uni'};
+const SC={Government:'#1e3a6e',GLC:'#00a878',Banking:'#c07a00',Corporate:'#7c3aed',Loan:'#0891b2',State:'#b45309',Media:'#be185d',International:'#0f766e',University:'#374151'};
+function cc(cat){return CC[cat]||'gov'}
 
-let activeCat = 'all';
-let activeChips = new Set();
+const now = new Date();
+const curMonth = now.getMonth()+1; // 1-12
+const SOON_DAYS = 60;
 
-function setTab(el){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-  activeCat = el.dataset.cat;
-  render();
+function isOpenNow(s){
+  if(s.rolling) return true;
+  if(!s.dl_months||!s.dl_open) return false;
+  // open if current month is within open window and before deadline
+  const openM = s.dl_open[0];
+  const closeM = s.dl_months[s.dl_months.length-1];
+  if(openM<=closeM){return curMonth>=openM&&curMonth<=closeM;}
+  return curMonth>=openM||curMonth<=closeM;
 }
 
+function isClosingSoon(s){
+  if(s.rolling||!s.dl_months) return false;
+  // check if deadline is within SOON_DAYS from today
+  const yr = now.getFullYear();
+  for(const m of s.dl_months){
+    const deadlineDate = new Date(yr,m-1,28); // approx end of month
+    const diff = (deadlineDate-now)/(1000*60*60*24);
+    if(diff>=0&&diff<=SOON_DAYS) return true;
+  }
+  return false;
+}
+
+function deadlineStatus(s){
+  if(s.rolling) return 'rolling';
+  if(isClosingSoon(s)) return 'soon';
+  if(isOpenNow(s)) return 'open';
+  return 'closed';
+}
+
+let activeCat='all', activeChips=new Set();
+
+function setTab(el){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');activeCat=el.dataset.cat;render();}
 function toggleChip(el){
-  const f = el.dataset.f;
-  if(activeChips.has(f)){ activeChips.delete(f); el.classList.remove('on'); }
-  else { activeChips.add(f); el.classList.add('on'); }
-  render();
+  const f=el.dataset.f;
+  if(activeChips.has(f)){activeChips.delete(f);el.classList.remove('on');}
+  else{activeChips.add(f);el.classList.add('on');}
+  updateFilterUI();render();
+}
+function toggleFilters(){
+  const p=document.getElementById('filterPanel');
+  p.classList.toggle('open');
+}
+function updateFilterUI(){
+  const n=activeChips.size;
+  const ac=document.getElementById('activeCount');
+  const cb=document.getElementById('clearBtn');
+  ac.textContent=n;ac.style.display=n?'inline':'none';
+  cb.style.display=n?'inline':'none';
+}
+function clearAll(){
+  activeChips.clear();
+  document.querySelectorAll('.chip.on').forEach(c=>c.classList.remove('on'));
+  updateFilterUI();render();
 }
 
 function matches(s){
-  const q = document.getElementById('si').value.toLowerCase().trim();
-  if(q){
-    const blob = [s.name,s.prov,s.cat,s.fields.join(' '),s.notes,s.quals.join(' '),s.grade,s.elig.join(' ')].join(' ').toLowerCase();
-    if(!blob.includes(q)) return false;
-  }
-  if(activeCat !== 'all' && s.cat !== activeCat) return false;
+  const q=document.getElementById('si').value.toLowerCase().trim();
+  if(q){const blob=[s.name,s.prov,s.cat,s.fields.join(' '),s.notes,s.quals.join(' '),s.grade,s.elig.join(' ')].join(' ').toLowerCase();if(!blob.includes(q))return false;}
+  if(activeCat!=='all'&&s.cat!==activeCat)return false;
+  const ds=deadlineStatus(s);
   for(const f of activeChips){
-    if(f==='SPM'     && !s.quals.includes('SPM')) return false;
-    if(f==='STPM'    && !s.quals.some(x=>x==='STPM'||x==='A-Level')) return false;
-    if(f==='UEC'     && !s.quals.some(x=>['UEC','O-Level','IGCSE'].includes(x))) return false;
-    if(f==='Diploma' && !s.quals.some(x=>x==='Diploma'||x==='Advanced Diploma')) return false;
-    if(f==='Overseas'&& s.dest!=='Overseas') return false;
-    if(f==='Full'    && s.cov!=='Full') return false;
-    if(f==='B40'     && !s.b40) return false;
-    if(f==='Bumi'    && !s.bumi) return false;
-    if(f==='NoBond'  && !s.nb) return false;
-    if(f==='Postgrad'&& !s.pg) return false;
+    // deadline filters
+    if(f==='OpenNow'&&!isOpenNow(s))return false;
+    if(f==='Soon'&&!isClosingSoon(s))return false;
+    if(f==='Rolling'&&!s.rolling)return false;
+    // entry level
+    if(f==='PostSPM'&&!s.entry.includes('PostSPM'))return false;
+    if(f==='PreU'&&!s.entry.includes('PreU'))return false;
+    if(f==='Undergrad'&&!s.entry.includes('Undergrad'))return false;
+    if(f==='Postgrad'&&!s.entry.includes('Postgrad'))return false;
+    // field
+    if(f==='fAny'&&!s.fieldTags.includes('Any'))return false;
+    if(f==='fSTEM'&&!s.fieldTags.some(x=>x==='STEM'||x==='Science'))return false;
+    if(f==='fEngineering'&&!s.fieldTags.includes('Engineering'))return false;
+    if(f==='fMedicine'&&!s.fieldTags.some(x=>x==='Medicine'||x==='Health'))return false;
+    if(f==='fBusiness'&&!s.fieldTags.includes('Business'))return false;
+    if(f==='fIT'&&!s.fieldTags.some(x=>x==='IT'||x==='Computer Science'))return false;
+    if(f==='fLaw'&&!s.fieldTags.includes('Law'))return false;
+    // grade
+    if(f==='gStraight'&&s.gradeMin!=='Straight')return false;
+    if(f==='g7'&&!['Straight','7As'].includes(s.gradeMin))return false;
+    if(f==='g5'&&!['Straight','7As','5As'].includes(s.gradeMin))return false;
+    if(f==='gAny'&&s.gradeMin!=='Any')return false;
+    // other
+    if(f==='Overseas'&&s.dest!=='Overseas')return false;
+    if(f==='Full'&&s.cov!=='Full')return false;
+    if(f==='B40'&&!s.b40)return false;
+    if(f==='Bumi'&&!s.bumi)return false;
+    if(f==='NoBond'&&!s.nb)return false;
+    if(f==='SPM'&&!s.quals.includes('SPM'))return false;
+    if(f==='STPM'&&!s.quals.some(x=>x==='STPM'||x==='A-Level'))return false;
+    if(f==='UEC'&&!s.quals.some(x=>['UEC','O-Level','IGCSE'].includes(x)))return false;
   }
   return true;
 }
 
-function buildCard(s, i){
-  const c = cc(s.cat);
-  const qualTags = s.quals.slice(0,4).map(q=>`<span class="tag">${q}</span>`).join('');
-  const fieldTag = s.fields[0] ? `<span class="tag">${s.fields[0]}${s.fields.length>1?` +${s.fields.length-1}`:''}</span>` : '';
-  return `
-  <div class="card" style="animation-delay:${Math.min(i*.04,.5)}s" onclick="openModal(${s.id})">
-    <div class="card-stripe cs-${c}"></div>
-    <div class="card-body">
-      <div class="card-top">
-        <div class="card-badges">
-          <span class="badge bg-${c}">${s.cat}</span>
-          ${s.cov==='Full'?'<span class="badge bg-full">Full</span>':''}
-          <span class="badge ${s.dest==='Overseas'?'bg-ov':'bg-lo'}">${s.dest}</span>
-          ${s.nb  ?'<span class="badge bg-nb">No Bond</span>':''}
-          ${s.b40 ?'<span class="badge bg-b40">B40</span>':''}
-          ${s.bumi?'<span class="badge bg-bumi">Bumi</span>':''}
-        </div>
-        <div class="card-name">${s.name}</div>
-        <div class="card-provider">${s.prov}</div>
-      </div>
-      <div class="card-amount">${s.amt}</div>
-      <div class="card-tags">${qualTags}${fieldTag}</div>
-    </div>
-    <div class="card-foot">
-      <div class="card-deadline">Deadline: <strong>${s.dl}</strong></div>
-      <div class="card-cta">View details <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
-    </div>
-  </div>`;
+function buildCard(s,i){
+  const c=cc(s.cat);
+  const qt=s.quals.slice(0,4).map(q=>`<span class="tag">${q}</span>`).join('');
+  const ft=s.fields[0]?`<span class="tag">${s.fields[0]}${s.fields.length>1?` +${s.fields.length-1}`:''}</span>`:'';
+  const ds=deadlineStatus(s);
+  const urgentCard=ds==='soon';
+  let statusBadge='';
+  if(ds==='rolling') statusBadge='<span class="badge" style="background:#f0f4ff;color:#6b7899;font-size:10px;padding:2px 7px;border-radius:3px;font-weight:700;text-transform:uppercase;letter-spacing:.05em">Rolling</span>';
+  else if(ds==='soon') statusBadge='<span class="badge bg-soon">Closing Soon</span>';
+  else if(ds==='open') statusBadge='<span class="badge" style="background:#f0fdf4;color:#15803d;font-size:10px;padding:2px 7px;border-radius:3px;font-weight:700;text-transform:uppercase;letter-spacing:.05em">Open</span>';
+  const entryBadges=s.entry.map(e=>{
+    const labels={PostSPM:'Post-SPM',PreU:'Pre-U',Undergrad:'Undergrad',Postgrad:'Postgrad'};
+    return`<span class="tag" style="font-size:10px">${labels[e]||e}</span>`;
+  }).join('');
+  return`<div class="card${urgentCard?' urgent-card':''}" style="animation-delay:${Math.min(i*.04,.5)}s" onclick="openModal(${s.id})">
+<div class="card-stripe cs-${c}"></div>
+<div class="card-body">
+<div class="card-top">
+<div class="card-badges">
+<span class="badge bg-${c}">${s.cat}</span>
+${s.cov==='Full'?'<span class="badge bg-full">Full</span>':''}
+<span class="badge ${s.dest==='Overseas'?'bg-ov':'bg-lo'}">${s.dest}</span>
+${s.nb?'<span class="badge bg-nb">No Bond</span>':''}
+${s.b40?'<span class="badge bg-b40">B40</span>':''}
+${s.bumi?'<span class="badge bg-bumi">Bumi</span>':''}
+${statusBadge}
+</div>
+<div class="card-name">${s.name}</div>
+<div class="card-provider">${s.prov}</div>
+</div>
+<div class="card-amount">${s.amt}</div>
+<div class="card-tags">${qt}${ft}</div>
+<div class="card-tags" style="margin-top:-6px">${entryBadges}</div>
+</div>
+<div class="card-foot">
+<div class="card-deadline${urgentCard?' urgent-dl':''}">Deadline: <strong>${s.dl}</strong></div>
+<div class="card-cta">View details <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+</div>
+</div>`;
 }
 
 function openModal(id){
-  const s = DATA.find(x=>x.id===id);
-  if(!s) return;
-  const c = cc(s.cat);
-  const col = SC[s.cat]||'#1e3a6e';
-  document.getElementById('modalInner').innerHTML = `
-    <div class="modal-stripe" style="background:${col}"></div>
-    <div class="modal-inner">
-      <div class="modal-badges">
-        <span class="badge bg-${c}">${s.cat}</span>
-        ${s.cov==='Full'?'<span class="badge bg-full">Full Scholarship</span>':''}
-        <span class="badge ${s.dest==='Overseas'?'bg-ov':'bg-lo'}">${s.dest}</span>
-        ${s.nb  ?'<span class="badge bg-nb">No Bond</span>':''}
-        ${s.b40 ?'<span class="badge bg-b40">B40 / Income-based</span>':''}
-        ${s.bumi?'<span class="badge bg-bumi">Bumiputera</span>':''}
-        ${s.pg  ?'<span class="badge" style="background:#ede9fe;color:#5b21b6;font-size:10px;padding:2px 8px;border-radius:3px;font-weight:700;text-transform:uppercase;letter-spacing:.05em">Postgrad</span>':''}
-      </div>
-      <div class="modal-title">${s.name}</div>
-      <div class="modal-provider">${s.prov}</div>
-      <div class="modal-amount">💰 ${s.amt}</div>
-      <div class="modal-grid">
-        <div class="modal-field"><div class="modal-field-label">Opens</div><div class="modal-field-val">${s.opens}</div></div>
-        <div class="modal-field"><div class="modal-field-label">Deadline</div><div class="modal-field-val urgent">${s.dl}</div></div>
-        <div class="modal-field"><div class="modal-field-label">Destination</div><div class="modal-field-val">${s.dest}</div></div>
-        <div class="modal-field"><div class="modal-field-label">Bond / Obligation</div><div class="modal-field-val">${s.bond}</div></div>
-      </div>
-      <div class="modal-section"><div class="modal-section-label">Eligible Qualifications</div><div class="modal-tag-wrap">${s.quals.map(q=>`<span class="modal-tag">${q}</span>`).join('')}</div></div>
-      <div class="modal-section"><div class="modal-section-label">Fields of Study</div><div class="modal-tag-wrap">${s.fields.map(f=>`<span class="modal-tag">${f}</span>`).join('')}</div></div>
-      <div class="modal-section"><div class="modal-section-label">Minimum Grade Requirement</div><div style="font-size:13px;line-height:1.6;color:var(--midnight)">${s.grade}</div></div>
-      <div class="modal-section"><div class="modal-section-label">Eligibility</div><div class="modal-tag-wrap">${s.elig.map(e=>`<span class="modal-tag">${e}</span>`).join('')}</div></div>
-      <div class="modal-section"><div class="modal-section-label">School Types</div><div class="modal-tag-wrap">${s.school.map(e=>`<span class="modal-tag">${e}</span>`).join('')}</div></div>
-      <div class="modal-section"><div class="modal-section-label">Notes & Tips</div><div class="modal-notes">${s.notes}</div></div>
-      <div class="modal-actions">
-        <a class="btn-primary" href="${s.url}" target="_blank">Visit Official Website ↗</a>
-        <a class="btn-secondary" href="#" onclick="document.getElementById('modal').classList.remove('open');return false">Close</a>
-      </div>
-    </div>`;
+  const s=DATA.find(x=>x.id===id);if(!s)return;
+  const c=cc(s.cat),col=SC[s.cat]||'#1e3a6e';
+  const ds=deadlineStatus(s);
+  const entryLabels={PostSPM:'Post-SPM',PreU:'Pre-University',Undergrad:'Undergraduate',Postgrad:'Postgraduate'};
+  const fieldLabels={Any:'Open to Any Field',STEM:'STEM / Science',Engineering:'Engineering',Medicine:'Medicine / Health',Business:'Business / Finance',IT:'IT / Computer Science',Law:'Law'};
+  document.getElementById('modalInner').innerHTML=`
+<div class="modal-stripe" style="background:${col}"></div>
+<div class="modal-inner">
+<div class="modal-badges">
+<span class="badge bg-${c}">${s.cat}</span>
+${s.cov==='Full'?'<span class="badge bg-full">Full Scholarship</span>':''}
+<span class="badge ${s.dest==='Overseas'?'bg-ov':'bg-lo'}">${s.dest}</span>
+${s.nb?'<span class="badge bg-nb">No Bond</span>':''}
+${s.b40?'<span class="badge bg-b40">B40 / Income-based</span>':''}
+${s.bumi?'<span class="badge bg-bumi">Bumiputera</span>':''}
+</div>
+<div class="modal-title">${s.name}</div>
+<div class="modal-provider">${s.prov}</div>
+<div class="modal-amount">💰 ${s.amt}</div>
+<div class="modal-grid">
+<div class="modal-field"><div class="modal-field-label">Opens</div><div class="modal-field-val">${s.dl_open?'Month '+s.dl_open.join('/')+' annually':'Varies / Rolling'}</div></div>
+<div class="modal-field"><div class="modal-field-label">Deadline</div><div class="modal-field-val urgent">${s.dl}</div></div>
+<div class="modal-field"><div class="modal-field-label">Destination</div><div class="modal-field-val">${s.dest}</div></div>
+<div class="modal-field"><div class="modal-field-label">Bond / Obligation</div><div class="modal-field-val">${s.bond}</div></div>
+</div>
+<div class="modal-section"><div class="modal-section-label">Entry Level</div><div class="modal-tag-wrap">${s.entry.map(e=>`<span class="modal-tag">${entryLabels[e]||e}</span>`).join('')}</div></div>
+<div class="modal-section"><div class="modal-section-label">Fields of Study</div><div class="modal-tag-wrap">${s.fields.map(f=>`<span class="modal-tag">${f}</span>`).join('')}</div></div>
+<div class="modal-section"><div class="modal-section-label">Eligible Qualifications</div><div class="modal-tag-wrap">${s.quals.map(q=>`<span class="modal-tag">${q}</span>`).join('')}</div></div>
+<div class="modal-section"><div class="modal-section-label">Minimum Grade Requirement</div><div style="font-size:13px;line-height:1.6;color:var(--midnight)">${s.grade}</div></div>
+<div class="modal-section"><div class="modal-section-label">Eligibility</div><div class="modal-tag-wrap">${s.elig.map(e=>`<span class="modal-tag">${e}</span>`).join('')}</div></div>
+<div class="modal-section"><div class="modal-section-label">Notes & Tips</div><div class="modal-notes">${s.notes}</div></div>
+<div class="modal-actions">
+<a class="btn-primary" href="${s.url}" target="_blank">Visit Official Website ↗</a>
+<a class="btn-secondary" href="#" onclick="document.getElementById('modal').classList.remove('open');return false">Close</a>
+</div>
+</div>`;
   document.getElementById('modal').classList.add('open');
-  document.getElementById('modalBox').scrollTop = 0;
+  document.getElementById('modalBox').scrollTop=0;
 }
 
-function closeModal(e){
-  if(e.target.id==='modal') document.getElementById('modal').classList.remove('open');
-}
-document.addEventListener('keydown', e=>{
-  if(e.key==='Escape') document.getElementById('modal').classList.remove('open');
-});
+function closeModal(e){if(e.target.id==='modal')document.getElementById('modal').classList.remove('open');}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')document.getElementById('modal').classList.remove('open');});
 
 function render(){
-  const sort = document.getElementById('sortSelect').value;
-  let items = DATA.filter(matches);
-  if(sort==='name') items.sort((a,b)=>a.name.localeCompare(b.name));
-  const grid = document.getElementById('cardGrid');
-  const n = items.length;
-  document.getElementById('countDisplay').textContent = n;
-  document.getElementById('navPill').textContent = `${n} programmes`;
-  if(!n){
-    grid.innerHTML = `<div class="no-results"><h3>No results found</h3><p>Try removing a filter or changing your search term.</p></div>`;
-    return;
+  const sort=document.getElementById('sortSelect').value;
+  let items=DATA.filter(matches);
+  if(sort==='deadline'){
+    items.sort((a,b)=>{
+      const am=a.dl_months?a.dl_months[0]:13;
+      const bm=b.dl_months?b.dl_months[0]:13;
+      return am-bm;
+    });
+  } else if(sort==='name'){
+    items.sort((a,b)=>a.name.localeCompare(b.name));
   }
-  grid.innerHTML = items.map((s,i) => buildCard(s,i)).join('');
+  const n=items.length;
+  document.getElementById('countDisplay').textContent=n;
+  document.getElementById('navPill').textContent=`${n} programmes`;
+  const grid=document.getElementById('cardGrid');
+  if(!n){grid.innerHTML=`<div class="no-results"><h3>No results found</h3><p>Try removing a filter or changing your search term.</p></div>`;return;}
+  grid.innerHTML=items.map((s,i)=>buildCard(s,i)).join('');
 }
 
-document.getElementById('heroCount').textContent = DATA.length;
-document.getElementById('navPill').textContent = `${DATA.length} programmes`;
+document.getElementById('heroCount').textContent=DATA.length;
+document.getElementById('navPill').textContent=`${DATA.length} programmes`;
 render();
 </script>
 </body>
