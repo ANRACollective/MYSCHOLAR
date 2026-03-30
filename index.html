@@ -4,6 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MyScholar — Malaysia Scholarship Finder 2025/2026</title>
+<meta name="description" content="Free Malaysia scholarship directory for 2025/2026. Find government, GLC, corporate, banking and university scholarships — SPM to postgraduate.">
+<meta property="og:title" content="MyScholar — Malaysia Scholarship Finder 2025/2026">
+<meta property="og:description" content="Free directory of 70+ scholarships for Malaysian students. Government, GLC, corporate, banking and university — SPM to postgraduate.">
+<meta property="og:url" content="https://myscholar.my">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://myscholar.my/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="MyScholar — Malaysia Scholarship Finder 2025/2026">
+<meta name="twitter:description" content="Free directory of 70+ scholarships for Malaysian students — SPM to postgraduate.">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{--midnight:#0f1f3d;--navy:#1e3a6e;--coral:#e8551e;--ice:#f0f4ff;--ice-mid:#e4ebfa;--white:#ffffff;--teal:#00a878;--border:#dde4f5;--border-mid:#c8d3ee;--muted:#6b7899;--c-gov:#1e3a6e;--c-glc:#00a878;--c-bank:#c07a00;--c-corp:#7c3aed;--c-loan:#0891b2;--c-state:#b45309;--c-media:#be185d;--c-intl:#0f766e;--c-uni:#374151;--serif:'Playfair Display',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif}
@@ -134,7 +143,7 @@ nav{position:sticky;top:0;z-index:200;background:var(--midnight);padding:0 32px;
 .about-inner p{color:rgba(255,255,255,.5);font-size:14px;line-height:1.85;font-weight:300}
 footer{background:#080f1e;color:rgba(255,255,255,.28);text-align:center;padding:28px 32px;font-size:12px;line-height:2.2}
 footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);text-decoration:none}footer a:hover{color:rgba(255,255,255,.7)}
-@media(max-width:680px){nav,.search-section,.filter-toggle,.results-bar,.grid-wrap,.about-section,footer{padding-left:16px;padding-right:16px}.tabs-wrap,.filter-panel{padding-left:16px;padding-right:16px}.grid{grid-template-columns:1fr}.modal-grid{grid-template-columns:1fr}.hero-stats{gap:28px}.hero{padding:44px 16px 60px}.filter-row{flex-wrap:wrap}.filter-label{min-width:100%;margin-bottom:2px}}
+@media(max-width:680px){nav,.search-section,.filter-toggle,.results-bar,.grid-wrap,.about-section,footer{padding-left:16px;padding-right:16px}.tabs-wrap,.filter-panel{padding-left:16px;padding-right:16px}.grid{grid-template-columns:1fr}.modal-grid{grid-template-columns:1fr}.hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:20px 40px;justify-items:center}.hero{padding:44px 16px 60px}.filter-row{flex-wrap:wrap}.filter-label{min-width:100%;margin-bottom:2px}}
 </style>
 </head>
 <body>
@@ -155,7 +164,7 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
 </section>
 <div class="search-section">
   <div class="search-wrap">
-    <svg class="search-icon" width="18" height="18" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <svg class="search-icon" width="18" height="18" fill="none" stroke="#aab" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
     <input type="text" id="si" placeholder="Search by name, provider, field, keyword…" oninput="render()">
   </div>
 </div>
@@ -488,6 +497,8 @@ function openModal(id){
   const ds=deadlineStatus(s);
   const entryLabels={PostSPM:'Post-SPM',PreU:'Pre-University',Undergrad:'Undergraduate',Postgrad:'Postgraduate'};
   const fieldLabels={Any:'Open to Any Field',STEM:'STEM / Science',Engineering:'Engineering',Medicine:'Medicine / Health',Business:'Business / Finance',IT:'IT / Computer Science',Law:'Law'};
+  const monthNames=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const opensText = s.dl_open && s.dl_open.length ? s.dl_open.map(m=>monthNames[m-1]).join(' / ')+' annually' : 'Varies / Rolling';
   document.getElementById('modalInner').innerHTML=`
 <div class="modal-stripe" style="background:${col}"></div>
 <div class="modal-inner">
@@ -503,7 +514,7 @@ ${s.bumi?'<span class="badge bg-bumi">Bumiputera</span>':''}
 <div class="modal-provider">${s.prov}</div>
 <div class="modal-amount">💰 ${s.amt}</div>
 <div class="modal-grid">
-<div class="modal-field"><div class="modal-field-label">Opens</div><div class="modal-field-val">${s.dl_open?'Month '+s.dl_open.join('/')+' annually':'Varies / Rolling'}</div></div>
+<div class="modal-field"><div class="modal-field-label">Opens</div><div class="modal-field-val">${opensText}</div></div>
 <div class="modal-field"><div class="modal-field-label">Deadline</div><div class="modal-field-val urgent">${s.dl}</div></div>
 <div class="modal-field"><div class="modal-field-label">Destination</div><div class="modal-field-val">${s.dest}</div></div>
 <div class="modal-field"><div class="modal-field-label">Bond / Obligation</div><div class="modal-field-val">${s.bond}</div></div>
