@@ -114,7 +114,7 @@ nav{position:sticky;top:0;z-index:200;background:var(--midnight);padding:0 32px;
 .sort-wrap{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
 .sort-wrap select{font-size:12px;border:1px solid var(--border);border-radius:4px;padding:5px 10px;background:var(--white);color:var(--midnight);font-family:var(--sans);cursor:pointer;outline:none}
 .grid-wrap{max-width:1280px;margin:0 auto;padding:12px 32px 80px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}.grid>*{display:flex;flex-direction:column}
 /* card */
 .card{background:var(--white);border:1px solid var(--border);border-radius:10px;overflow:hidden;cursor:pointer;display:flex;flex-direction:column;transition:transform .18s,box-shadow .18s,border-color .18s;animation:fadeUp .3s ease both}
 .card:hover{transform:translateY(-3px);box-shadow:0 10px 32px rgba(15,31,61,.12);border-color:var(--border-mid)}
@@ -122,9 +122,9 @@ nav{position:sticky;top:0;z-index:200;background:var(--midnight);padding:0 32px;
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 .card-stripe{height:3px}
 .cs-gov{background:var(--c-gov)}.cs-glc{background:var(--c-glc)}.cs-bank{background:var(--c-bank)}.cs-corp{background:var(--c-corp)}.cs-loan{background:var(--c-loan)}.cs-state{background:var(--c-state)}.cs-media{background:var(--c-media)}.cs-intl{background:var(--c-intl)}.cs-uni{background:var(--c-uni)}.cs-found{background:#d97706}.cs-pg{background:#0891b2}
-.card-body{padding:20px 20px 16px;flex:1;display:flex;flex-direction:column;gap:13px}
-.card-tags-spacer{flex:1;min-height:8px}
-.card-top{display:flex;flex-direction:column;gap:7px}
+.card-body{padding:20px 20px 16px;flex:1;min-height:0;display:flex;flex-direction:column}
+.card-tags-spacer{flex:1 1 0;min-height:0}
+.card-top{display:flex;flex-direction:column;gap:7px;margin-bottom:13px}
 .card-badges{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
 .badge{font-size:10px;padding:2px 8px;border-radius:3px;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
 .bg-gov{background:#e0e8f8;color:var(--c-gov)}.bg-glc{background:#e0f5ef;color:#007a57}.bg-bank{background:#fef3c7;color:#92400e}.bg-corp{background:#ede9fe;color:#5b21b6}.bg-loan{background:#e0f2fe;color:#075985}.bg-state{background:#fef3c7;color:#92400e}.bg-media{background:#fce7f3;color:#9d174d}.bg-intl{background:#e0f5ef;color:#0f766e}.bg-uni{background:#f3f4f6;color:#374151}.bg-found{background:#fef3c7;color:#92400e}.bg-pg{background:#e0f2fe;color:#075985}
@@ -134,10 +134,10 @@ nav{position:sticky;top:0;z-index:200;background:var(--midnight);padding:0 32px;
 .bg-chinese{background:#fef2f2;color:#dc2626}.bg-indian{background:#fff7ed;color:#b45309}.bg-intl-elig{background:#e0f5ef;color:#0f766e}
 .card-name{font-family:var(--serif);font-size:17px;font-weight:700;color:var(--midnight);line-height:1.25}
 .card-provider{font-size:12px;color:var(--muted)}
-.card-amount{font-size:13px;font-weight:500;color:var(--navy);background:var(--ice);border-radius:5px;padding:10px 12px;line-height:1.4;border-left:3px solid var(--border-mid)}
-.card-tags{display:flex;gap:5px;flex-wrap:wrap}
+.card-amount{font-size:13px;font-weight:500;color:var(--navy);background:var(--ice);border-radius:5px;padding:10px 12px;line-height:1.4;border-left:3px solid var(--border-mid);margin-bottom:13px}
+.card-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:6px}
 .tag{font-size:11px;padding:3px 8px;border-radius:4px;background:var(--ice-mid);color:var(--muted);border:1px solid var(--border);font-weight:500}
-.card-foot{padding:12px 20px;border-top:1px solid var(--border);background:var(--ice);display:flex;justify-content:space-between;align-items:center;gap:8px}
+.card-foot{padding:12px 20px;border-top:1px solid var(--border);background:var(--ice);display:flex;justify-content:space-between;align-items:center;gap:8px;flex-shrink:0;margin-top:auto}
 .card-deadline{font-size:11.5px;color:var(--muted)}.card-deadline strong{color:var(--coral);font-weight:600}
 .card-deadline.urgent-dl strong{color:#dc2626;font-weight:700}
 .card-foot-right{display:flex;align-items:center;gap:8px}
