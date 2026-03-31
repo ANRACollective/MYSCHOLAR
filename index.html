@@ -423,9 +423,7 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
 </div>
 
 <script>
-const TODAY = new Date();
-const curMonth = TODAY.getMonth()+1;
-const SOON_DAYS = 60;
+
 
 // ── SCHOLARSHIP DATA ──────────────────────────────────────────────────────
 // ethnicity flags: openAll, bumiOnly, chineseCommunity, indianCommunity, foreignerOk, global
@@ -562,6 +560,7 @@ const SC={Government:'#1e3a6e',GLC:'#00a878',Banking:'#c07a00',Corporate:'#7c3ae
 function cc(cat){return CC[cat]||'gov'}
 
 const now = new Date();
+const curMonth = now.getMonth()+1;
 const SOON_DAYS = 60;
 
 function isOpenNow(s){
