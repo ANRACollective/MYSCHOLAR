@@ -46,13 +46,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{--midnight:#0f1f3d;--navy:#1e3a6e;--coral:#e8551e;--ice:#f0f4ff;--ice-mid:#e4ebfa;--white:#ffffff;--teal:#00a878;--border:#dde4f5;--border-mid:#c8d3ee;--muted:#6b7899;--c-gov:#1e3a6e;--c-glc:#00a878;--c-bank:#c07a00;--c-corp:#7c3aed;--c-loan:#0891b2;--c-state:#b45309;--c-media:#be185d;--c-intl:#0f766e;--c-uni:#374151;--serif:'Playfair Display',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif}
-*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
-body{font-family:var(--sans);background:var(--ice);color:var(--midnight);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
-nav{position:sticky;top:0;z-index:200;background:var(--midnight);padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:52px;border-bottom:2px solid var(--coral)}
-.nav-logo{font-family:var(--serif);color:#fff;font-size:20px;letter-spacing:-.3px;text-decoration:none}.nav-logo span{color:var(--coral)}
-.nav-r{display:flex;align-items:center;gap:20px}
-.nav-r a{color:rgba(255,255,255,.5);font-size:12px;text-decoration:none;letter-spacing:.04em;transition:color .2s}.nav-r a:hover{color:#fff}
-.nav-pill{font-size:11px;color:rgba(255,255,255,.4);background:rgba(255,255,255,.09);padding:3px 10px;border-radius:20px;white-space:nowrap}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:hidden;max-width:100%}
+body{font-family:var(--sans);background:var(--ice);color:var(--midnight);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;width:100%}
+nav{position:sticky;top:0;z-index:200;background:var(--midnight);padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:52px;border-bottom:2px solid var(--coral);width:100%;max-width:100%;overflow:hidden}
+.nav-logo{font-family:var(--serif);color:#fff;font-size:20px;letter-spacing:-.3px;text-decoration:none;flex-shrink:0}.nav-logo span{color:var(--coral)}
+.nav-r{display:flex;align-items:center;gap:8px;overflow:hidden;min-width:0}
+.nav-r a{color:rgba(255,255,255,.5);font-size:12px;text-decoration:none;letter-spacing:.04em;transition:color .2s;flex-shrink:0}.nav-r a:hover{color:#fff}
+.nav-pill{font-size:11px;color:rgba(255,255,255,.4);background:rgba(255,255,255,.09);padding:3px 8px;border-radius:20px;white-space:nowrap;flex-shrink:0}
 .hero{background:var(--midnight);padding:60px 32px 76px;text-align:center;position:relative;overflow:hidden}
 .hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(255,255,255,.013) 0,rgba(255,255,255,.013) 1px,transparent 1px,transparent 80px),repeating-linear-gradient(0deg,rgba(255,255,255,.013) 0,rgba(255,255,255,.013) 1px,transparent 1px,transparent 80px);pointer-events:none}
 .hero::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:40px;background:linear-gradient(to bottom,transparent,var(--ice))}
@@ -122,9 +123,10 @@ nav{position:sticky;top:0;z-index:200;background:var(--midnight);padding:0 32px;
 .filter-panel{display:none}.filter-panel.open{display:block}
 .clear-btn{font-size:11px;color:var(--coral);cursor:pointer;border:none;background:transparent;font-family:var(--sans);font-weight:600;padding:0;margin-left:auto}
 /* bookmark button in nav area */
-.bookmark-nav-btn{font-size:12px;color:rgba(255,255,255,.5);background:rgba(255,255,255,.09);border:none;border-radius:20px;padding:4px 12px;cursor:pointer;font-family:var(--sans);display:flex;align-items:center;gap:5px;transition:all .2s;white-space:nowrap}
+.bookmark-nav-btn{font-size:12px;color:rgba(255,255,255,.5);background:rgba(255,255,255,.09);border:none;border-radius:20px;padding:4px 10px;cursor:pointer;font-family:var(--sans);display:flex;align-items:center;gap:4px;transition:all .2s;white-space:nowrap;flex-shrink:0}
 .bookmark-nav-btn:hover{color:#fff;background:rgba(255,255,255,.18)}
 .bookmark-nav-btn.has-bookmarks{color:var(--coral);background:rgba(232,85,30,.18)}
+.nav-btn-label{display:inline}
 /* results */
 .results-bar{max-width:1280px;margin:0 auto;padding:14px 32px 4px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
 .results-count{font-size:13px;color:var(--muted)}.results-count strong{color:var(--midnight);font-weight:600}
@@ -233,25 +235,57 @@ nav{position:sticky;top:0;z-index:200;background:var(--midnight);padding:0 32px;
 .about-cta button:hover{opacity:.88}
 footer{background:#080f1e;color:rgba(255,255,255,.28);text-align:center;padding:28px 32px;font-size:12px;line-height:2.2}
 footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);text-decoration:none}footer a:hover{color:rgba(255,255,255,.7)}
-@media(max-width:680px){nav,.search-section,.filter-toggle,.results-bar,.grid-wrap,.about-section,footer{padding-left:16px;padding-right:16px}.tabs-wrap,.filter-panel{padding-left:16px;padding-right:16px}.grid{grid-template-columns:1fr}.modal-grid{grid-template-columns:1fr}.hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:20px 40px;justify-items:center}.hero{padding:44px 16px 60px}.filter-row{flex-wrap:wrap}.filter-label{min-width:100%;margin-bottom:2px}.form-row{grid-template-columns:1fr}.modal-actions{flex-direction:column}}
+@media(max-width:680px){
+  /* ── GLOBAL OVERFLOW LOCK ── */
+  *{max-width:100%}
+  nav{padding:0 12px;gap:0}
+  /* Hide text labels in nav — show icons only */
+  .nav-btn-label{display:none}
+  /* Tighten up nav pill */
+  .nav-pill{font-size:10px;padding:2px 6px}
+  /* Tighten bookmark btn padding */
+  .bookmark-nav-btn{padding:4px 7px;font-size:11px;gap:2px}
+  /* Remove "About" link on mobile to save space */
+  .nav-r > a{display:none}
+  /* ── PADDING RESETS ── */
+  .search-section,.filter-toggle,.results-bar,.grid-wrap,.about-section,footer{padding-left:16px;padding-right:16px}
+  .tabs-wrap,.filter-panel{padding-left:0;padding-right:0}
+  /* ── GRID ── */
+  .grid{grid-template-columns:1fr}
+  /* ── MODALS ── */
+  .modal-grid{grid-template-columns:1fr}
+  .modal-overlay{padding:12px}
+  .modal-inner{padding:18px 16px 24px}
+  .modal-actions{flex-direction:column}
+  /* ── HERO ── */
+  .hero{padding:44px 16px 60px}
+  .hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:20px 40px;justify-items:center}
+  /* ── FILTERS ── */
+  .filter-row{flex-wrap:wrap}
+  .filter-label{min-width:100%;margin-bottom:2px}
+  /* ── FORMS ── */
+  .form-row{grid-template-columns:1fr}
+  /* ── SUBMIT MODAL ── */
+  .submit-modal,.submit-inner{padding-left:16px;padding-right:16px}
+}
 </style>
 </head>
 <body>
 <nav>
   <a class="nav-logo" href="#">My<span>Scholar</span></a>
   <div class="nav-r">
-    <a href="#about">About</a>
+    <a href="#about" class="nav-btn-label">About</a>
     <button class="bookmark-nav-btn" id="bookmarkNavBtn" onclick="openBookmarkPanel()">
       <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-      Saved (<span id="bookmarkCount">0</span>)
+      <span class="nav-btn-label">Saved</span> (<span id="bookmarkCount">0</span>)
     </button>
     <button class="bookmark-nav-btn" style="background:rgba(232,85,30,.18);color:var(--coral)" onclick="openSubmitModal()">
-      + Suggest Scholarship
+      + <span class="nav-btn-label">Suggest</span>
     </button>
     <button class="bookmark-nav-btn" style="background:rgba(0,168,120,.15);color:#00a878" onclick="openLinkChecker()" title="Check if scholarship links are working">
-      🔗 Check Links
+      🔗 <span class="nav-btn-label">Links</span>
     </button>
-    <div class="nav-pill" id="navPill">0 programmes</div>
+    <div class="nav-pill" id="navPill">0</div>
   </div>
 </nav>
 <section class="hero">
@@ -941,7 +975,7 @@ function render(){
   }
   const n=items.length;
   document.getElementById('countDisplay').textContent=n;
-  document.getElementById('navPill').textContent=`${n} programmes`;
+  document.getElementById('navPill').textContent=`${n}`;
   const grid=document.getElementById('cardGrid');
   if(!n){grid.innerHTML=`<div class="no-results"><h3>No results found</h3><p>Try removing a filter or changing your search term.</p></div>`;return;}
   grid.innerHTML=items.map((s,i)=>buildCard(s,i)).join('');
