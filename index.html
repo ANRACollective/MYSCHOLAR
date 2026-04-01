@@ -29,19 +29,19 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Free directory of 110+ scholarships for Malaysian students — SPM to postgraduate. Filter by field, ethnicity, deadline and more.">
+<meta name="description" content="Free directory of 130+ scholarships for Malaysian students — SPM to postgraduate. Filter by field, eligibility, deadline and more.">
 
 <link rel="canonical" href="https://myscholar.my/">
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://myscholar.my/" />
 <meta property="og:title" content="MyScholar - Malaysia Scholarship Finder 2025/2026" />
-<meta property="og:description" content="Find your scholarship. Fund your future. 110+ scholarships for Malaysian students." />
+<meta property="og:description" content="Find your scholarship. Fund your future. 130+ scholarships for Malaysian students." />
 <meta property="og:image" content="https://myscholar.my/myscholar-og.jpg" />
 <meta property="og:image:width" content="1280" />
 <meta property="og:image:height" content="640" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="MyScholar - Malaysia Scholarship Finder 2025/2026" />
-<meta name="twitter:description" content="Free directory of 110+ scholarships for Malaysian students — SPM to postgraduate." />
+<meta name="twitter:description" content="Free directory of 130+ scholarships for Malaysian students — SPM to postgraduate." />
 <meta name="twitter:image" content="https://myscholar.my/myscholar-og.jpg" />
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -148,7 +148,7 @@ nav{position:sticky;top:0;z-index:200;background:var(--midnight);padding:0 32px;
 .bg-full{background:var(--midnight);color:#fff}.bg-ov{background:#fdeee8;color:var(--coral)}.bg-lo{background:#e0e8f8;color:var(--c-gov)}.bg-nb{background:#e0f5ef;color:#007a57}.bg-b40{background:#fef3c7;color:#92400e}.bg-bumi{background:#e0e8f8;color:var(--c-gov)}.bg-pg{background:#ede9fe;color:#5b21b6}
 .bg-urgent{background:#fef2f2;color:#dc2626}.bg-soon{background:#fff7ed;color:#ea580c}
 /* ethnicity badges */
-.bg-chinese{background:#fef2f2;color:#dc2626}.bg-indian{background:#fff7ed;color:#b45309}.bg-intl-elig{background:#e0f5ef;color:#0f766e}
+.bg-intl-elig{background:#e0f5ef;color:#0f766e}
 .card-name{font-family:var(--serif);font-size:17px;font-weight:700;color:var(--midnight);line-height:1.25}
 .card-provider{font-size:12px;color:var(--muted)}
 .card-amount{font-size:13px;font-weight:500;color:var(--navy);background:var(--ice);border-radius:5px;padding:10px 12px;line-height:1.4;border-left:3px solid var(--border-mid);margin-bottom:13px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
@@ -248,6 +248,9 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
     <button class="bookmark-nav-btn" style="background:rgba(232,85,30,.18);color:var(--coral)" onclick="openSubmitModal()">
       + Suggest Scholarship
     </button>
+    <button class="bookmark-nav-btn" style="background:rgba(0,168,120,.15);color:#00a878" onclick="openLinkChecker()" title="Check if scholarship links are working">
+      🔗 Check Links
+    </button>
     <div class="nav-pill" id="navPill">0 programmes</div>
   </div>
 </nav>
@@ -258,7 +261,7 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
   <div class="hero-stats">
     <div><div class="hs-num" id="heroCount">0</div><div class="hs-lbl">Programmes</div></div>
     <div><div class="hs-num">12</div><div class="hs-lbl">Categories</div></div>
-    <div><div class="hs-num">6</div><div class="hs-lbl">Exam Pathways</div></div>
+    <div><div class="hs-num">7</div><div class="hs-lbl">Exam Pathways</div></div>
     <div><div class="hs-num">100%</div><div class="hs-lbl">Free</div></div>
   </div>
 </section>
@@ -325,10 +328,8 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
   </div>
   <div class="filter-row">
     <span class="filter-label">👥 Eligibility</span>
-    <div class="chip chip-tooltip" data-f="eAll" onclick="toggleChip(this)">Open to All Races<span class="tooltip-text">Scholarship is open regardless of ethnicity — Malay, Chinese, Indian, and others are all eligible.</span></div>
+    <div class="chip chip-tooltip" data-f="eAll" onclick="toggleChip(this)">Open to All<span class="tooltip-text">Scholarship is open regardless of ethnicity — all Malaysian citizens are eligible.</span></div>
     <div class="chip chip-tooltip" data-f="eBumi" onclick="toggleChip(this)">Bumiputera Only<span class="tooltip-text">Reserved for Bumiputera applicants as defined by Malaysian law.</span></div>
-    <div class="chip chip-tooltip" data-f="eChinese" onclick="toggleChip(this)">Chinese Community<span class="tooltip-text">Scholarships specifically for or strongly associated with the Chinese Malaysian community.</span></div>
-    <div class="chip chip-tooltip" data-f="eIndian" onclick="toggleChip(this)">Indian Community<span class="tooltip-text">Scholarships specifically for or strongly associated with the Indian Malaysian community.</span></div>
     <div class="chip chip-tooltip" data-f="eForeigner" onclick="toggleChip(this)">Open to Non-Malaysians<span class="tooltip-text">International students or non-Malaysian citizens may also apply.</span></div>
   </div>
   <div class="filter-row">
@@ -359,7 +360,7 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
   <div class="about-inner">
     <div class="about-eyebrow">About MyScholar</div>
     <h2>Built for Malaysian students</h2>
-    <p>No student should miss out on a scholarship because they didn't know it existed. This directory covers government, GLC, corporate, banking, state-level, international, and university scholarships — including global programmes open to Malaysians. For SPM, STPM, O-Level, UEC, and IGCSE graduates through postgraduate. Always verify deadlines and requirements at the official website before applying.</p>
+    <p>No student should miss out on a scholarship because they didn't know it existed. This directory covers government, GLC, corporate, banking, state-level, international, and university scholarships — including global programmes open to Malaysians. For SPM, STPM, O-Level, UEC, IGCSE graduates through postgraduate. Always verify deadlines and requirements at the official website before applying.<br><br>Last updated: April 2026 · 130+ programmes across 12 categories.</p>
     <div class="about-cta">
       <button onclick="openSubmitModal()">Know a scholarship we're missing? Tell us →</button>
     </div>
@@ -367,7 +368,7 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
 </section>
 <footer>
   <strong>MyScholar Malaysia</strong> · myscholar.my · Scholarship Directory 2025/2026<br>
-  Data sourced from official portals · Always verify before applying · Free for all Malaysian students<br>
+  130+ programmes updated April 2026 · Sourced from official portals · Always verify before applying · Free for all Malaysian students<br>
   <a href="https://www.jpa.gov.my">JPA</a> · <a href="https://www.mara.gov.my">MARA</a> · <a href="https://www.yayasankhazanah.com.my">Khazanah</a> · <a href="https://www.petronas.com">Petronas</a> · <a href="https://www.bnm.gov.my">Bank Negara</a> · <a href="https://www.ptptn.gov.my">PTPTN</a> · <a href="https://kuokfoundation.com">Kuok Foundation</a> · <a href="https://ytlfoundation.org">YTL Foundation</a> · <a href="https://jeffreycheah.foundation">Jeffrey Cheah Foundation</a>
 </footer>
 
@@ -439,8 +440,24 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
   </div>
 </div>
 
-<script>
+<!-- Link Checker Modal -->
+<div class="modal-overlay" id="linkCheckerModal" onclick="if(event.target.id==='linkCheckerModal')closeLinkChecker()">
+  <div class="submit-modal" style="max-width:680px">
+    <button class="modal-close" onclick="closeLinkChecker()">✕</button>
+    <div class="submit-inner">
+      <h2>🔗 URL Link Checker</h2>
+      <p style="color:var(--muted);font-size:13px;line-height:1.7">Checks all scholarship links by testing if they respond. Some links may show as broken due to CORS restrictions even if they work — always verify manually before removing. Results open in new tabs.</p>
+      <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">
+        <button class="submit-btn" style="flex:1;min-width:140px;margin-top:0" onclick="runLinkCheck()">▶ Run Check</button>
+        <button class="submit-btn" style="flex:1;min-width:140px;margin-top:0;background:var(--muted)" onclick="document.getElementById('linkResults').innerHTML='';document.getElementById('linkSummary').textContent=''">Clear</button>
+      </div>
+      <div id="linkSummary" style="font-size:13px;color:var(--muted);margin-bottom:10px"></div>
+      <div id="linkResults" style="max-height:420px;overflow-y:auto;border:1px solid var(--border);border-radius:6px;background:var(--ice);padding:10px;font-size:12px;line-height:1.8"></div>
+    </div>
+  </div>
+</div>
 
+<script>
 
 // ── SCHOLARSHIP DATA ──────────────────────────────────────────────────────
 // ethnicity flags: openAll, bumiOnly, chineseCommunity, indianCommunity, foreignerOk, global
@@ -568,7 +585,37 @@ const DATA=[
   {id:70,name:"TAR UMT Scholarship",prov:"Tunku Abdul Rahman University of Management & Technology",cat:"University",amt:"Merit scholarships — partial tuition fee waiver",cov:"Partial",dest:"Local",fields:["Any field at TAR UMT","Accounting","Business","Engineering","IT","Communication","Hospitality"],quals:["SPM","STPM","A-Level","UEC","Foundation","Matriculation"],elig:["Open to all","Malaysian citizens preferred"],school:["Open to all"],grade:"Strong academic results; STPM/A-Level/UEC/Foundation; sports/national athletes also eligible",dl:"Rolling",dl_months:null,dl_open:null,entry:["PostSPM","PreU","Undergrad"],fieldTags:["Any","Business","Engineering","IT"],gradeMin:"5As",bond:"None",nb:true,b40:false,bumi:false,rolling:true,openAll:true,bumiOnly:false,chineseCommunity:true,indianCommunity:false,foreignerOk:false,global:false,notes:"TAR UMT (formerly Tunku Abdul Rahman College). Strongly associated with MCA/Chinese community education. Separate bursary for state and national athletes. UEC students well-supported.",url:"https://www.tarc.edu.my/scholarships"},
   // POSTGRADUATE
   {id:90,name:"MyBrain 2.0 — MyMaster & MyPhD Scholarship",prov:"Ministry of Higher Education Malaysia (MoHE)",cat:"Postgraduate",amt:"Full — tuition + monthly stipend (Masters and PhD)",cov:"Full",dest:"Local",fields:["Any field","STEM priority","Education","Social Sciences"],quals:["Degree (for MyMaster)","Masters (for MyPhD)"],elig:["Malaysian citizens","age ≤45 for MyPhD","enrolled or accepted at IPTA/selected IPTS"],school:["Public universities and selected IPTS"],grade:"Min CGPA 3.00 at degree level (MyMaster); min CGPA 3.00 Masters (MyPhD)",dl:"Rolling — batches in Jan, Apr, Jul, Oct",dl_months:null,dl_open:null,entry:["Postgrad"],fieldTags:["Any","STEM"],gradeMin:"Any",bond:"None",nb:true,b40:false,bumi:false,rolling:true,openAll:true,bumiOnly:false,chineseCommunity:false,indianCommunity:false,foreignerOk:false,global:false,notes:"Government postgraduate scholarship replacing MyBrain15. Two streams: MyMaster (Masters) and MyPhD (Doctorate). Rolling applications processed in quarterly batches — January, April, July, October. IMPORTANT: Do NOT pay tuition fees before scholarship approval — fees paid before successful application cannot be claimed back. Apply via payloan.mohe.gov.my.",url:"https://payloan.mohe.gov.my/MyBrain15"},
-  {id:91,name:"Zamalah University Research Scholarship",prov:"Malaysian Public Universities (UM, UKM, UPM, UTM, UiTM, etc.)",cat:"Postgraduate",amt:"Monthly stipend RM1,000–RM1,800 + partial/full tuition waiver",cov:"Partial",dest:"Local",fields:["Any field","Research-based programmes"],quals:["Degree","Masters"],elig:["Malaysian citizens and international students","enrolled in research-based Masters or PhD"],school:["Public universities"],grade:"First-class or Second-class Upper for Masters entry; CGPA 3.00+ for PhD",dl:"Rolling — check each university's RMC",dl_months:null,dl_open:null,entry:["Postgrad"],fieldTags:["Any","STEM"],gradeMin:"Any",bond:"None",nb:true,b40:false,bumi:false,rolling:true,openAll:true,bumiOnly:false,chineseCommunity:false,indianCommunity:false,foreignerOk:true,global:false,notes:"Zamalah refers to internal research assistantship/scholarship schemes at Malaysian public universities. Each university operates its own scheme via its Research Management Centre (RMC). Available at UM, UKM, UPM, UTM, UiTM and others. Typically requires enrolment in research-based programme.",url:"https://www.um.edu.my/research/research-management/zamalah-scholarships"}
+  {id:91,name:"Zamalah University Research Scholarship",prov:"Malaysian Public Universities (UM, UKM, UPM, UTM, UiTM, etc.)",cat:"Postgraduate",amt:"Monthly stipend RM1,000–RM1,800 + partial/full tuition waiver",cov:"Partial",dest:"Local",fields:["Any field","Research-based programmes"],quals:["Degree","Masters"],elig:["Malaysian citizens and international students","enrolled in research-based Masters or PhD"],school:["Public universities"],grade:"First-class or Second-class Upper for Masters entry; CGPA 3.00+ for PhD",dl:"Rolling — check each university's RMC",dl_months:null,dl_open:null,entry:["Postgrad"],fieldTags:["Any","STEM"],gradeMin:"Any",bond:"None",nb:true,b40:false,bumi:false,rolling:true,openAll:true,bumiOnly:false,chineseCommunity:false,indianCommunity:false,foreignerOk:true,global:false,notes:"Zamalah refers to internal research assistantship/scholarship schemes at Malaysian public universities. Each university operates its own scheme via its Research Management Centre (RMC). Available at UM, UKM, UPM, UTM, UiTM and others. Typically requires enrolment in research-based programme.",url:"https://www.um.edu.my/research/research-management/zamalah-scholarships"},
+  // NEW ENTRIES — GOVERNMENT
+  {id:121,name:"Biasiswa Yang Di-Pertuan Agong (BYDPA)",prov:"Jabatan Perkhidmatan Awam (JPA)",cat:"Government",amt:"Full — tuition, living, flights (overseas) or tuition + allowances (local)",cov:"Full",dest:"Overseas",fields:["Any field","STEM","Law","Medicine","Economics","Business","Social Sciences"],quals:["A-Level","STPM","Matriculation","Foundation","Diploma"],elig:["Open to all","Malaysian citizens","age ≤24 typically"],school:["Open to all"],grade:"Outstanding pre-university results — CGPA 3.90+ or equivalent; strong leadership",dl:"March–April",dl_months:[3,4],dl_open:[1,2],entry:["PreU","Undergrad"],fieldTags:["Any","STEM","Law","Medicine","Business"],gradeMin:"Straight",bond:"Yes — government service bond",nb:false,b40:false,bumi:false,rolling:false,openAll:true,bumiOnly:false,chineseCommunity:false,indianCommunity:false,foreignerOk:false,global:false,notes:"JPA-administered royal scholarship — one of Malaysia's most prestigious awards. Offered to outstanding pre-university graduates. Covers study at top-ranked universities worldwide. Highly competitive selection — national-level assessment. Check JPA's official penajaan portal for current cycle details.",url:"https://penajaan.jpa.gov.my"},
+  {id:122,name:"JPA Program Khas Perubatan, Pergigian & Farmasi (PPF)",prov:"Jabatan Perkhidmatan Awam (JPA)",cat:"Government",amt:"Full — tuition + allowances",cov:"Full",dest:"Local",fields:["Medicine","Dentistry","Pharmacy"],quals:["A-Level","STPM","Matriculation","Foundation"],elig:["Open to all","Malaysian citizens"],school:["Public universities"],grade:"Min CGPA 3.90 pre-university; strong science track",dl:"January–March",dl_months:[1,2,3],dl_open:[1],entry:["PreU","Undergrad"],fieldTags:["Medicine","STEM"],gradeMin:"Straight",bond:"Yes — government service bond",nb:false,b40:false,bumi:false,rolling:false,openAll:true,bumiOnly:false,chineseCommunity:false,indianCommunity:false,foreignerOk:false,global:false,notes:"Separate JPA sponsorship specifically for Medicine, Dentistry, and Pharmacy at Malaysian public universities. Distinct from the general PPN/LSPM tracks. Applications typically open January annually. Requires pre-university offer from a public university medical/pharmacy programme.",url:"https://penajaan.jpa.gov.my"},
+  {id:123,name:"KPM Biasiswa Perguruan Persekutuan (ISMP)",prov:"Kementerian Pendidikan Malaysia (KPM)",cat:"Government",amt:"Full — tuition + monthly allowance (teacher training bond)",cov:"Full",dest:"Local",fields:["Education","Teacher Training","STEM Education","Bahasa Malaysia","Islamic Studies","Physical Education","Special Education"],quals:["STPM","A-Level","Matriculation","Foundation","Diploma"],elig:["Open to all","Malaysian citizens","commitment to teaching career"],school:["Public universities"],grade:"Excellent pre-university results; strong personal statement about teaching vocation",dl:"January–March",dl_months:[1,2,3],dl_open:[1],entry:["PreU","Undergrad"],fieldTags:["Any","STEM"],gradeMin:"5As",bond:"Yes — mandatory teaching service 10 years in Malaysian public schools",nb:false,b40:false,bumi:false,rolling:false,openAll:true,bumiOnly:false,chineseCommunity:false,indianCommunity:false,foreignerOk:false,global:false,notes:"Ministry of Education scholarship for the Ijazah Sarjana Muda Pendidikan (ISMP) — undergraduate degree in teaching. Funded place at public university to produce qualified teachers. 10-year teaching bond at public schools. Applications open January annually via KPM portal. Covers all education specialisations.",url:"https://www.moe.gov.my"},
+  {id:124,name:"Malaysian International Scholarship (MIS)",prov:"Ministry of Higher Education Malaysia (MoHE)",cat:"Government",amt:"Full — tuition + monthly allowance for international postgrads to study IN Malaysia",cov:"Full",dest:"Local",fields:["STEM","Engineering","Medicine","Business","Social Sciences","Humanities","Arts"],quals:["Degree (undergraduate completed)"],elig:["International students from developing countries","Citizens of countries with Malaysia diplomatic relations"],school:["Public universities"],grade:"Strong undergraduate degree (CGPA ≥3.00); research proposal required for PhD",dl:"March–May",dl_months:[3,4,5],dl_open:[2],entry:["Postgrad"],fieldTags:["Any","STEM","Medicine","Business","Engineering"],gradeMin:"Any",bond:"Must return to home country after studies",nb:false,b40:false,bumi:false,rolling:false,openAll:false,bumiOnly:false,chineseCommunity:false,indianCommunity:false,foreignerOk:true,global:false,notes:"MIS is a Malaysian Government initiative to attract international talent to study at Malaysian public universities. Covers postgraduate (Masters and PhD) at selected Malaysian IPTA. Unlike other entries in this directory which are FOR Malaysians, MIS is specifically for international students choosing to study IN Malaysia. Relevant for Malaysians who know international friends seeking Malaysian postgraduate study.",url:"https://www.studymalaysia.com/education/scholarships/malaysian-international-scholarship-mis"},
+  // NEW ENTRIES — BANKING
+  {id:125,name:"RHB Foundation xCEL Scholarship",prov:"RHB Foundation (RHB Banking Group)",cat:"Banking",amt:"Full — tuition + monthly living allowance",cov:"Full",dest:"Local",fields:["Any approved undergraduate field","Business","Finance","Accounting","Economics","IT","Engineering","Law"],quals:["STPM","A-Level","Matriculation","Foundation","Diploma","UEC"],elig:["Open to all","Malaysian citizens","min CGPA 3.50 or equivalent","age ≤25"],school:["Open to all"],grade:"Min CGPA 3.50 pre-university; active in ECA and leadership",dl:"May–July",dl_months:[5,6,7],dl_open:[4],entry:["PreU","Undergrad"],fieldTags:["Business","IT","Engineering","Law"],gradeMin:"5As",bond:"Yes — service bond at RHB Group",nb:false,b40:false,bumi:false,rolling:false,openAll:true,bumiOnly:false,chineseCommunity:false,indianCommunity:false,foreignerOk:false,global:false,notes:"RHB Banking Group's flagship undergraduate scholarship programme. Full coverage including tuition fees and monthly living allowance. Strong pathway into banking and finance careers. Apply via rhbfoundation.rhbgroup.com. Check for 2026 cycle opening dates.",url:"https://rhbfoundation.rhbgroup.com/home/rhbxcel/index.html"},
+  {id:126,name:"MNRB Scholarship Fund",prov:"MNRB Holdings Berhad",cat:"Banking",amt:"Full — tuition + allowances at local universities",cov:"Full",dest:"Local",fields:["Any approved field","Actuarial Science","Risk Management","Finance","Insurance","Business","IT","Law","Engineering"],quals:["SPM","STPM","A-Level","Foundation","Matriculation"],elig:["Open to all","Malaysian citizens","SPM leavers or current undergraduates"],school:["Open to all"],grade:"Min 6As SPM or equivalent; strong academic + ECA record",dl:"Within 2 weeks after SPM results (annually)",dl_months:[3,4],dl_open:[3],entry:["PostSPM","PreU","Undergrad"],fieldTags:["Business","IT","Engineering","Law"],gradeMin:"5As",bond:"Yes — employment at MNRB Group",nb:false,b40:false,bumi:false,rolling:false,openAll:true,bumiOnly:false,chineseCommunity:false,indianCommunity:false,foreignerOk:false,global:false,notes:"Established 1998. MNRB is Malaysia's national reinsurance group. Open to SPM leavers, students pursuing or intending to pursue local university studies. Deadline approximately within 2 weeks after SPM results. Also open to current undergraduates at local/selected private with twinning. Apply at mnrb.com.my/careers/scholarships.",url:"https://www.mnrb.com.my/careers/scholarships"},
+  // NEW ENTRIES — CORPORATE
+  {id:127,name:"Top Glove Foundation Scholarship",prov:"Top Glove Foundation / Top Glove Corporation",cat:"Corporate",amt:"Full — tuition + monthly living allowance",cov:"Full",dest:"Local",fields:["Engineering","Medicine","Nursing","Pharmacy","Business","Finance","IT","Supply Chain","Manufacturing"],quals:["SPM","STPM","A-Level","Foundation","Matriculation","UEC"],elig:["Open to all","Malaysian citizens","financial need preferred"],school:["Open to all"],grade:"Strong academic results; active ECA; demonstrated financial need",dl:"Rolling — check topglove.com",dl_months:null,dl_open:null,entry:["PostSPM","PreU","Undergrad"],fieldTags:["Engineering","Medicine","Business","IT","STEM"],gradeMin:"5As",bond:"Varies — potential employment opportunity at Top Glove",nb:false,b40:true,bumi:false,rolling:true,openAll:true,bumiOnly:false,chineseCommunity:false,indianCommunity:false,foreignerOk:false,global:false,notes:"Top Glove Foundation (world's largest glove manufacturer) scholarship for deserving Malaysian students. Focus on health sciences, engineering and business. Apply via topglove.com foundation page.",url:"https://www.topglove.com/social-top-glove-foundation-education"},
+  {id:128,name:"Senheng Education Assistance (SEA)",prov:"Senheng Electric (KL) Sdn Bhd",cat:"Corporate",amt:"Partial — education assistance/bursary",cov:"Partial",dest:"Local",fields:["Any field","Business","IT","Engineering","Retail Management","Supply Chain"],quals:["SPM","STPM","A-Level","Foundation","Diploma"],elig:["Open to all","Malaysian citizens","children or family of Senheng employees also eligible"],school:["Open to all"],grade:"Good academic results; active ECA",dl:"Varies — check Senheng website",dl_months:null,dl_open:null,entry:["PostSPM","PreU","Undergrad"],fieldTags:["Any","Business","IT","Engineering"],gradeMin:"Any",bond:"Varies",nb:false,b40:false,bumi:false,rolling:true,openAll:true,bumiOnly:false,chineseCommunity:false,indianCommunity:false,foreignerOk:false,global:false,notes:"Senheng Electric is one of Malaysia's largest consumer electronics retail chains. SEA (Senheng Education Assistance) provides education support for aspiring students. Check Senheng's website or Malaysian scholarship portals for current cycle details.",url:"https://senheng.com.my"},
+  {id:129,name:"Yayasan JCorp Scholarship (Johor Corporation)",prov:"Yayasan Johor Corporation (JCorp)",cat:"Corporate",amt:"Education assistance — varies by programme",cov:"Partial",dest:"Local",fields:["Any field","Business","Engineering","Plantation Management","Healthcare","IT"],quals:["SPM","STPM","A-Level","Foundation","Matriculation","Diploma"],elig:["Open to all","Johorean students preferred","Malaysian citizens"],school:["Open to all"],grade:"Good academic results; Johor connection preferred; active ECA",dl:"Rolling — check yayasanjcorp.com.my",dl_months:null,dl_open:null,entry:["PostSPM","PreU","Undergrad"],fieldTags:["Any","Business","Engineering","IT"],gradeMin:"5As",bond:"Varies",nb:false,b40:false,bumi:false,rolling:true,openAll:true,bumiOnly:false,chineseCommunity:false,indianCommunity:false,foreignerOk:false,global:false,notes:"Johor Corporation (JCorp) is a Johor state-linked conglomerate with businesses in property, healthcare, food, and plantation. Yayasan JCorp provides education assistance for deserving students especially from Johor. Apply via yayasanjcorp.com.my.",url:"https://www.yayasanjcorp.com.my/education.php"},
+  {id:130,name:"Yayasan DayaDiri (YDD) Scholarship",prov:"Yayasan DayaDiri (YDD)",cat:"Corporate",amt:"Full — tuition at partner institutions + monthly allowance",cov:"Full",dest:"Local",fields:["Business","Banking","Finance","IT","Computer Networking","Data Analytics","AI"],quals:["SPM","STPM","A-Level","Foundation","Matriculation"],elig:["Open to all","Malaysian citizens","academic excellence + strong extracurriculars"],school:["Open to all"],grade:"Excellent results; strong extracurricular profile; leadership qualities",dl:"April",dl_months:[4],dl_open:[2],entry:["PostSPM","PreU","Undergrad"],fieldTags:["Business","IT","STEM"],gradeMin:"5As",bond:"Varies",nb:false,b40:false,bumi:false,rolling:false,openAll:true,bumiOnly:false,chineseCommunity:false,indianCommunity:false,foreignerOk:false,global:false,notes:"YDD (Yayasan DayaDiri) scholarship for post-SPM and undergraduate students at partner institutions including Monash University Malaysia, Sunway University, Taylor's University. Approved fields include Business, IT (AI, Data Analytics, Networking), and Finance at selected degree programmes. 2026 deadline: approximately 12 April 2026. Apply at ydd.org.my.",url:"https://ydd.org.my/post-spm-scholarships/"},
+  {id:131,name:"Budimas Charitable Foundation Scholarship",prov:"Budimas Charitable Foundation",cat:"Corporate",amt:"Full — tuition + monthly living allowance",cov:"Full",dest:"Local",fields:["Any field","Business","IT","Social Sciences","Education"],quals:["SPM","STPM","Foundation","Diploma"],elig:["Underprivileged Malaysian students","orphans","low-income families","B40"],school:["Open to all"],grade:"Good academic results; demonstrated financial hardship",dl:"Rolling",dl_months:null,dl_open:null,entry:["PostSPM","PreU","Undergrad"],fieldTags:["Any","Business","IT"],gradeMin:"Any",bond:"None",nb:true,b40:true,bumi:false,rolling:true,openAll:true,bumiOnly:false,chineseCommunity:false,indianCommunity:false,foreignerOk:false,global:false,notes:"Established 2020. Budimas focuses on providing underprivileged Malaysian children — including orphans and those from extremely low-income families — the opportunity to pursue higher education. Fully funded scholarship including living expenses. Apply via budimas.org.my.",url:"https://www.budimas.org.my"},
+  // NEW ENTRIES — STATE
+  {id:132,name:"Yayasan Perak Education Fund",prov:"Yayasan Perak",cat:"State",amt:"Education loan/bursary — varies by programme",cov:"Partial",dest:"Local",fields:["Any field at accredited institutions"],quals:["SPM","STPM","Foundation","Diploma","Degree"],elig:["Perak residents","Malaysian citizen born in Perak or resided ≥5 years"],school:["Open to all"],grade:"Good academic results; Perak connection required",dl:"Rolling — check yayasanperak.gov.my",dl_months:null,dl_open:null,entry:["PostSPM","PreU","Undergrad"],fieldTags:["Any"],gradeMin:"Any",bond:"Loan — repayment required; some grants for top students",nb:false,b40:false,bumi:false,rolling:true,openAll:true,bumiOnly:false,chineseCommunity:false,indianCommunity:false,foreignerOk:false,global:false,notes:"Perak state foundation for Perak residents. Also provides Insentif Siswa Yayasan Perak incentive for first-class graduates. Apply via yayasanperak.gov.my.",url:"https://yayasanperak.gov.my"},
+  {id:133,name:"Yayasan Kelantan (YAKIN) Education Loan",prov:"Yayasan Kelantan Darulnaim (YAKIN)",cat:"State",amt:"Education loan — amount varies by level",cov:"Partial",dest:"Local",fields:["Any field at accredited institutions"],quals:["SPM","STPM","Foundation","Diploma","Degree"],elig:["Kelantanese — born in Kelantan or parent is Kelantanese","Malaysian citizen"],school:["Open to all"],grade:"Good academic results; Kelantan connection required",dl:"Rolling — check espmb.com/yakin",dl_months:null,dl_open:null,entry:["PostSPM","PreU","Undergrad"],fieldTags:["Any"],gradeMin:"Any",bond:"Loan — repayment required",nb:false,b40:false,bumi:false,rolling:true,openAll:true,bumiOnly:false,chineseCommunity:false,indianCommunity:false,foreignerOk:false,global:false,notes:"Kelantan state education loan for students with Kelantan origin. Apply via espmb.com/yakin or Yayasan Kelantan portal. Covers Diploma and Degree at accredited Malaysian institutions.",url:"https://espmb.com/yakin/"},
+  {id:134,name:"Tabung Amanah Pendidikan Negeri Melaka (TAPEM)",prov:"Melaka State Government",cat:"State",amt:"Education loan — varies by programme",cov:"Partial",dest:"Local",fields:["Any field at accredited institutions"],quals:["SPM","STPM","Foundation","Diploma","Degree"],elig:["Melaka residents","born in Melaka or parent registered in Melaka"],school:["Open to all"],grade:"Good academic results; Melaka connection required; accepted at accredited institution",dl:"Rolling — check tapem.melaka.gov.my",dl_months:null,dl_open:null,entry:["PostSPM","PreU","Undergrad"],fieldTags:["Any"],gradeMin:"Any",bond:"Loan — repayment required",nb:false,b40:false,bumi:false,rolling:true,openAll:true,bumiOnly:false,chineseCommunity:false,indianCommunity:false,foreignerOk:false,global:false,notes:"Melaka state education loan for Melaka residents. Apply via tapem.melaka.gov.my. Covers Diploma and Degree programmes at Malaysian institutions.",url:"https://tapem.melaka.gov.my/pinjaman-wang-pengajian-tinggi"},
+  {id:135,name:"Pinjaman Pelajaran Yayasan Selangor",prov:"Yayasan Selangor",cat:"State",amt:"Education loan — varies by programme",cov:"Partial",dest:"Local",fields:["Any field at accredited institutions"],quals:["SPM","STPM","Foundation","Diploma","Degree"],elig:["Selangor residents","Malaysian citizens registered in Selangor"],school:["Open to all"],grade:"Good academic results; Selangor connection required",dl:"Rolling",dl_months:null,dl_open:null,entry:["PostSPM","PreU","Undergrad"],fieldTags:["Any"],gradeMin:"Any",bond:"Loan — repayment required",nb:false,b40:false,bumi:false,rolling:true,openAll:true,bumiOnly:false,chineseCommunity:false,indianCommunity:false,foreignerOk:false,global:false,notes:"Distinct from the Tabung Pendidikan Selangor (Dana Pendidikan Selangor). Yayasan Selangor specifically provides a student loan programme. Apply via yayasanselangor.org.my.",url:"https://yayasanselangor.org.my/maklumat-tawaran-pinjaman/"},
+  // NEW ENTRIES — LOAN
+  {id:136,name:"Yayasan ANGKASA Education Loan",prov:"Yayasan Angkasa (Angkatan Koperasi Kebangsaan Malaysia)",cat:"Loan",amt:"Education loan — varies by programme and level",cov:"Partial",dest:"Local",fields:["Any MQA-accredited field"],quals:["SPM","STPM","Foundation","Diploma","Degree"],elig:["Open to all","Malaysian citizens","members of cooperative movement preferred"],school:["Open to all"],grade:"Good academic results; accepted at accredited institution",dl:"Rolling",dl_months:null,dl_open:null,entry:["PostSPM","PreU","Undergrad","Postgrad"],fieldTags:["Any"],gradeMin:"Any",bond:"None — loan repayment required",nb:false,b40:false,bumi:false,rolling:true,openAll:true,bumiOnly:false,chineseCommunity:false,indianCommunity:false,foreignerOk:false,global:false,notes:"Yayasan ANGKASA provides education financing for Malaysian students through the national cooperative movement. Priority given to children of cooperative members. Apply via yayasanangkasa.coop.",url:"https://www.yayasanangkasa.coop/"},
+  // NEW ENTRIES — INTERNATIONAL
+  {id:137,name:"IsDB Scholarship (Islamic Development Bank)",prov:"Islamic Development Bank (IsDB) / IRTI",cat:"International",amt:"Full — tuition + monthly stipend + travel",cov:"Full",dest:"Overseas",fields:["STEM","Engineering","Medicine","IT","Business","Education","Economics","Agriculture","Environment"],quals:["SPM","A-Level","STPM","Diploma (Undergrad)","Degree (Postgrad)"],elig:["Malaysian citizens","Muslim applicants preferred for some programmes","member country nationals"],school:["Open to all"],grade:"Good to excellent academic results; min CGPA 3.00; motivation and development focus",dl:"January–April",dl_months:[1,2,3,4],dl_open:[11,12],entry:["PreU","Undergrad","Postgrad"],fieldTags:["Any","STEM","Medicine","Business","Engineering"],gradeMin:"5As",bond:"Must return to home country and contribute to development",nb:false,b40:true,bumi:false,rolling:false,openAll:true,bumiOnly:false,chineseCommunity:false,indianCommunity:false,foreignerOk:false,global:true,notes:"IsDB (Islamic Development Bank) scholarships for students from IsDB member countries including Malaysia. Multiple programmes: Merit scholarship (top-performing students), Scholarship for Muslims in Non-Member Countries. Covers undergraduate and postgraduate at top universities worldwide. Strong focus on development-oriented fields. Malaysia is an IsDB member country — Malaysians are eligible. Apply via IsDB portal or through YPEIM (Yayasan Pembangunan Ekonomi Islam Malaysia).",url:"https://www.isdb.org/what-we-do/merit-scholarship-program"},
+  {id:138,name:"ASEAN Scholarship (Singapore MOE)",prov:"Ministry of Education Singapore",cat:"International",amt:"Full — school fees, accommodation, living allowance, return flights",cov:"Full",dest:"Overseas",fields:["Pre-university studies at top Singapore schools — any stream"],quals:["SPM","IGCSE","O-Level","STPM"],elig:["Malaysian citizens","Age appropriate for secondary/JC intake","outstanding academic record"],school:["Open to all"],grade:"Outstanding O-Level / IGCSE results equivalent; excellent co-curricular profile",dl:"February–March",dl_months:[2,3],dl_open:[1],entry:["PostSPM","PreU"],fieldTags:["Any","STEM"],gradeMin:"7As",bond:"None — no work bond to Singapore",nb:true,b40:false,bumi:false,rolling:false,openAll:true,bumiOnly:false,chineseCommunity:false,indianCommunity:false,foreignerOk:false,global:true,notes:"Singapore Ministry of Education scholarship for Malaysian students to pursue secondary education (Year 3–4) or pre-university (Year 5–6 / JC) at top Singapore schools. Includes Raffles Institution, Hwa Chong, National JC, Victoria JC and others. No bond required to work in Singapore. Very competitive — typically 150–200 Malaysians selected per year. Apply via MOE Singapore website.",url:"https://www.moe.gov.sg/financial-matters/awards-scholarships/asean-scholarships/malaysia"},
+  {id:139,name:"Kuok Foundation British Universities Scholarship",prov:"Kuok Foundation Berhad",cat:"International",amt:"Full — tuition + monthly stipend at UK universities",cov:"Full",dest:"Overseas",fields:["Any field","Business","Engineering","Sciences","Law","Economics"],quals:["A-Level","STPM","IB","Foundation","Diploma"],elig:["Malaysian citizens","financial need required","academic excellence"],school:["Open to all"],grade:"Excellent A-Level / pre-university results; accepted at UK university; financial need demonstrated",dl:"June–July",dl_months:[6,7],dl_open:[5],entry:["PreU","Undergrad"],fieldTags:["Any","Business","Engineering","STEM","Law"],gradeMin:"7As",bond:"None",nb:true,b40:false,bumi:false,rolling:false,openAll:true,bumiOnly:false,chineseCommunity:false,indianCommunity:false,foreignerOk:false,global:true,notes:"Distinct from the Kuok Foundation local undergraduate award. This full-ride scholarship is specifically for Malaysian students pursuing undergraduate degrees at British universities. Covers full tuition + monthly stipend. Est. 1970 Kuok family foundation. Financial need is a key criterion. Apply via kuokfoundation.com — check for current UK scholarship cycle separate from local scholarship applications.",url:"https://kuokfoundation.com"},
+  // NEW ENTRIES — FOUNDATION
+  {id:140,name:"Yayasan PEMENANG Scholarship (Penang Malay Association)",prov:"Persatuan Melayu Pulau Pinang (PEMENANG)",cat:"Foundation",amt:"Bursary — amount varies",cov:"Partial",dest:"Local",fields:["Any field at public/private institutions"],quals:["SPM","STPM","Foundation","Diploma","Degree"],elig:["Penang Malay community","Malaysian citizens"],school:["Open to all"],grade:"Good academic results; Penang Malay community connection",dl:"Rolling — check pemenang.org.my",dl_months:null,dl_open:null,entry:["PostSPM","PreU","Undergrad"],fieldTags:["Any"],gradeMin:"Any",bond:"None",nb:true,b40:false,bumi:true,rolling:true,openAll:false,bumiOnly:true,chineseCommunity:false,indianCommunity:false,foreignerOk:false,global:false,notes:"Persatuan Melayu Pulau Pinang (Penang Malay Association) scholarship/bursary for Penang Malay community students. Apply via pemenang.org.my.",url:"https://www.pemenang.org.my/biasiswa/"},
+  // NEW ENTRIES — POSTGRADUATE
+  {id:141,name:"Khazanah-CIMB Foundation Islamic Finance Scholarship (Postgrad)",prov:"Yayasan Khazanah / CIMB Foundation",cat:"Postgraduate",amt:"Full — tuition + living allowance at partner institutions",cov:"Full",dest:"Overseas",fields:["Islamic Finance","Islamic Economics","Shariah","Finance","Law","Economics"],quals:["Degree (undergraduate completed)"],elig:["Malaysian citizens","Open to all","strong academic record in relevant field"],school:["Open to all"],grade:"Strong undergraduate degree; accepted at partner institution; relevant field background",dl:"March–May",dl_months:[3,4,5],dl_open:[2],entry:["Postgrad"],fieldTags:["Business","Law"],gradeMin:"Any",bond:"Must return to Malaysia",nb:false,b40:false,bumi:false,rolling:false,openAll:true,bumiOnly:false,chineseCommunity:false,indianCommunity:false,foreignerOk:false,global:false,notes:"Joint postgraduate scholarship for Islamic finance and economics studies at leading institutions. Covers Masters programmes at INCEIF, Durham, Exeter, and other Islamic finance-focused universities. Check Yayasan Khazanah and CIMB Foundation websites for latest cycle.",url:"https://www.yayasankhazanah.com.my"},
+  {id:142,name:"Yayasan Peneraju Postgraduate (Masters/PhD)",prov:"Yayasan Peneraju Pendidikan Bumiputera",cat:"Postgraduate",amt:"Full — tuition + monthly stipend for Masters and PhD",cov:"Full",dest:"Local",fields:["Any field","STEM","Business","Education","Professional Certification"],quals:["Degree (for Masters)","Masters (for PhD)"],elig:["Bumiputera only","Malaysian citizens"],school:["Public universities and selected IPTS"],grade:"Min CGPA 3.00 at degree level; strong academic and leadership profile",dl:"Rolling",dl_months:null,dl_open:null,entry:["Postgrad"],fieldTags:["Any","STEM","Business"],gradeMin:"Any",bond:"Varies",nb:false,b40:false,bumi:true,rolling:true,openAll:false,bumiOnly:true,chineseCommunity:false,indianCommunity:false,foreignerOk:false,global:false,notes:"Yayasan Peneraju extends its scholarships to postgraduate level for Bumiputera students. Covers Masters and PhD at Malaysian public universities and selected private institutions. Rolling applications — check yayasanpeneraju.com.my for current batch.",url:"https://www.yayasanpeneraju.com.my"}
 ];
 
 // ── HELPERS ──────────────────────────────────────────────────────────────
@@ -738,9 +785,7 @@ function matches(s){
     // ethnicity / eligibility
     if(f==='eAll'&&!s.openAll)return false;
     if(f==='eBumi'&&!s.bumiOnly)return false;
-    if(f==='eChinese'&&!s.chineseCommunity)return false;
-    if(f==='eIndian'&&!s.indianCommunity)return false;
-    if(f==='eForeigner'&&!s.foreignerOk)return false;
+    if(f==='eForeigner'&&!s.foreignerOk&&!s.global)return false;
     // other
     if(f==='Overseas'&&s.dest!=='Overseas')return false;
     if(f==='Full'&&s.cov!=='Full')return false;
@@ -900,6 +945,69 @@ function render(){
   const grid=document.getElementById('cardGrid');
   if(!n){grid.innerHTML=`<div class="no-results"><h3>No results found</h3><p>Try removing a filter or changing your search term.</p></div>`;return;}
   grid.innerHTML=items.map((s,i)=>buildCard(s,i)).join('');
+}
+
+// ── LINK CHECKER ──────────────────────────────────────────────────────────
+function openLinkChecker(){
+  document.getElementById('linkCheckerModal').classList.add('open');
+}
+function closeLinkChecker(){
+  document.getElementById('linkCheckerModal').classList.remove('open');
+}
+
+async function runLinkCheck(){
+  const results=document.getElementById('linkResults');
+  const summary=document.getElementById('linkSummary');
+  results.innerHTML='<div style="color:var(--muted);padding:8px">⏳ Checking links... this may take 30–60 seconds.</div>';
+  summary.textContent='';
+
+  // Deduplicate URLs
+  const urlMap={};
+  DATA.forEach(s=>{
+    if(!urlMap[s.url]) urlMap[s.url]=[];
+    urlMap[s.url].push(s.name);
+  });
+  const urls=Object.entries(urlMap);
+  let ok=0,warn=0,err=0;
+  const rows=[];
+
+  await Promise.all(urls.map(async ([url,names])=>{
+    let status='⚠️',color='#b45309',label='Unverifiable (CORS)';
+    try {
+      const ctrl=new AbortController();
+      const tid=setTimeout(()=>ctrl.abort(),8000);
+      const r=await fetch(url,{method:'HEAD',mode:'no-cors',signal:ctrl.signal});
+      clearTimeout(tid);
+      // no-cors always returns opaque — if no error thrown, likely reachable
+      status='✅';color='#007a57';label='Likely reachable';ok++;
+    } catch(e){
+      if(e.name==='AbortError'){
+        status='❌';color='#dc2626';label='Timeout (8s)';err++;
+      } else {
+        // Could be CORS block on a live site — treat as warning not hard error
+        status='⚠️';color='#b45309';label='CORS/Network restricted';warn++;
+      }
+    }
+    rows.push({url,names,status,color,label});
+  }));
+
+  rows.sort((a,b)=>{
+    const order={'❌':0,'⚠️':1,'✅':2};
+    return (order[a.status]??2)-(order[b.status]??2);
+  });
+
+  results.innerHTML=rows.map(r=>`
+    <div style="padding:6px 4px;border-bottom:1px solid var(--border);display:flex;gap:8px;align-items:flex-start">
+      <span style="flex-shrink:0;font-size:14px">${r.status}</span>
+      <div style="flex:1;min-width:0">
+        <div style="color:var(--midnight);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${r.names.join(', ')}">${r.names.join(', ')}</div>
+        <a href="${r.url}" target="_blank" style="color:${r.color};text-decoration:none;font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block" title="${r.url}">${r.url}</a>
+        <span style="font-size:10px;color:${r.color}">${r.label}</span>
+      </div>
+    </div>`).join('');
+
+  summary.innerHTML=`<strong>Results:</strong> ${ok} likely OK · ${warn} CORS-restricted (verify manually) · ${err} timed out / unreachable — out of ${urls.length} unique URLs.
+    <br><small style="color:var(--muted)">Note: CORS restrictions mean many working sites appear as ⚠️. Open ❌ links manually to confirm if truly broken.</small>`;
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────
