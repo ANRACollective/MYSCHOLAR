@@ -267,12 +267,49 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
   .form-row{grid-template-columns:1fr}
   /* ── SUBMIT MODAL ── */
   .submit-modal,.submit-inner{padding-left:16px;padding-right:16px}
+  /* ── PAGINATION ── */
+  .pagination{padding:20px 16px 8px;gap:4px}
+  .pg-btn{min-width:32px;height:32px;font-size:12px;padding:0 8px}
+  /* ── BANNER ── */
+  .open-now-banner{padding:10px 16px}
+  /* ── BACK TO TOP ── */
+  .back-to-top{bottom:16px;right:16px;width:38px;height:38px;font-size:16px}
 }
 
 /* Skeleton loading animation */
 @keyframes skeletonPulse {
   0%,100%{opacity:1} 50%{opacity:.4}
 }
+/* ── PAGINATION ── */
+.pagination{display:flex;align-items:center;justify-content:center;gap:6px;padding:28px 32px 12px;flex-wrap:wrap}
+.pg-btn{min-width:36px;height:36px;padding:0 10px;border:1px solid var(--border);border-radius:7px;background:var(--white);color:var(--muted);font-family:var(--sans);font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center}
+.pg-btn:hover{border-color:var(--border-mid);color:var(--midnight)}
+.pg-btn.active{background:var(--midnight);color:#fff;border-color:var(--midnight);font-weight:700}
+.pg-btn:disabled{opacity:.35;cursor:default}
+.pg-info{font-size:12px;color:var(--muted);margin:0 8px}
+/* ── OPEN NOW BANNER ── */
+.open-now-banner{background:linear-gradient(135deg,#00a878,#0891b2);color:#fff;padding:10px 32px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.open-now-banner .banner-text{font-size:13px;font-weight:500}
+.open-now-banner .banner-text strong{font-weight:700}
+.banner-cta{font-size:11.5px;background:rgba(255,255,255,.2);border:none;color:#fff;padding:5px 12px;border-radius:20px;cursor:pointer;font-family:var(--sans);font-weight:600;white-space:nowrap;transition:background .15s}
+.banner-cta:hover{background:rgba(255,255,255,.32)}
+/* ── SHARE BUTTON ON CARD ── */
+.share-btn{background:none;border:none;cursor:pointer;padding:4px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:all .15s;flex-shrink:0;font-size:13px}
+.share-btn:hover{color:var(--navy);background:rgba(30,58,110,.08)}
+/* ── BACK TO TOP ── */
+.back-to-top{position:fixed;bottom:24px;right:24px;width:42px;height:42px;background:var(--midnight);color:#fff;border:none;border-radius:50%;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(15,31,61,.25);transition:all .2s;z-index:300;opacity:0;pointer-events:none}
+.back-to-top.visible{opacity:1;pointer-events:all}
+.back-to-top:hover{background:var(--coral);transform:translateY(-2px)}
+/* ── LAST VERIFIED BADGE ── */
+.verified-badge{font-size:10px;color:#007a57;background:#e0f5ef;padding:2px 7px;border-radius:4px;font-weight:600;display:inline-flex;align-items:center;gap:3px}
+/* ── SEARCH CLEAR BUTTON ── */
+.search-clear{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#aab;font-size:18px;line-height:1;padding:2px;display:none}
+.search-clear.visible{display:block}
+/* ── COPY TOAST ── */
+.copy-toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--midnight);color:#fff;font-size:12px;padding:8px 18px;border-radius:20px;z-index:9999;opacity:0;transition:all .25s;pointer-events:none;white-space:nowrap}
+.copy-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+/* ── RESULTS INFO UPDATE ── */
+.page-info{font-size:12px;color:var(--muted);margin-left:8px}
 </style>
 </head>
 <body>
@@ -307,8 +344,13 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
 <div class="search-section">
   <div class="search-wrap">
     <svg class="search-icon" width="18" height="18" fill="none" stroke="#aab" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-    <input type="text" id="si" placeholder="Search by name, provider, field, keyword…" oninput="render()">
+    <input type="text" id="si" placeholder="Search by name, provider, field, keyword…" oninput="onSearchInput()">
+    <button class="search-clear" id="searchClear" onclick="clearSearch()" title="Clear search">×</button>
   </div>
+</div>
+<div class="open-now-banner" id="openNowBanner" style="display:none">
+  <span class="banner-text">🟢 <strong id="openNowCount">0</strong> scholarships are open for applications right now</span>
+  <button class="banner-cta" onclick="filterOpenNow()">Show open only →</button>
 </div>
 <div class="tabs-wrap">
   <div class="tabs">
@@ -384,7 +426,7 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
   </div>
 </div>
 <div class="results-bar">
-  <div class="results-count">Showing <strong id="countDisplay">0</strong> programmes</div>
+  <div class="results-count">Showing <strong id="countDisplay">0</strong> programmes<span class="page-info" id="pageInfo"></span></div>
   <div class="sort-wrap">Sort:
     <select id="sortSelect" onchange="render()">
       <option value="default">Default</option>
@@ -395,6 +437,13 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
   </div>
 </div>
 <div class="grid-wrap"><div class="grid" id="cardGrid"></div></div>
+<div class="pagination" id="paginationBar"></div>
+
+<!-- Back to top -->
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">↑</button>
+
+<!-- Copy/share toast -->
+<div class="copy-toast" id="copyToast">🔗 Link copied!</div>
 <section class="about-section" id="about">
   <div class="about-inner">
     <div class="about-eyebrow">About MyScholar</div>
@@ -626,7 +675,11 @@ async function initData() {
     // Update hero count
     document.getElementById('heroCount').textContent = DATA.length;
     updateBookmarkCount();
+
+    // New features
+    updateOpenNowBanner();
     render();
+    checkDeepLink();
 
     // GA event: track successful data load
     if (typeof gtag !== 'undefined') {
@@ -881,6 +934,9 @@ ${statusBadge}
 <button class="bookmark-btn${isSaved?' saved':''}" onclick="toggleBookmark(${s.id},event)" title="${isSaved?'Remove bookmark':'Save scholarship'}">
   <svg width="15" height="15" fill="${isSaved?'currentColor':'none'}" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
 </button>
+<button class="share-btn" onclick="shareScholarship(${s.id},event)" title="Copy link to this scholarship">
+  <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/></svg>
+</button>
 <div class="card-cta">View <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
 </div>
 </div>
@@ -952,12 +1008,19 @@ document.addEventListener('keydown',e=>{
   }
 });
 
+// ── PAGINATION STATE ──────────────────────────────────────────────────────
+const PAGE_SIZE = 15; // 3 columns × 5 rows
+let currentPage = 1;
+let filteredItems = [];
+
 // ── RENDER ────────────────────────────────────────────────────────────────
 function render(){
-  const sort=document.getElementById('sortSelect').value;
-  let items=DATA.filter(matches);
+  const sort = document.getElementById('sortSelect').value;
+  filteredItems = DATA.filter(matches);
+
+  // Sort
   if(sort==='deadline'){
-    items.sort((a,b)=>{
+    filteredItems.sort((a,b)=>{
       if(a.rolling&&!b.rolling)return 1;
       if(!a.rolling&&b.rolling)return -1;
       const am=a.dl_months?a.dl_months[0]:13;
@@ -965,20 +1028,198 @@ function render(){
       return am-bm;
     });
   } else if(sort==='name'){
-    items.sort((a,b)=>a.name.localeCompare(b.name));
+    filteredItems.sort((a,b)=>a.name.localeCompare(b.name));
   } else if(sort==='saved'){
-    items.sort((a,b)=>{
+    filteredItems.sort((a,b)=>{
       const as=bookmarks.has(a.id)?0:1;
       const bs=bookmarks.has(b.id)?0:1;
       return as-bs;
     });
   }
-  const n=items.length;
-  document.getElementById('countDisplay').textContent=n;
-  document.getElementById('navPill').textContent=`${n}`;
-  const grid=document.getElementById('cardGrid');
-  if(!n){grid.innerHTML=`<div class="no-results"><h3>No results found</h3><p>Try removing a filter or changing your search term.</p></div>`;return;}
-  grid.innerHTML=items.map((s,i)=>buildCard(s,i)).join('');
+
+  const n = filteredItems.length;
+  const totalPages = Math.max(1, Math.ceil(n / PAGE_SIZE));
+
+  // Clamp current page
+  if(currentPage > totalPages) currentPage = 1;
+
+  const start = (currentPage - 1) * PAGE_SIZE;
+  const end   = Math.min(start + PAGE_SIZE, n);
+  const pageItems = filteredItems.slice(start, end);
+
+  // Update counts
+  document.getElementById('countDisplay').textContent = n;
+  document.getElementById('navPill').textContent = `${n}`;
+  document.getElementById('pageInfo').textContent =
+    n > PAGE_SIZE ? ` · Page ${currentPage} of ${totalPages}` : '';
+
+  // Render cards
+  const grid = document.getElementById('cardGrid');
+  if(!n){
+    grid.innerHTML = `<div class="no-results"><h3>No results found</h3><p>Try removing a filter or changing your search term.</p></div>`;
+    document.getElementById('paginationBar').innerHTML = '';
+    return;
+  }
+  grid.innerHTML = pageItems.map((s,i) => buildCard(s,i)).join('');
+
+  // Render pagination
+  renderPagination(totalPages);
+
+  // GA: track search/filter usage
+  const q = document.getElementById('si').value.trim();
+  if(q && typeof gtag !== 'undefined'){
+    gtag('event','search',{search_term:q,event_category:'scholarship_search',value:n});
+  }
+}
+
+function renderPagination(totalPages){
+  const bar = document.getElementById('paginationBar');
+  if(totalPages <= 1){ bar.innerHTML=''; return; }
+
+  let html = '';
+
+  // Prev button
+  html += `<button class="pg-btn" onclick="goToPage(${currentPage-1})" ${currentPage===1?'disabled':''}>← Prev</button>`;
+
+  // Page number buttons — show max 5 around current
+  const range = [];
+  for(let p=1; p<=totalPages; p++){
+    if(p===1 || p===totalPages || (p>=currentPage-2 && p<=currentPage+2)) range.push(p);
+  }
+  let prev = 0;
+  for(const p of range){
+    if(p - prev > 1) html += `<span class="pg-info">…</span>`;
+    html += `<button class="pg-btn${p===currentPage?' active':''}" onclick="goToPage(${p})">${p}</button>`;
+    prev = p;
+  }
+
+  // Next button
+  html += `<button class="pg-btn" onclick="goToPage(${currentPage+1})" ${currentPage===totalPages?'disabled':''}>Next →</button>`;
+
+  bar.innerHTML = html;
+}
+
+function goToPage(p){
+  const totalPages = Math.ceil(filteredItems.length / PAGE_SIZE);
+  if(p < 1 || p > totalPages) return;
+  currentPage = p;
+  // Scroll to top of grid smoothly
+  document.querySelector('.results-bar').scrollIntoView({behavior:'smooth', block:'start'});
+  render();
+}
+
+// Reset to page 1 whenever filters/search/sort change
+function resetPage(){ currentPage = 1; }
+
+// ── SEARCH CLEAR ──────────────────────────────────────────────────────────
+function onSearchInput(){
+  const q = document.getElementById('si').value;
+  const clearBtn = document.getElementById('searchClear');
+  clearBtn.classList.toggle('visible', q.length > 0);
+  resetPage();
+  render();
+}
+
+function clearSearch(){
+  document.getElementById('si').value = '';
+  document.getElementById('searchClear').classList.remove('visible');
+  resetPage();
+  render();
+}
+
+// ── SHARE SCHOLARSHIP ─────────────────────────────────────────────────────
+// Copies a direct URL like myscholar.my/?id=9 to clipboard
+// The page checks for ?id= on load and auto-opens that modal
+function shareScholarship(id, e){
+  if(e) e.stopPropagation();
+  const url = `${location.origin}${location.pathname}?id=${id}`;
+  navigator.clipboard.writeText(url).then(()=>{
+    showToast('🔗 Link copied!');
+    // GA event
+    const s = DATA.find(x=>x.id===id);
+    if(typeof gtag !== 'undefined' && s){
+      gtag('event','share',{event_category:'scholarship',event_label:s.name});
+    }
+  }).catch(()=>{
+    // Fallback for browsers without clipboard API
+    showToast('Copy: ' + url);
+  });
+}
+
+function showToast(msg){
+  const t = document.getElementById('copyToast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=> t.classList.remove('show'), 2200);
+}
+
+// ── OPEN NOW BANNER ───────────────────────────────────────────────────────
+function updateOpenNowBanner(){
+  if(!DATA.length) return;
+  const openCount = DATA.filter(s => isOpenNow(s) || isClosingSoon(s)).length;
+  const banner = document.getElementById('openNowBanner');
+  const countEl = document.getElementById('openNowCount');
+  if(openCount > 0){
+    countEl.textContent = openCount;
+    banner.style.display = 'flex';
+  }
+}
+
+function filterOpenNow(){
+  // Activate the "Open Now" chip
+  const chip = document.querySelector('[data-f="OpenNow"]');
+  if(chip && !activeChips.has('OpenNow')){
+    chip.classList.add('on');
+    activeChips.add('OpenNow');
+    updateFilterUI();
+  }
+  resetPage();
+  render();
+  // Scroll to grid
+  document.querySelector('.tabs-wrap').scrollIntoView({behavior:'smooth'});
+}
+
+// ── BACK TO TOP ───────────────────────────────────────────────────────────
+window.addEventListener('scroll', ()=>{
+  const btn = document.getElementById('backToTop');
+  btn.classList.toggle('visible', window.scrollY > 600);
+}, {passive: true});
+
+// ── DEEP LINK — open modal from ?id= URL param ────────────────────────────
+function checkDeepLink(){
+  const params = new URLSearchParams(location.search);
+  const id = parseInt(params.get('id'));
+  if(id && DATA.find(x=>x.id===id)){
+    openModal(id);
+  }
+}
+
+// ── OVERRIDE setTab AND toggleChip to reset page ─────────────────────────
+const _origSetTab = setTab;
+// Wrap filter toggle to reset page
+function toggleChip(el){
+  const f=el.dataset.f;
+  if(activeChips.has(f)){activeChips.delete(f);el.classList.remove('on');}
+  else{activeChips.add(f);el.classList.add('on');}
+  updateFilterUI();
+  resetPage();
+  render();
+}
+
+function setTab(el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  activeCat=el.dataset.cat;
+  resetPage();
+  render();
+}
+
+function clearAll(){
+  activeChips.clear();
+  document.querySelectorAll('.chip.on').forEach(c=>c.classList.remove('on'));
+  updateFilterUI();
+  resetPage();
+  render();
 }
 
 // ── LINK CHECKER ──────────────────────────────────────────────────────────
