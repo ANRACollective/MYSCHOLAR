@@ -296,6 +296,61 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
 /* ── SHARE BUTTON ON CARD ── */
 .share-btn{background:none;border:none;cursor:pointer;padding:4px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:all .15s;flex-shrink:0;font-size:13px}
 .share-btn:hover{color:var(--navy);background:rgba(30,58,110,.08)}
+/* ── COMPARE BUTTON ON CARD ── */
+.compare-btn{background:none;border:none;cursor:pointer;padding:4px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:all .15s;flex-shrink:0}
+.compare-btn:hover{color:var(--navy);background:rgba(30,58,110,.08)}
+.compare-btn.in-compare{color:var(--navy);background:rgba(30,58,110,.12)}
+/* ── COMPARE TRAY (sticky bottom) ── */
+.compare-tray{position:fixed;bottom:0;left:0;right:0;background:var(--midnight);color:#fff;z-index:400;padding:12px 20px;display:flex;align-items:center;gap:12px;transform:translateY(100%);transition:transform .28s cubic-bezier(.32,.72,0,1);box-shadow:0 -4px 24px rgba(15,31,61,.25)}
+.compare-tray.visible{transform:translateY(0)}
+.compare-tray-slots{display:flex;gap:8px;flex:1;min-width:0;overflow:hidden}
+.compare-slot{height:36px;min-width:90px;max-width:160px;flex:1;border-radius:6px;border:1.5px dashed rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:11px;color:rgba(255,255,255,.35);padding:0 8px;transition:all .15s}
+.compare-slot.filled{background:rgba(255,255,255,.1);border-style:solid;border-color:rgba(255,255,255,.3);color:#fff;font-size:11px;font-weight:500;justify-content:space-between;gap:4px}
+.compare-slot-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
+.compare-slot-remove{flex-shrink:0;background:none;border:none;color:rgba(255,255,255,.45);cursor:pointer;font-size:15px;line-height:1;padding:0 2px;transition:color .1s}
+.compare-slot-remove:hover{color:#fff}
+.compare-tray-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.compare-tray-btn{font-family:var(--sans);font-size:13px;font-weight:600;background:var(--coral);color:#fff;border:none;border-radius:7px;padding:8px 18px;cursor:pointer;transition:opacity .15s;white-space:nowrap}
+.compare-tray-btn:hover{opacity:.88}
+.compare-tray-btn:disabled{opacity:.35;cursor:default}
+.compare-tray-clear{font-family:var(--sans);font-size:12px;color:rgba(255,255,255,.4);background:none;border:none;cursor:pointer;padding:4px 6px;transition:color .15s;white-space:nowrap}
+.compare-tray-clear:hover{color:#fff}
+/* ── COMPARE MODAL ── */
+.compare-overlay{display:none;position:fixed;inset:0;background:rgba(15,31,61,.65);z-index:1000;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto;backdrop-filter:blur(3px)}
+.compare-overlay.open{display:flex}
+.compare-modal{background:var(--white);border-radius:14px;width:100%;max-width:900px;position:relative;overflow:hidden;margin:auto}
+.compare-modal-head{padding:20px 24px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px}
+.compare-modal-title{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--midnight)}
+.compare-modal-sub{font-size:12px;color:var(--muted);margin-top:2px}
+.compare-modal-close{background:var(--ice);border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:15px;color:var(--muted);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s}
+.compare-modal-close:hover{background:var(--border)}
+.compare-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.compare-table{width:100%;border-collapse:collapse}
+.compare-table th{padding:14px 16px;text-align:left;background:var(--ice);border-bottom:2px solid var(--border);vertical-align:top}
+.compare-table th.row-label{background:var(--ice-mid);width:120px;min-width:120px}
+.compare-table th.col-head{font-family:var(--serif);font-size:14px;font-weight:700;color:var(--midnight);min-width:190px}
+.compare-table th .col-provider{font-family:var(--sans);font-size:11px;font-weight:500;color:var(--muted);margin-top:3px}
+.compare-table th .col-stripe{height:3px;border-radius:2px;margin-top:8px}
+.compare-table td{padding:11px 16px;border-bottom:1px solid var(--border);font-size:13px;color:var(--midnight);vertical-align:top;line-height:1.5}
+.compare-table td.row-label{background:var(--ice);color:var(--muted);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;white-space:nowrap;width:120px}
+.compare-table tr:last-child td{border-bottom:none}
+.compare-chip{display:inline-flex;align-items:center;gap:3px;font-size:10px;padding:2px 8px;border-radius:3px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.cmp-yes{background:#dcfce7;color:#15803d}
+.cmp-no{background:#fee2e2;color:#b91c1c}
+.cmp-partial{background:#fff7ed;color:#c2610c}
+.cmp-neutral{background:var(--ice-mid);color:var(--muted)}
+.compare-visit-btn{display:inline-block;margin-top:6px;font-size:12px;font-weight:600;color:var(--navy);text-decoration:none;padding:5px 12px;border:1px solid var(--border);border-radius:5px;transition:all .14s}
+.compare-visit-btn:hover{background:var(--ice);border-color:var(--border-mid)}
+.compare-modal-foot{padding:12px 20px;border-top:1px solid var(--border);background:var(--ice);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.compare-foot-note{font-size:11.5px;color:var(--muted)}
+.compare-clear-all{font-family:var(--sans);font-size:12px;font-weight:600;color:var(--coral);background:none;border:none;cursor:pointer}
+@media(max-width:680px){
+  .compare-tray{padding:10px 12px;gap:8px}
+  .compare-slot{min-width:72px;font-size:10px}
+  .compare-table th,.compare-table td{padding:9px 10px;font-size:12px}
+  .compare-table th.row-label,.compare-table td.row-label{width:88px;min-width:88px}
+  .compare-overlay{padding:10px}
+}
 /* ── BACK TO TOP ── */
 .back-to-top{position:fixed;bottom:24px;right:24px;width:42px;height:42px;background:var(--midnight);color:#fff;border:none;border-radius:50%;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(15,31,61,.25);transition:all .2s;z-index:300;opacity:0;pointer-events:none}
 .back-to-top.visible{opacity:1;pointer-events:all}
@@ -553,6 +608,41 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
   130+ programmes updated April 2026 · Sourced from official portals · Always verify before applying · Free for all Malaysian students<br>
   <a href="https://www.jpa.gov.my">JPA</a> · <a href="https://www.mara.gov.my">MARA</a> · <a href="https://www.yayasankhazanah.com.my">Khazanah</a> · <a href="https://www.petronas.com">Petronas</a> · <a href="https://www.bnm.gov.my">Bank Negara</a> · <a href="https://www.ptptn.gov.my">PTPTN</a> · <a href="https://kuokfoundation.com">Kuok Foundation</a> · <a href="https://ytlfoundation.org">YTL Foundation</a> · <a href="https://jeffreycheah.foundation">Jeffrey Cheah Foundation</a>
 </footer>
+
+<!-- ── COMPARE TRAY ──────────────────────────────────────────────────────── -->
+<div class="compare-tray" id="compareTray">
+  <div class="compare-tray-slots" id="compareTraySlots">
+    <div class="compare-slot" id="compareSlot0">+ Add scholarship</div>
+    <div class="compare-slot" id="compareSlot1">+ Add scholarship</div>
+    <div class="compare-slot" id="compareSlot2">+ Add scholarship</div>
+  </div>
+  <div class="compare-tray-actions">
+    <button class="compare-tray-clear" onclick="clearCompare()">Clear</button>
+    <button class="compare-tray-btn" id="compareTrayBtn" onclick="openCompareModal()" disabled>Compare →</button>
+  </div>
+</div>
+
+<!-- ── COMPARE MODAL ──────────────────────────────────────────────────────── -->
+<div class="compare-overlay" id="compareOverlay" onclick="handleCompareOverlayClick(event)">
+  <div class="compare-modal" id="compareModal">
+    <div class="compare-modal-head">
+      <div>
+        <div class="compare-modal-title">Compare Scholarships</div>
+        <div class="compare-modal-sub">Reviewing key details side by side — always verify at the official website.</div>
+      </div>
+      <button class="compare-modal-close" onclick="closeCompareModal()">✕</button>
+    </div>
+    <div class="compare-table-wrap">
+      <table class="compare-table" id="compareTable">
+        <!-- populated by JS -->
+      </table>
+    </div>
+    <div class="compare-modal-foot">
+      <span class="compare-foot-note">Data sourced from official portals · Last verified April 2026</span>
+      <button class="compare-clear-all" onclick="clearCompare();closeCompareModal()">Clear all & start over</button>
+    </div>
+  </div>
+</div>
 
 <!-- ── FIND MY MATCH QUIZ MODAL ─────────────────────────────────────────── -->
 <div class="quiz-overlay" id="quizOverlay" onclick="handleQuizOverlayClick(event)">
@@ -1027,6 +1117,9 @@ async function initData() {
       updateMatchStrip();
     }
 
+    // Restore compare tray if scholarships were previously selected
+    restoreCompareState();
+
     // GA event: track successful data load
     if (typeof gtag !== 'undefined') {
       gtag('event', 'data_loaded', {
@@ -1290,6 +1383,9 @@ ${eligBadge}
 </button>
 <button class="share-btn" onclick="shareScholarship(${s.id},event)" title="Copy link to this scholarship">
   <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/></svg>
+</button>
+<button class="compare-btn${compareSet.has(s.id)?' in-compare':''}" onclick="toggleCompare(${s.id},event)" title="${compareSet.has(s.id)?'Remove from compare':'Add to compare'}">
+  <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="8" height="18" rx="1"/><rect x="14" y="3" width="8" height="18" rx="1"/></svg>
 </button>
 <div class="card-cta">View <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
 </div>
@@ -1854,6 +1950,223 @@ function eligibilityScore(s, profile){
   if(hardPass) return 'yes';
   if(softIssues <= 1) return 'maybe';
   return null; // Too many mismatches — no badge shown
+}
+
+// ── COMPARE STATE ─────────────────────────────────────────────────────────
+// Max 3 scholarships. Stored as a Set of IDs.
+// Uses localStorage so compare list survives a page refresh.
+const COMPARE_KEY = 'myscholar_compare_v1';
+let compareSet = new Set();
+
+(function loadSavedCompare(){
+  try {
+    const saved = localStorage.getItem(COMPARE_KEY);
+    if(saved){
+      const arr = JSON.parse(saved);
+      if(Array.isArray(arr)) arr.forEach(id => compareSet.add(id));
+    }
+  } catch(e){ compareSet = new Set(); }
+})();
+
+function saveCompare(){
+  try { localStorage.setItem(COMPARE_KEY, JSON.stringify([...compareSet])); } catch(e){}
+}
+
+// ── TOGGLE COMPARE ────────────────────────────────────────────────────────
+function toggleCompare(id, e){
+  if(e) e.stopPropagation();
+  if(compareSet.has(id)){
+    compareSet.delete(id);
+  } else {
+    if(compareSet.size >= 3){
+      showToast('Maximum 3 scholarships to compare');
+      return;
+    }
+    compareSet.add(id);
+    if(typeof gtag !== 'undefined'){
+      const s = DATA.find(x=>x.id===id);
+      if(s) gtag('event','compare_add',{event_category:'engagement',event_label:s.name});
+    }
+  }
+  saveCompare();
+  updateCompareTray();
+  render(); // refresh card buttons
+}
+
+// ── TRAY ──────────────────────────────────────────────────────────────────
+function updateCompareTray(){
+  const tray = document.getElementById('compareTray');
+  const btn  = document.getElementById('compareTrayBtn');
+  const ids  = [...compareSet];
+
+  // Show/hide tray
+  tray.classList.toggle('visible', ids.length > 0);
+
+  // Update 3 slots
+  for(let i=0; i<3; i++){
+    const slot = document.getElementById('compareSlot'+i);
+    if(!slot) continue;
+    const id = ids[i];
+    if(id !== undefined){
+      const s = DATA.find(x=>x.id===id);
+      const name = s ? s.name : '—';
+      slot.className = 'compare-slot filled';
+      slot.innerHTML = `<span class="compare-slot-name" title="${name}">${name}</span><button class="compare-slot-remove" onclick="toggleCompare(${id},event)" title="Remove">✕</button>`;
+    } else {
+      slot.className = 'compare-slot';
+      slot.innerHTML = i < ids.length + 1 ? '+ Add scholarship' : '';
+      slot.innerHTML = ids.length === 0 && i === 0 ? 'Add up to 3 scholarships' : (i >= ids.length ? '' : '');
+    }
+  }
+
+  // Enable compare button only when 2+
+  btn.disabled = ids.length < 2;
+}
+
+function clearCompare(){
+  compareSet.clear();
+  saveCompare();
+  updateCompareTray();
+  render();
+}
+
+// ── COMPARE MODAL ─────────────────────────────────────────────────────────
+function openCompareModal(){
+  if(compareSet.size < 2) return;
+  buildCompareTable();
+  document.getElementById('compareOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  if(typeof gtag !== 'undefined'){
+    gtag('event','compare_view',{event_category:'engagement',event_label:[...compareSet].join(',')});
+  }
+}
+
+function closeCompareModal(){
+  document.getElementById('compareOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function handleCompareOverlayClick(e){
+  if(e.target.id === 'compareOverlay') closeCompareModal();
+}
+
+// ── BUILD COMPARE TABLE ───────────────────────────────────────────────────
+function buildCompareTable(){
+  const ids = [...compareSet];
+  const scholarships = ids.map(id => DATA.find(x=>x.id===id)).filter(Boolean);
+  if(scholarships.length < 2) return;
+
+  const SC_COLORS = {
+    Government:'#1e3a6e',GLC:'#00a878',Banking:'#c07a00',Corporate:'#7c3aed',
+    Loan:'#0891b2',State:'#b45309',Media:'#be185d',International:'#0f766e',
+    University:'#374151',Foundation:'#d97706',Postgraduate:'#0891b2'
+  };
+
+  // Helper: yes/no chip
+  function yesNo(val, yesLabel='Yes', noLabel='No'){
+    return val
+      ? `<span class="compare-chip cmp-yes">${yesLabel}</span>`
+      : `<span class="compare-chip cmp-no">${noLabel}</span>`;
+  }
+
+  function neutral(text){
+    return `<span class="compare-chip cmp-neutral">${text||'—'}</span>`;
+  }
+
+  // Header row
+  let html = '<thead><tr><th class="row-label"></th>';
+  scholarships.forEach(s => {
+    const col = SC_COLORS[s.cat] || '#1e3a6e';
+    html += `<th class="col-head">
+      ${s.name}
+      <div class="col-provider">${s.prov}</div>
+      <div class="col-stripe" style="background:${col}"></div>
+    </th>`;
+  });
+  html += '</tr></thead><tbody>';
+
+  // Row builder helper
+  function row(label, cells){
+    return `<tr><td class="row-label">${label}</td>${cells.map(c=>`<td>${c}</td>`).join('')}</tr>`;
+  }
+
+  // Category
+  html += row('Category', scholarships.map(s => neutral(s.cat)));
+
+  // Coverage
+  html += row('Coverage', scholarships.map(s =>
+    s.cov === 'Full'
+      ? '<span class="compare-chip cmp-yes">★ Full scholarship</span>'
+      : '<span class="compare-chip cmp-partial">Partial</span>'
+  ));
+
+  // Study destination
+  html += row('Study location', scholarships.map(s =>
+    s.dest === 'Overseas'
+      ? '<span class="compare-chip cmp-yes">✈ Overseas</span>'
+      : '<span class="compare-chip cmp-neutral">🇲🇾 Local</span>'
+  ));
+
+  // Deadline
+  html += row('Deadline', scholarships.map(s =>
+    `<strong style="color:var(--coral)">${s.dl||'—'}</strong>`
+  ));
+
+  // Min grade
+  const gradeLabels = {Straight:'Straight As (9A+)', '7As':'7–8 As', '5As':'5–6 As', Any:'No minimum'};
+  html += row('Min grade', scholarships.map(s =>
+    neutral(gradeLabels[s.gradeMin] || s.gradeMin || '—')
+  ));
+
+  // Bond
+  html += row('Bond', scholarships.map(s =>
+    s.nb
+      ? '<span class="compare-chip cmp-yes">✓ No bond</span>'
+      : `<span class="compare-chip cmp-partial">${s.bond||'Yes — check details'}</span>`
+  ));
+
+  // Eligibility
+  html += row('Open to all', scholarships.map(s =>
+    s.openAll ? yesNo(true,'All races') : (s.bumiOnly ? '<span class="compare-chip cmp-partial">Bumi only</span>' : neutral('Check'))
+  ));
+
+  // B40
+  html += row('B40 priority', scholarships.map(s => yesNo(s.b40)));
+
+  // Fields
+  html += row('Fields of study', scholarships.map(s =>
+    s.fields && s.fields.length
+      ? s.fields.slice(0,3).join(', ') + (s.fields.length > 3 ? ` +${s.fields.length-3}` : '')
+      : '—'
+  ));
+
+  // Entry levels
+  const entryLabels2 = {PostSPM:'Post-SPM',PreU:'Pre-U',Undergrad:'Degree',Postgrad:'Postgrad',Diploma:'Diploma'};
+  html += row('Entry level', scholarships.map(s =>
+    s.entry && s.entry.length
+      ? s.entry.map(e => `<span class="compare-chip cmp-neutral">${entryLabels2[e]||e}</span> `).join('')
+      : '—'
+  ));
+
+  // Official links
+  html += row('Official site', scholarships.map(s =>
+    s.url ? `<a class="compare-visit-btn" href="${s.url}" target="_blank" rel="noopener">Visit →</a>` : '—'
+  ));
+
+  html += '</tbody>';
+  document.getElementById('compareTable').innerHTML = html;
+}
+
+// ── ESCAPE KEY closes compare modal too ───────────────────────────────────
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape'){
+    closeCompareModal();
+  }
+});
+
+// Restore tray state on page load (after data loads)
+function restoreCompareState(){
+  if(compareSet.size > 0) updateCompareTray();
 }
 
 // ── INIT: apply saved quiz profile on load ────────────────────────────────
