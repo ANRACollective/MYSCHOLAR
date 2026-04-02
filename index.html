@@ -1734,7 +1734,7 @@ function closeLinkChecker(){
 async function runLinkCheck(){
   const results=document.getElementById('linkResults');
   const summary=document.getElementById('linkSummary');
-  results.innerHTML='<div style="color:var(--muted);padding:8px">⏳ Checking links... this may take 30–60 seconds.</div>';
+  results.innerHTML='<div style="color:var(--muted);padding:8px 4px">⏳ Checking links... this may take 30–60 seconds.</div>';
   summary.textContent='';
 
   // Deduplicate URLs — skip any that are null, empty, or not a real http URL
@@ -1748,43 +1748,68 @@ async function runLinkCheck(){
   let ok=0,warn=0,err=0;
   const rows=[];
 
+  // Helper: derive parent/homepage URL from a deep link
+  // e.g. https://www.daad.de/en/study/... → https://www.daad.de
+  function getParentUrl(url){
+    try {
+      const u = new URL(url);
+      // If the URL already IS the homepage (just origin + optional /), return null
+      if(u.pathname === '/' || u.pathname === '') return null;
+      return u.origin;
+    } catch(e){ return null; }
+  }
+
   await Promise.all(urls.map(async ([url,names])=>{
-    let status='⚠️',color='#b45309',label='Unverifiable (CORS)';
+    let status='⚠️', statusCode=1, label='CORS restricted — verify manually', parentUrl=null;
     try {
       const ctrl=new AbortController();
       const tid=setTimeout(()=>ctrl.abort(),8000);
-      const r=await fetch(url,{method:'HEAD',mode:'no-cors',signal:ctrl.signal});
+      await fetch(url,{method:'HEAD',mode:'no-cors',signal:ctrl.signal});
       clearTimeout(tid);
-      // no-cors always returns opaque — if no error thrown, likely reachable
-      status='✅';color='#007a57';label='Likely reachable';ok++;
+      // no-cors always returns opaque — no throw = likely reachable
+      status='✅'; statusCode=0; label='Likely reachable';ok++;
     } catch(e){
       if(e.name==='AbortError'){
-        status='❌';color='#dc2626';label='Timeout (8s)';err++;
+        status='❌'; statusCode=2; label='Timeout — may be down or blocking requests';err++;
+        parentUrl = getParentUrl(url);
       } else {
-        // Could be CORS block on a live site — treat as warning not hard error
-        status='⚠️';color='#b45309';label='CORS/Network restricted';warn++;
+        // CORS block — site is probably live but blocking HEAD requests
+        status='⚠️'; statusCode=1; label='CORS restricted — likely working, verify manually';warn++;
       }
     }
-    rows.push({url,names,status,color,label});
+    rows.push({url, names, status, statusCode, label, parentUrl});
   }));
 
-  rows.sort((a,b)=>{
-    const order={'❌':0,'⚠️':1,'✅':2};
-    return (order[a.status]??2)-(order[b.status]??2);
-  });
+  // Sort: ✅ OK first (0), then ⚠️ warnings (1), then ❌ failures (2)
+  rows.sort((a,b) => a.statusCode - b.statusCode);
 
-  results.innerHTML=rows.map(r=>`
-    <div style="padding:6px 4px;border-bottom:1px solid var(--border);display:flex;gap:8px;align-items:flex-start">
-      <span style="flex-shrink:0;font-size:14px">${r.status}</span>
+  const colorMap = {'✅':'#007a57', '⚠️':'#b45309', '❌':'#dc2626'};
+
+  results.innerHTML = rows.map(r => {
+    const color = colorMap[r.status];
+    const parentNote = r.parentUrl
+      ? `<span style="font-size:10px;color:var(--muted)">Try homepage: <a href="${r.parentUrl}" target="_blank" rel="noopener" style="color:var(--navy)">${r.parentUrl}</a></span>`
+      : '';
+    return `
+    <div style="padding:8px 4px;border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:flex-start">
+      <span style="flex-shrink:0;font-size:15px;margin-top:1px">${r.status}</span>
       <div style="flex:1;min-width:0">
-        <div style="color:var(--midnight);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${r.names.join(', ')}">${r.names.join(', ')}</div>
-        <a href="${r.url}" target="_blank" style="color:${r.color};text-decoration:none;font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block" title="${r.url}">${r.url}</a>
-        <span style="font-size:10px;color:${r.color}">${r.label}</span>
+        <div style="color:var(--midnight);font-weight:600;font-size:12px;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${r.names.join(', ')}">${r.names.join(', ')}</div>
+        <a href="${r.url}" target="_blank" rel="noopener" style="color:${color};text-decoration:none;font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block" title="${r.url}">${r.url}</a>
+        <span style="font-size:10px;color:${color}">${r.label}</span>
+        ${parentNote}
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 
-  summary.innerHTML=`<strong>Results:</strong> ${ok} likely OK · ${warn} CORS-restricted (verify manually) · ${err} timed out / unreachable — out of ${urls.length} unique URLs.
-    <br><small style="color:var(--muted)">Note: CORS restrictions mean many working sites appear as ⚠️. Open ❌ links manually to confirm if truly broken.</small>`;
+  summary.innerHTML=`
+    <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:6px">
+      <span style="font-size:12px">✅ <strong>${ok}</strong> likely OK</span>
+      <span style="font-size:12px">⚠️ <strong>${warn}</strong> CORS restricted</span>
+      <span style="font-size:12px">❌ <strong>${err}</strong> timed out</span>
+      <span style="font-size:12px;color:var(--muted)">— out of ${urls.length} unique URLs</span>
+    </div>
+    <small style="color:var(--muted);font-size:11px">CORS restrictions mean many working sites appear as ⚠️ — always open the link manually to confirm before removing. ❌ timeouts may also be live sites blocking automated checks.</small>`;
 }
 
 // ── QUIZ STATE ────────────────────────────────────────────────────────────
