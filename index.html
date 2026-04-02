@@ -1001,19 +1001,35 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
   </div>
 </div>
 
-<!-- Link Checker Modal -->
+<!-- URL Audit Panel -->
 <div class="modal-overlay" id="linkCheckerModal" onclick="if(event.target.id==='linkCheckerModal')closeLinkChecker()">
-  <div class="submit-modal" style="max-width:680px">
+  <div class="submit-modal" style="max-width:740px">
     <button class="modal-close" onclick="closeLinkChecker()">✕</button>
     <div class="submit-inner">
-      <h2>🔗 URL Link Checker</h2>
-      <p style="color:var(--muted);font-size:13px;line-height:1.7">Checks all scholarship links by testing if they respond. Some links may show as broken due to CORS restrictions even if they work — always verify manually before removing. Results open in new tabs.</p>
-      <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">
-        <button class="submit-btn" style="flex:1;min-width:140px;margin-top:0" onclick="runLinkCheck()">▶ Run Check</button>
-        <button class="submit-btn" style="flex:1;min-width:140px;margin-top:0;background:var(--muted)" onclick="document.getElementById('linkResults').innerHTML='';document.getElementById('linkSummary').textContent=''">Clear</button>
+      <h2>🔗 URL Audit Panel</h2>
+      <p style="color:var(--muted);font-size:13px;line-height:1.6;margin-bottom:14px">Open each link, verify it works, then mark it ✅ OK or ❌ Broken. Status is saved to Supabase instantly. Filter by status to focus on unverified or broken links first.</p>
+
+      <!-- Stats bar -->
+      <div id="auditStats" style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px;padding:10px 14px;background:var(--ice);border-radius:8px;border:1px solid var(--border)">
+        <span style="font-size:12px;color:var(--muted)">Loading stats...</span>
       </div>
-      <div id="linkSummary" style="font-size:13px;color:var(--muted);margin-bottom:10px"></div>
-      <div id="linkResults" style="max-height:420px;overflow-y:auto;border:1px solid var(--border);border-radius:6px;background:var(--ice);padding:10px;font-size:12px;line-height:1.8"></div>
+
+      <!-- Filter + actions row -->
+      <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center">
+        <select id="auditFilter" onchange="renderAuditList()" style="font-size:12px;padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:var(--white);color:var(--midnight);font-family:var(--sans);cursor:pointer">
+          <option value="all">All (148)</option>
+          <option value="unverified">🔘 Unverified</option>
+          <option value="ok">✅ Verified OK</option>
+          <option value="broken">❌ Broken</option>
+          <option value="suspected">⚠️ Suspected</option>
+        </select>
+        <button onclick="runAutoCheck()" style="font-size:12px;font-weight:600;background:var(--navy);color:#fff;border:none;border-radius:6px;padding:6px 14px;cursor:pointer;font-family:var(--sans)">▶ Auto-check all</button>
+        <span style="font-size:11px;color:var(--muted);margin-left:4px">Auto-check flags suspected broken links for manual review</span>
+      </div>
+
+      <!-- Results list -->
+      <div id="linkResults" style="max-height:460px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;background:var(--ice)"></div>
+      <div id="linkSummary" style="font-size:12px;color:var(--muted);margin-top:10px;line-height:1.6"></div>
     </div>
   </div>
 </div>
@@ -1726,94 +1742,202 @@ function clearAll(){
   render();
 }
 
-// ── LINK CHECKER ──────────────────────────────────────────────────────────
+// ── URL AUDIT PANEL ──────────────────────────────────────────────────────────
+// Reads url_status from Supabase, lets you verify each URL manually,
+// and writes the result back to Supabase in real time.
+// No backend needed — uses the anon key with a secure UPDATE policy.
+
 function openLinkChecker(){
   document.getElementById('linkCheckerModal').classList.add('open');
+  loadAuditData();
 }
 function closeLinkChecker(){
   document.getElementById('linkCheckerModal').classList.remove('open');
 }
 
-async function runLinkCheck(){
-  const results=document.getElementById('linkResults');
-  const summary=document.getElementById('linkSummary');
-  results.innerHTML='<div style="color:var(--muted);padding:8px 4px">⏳ Checking links... this may take 30–60 seconds.</div>';
-  summary.textContent='';
+// Local cache of audit data — filled from Supabase on open
+let auditData = [];
 
-  // Deduplicate URLs — skip any that are null, empty, or not a real http URL
-  const urlMap={};
-  DATA.forEach(s=>{
-    if(!s.url || typeof s.url !== 'string' || !s.url.startsWith('http')) return;
-    if(!urlMap[s.url]) urlMap[s.url]=[];
-    urlMap[s.url].push(s.name);
-  });
-  const urls=Object.entries(urlMap);
-  let ok=0,warn=0,err=0;
-  const rows=[];
+async function loadAuditData(){
+  document.getElementById('linkResults').innerHTML =
+    '<div style="padding:16px;color:var(--muted);font-size:13px">⏳ Loading scholarships from Supabase...</div>';
+  try {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/scholarships?select=id,name,url,url_status,last_verified&is_active=eq.true&order=url_status.asc,id.asc&limit=200`,
+      { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
+    );
+    auditData = await res.json();
+    renderAuditStats();
+    renderAuditList();
+  } catch(e) {
+    document.getElementById('linkResults').innerHTML =
+      `<div style="padding:16px;color:#dc2626;font-size:13px">❌ Failed to load: ${e.message}</div>`;
+  }
+}
 
-  // Helper: derive parent/homepage URL from a deep link
-  // e.g. https://www.daad.de/en/study/... → https://www.daad.de
-  function getParentUrl(url){
-    try {
-      const u = new URL(url);
-      // If the URL already IS the homepage (just origin + optional /), return null
-      if(u.pathname === '/' || u.pathname === '') return null;
-      return u.origin;
-    } catch(e){ return null; }
+function renderAuditStats(){
+  const counts = {ok:0, broken:0, suspected:0, unverified:0};
+  auditData.forEach(s => counts[s.url_status] = (counts[s.url_status]||0) + 1);
+  const total = auditData.length;
+  const pct = Math.round((counts.ok / total) * 100);
+
+  // Update filter dropdown counts
+  const sel = document.getElementById('auditFilter');
+  sel.options[0].text = `All (${total})`;
+  sel.options[1].text = `🔘 Unverified (${counts.unverified||0})`;
+  sel.options[2].text = `✅ Verified OK (${counts.ok||0})`;
+  sel.options[3].text = `❌ Broken (${counts.broken||0})`;
+  sel.options[4].text = `⚠️ Suspected (${counts.suspected||0})`;
+
+  document.getElementById('auditStats').innerHTML = `
+    <span style="font-size:12px;font-weight:600;color:var(--midnight)">${pct}% verified</span>
+    <span style="font-size:12px;color:#15803d">✅ ${counts.ok||0} OK</span>
+    <span style="font-size:12px;color:#dc2626">❌ ${counts.broken||0} broken</span>
+    <span style="font-size:12px;color:#b45309">⚠️ ${counts.suspected||0} suspected</span>
+    <span style="font-size:12px;color:var(--muted)">🔘 ${counts.unverified||0} unverified</span>
+    <div style="width:100%;height:4px;background:var(--border);border-radius:2px;margin-top:6px">
+      <div style="height:4px;background:#15803d;border-radius:2px;width:${pct}%;transition:width .4s"></div>
+    </div>`;
+}
+
+function renderAuditList(){
+  const filter = document.getElementById('auditFilter').value;
+  const list = filter === 'all' ? auditData : auditData.filter(s => s.url_status === filter);
+
+  if(!list.length){
+    document.getElementById('linkResults').innerHTML =
+      '<div style="padding:20px;color:var(--muted);font-size:13px;text-align:center">No scholarships match this filter.</div>';
+    return;
   }
 
-  await Promise.all(urls.map(async ([url,names])=>{
-    let status='⚠️', statusCode=1, label='CORS restricted — verify manually', parentUrl=null;
-    try {
-      const ctrl=new AbortController();
-      const tid=setTimeout(()=>ctrl.abort(),8000);
-      await fetch(url,{method:'HEAD',mode:'no-cors',signal:ctrl.signal});
-      clearTimeout(tid);
-      // no-cors always returns opaque — no throw = likely reachable
-      status='✅'; statusCode=0; label='Likely reachable';ok++;
-    } catch(e){
-      if(e.name==='AbortError'){
-        status='❌'; statusCode=2; label='Timeout — may be down or blocking requests';err++;
-        parentUrl = getParentUrl(url);
-      } else {
-        // CORS block — site is probably live but blocking HEAD requests
-        status='⚠️'; statusCode=1; label='CORS restricted — likely working, verify manually';warn++;
-      }
-    }
-    rows.push({url, names, status, statusCode, label, parentUrl});
-  }));
+  const statusColor = {ok:'#15803d', broken:'#dc2626', suspected:'#b45309', unverified:'#6b7899'};
+  const statusIcon  = {ok:'✅', broken:'❌', suspected:'⚠️', unverified:'🔘'};
 
-  // Sort: ✅ OK first (0), then ⚠️ warnings (1), then ❌ failures (2)
-  rows.sort((a,b) => a.statusCode - b.statusCode);
-
-  const colorMap = {'✅':'#007a57', '⚠️':'#b45309', '❌':'#dc2626'};
-
-  results.innerHTML = rows.map(r => {
-    const color = colorMap[r.status];
-    const parentNote = r.parentUrl
-      ? `<span style="font-size:10px;color:var(--muted)">Try homepage: <a href="${r.parentUrl}" target="_blank" rel="noopener" style="color:var(--navy)">${r.parentUrl}</a></span>`
-      : '';
+  document.getElementById('linkResults').innerHTML = list.map(s => {
+    const color = statusColor[s.url_status];
+    const icon  = statusIcon[s.url_status];
+    const verifiedText = s.last_verified ? `Last verified: ${s.last_verified}` : 'Never verified';
     return `
-    <div style="padding:8px 4px;border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:flex-start">
-      <span style="flex-shrink:0;font-size:15px;margin-top:1px">${r.status}</span>
+    <div id="audit-row-${s.id}" style="padding:10px 14px;border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:center;background:var(--white)">
+      <span style="font-size:15px;flex-shrink:0">${icon}</span>
       <div style="flex:1;min-width:0">
-        <div style="color:var(--midnight);font-weight:600;font-size:12px;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${r.names.join(', ')}">${r.names.join(', ')}</div>
-        <a href="${r.url}" target="_blank" rel="noopener" style="color:${color};text-decoration:none;font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block" title="${r.url}">${r.url}</a>
-        <span style="font-size:10px;color:${color}">${r.label}</span>
-        ${parentNote}
+        <div style="font-size:12px;font-weight:600;color:var(--midnight);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.name}</div>
+        <a href="${s.url}" target="_blank" rel="noopener"
+           style="font-size:11px;color:${color};text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block"
+           onclick="markSuspected(${s.id})"
+           title="${s.url}">${s.url}</a>
+        <span style="font-size:10px;color:var(--muted)">${verifiedText}</span>
+      </div>
+      <div style="display:flex;gap:5px;flex-shrink:0">
+        <button onclick="markUrl(${s.id},'ok')"
+          style="font-size:11px;font-weight:600;background:#dcfce7;color:#15803d;border:1px solid #86efac;border-radius:5px;padding:4px 8px;cursor:pointer;font-family:var(--sans)"
+          title="Mark as verified and working">✓ OK</button>
+        <button onclick="markUrl(${s.id},'broken')"
+          style="font-size:11px;font-weight:600;background:#fee2e2;color:#dc2626;border:1px solid #fca5a5;border-radius:5px;padding:4px 8px;cursor:pointer;font-family:var(--sans)"
+          title="Mark as broken — needs new URL">✗ Broken</button>
       </div>
     </div>`;
   }).join('');
 
-  summary.innerHTML=`
-    <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:6px">
-      <span style="font-size:12px">✅ <strong>${ok}</strong> likely OK</span>
-      <span style="font-size:12px">⚠️ <strong>${warn}</strong> CORS restricted</span>
-      <span style="font-size:12px">❌ <strong>${err}</strong> timed out</span>
-      <span style="font-size:12px;color:var(--muted)">— out of ${urls.length} unique URLs</span>
-    </div>
-    <small style="color:var(--muted);font-size:11px">CORS restrictions mean many working sites appear as ⚠️ — always open the link manually to confirm before removing. ❌ timeouts may also be live sites blocking automated checks.</small>`;
+  document.getElementById('linkSummary').textContent =
+    `Showing ${list.length} of ${auditData.length} scholarships`;
 }
+
+// Called when user clicks a link — mark as "suspected" so it appears in the filter
+// until they confirm OK or Broken
+function markSuspected(id){
+  const s = auditData.find(x => x.id === id);
+  if(!s || s.url_status !== 'unverified') return;
+  // Don't await — fire and forget, just a hint
+  updateUrlStatus(id, 'suspected');
+}
+
+async function markUrl(id, status){
+  const row = document.getElementById(`audit-row-${id}`);
+  if(row){
+    row.style.opacity = '0.5';
+    row.style.pointerEvents = 'none';
+  }
+
+  const success = await updateUrlStatus(id, status);
+
+  if(success){
+    // Update local cache
+    const s = auditData.find(x => x.id === id);
+    if(s){
+      s.url_status = status;
+      s.last_verified = new Date().toISOString().split('T')[0];
+    }
+    renderAuditStats();
+
+    // Animate row out then re-render
+    if(row){
+      row.style.transition = 'all 0.2s';
+      row.style.opacity = '0';
+      setTimeout(() => renderAuditList(), 220);
+    }
+  } else {
+    if(row){ row.style.opacity = '1'; row.style.pointerEvents = ''; }
+    showToast('❌ Failed to save — check Supabase connection');
+  }
+}
+
+async function updateUrlStatus(id, status){
+  try {
+    const today = new Date().toISOString().split('T')[0];
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/scholarships?id=eq.${id}`,
+      {
+        method: 'PATCH',
+        headers: {
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({ url_status: status, last_verified: today })
+      }
+    );
+    return res.ok;
+  } catch(e){ return false; }
+}
+
+// Auto-check: fires HEAD requests, marks timed-out as 'suspected'
+async function runAutoCheck(){
+  const btn = document.querySelector('[onclick="runAutoCheck()"]');
+  if(btn){ btn.textContent = '⏳ Checking...'; btn.disabled = true; }
+
+  const toCheck = auditData.filter(s => s.url_status === 'unverified' && s.url?.startsWith('http'));
+  let flagged = 0;
+
+  await Promise.all(toCheck.map(async s => {
+    try {
+      const ctrl = new AbortController();
+      const tid = setTimeout(() => ctrl.abort(), 7000);
+      await fetch(s.url, { method:'HEAD', mode:'no-cors', signal: ctrl.signal });
+      clearTimeout(tid);
+      // Reachable — mark ok locally (don't write to DB — needs manual confirmation)
+      s._autoOk = true;
+    } catch(e) {
+      if(e.name === 'AbortError'){
+        // Timed out — flag as suspected
+        await updateUrlStatus(s.id, 'suspected');
+        s.url_status = 'suspected';
+        flagged++;
+      }
+      // CORS errors = likely fine, leave as unverified
+    }
+  }));
+
+  if(btn){ btn.textContent = '▶ Auto-check all'; btn.disabled = false; }
+  renderAuditStats();
+  renderAuditList();
+  showToast(`Auto-check done — ${flagged} flagged as suspected`);
+}
+
+// Legacy function kept for compatibility
+async function runLinkCheck(){ openLinkChecker(); }
+
 
 // ── QUIZ STATE ────────────────────────────────────────────────────────────
 // Stores the student's answers. Persisted to localStorage so returning
