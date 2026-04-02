@@ -94,6 +94,8 @@ nav{position:sticky;top:0;z-index:200;background:var(--midnight);padding:0 20px;
 /* qual chips */
 .chip[data-f="PostSPM"].on{background:var(--c-gov);border-color:var(--c-gov)}
 .chip[data-f="PreU"].on{background:var(--c-glc);border-color:var(--c-glc)}
+.chip[data-f="Diploma"].on{background:#0369a1;border-color:#0369a1}
+.chip[data-f="Matrikulasi"].on{background:#0f766e;border-color:#0f766e}
 .chip[data-f="Undergrad"].on{background:var(--c-bank);border-color:var(--c-bank)}
 .chip[data-f="Postgrad"].on{background:var(--c-corp);border-color:var(--c-corp)}
 /* field chips */
@@ -271,8 +273,7 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
   .pagination{padding:20px 16px 8px;gap:4px}
   .pg-btn{min-width:32px;height:32px;font-size:12px;padding:0 8px}
   /* ── BANNER ── */
-  .open-now-banner{padding:12px 16px;flex-direction:column;align-items:flex-start;gap:10px}
-  .banner-cta{width:100%;text-align:center;padding:8px 16px}
+  .open-now-banner{padding:10px 16px}
   /* ── BACK TO TOP ── */
   .back-to-top{bottom:16px;right:16px;width:38px;height:38px;font-size:16px}
 }
@@ -288,15 +289,12 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
 .pg-btn.active{background:var(--midnight);color:#fff;border-color:var(--midnight);font-weight:700}
 .pg-btn:disabled{opacity:.35;cursor:default}
 .pg-info{font-size:12px;color:var(--muted);margin:0 8px}
-/* ── OPEN NOW BANNER — white bg, coral pulse dot, navy button ── */
-.open-now-banner{background:#fff;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:12px 32px;display:flex;align-items:center;gap:14px}
-.banner-left{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
-.banner-dot{width:9px;height:9px;border-radius:50%;background:var(--coral);flex-shrink:0;animation:bannerPulse 2s infinite}
-@keyframes bannerPulse{0%,100%{box-shadow:0 0 0 0 rgba(232,85,30,0.35)}50%{box-shadow:0 0 0 5px rgba(232,85,30,0)}}
-.open-now-banner .banner-text{font-size:13px;font-weight:500;color:var(--midnight)}
+/* ── OPEN NOW BANNER ── */
+.open-now-banner{background:linear-gradient(135deg,#00a878,#0891b2);color:#fff;padding:10px 32px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.open-now-banner .banner-text{font-size:13px;font-weight:500}
 .open-now-banner .banner-text strong{font-weight:700}
-.banner-cta{font-size:11.5px;background:var(--midnight);border:none;color:#fff;padding:6px 16px;border-radius:6px;cursor:pointer;font-family:var(--sans);font-weight:600;white-space:nowrap;flex-shrink:0;transition:opacity .15s}
-.banner-cta:hover{opacity:.85}
+.banner-cta{font-size:11.5px;background:rgba(255,255,255,.2);border:none;color:#fff;padding:5px 12px;border-radius:20px;cursor:pointer;font-family:var(--sans);font-weight:600;white-space:nowrap;transition:background .15s}
+.banner-cta:hover{background:rgba(255,255,255,.32)}
 /* ── SHARE BUTTON ON CARD ── */
 .share-btn{background:none;border:none;cursor:pointer;padding:4px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:all .15s;flex-shrink:0;font-size:13px}
 .share-btn:hover{color:var(--navy);background:rgba(30,58,110,.08)}
@@ -328,7 +326,7 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
     <button class="bookmark-nav-btn" style="background:rgba(232,85,30,.18);color:var(--coral)" onclick="openSubmitModal()">
       + <span class="nav-btn-label">Suggest</span>
     </button>
-    <button class="bookmark-nav-btn" style="background:rgba(0,168,120,.15);color:#00a878" onclick="openLinkChecker()" title="Check if scholarship links are working" style="display:none">
+    <button class="bookmark-nav-btn" style="background:rgba(0,168,120,.15);color:#00a878" onclick="openLinkChecker()" title="Check if scholarship links are working">
       🔗 <span class="nav-btn-label">Links</span>
     </button>
     <div class="nav-pill" id="navPill">0</div>
@@ -353,10 +351,7 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
   </div>
 </div>
 <div class="open-now-banner" id="openNowBanner" style="display:none">
-  <div class="banner-left">
-    <div class="banner-dot"></div>
-    <span class="banner-text"><strong id="openNowCount">0</strong> scholarships are open for applications right now</span>
-  </div>
+  <span class="banner-text">🟢 <strong id="openNowCount">0</strong> scholarships are open for applications right now</span>
   <button class="banner-cta" onclick="filterOpenNow()">Show open only →</button>
 </div>
 <div class="tabs-wrap">
@@ -394,6 +389,8 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
     <span class="filter-label">🎓 Entry Level</span>
     <div class="chip" data-f="PostSPM" onclick="toggleChip(this)">Post-SPM</div>
     <div class="chip" data-f="PreU" onclick="toggleChip(this)">Pre-University</div>
+    <div class="chip chip-tooltip" data-f="Diploma" onclick="toggleChip(this)">Diploma Leavers<span class="tooltip-text">For students who completed a Diploma and are looking to continue to a degree programme.</span></div>
+    <div class="chip chip-tooltip" data-f="Matrikulasi" onclick="toggleChip(this)">Matrikulasi<span class="tooltip-text">For KPM Matrikulasi graduates seeking undergraduate scholarships.</span></div>
     <div class="chip" data-f="Undergrad" onclick="toggleChip(this)">Undergraduate</div>
     <div class="chip" data-f="Postgrad" onclick="toggleChip(this)">Postgraduate</div>
   </div>
@@ -803,59 +800,11 @@ function closeSubmitModal(){
 }
 function submitSuggestion(){
   const name=document.getElementById('sub-name').value.trim();
-  const prov=document.getElementById('sub-prov').value.trim();
   const url=document.getElementById('sub-url').value.trim();
-  const cat=document.getElementById('sub-cat').value;
-  const dl=document.getElementById('sub-dl').value.trim();
-  const notes=document.getElementById('sub-notes').value.trim();
-  const email=document.getElementById('sub-email').value.trim();
-
   if(!name||!url){alert('Please fill in the Scholarship Name and Official Website URL at minimum.');return;}
-
   const inner=document.getElementById('submitInner');
-
-  // ── FORMSPREE SUBMISSION ──
-  // Replace YOUR_FORM_ID below with your actual Formspree form ID
-  // Sign up free at formspree.io → create form → copy the ID from the endpoint URL
-  // e.g. if your endpoint is https://formspree.io/f/xpwzabcd → ID is xpwzabcd
-  const FORMSPREE_ID = 'https://formspree.io/f/xnjobqbl'; 
-
-  const payload = {
-    'Scholarship Name': name,
-    'Provider / Organisation': prov,
-    'Category': cat,
-    'Approximate Deadline': dl,
-    'Official Website URL': url,
-    'Additional Notes': notes,
-    'Submitter Email': email || 'Not provided',
-    '_subject': `[MyScholar] New Scholarship Suggestion: ${name}`
-  };
-
-  // Show loading state
-  const submitBtn = inner.querySelector('.submit-btn');
-  if(submitBtn){ submitBtn.textContent = 'Sending…'; submitBtn.disabled = true; }
-
-  fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-    body: JSON.stringify(payload)
-  })
-  .then(r => {
-    if(r.ok){
-      // Success — show thank you
-      inner.innerHTML=`<div class="submit-success"><div class="submit-success-icon">🎉</div><h2>Thank you!</h2><p style="color:var(--muted);font-size:14px;line-height:1.8">We've received your suggestion for <strong>${name}</strong>. Our team will review and verify it before adding to the directory.<br><br>Help more students by sharing MyScholar!</p><button class="submit-btn" style="margin-top:20px" onclick="closeSubmitModal()">Close</button></div>`;
-      // GA event
-      if(typeof gtag !== 'undefined') gtag('event','suggest_scholarship',{event_category:'engagement',event_label:name});
-    } else {
-      // Formspree error
-      if(submitBtn){ submitBtn.textContent = 'Submit Suggestion →'; submitBtn.disabled = false; }
-      alert('Something went wrong. Please email us directly at hello@myscholar.my with the scholarship details.');
-    }
-  })
-  .catch(() => {
-    if(submitBtn){ submitBtn.textContent = 'Submit Suggestion →'; submitBtn.disabled = false; }
-    alert('Could not connect. Please email us at hello@myscholar.my with the scholarship details.');
-  });
+  inner.innerHTML=`<div class="submit-success"><div class="submit-success-icon">🎉</div><h2>Thank you!</h2><p style="color:var(--muted);font-size:14px;line-height:1.8">We've received your suggestion for <strong>${name}</strong>. We'll review it and add it to the directory if verified.<br><br>You can help more students by sharing MyScholar with your friends!</p><button class="submit-btn" style="margin-top:20px" onclick="closeSubmitModal()">Close</button></div>`;
+  // In a real deployment, you'd POST this to a backend/form service. For now it's a UX mock.
 }
 
 // ── FILTER STATE ──────────────────────────────────────────────────────────
@@ -909,6 +858,8 @@ function matches(s){
     // entry level
     if(f==='PostSPM'&&!s.entry.includes('PostSPM'))return false;
     if(f==='PreU'&&!s.entry.includes('PreU'))return false;
+    if(f==='Diploma'&&!s.quals.some(x=>x==='Diploma'))return false;
+    if(f==='Matrikulasi'&&!s.quals.some(x=>x==='Matriculation'||x==='Matrikulasi'))return false;
     if(f==='Undergrad'&&!s.entry.includes('Undergrad'))return false;
     if(f==='Postgrad'&&!s.entry.includes('Postgrad'))return false;
     // field
