@@ -537,7 +537,7 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
 </div>
 <div class="match-strip" id="matchStrip">
   <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-  <span>Matched to your profile — <strong id="matchCount">0</strong> of these results likely eligible for you</span>
+  <span id="matchCount">Matched to your profile</span>
   <button class="match-strip-clear" onclick="clearMatch()">Clear match ✕</button>
 </div>
 <div class="tabs-wrap">
@@ -1324,6 +1324,15 @@ function matches(s){
     if(!blob.includes(q))return false;
   }
   if(activeCat!=='all'&&s.cat!==activeCat)return false;
+
+  // ── QUIZ PROFILE FILTER ───────────────────────────────────────────────
+  // When a quiz profile is active, only show scholarships the student
+  // is eligible for (yes) or possibly eligible for (maybe).
+  // Scholarships that return null — wrong level entirely — are hidden.
+  if(quizProfile){
+    const score = eligibilityScore(s, quizProfile);
+    if(score === null) return false;
+  }
   for(const f of activeChips){
     // deadline
     if(f==='OpenNow'&&!isOpenNow(s))return false;
@@ -1920,14 +1929,22 @@ function clearMatch(){
 }
 
 // ── MATCH STRIP ───────────────────────────────────────────────────────────
-// Counts eligible scholarships from filteredItems — the currently visible
-// set after search/filter — NOT from the full DATA array.
-// This way the number always matches what students actually see on screen.
 function updateMatchStrip(){
   if(!quizProfile) return;
-  const source = filteredItems.length > 0 ? filteredItems : DATA;
-  const eligible = source.filter(s => eligibilityScore(s, quizProfile) === 'yes').length;
-  document.getElementById('matchCount').textContent = eligible;
+  // filteredItems is already quiz-filtered via matches() — count the yes vs maybe split
+  const yesCount   = filteredItems.filter(s => eligibilityScore(s, quizProfile) === 'yes').length;
+  const maybeCount = filteredItems.filter(s => eligibilityScore(s, quizProfile) === 'maybe').length;
+  const total      = filteredItems.length;
+
+  let text = '';
+  if(total === 0){
+    text = 'No matches found for your profile — try adjusting your filters';
+  } else {
+    text = `<strong>${yesCount}</strong> likely eligible`;
+    if(maybeCount > 0) text += ` · <strong>${maybeCount}</strong> check requirements`;
+    text += ` — from your matched scholarships`;
+  }
+  document.getElementById('matchCount').innerHTML = text;
   document.getElementById('matchStrip').classList.add('active');
 }
 
