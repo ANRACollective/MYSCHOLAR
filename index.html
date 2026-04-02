@@ -94,8 +94,6 @@ nav{position:sticky;top:0;z-index:200;background:var(--midnight);padding:0 20px;
 /* qual chips */
 .chip[data-f="PostSPM"].on{background:var(--c-gov);border-color:var(--c-gov)}
 .chip[data-f="PreU"].on{background:var(--c-glc);border-color:var(--c-glc)}
-.chip[data-f="Diploma"].on{background:#0369a1;border-color:#0369a1}
-.chip[data-f="Matrikulasi"].on{background:#0f766e;border-color:#0f766e}
 .chip[data-f="Undergrad"].on{background:var(--c-bank);border-color:var(--c-bank)}
 .chip[data-f="Postgrad"].on{background:var(--c-corp);border-color:var(--c-corp)}
 /* field chips */
@@ -312,6 +310,85 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
 .copy-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 /* ── RESULTS INFO UPDATE ── */
 .page-info{font-size:12px;color:var(--muted);margin-left:8px}
+
+/* ── FIND MY MATCH CTA (hero) ── */
+.hero-cta{margin-top:32px;display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+.btn-match{font-family:var(--sans);font-size:15px;font-weight:600;background:var(--coral);color:#fff;border:none;border-radius:8px;padding:14px 28px;cursor:pointer;transition:opacity .18s,transform .12s;display:inline-flex;align-items:center;gap:8px;letter-spacing:.01em}
+.btn-match:hover{opacity:.9;transform:translateY(-1px)}
+.btn-match:active{transform:scale(.98)}
+.btn-browse{font-family:var(--sans);font-size:14px;font-weight:500;background:rgba(255,255,255,.1);color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:14px 24px;cursor:pointer;transition:all .18s}
+.btn-browse:hover{background:rgba(255,255,255,.18);color:#fff}
+
+/* ── QUIZ MODAL ── */
+.quiz-overlay{display:none;position:fixed;inset:0;background:rgba(15,31,61,.6);z-index:998;align-items:flex-end;justify-content:center;padding:0;backdrop-filter:blur(3px)}
+.quiz-overlay.open{display:flex}
+/* slides up from bottom on mobile, centered on desktop */
+.quiz-modal{background:var(--white);border-radius:16px 16px 0 0;width:100%;max-width:100%;padding:0;overflow:hidden;transform:translateY(100%);transition:transform .32s cubic-bezier(.32,.72,0,1);max-height:92vh;overflow-y:auto}
+.quiz-overlay.open .quiz-modal{transform:translateY(0)}
+@media(min-width:640px){
+  .quiz-overlay{align-items:center;padding:20px}
+  .quiz-modal{border-radius:14px;max-width:520px;max-height:88vh;transform:translateY(20px);transition:transform .28s cubic-bezier(.32,.72,0,1),opacity .28s;opacity:0}
+  .quiz-overlay.open .quiz-modal{transform:translateY(0);opacity:1}
+}
+.quiz-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:12px auto 0}
+@media(min-width:640px){.quiz-handle{display:none}}
+.quiz-inner{padding:24px 24px 36px}
+@media(min-width:640px){.quiz-inner{padding:32px 36px 40px}}
+.quiz-progress{display:flex;gap:4px;margin-bottom:24px}
+.quiz-prog-dot{flex:1;height:3px;border-radius:2px;background:var(--border);transition:background .2s}
+.quiz-prog-dot.done{background:var(--coral)}
+.quiz-prog-dot.active{background:var(--navy)}
+.quiz-step{display:none}
+.quiz-step.active{display:block}
+.quiz-q{font-family:var(--serif);font-size:21px;font-weight:700;color:var(--midnight);line-height:1.25;margin-bottom:6px}
+@media(min-width:640px){.quiz-q{font-size:23px}}
+.quiz-hint{font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.5}
+.quiz-options{display:flex;flex-direction:column;gap:9px}
+.quiz-option{display:flex;align-items:center;gap:14px;padding:13px 16px;border:1.5px solid var(--border);border-radius:10px;cursor:pointer;transition:all .14s;background:var(--white);width:100%;text-align:left;font-family:var(--sans)}
+.quiz-option:hover{border-color:var(--navy);background:var(--ice)}
+.quiz-option.selected{border-color:var(--navy);background:var(--ice);box-shadow:0 0 0 3px rgba(30,58,110,.08)}
+.quiz-option-icon{font-size:20px;width:32px;text-align:center;flex-shrink:0}
+.quiz-option-body{flex:1}
+.quiz-option-label{font-size:14px;font-weight:600;color:var(--midnight);display:block;margin-bottom:1px}
+.quiz-option-sub{font-size:12px;color:var(--muted)}
+.quiz-option input[type=radio]{position:absolute;opacity:0;pointer-events:none}
+.quiz-nav{display:flex;justify-content:space-between;align-items:center;margin-top:22px}
+.quiz-back{font-family:var(--sans);font-size:13px;font-weight:500;color:var(--muted);background:none;border:none;cursor:pointer;padding:6px 0;display:flex;align-items:center;gap:4px}
+.quiz-back:hover{color:var(--midnight)}
+.quiz-next{font-family:var(--sans);font-size:14px;font-weight:600;background:var(--midnight);color:#fff;border:none;border-radius:8px;padding:11px 24px;cursor:pointer;transition:opacity .15s}
+.quiz-next:hover{opacity:.88}
+.quiz-next:disabled{opacity:.35;cursor:default}
+.quiz-step-count{font-size:12px;color:var(--muted)}
+
+/* ── QUIZ RESULTS STATE ── */
+.quiz-results-header{margin-bottom:20px}
+.quiz-results-title{font-family:var(--serif);font-size:22px;font-weight:700;color:var(--midnight);margin-bottom:4px}
+.quiz-results-sub{font-size:13px;color:var(--muted);line-height:1.5}
+.quiz-profile-pills{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0}
+.quiz-pill{font-size:11px;padding:3px 10px;border-radius:20px;background:var(--ice-mid);color:var(--navy);border:1px solid var(--border);font-weight:500}
+.quiz-results-actions{display:flex;gap:8px;flex-wrap:wrap}
+.quiz-apply-btn{font-family:var(--sans);font-size:13.5px;font-weight:600;background:var(--coral);color:#fff;border:none;border-radius:7px;padding:11px 20px;cursor:pointer;transition:opacity .15s;flex:1}
+.quiz-apply-btn:hover{opacity:.88}
+.quiz-reset-btn{font-family:var(--sans);font-size:13px;font-weight:500;color:var(--muted);background:var(--ice);border:1px solid var(--border);border-radius:7px;padding:11px 16px;cursor:pointer;transition:all .15s}
+.quiz-reset-btn:hover{color:var(--midnight);border-color:var(--border-mid)}
+
+/* ── ELIGIBILITY BADGE ON CARD ── */
+.elig-badge{font-size:10px;padding:2px 8px;border-radius:3px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;display:inline-flex;align-items:center;gap:3px}
+.elig-yes{background:#dcfce7;color:#15803d}
+.elig-maybe{background:#fff7ed;color:#c2610c}
+/* ── MATCH ACTIVE NOTICE STRIP ── */
+.match-strip{background:var(--ice);border-bottom:1px solid var(--border);padding:8px 32px;display:none;align-items:center;gap:10px;font-size:12px;color:var(--navy)}
+.match-strip.active{display:flex}
+.match-strip strong{font-weight:600}
+.match-strip-clear{font-size:11px;font-weight:600;color:var(--coral);cursor:pointer;border:none;background:none;font-family:var(--sans);padding:0;margin-left:auto;flex-shrink:0}
+@media(max-width:680px){
+  .match-strip{padding:8px 16px}
+  .hero-cta{margin-top:24px;gap:10px}
+  .btn-match{width:100%;justify-content:center}
+  .btn-browse{width:100%;justify-content:center}
+  .quiz-inner{padding:20px 20px 32px}
+  .quiz-q{font-size:18px}
+}
 </style>
 </head>
 <body>
@@ -342,6 +419,13 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
     <div><div class="hs-num">7</div><div class="hs-lbl">Exam Pathways</div></div>
     <div><div class="hs-num">100%</div><div class="hs-lbl">Free</div></div>
   </div>
+  <div class="hero-cta">
+    <button class="btn-match" onclick="openQuiz()">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      Find My Match
+    </button>
+    <button class="btn-browse" onclick="document.querySelector('.tabs-wrap').scrollIntoView({behavior:'smooth'})">Browse All →</button>
+  </div>
 </section>
 <div class="search-section">
   <div class="search-wrap">
@@ -351,8 +435,16 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
   </div>
 </div>
 <div class="open-now-banner" id="openNowBanner" style="display:none">
-  <span class="banner-text">🟢 <strong id="openNowCount">0</strong> scholarships are open for applications right now</span>
+  <div class="banner-left">
+    <div class="banner-dot"></div>
+    <span class="banner-text"><strong id="openNowCount">0</strong> scholarships are open for applications right now</span>
+  </div>
   <button class="banner-cta" onclick="filterOpenNow()">Show open only →</button>
+</div>
+<div class="match-strip" id="matchStrip">
+  <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+  <span>Showing scholarships matched to your profile — <strong id="matchCount">0</strong> likely eligible</span>
+  <button class="match-strip-clear" onclick="clearMatch()">Clear match ✕</button>
 </div>
 <div class="tabs-wrap">
   <div class="tabs">
@@ -389,8 +481,6 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
     <span class="filter-label">🎓 Entry Level</span>
     <div class="chip" data-f="PostSPM" onclick="toggleChip(this)">Post-SPM</div>
     <div class="chip" data-f="PreU" onclick="toggleChip(this)">Pre-University</div>
-    <div class="chip chip-tooltip" data-f="Diploma" onclick="toggleChip(this)">Diploma Leavers<span class="tooltip-text">For students who completed a Diploma and are looking to continue to a degree programme.</span></div>
-    <div class="chip chip-tooltip" data-f="Matrikulasi" onclick="toggleChip(this)">Matrikulasi<span class="tooltip-text">For KPM Matrikulasi graduates seeking undergraduate scholarships.</span></div>
     <div class="chip" data-f="Undergrad" onclick="toggleChip(this)">Undergraduate</div>
     <div class="chip" data-f="Postgrad" onclick="toggleChip(this)">Postgraduate</div>
   </div>
@@ -463,6 +553,253 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
   130+ programmes updated April 2026 · Sourced from official portals · Always verify before applying · Free for all Malaysian students<br>
   <a href="https://www.jpa.gov.my">JPA</a> · <a href="https://www.mara.gov.my">MARA</a> · <a href="https://www.yayasankhazanah.com.my">Khazanah</a> · <a href="https://www.petronas.com">Petronas</a> · <a href="https://www.bnm.gov.my">Bank Negara</a> · <a href="https://www.ptptn.gov.my">PTPTN</a> · <a href="https://kuokfoundation.com">Kuok Foundation</a> · <a href="https://ytlfoundation.org">YTL Foundation</a> · <a href="https://jeffreycheah.foundation">Jeffrey Cheah Foundation</a>
 </footer>
+
+<!-- ── FIND MY MATCH QUIZ MODAL ─────────────────────────────────────────── -->
+<div class="quiz-overlay" id="quizOverlay" onclick="handleQuizOverlayClick(event)">
+  <div class="quiz-modal" id="quizModal">
+    <div class="quiz-handle"></div>
+    <div class="quiz-inner">
+
+      <!-- Progress dots -->
+      <div class="quiz-progress">
+        <div class="quiz-prog-dot active" id="qpd0"></div>
+        <div class="quiz-prog-dot" id="qpd1"></div>
+        <div class="quiz-prog-dot" id="qpd2"></div>
+        <div class="quiz-prog-dot" id="qpd3"></div>
+        <div class="quiz-prog-dot" id="qpd4"></div>
+      </div>
+
+      <!-- Step 1: Study level -->
+      <div class="quiz-step active" id="qs0">
+        <div class="quiz-q">Where are you in your studies?</div>
+        <div class="quiz-hint">This helps us show scholarships at the right level for you.</div>
+        <div class="quiz-options">
+          <label class="quiz-option" data-val="PostSPM">
+            <input type="radio" name="level" value="PostSPM">
+            <span class="quiz-option-icon">📋</span>
+            <span class="quiz-option-body">
+              <span class="quiz-option-label">Just finished SPM</span>
+              <span class="quiz-option-sub">Looking for pre-university or degree sponsorship</span>
+            </span>
+          </label>
+          <label class="quiz-option" data-val="PreU">
+            <input type="radio" name="level" value="PreU">
+            <span class="quiz-option-icon">🏫</span>
+            <span class="quiz-option-body">
+              <span class="quiz-option-label">In Foundation / Matrikulasi / A-Level</span>
+              <span class="quiz-option-sub">Currently doing pre-university studies</span>
+            </span>
+          </label>
+          <label class="quiz-option" data-val="Diploma">
+            <input type="radio" name="level" value="Diploma">
+            <span class="quiz-option-icon">📜</span>
+            <span class="quiz-option-body">
+              <span class="quiz-option-label">Diploma leaver</span>
+              <span class="quiz-option-sub">Continuing to a degree programme</span>
+            </span>
+          </label>
+          <label class="quiz-option" data-val="Undergrad">
+            <input type="radio" name="level" value="Undergrad">
+            <span class="quiz-option-icon">🎓</span>
+            <span class="quiz-option-body">
+              <span class="quiz-option-label">Undergraduate degree</span>
+              <span class="quiz-option-sub">Currently pursuing or about to start a degree</span>
+            </span>
+          </label>
+          <label class="quiz-option" data-val="Postgrad">
+            <input type="radio" name="level" value="Postgrad">
+            <span class="quiz-option-icon">🔬</span>
+            <span class="quiz-option-body">
+              <span class="quiz-option-label">Postgraduate / Master's / PhD</span>
+              <span class="quiz-option-sub">Research or advanced degree</span>
+            </span>
+          </label>
+        </div>
+        <div class="quiz-nav">
+          <span></span>
+          <div style="display:flex;align-items:center;gap:14px">
+            <span class="quiz-step-count">1 of 5</span>
+            <button class="quiz-next" id="qn0" disabled onclick="quizNext(0)">Next →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Grade -->
+      <div class="quiz-step" id="qs1">
+        <div class="quiz-q">How were your exam results?</div>
+        <div class="quiz-hint">Be honest — this ensures we show realistic matches, not just the most competitive ones.</div>
+        <div class="quiz-options">
+          <label class="quiz-option" data-val="Straight">
+            <input type="radio" name="grade" value="Straight">
+            <span class="quiz-option-icon">⭐</span>
+            <span class="quiz-option-body">
+              <span class="quiz-option-label">Straight As (9A+ / CGPA 3.8+)</span>
+              <span class="quiz-option-sub">Top academic performance</span>
+            </span>
+          </label>
+          <label class="quiz-option" data-val="7As">
+            <input type="radio" name="grade" value="7As">
+            <span class="quiz-option-icon">👍</span>
+            <span class="quiz-option-body">
+              <span class="quiz-option-label">7–8 As (CGPA 3.5–3.79)</span>
+              <span class="quiz-option-sub">Strong results</span>
+            </span>
+          </label>
+          <label class="quiz-option" data-val="5As">
+            <input type="radio" name="grade" value="5As">
+            <span class="quiz-option-icon">✅</span>
+            <span class="quiz-option-body">
+              <span class="quiz-option-label">5–6 As (CGPA 3.0–3.49)</span>
+              <span class="quiz-option-sub">Good results</span>
+            </span>
+          </label>
+          <label class="quiz-option" data-val="Any">
+            <input type="radio" name="grade" value="Any">
+            <span class="quiz-option-icon">📊</span>
+            <span class="quiz-option-body">
+              <span class="quiz-option-label">Below 5 As or unsure</span>
+              <span class="quiz-option-sub">There are still options for you</span>
+            </span>
+          </label>
+        </div>
+        <div class="quiz-nav">
+          <button class="quiz-back" onclick="quizBack(1)">← Back</button>
+          <div style="display:flex;align-items:center;gap:14px">
+            <span class="quiz-step-count">2 of 5</span>
+            <button class="quiz-next" id="qn1" disabled onclick="quizNext(1)">Next →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: Field -->
+      <div class="quiz-step" id="qs2">
+        <div class="quiz-q">What field interests you?</div>
+        <div class="quiz-hint">Pick the closest match — you can always browse all fields later.</div>
+        <div class="quiz-options">
+          <label class="quiz-option" data-val="Engineering">
+            <input type="radio" name="field" value="Engineering">
+            <span class="quiz-option-icon">⚙️</span>
+            <span class="quiz-option-body"><span class="quiz-option-label">Engineering & Technology</span><span class="quiz-option-sub">Civil, mechanical, electrical, chemical</span></span>
+          </label>
+          <label class="quiz-option" data-val="IT">
+            <input type="radio" name="field" value="IT">
+            <span class="quiz-option-icon">💻</span>
+            <span class="quiz-option-body"><span class="quiz-option-label">IT & Computer Science</span><span class="quiz-option-sub">Software, data science, AI, cybersecurity</span></span>
+          </label>
+          <label class="quiz-option" data-val="Business">
+            <input type="radio" name="field" value="Business">
+            <span class="quiz-option-icon">📈</span>
+            <span class="quiz-option-body"><span class="quiz-option-label">Business, Finance & Accounting</span><span class="quiz-option-sub">Economics, management, actuarial</span></span>
+          </label>
+          <label class="quiz-option" data-val="Medicine">
+            <input type="radio" name="field" value="Medicine">
+            <span class="quiz-option-icon">🏥</span>
+            <span class="quiz-option-body"><span class="quiz-option-label">Medicine & Health Sciences</span><span class="quiz-option-sub">Medicine, dentistry, pharmacy, nursing</span></span>
+          </label>
+          <label class="quiz-option" data-val="Law">
+            <input type="radio" name="field" value="Law">
+            <span class="quiz-option-icon">⚖️</span>
+            <span class="quiz-option-body"><span class="quiz-option-label">Law</span><span class="quiz-option-sub">Legal studies and practice</span></span>
+          </label>
+          <label class="quiz-option" data-val="Any">
+            <input type="radio" name="field" value="Any">
+            <span class="quiz-option-icon">🌟</span>
+            <span class="quiz-option-body"><span class="quiz-option-label">Not sure / Open to anything</span><span class="quiz-option-sub">Show all fields</span></span>
+          </label>
+        </div>
+        <div class="quiz-nav">
+          <button class="quiz-back" onclick="quizBack(2)">← Back</button>
+          <div style="display:flex;align-items:center;gap:14px">
+            <span class="quiz-step-count">3 of 5</span>
+            <button class="quiz-next" id="qn2" disabled onclick="quizNext(2)">Next →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4: Study destination -->
+      <div class="quiz-step" id="qs3">
+        <div class="quiz-q">Where would you like to study?</div>
+        <div class="quiz-hint">This filters out scholarships that don't match your preference.</div>
+        <div class="quiz-options">
+          <label class="quiz-option" data-val="Local">
+            <input type="radio" name="dest" value="Local">
+            <span class="quiz-option-icon">🇲🇾</span>
+            <span class="quiz-option-body"><span class="quiz-option-label">Malaysia only</span><span class="quiz-option-sub">Public or private universities in Malaysia</span></span>
+          </label>
+          <label class="quiz-option" data-val="Overseas">
+            <input type="radio" name="dest" value="Overseas">
+            <span class="quiz-option-icon">✈️</span>
+            <span class="quiz-option-body"><span class="quiz-option-label">Overseas preferred</span><span class="quiz-option-sub">UK, US, Australia, and other countries</span></span>
+          </label>
+          <label class="quiz-option" data-val="Both">
+            <input type="radio" name="dest" value="Both">
+            <span class="quiz-option-icon">🌏</span>
+            <span class="quiz-option-body"><span class="quiz-option-label">Open to both</span><span class="quiz-option-sub">Show me all options</span></span>
+          </label>
+        </div>
+        <div class="quiz-nav">
+          <button class="quiz-back" onclick="quizBack(3)">← Back</button>
+          <div style="display:flex;align-items:center;gap:14px">
+            <span class="quiz-step-count">4 of 5</span>
+            <button class="quiz-next" id="qn3" disabled onclick="quizNext(3)">Next →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 5: Income / B40 -->
+      <div class="quiz-step" id="qs4">
+        <div class="quiz-q">What is your household income?</div>
+        <div class="quiz-hint">Some scholarships specifically target lower-income families. This is optional but improves your matches.</div>
+        <div class="quiz-options">
+          <label class="quiz-option" data-val="B40">
+            <input type="radio" name="income" value="B40">
+            <span class="quiz-option-icon">🤝</span>
+            <span class="quiz-option-body"><span class="quiz-option-label">B40 — household income below RM4,850/month</span><span class="quiz-option-sub">Additional B40 scholarships and grants will be shown</span></span>
+          </label>
+          <label class="quiz-option" data-val="M40">
+            <input type="radio" name="income" value="M40">
+            <span class="quiz-option-icon">📊</span>
+            <span class="quiz-option-body"><span class="quiz-option-label">M40 — RM4,850 to RM10,970/month</span><span class="quiz-option-sub">Middle income household</span></span>
+          </label>
+          <label class="quiz-option" data-val="T20">
+            <input type="radio" name="income" value="T20">
+            <span class="quiz-option-icon">💼</span>
+            <span class="quiz-option-body"><span class="quiz-option-label">T20 — above RM10,970/month</span><span class="quiz-option-sub">Top income bracket</span></span>
+          </label>
+          <label class="quiz-option" data-val="skip">
+            <input type="radio" name="income" value="skip">
+            <span class="quiz-option-icon">🔒</span>
+            <span class="quiz-option-body"><span class="quiz-option-label">Prefer not to say</span><span class="quiz-option-sub">We'll skip income-based filtering</span></span>
+          </label>
+        </div>
+        <div class="quiz-nav">
+          <button class="quiz-back" onclick="quizBack(4)">← Back</button>
+          <div style="display:flex;align-items:center;gap:14px">
+            <span class="quiz-step-count">5 of 5</span>
+            <button class="quiz-next" id="qn4" disabled onclick="quizFinish()">See My Matches →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Results step -->
+      <div class="quiz-step" id="qs5">
+        <div class="quiz-results-header">
+          <div class="quiz-results-title">Your profile is ready</div>
+          <div class="quiz-results-sub">We've matched scholarships to your answers. Eligibility indicators will appear on each card.</div>
+          <div class="quiz-profile-pills" id="quizProfilePills"></div>
+        </div>
+        <div class="quiz-results-actions">
+          <button class="quiz-apply-btn" onclick="applyMatchAndClose()">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24" style="display:inline;vertical-align:-2px;margin-right:5px"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            Show My Matches
+          </button>
+          <button class="quiz-reset-btn" onclick="resetQuiz()">Start over</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
 
 <!-- Scholarship Detail Modal -->
 <div class="modal-overlay" id="modal" onclick="closeModal(event)">
@@ -685,6 +1022,11 @@ async function initData() {
     render();
     checkDeepLink();
 
+    // If student has a saved quiz profile, activate match mode immediately
+    if(quizProfile){
+      updateMatchStrip();
+    }
+
     // GA event: track successful data load
     if (typeof gtag !== 'undefined') {
       gtag('event', 'data_loaded', {
@@ -858,8 +1200,6 @@ function matches(s){
     // entry level
     if(f==='PostSPM'&&!s.entry.includes('PostSPM'))return false;
     if(f==='PreU'&&!s.entry.includes('PreU'))return false;
-    if(f==='Diploma'&&!s.quals.some(x=>x==='Diploma'))return false;
-    if(f==='Matrikulasi'&&!s.quals.some(x=>x==='Matriculation'||x==='Matrikulasi'))return false;
     if(f==='Undergrad'&&!s.entry.includes('Undergrad'))return false;
     if(f==='Postgrad'&&!s.entry.includes('Postgrad'))return false;
     // field
@@ -909,6 +1249,13 @@ function buildCard(s,i){
     return`<span class="tag" style="font-size:10px">${labels[e]||e}</span>`;
   }).join('');
   const globalBadge=s.global?'<span class="badge" style="background:#e0f5ef;color:#0f766e;font-size:10px;padding:2px 7px;border-radius:3px;font-weight:700;text-transform:uppercase;letter-spacing:.05em">🌐 Global</span>':'';
+  // ── Eligibility badge — only shown when quiz profile is active
+  const eligScore = eligibilityScore(s, quizProfile);
+  const eligBadge = eligScore === 'yes'
+    ? '<span class="elig-badge elig-yes"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> Likely eligible</span>'
+    : eligScore === 'maybe'
+    ? '<span class="elig-badge elig-maybe">⚠ Check requirements</span>'
+    : '';
   return`<div class="card${urgentCard?' urgent-card':''}" style="animation-delay:${Math.min(i*.04,.5)}s" onclick="openModal(${s.id})">
 <div class="card-stripe cs-${c}"></div>
 <div class="card-body">
@@ -925,6 +1272,7 @@ ${s.indianCommunity?'<span class="badge bg-indian">Indian</span>':''}
 ${s.foreignerOk?'<span class="badge bg-intl-elig">Intl OK</span>':''}
 ${globalBadge}
 ${statusBadge}
+${eligBadge}
 </div>
 <div class="card-name">${s.name}</div>
 <div class="card-provider">${s.prov}</div>
@@ -1291,6 +1639,224 @@ async function runLinkCheck(){
     <br><small style="color:var(--muted)">Note: CORS restrictions mean many working sites appear as ⚠️. Open ❌ links manually to confirm if truly broken.</small>`;
 }
 
+// ── QUIZ STATE ────────────────────────────────────────────────────────────
+// Stores the student's answers. Persisted to localStorage so returning
+// visitors see their matches immediately without re-answering.
+let quizProfile = null;
+const QUIZ_KEY = 'myscholar_quiz_v1';
+
+// Load saved profile on startup
+(function loadSavedQuiz(){
+  try {
+    const saved = localStorage.getItem(QUIZ_KEY);
+    if(saved) quizProfile = JSON.parse(saved);
+  } catch(e){ quizProfile = null; }
+})();
+
+// ── QUIZ OPEN / CLOSE ─────────────────────────────────────────────────────
+function openQuiz(){
+  // If profile already saved, show results step directly
+  if(quizProfile){
+    showQuizStep(5);
+    renderQuizProfilePills();
+  } else {
+    showQuizStep(0);
+  }
+  document.getElementById('quizOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  if(typeof gtag !== 'undefined') gtag('event','quiz_open',{event_category:'engagement'});
+}
+
+function closeQuiz(){
+  document.getElementById('quizOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function handleQuizOverlayClick(e){
+  if(e.target.id === 'quizOverlay') closeQuiz();
+}
+
+// ── QUIZ STEP MANAGEMENT ──────────────────────────────────────────────────
+function showQuizStep(n){
+  document.querySelectorAll('.quiz-step').forEach((el,i) => {
+    el.classList.toggle('active', i === n);
+  });
+  // Update progress dots (only for steps 0–4)
+  for(let i=0; i<5; i++){
+    const dot = document.getElementById('qpd'+i);
+    if(!dot) continue;
+    dot.className = 'quiz-prog-dot' + (i < n ? ' done' : i === n ? ' active' : '');
+  }
+}
+
+function quizNext(step){
+  showQuizStep(step + 1);
+}
+
+function quizBack(step){
+  showQuizStep(step - 1);
+}
+
+// ── QUIZ OPTION SELECTION ─────────────────────────────────────────────────
+// Wire up option clicks — runs after DOM is ready
+document.addEventListener('DOMContentLoaded', function(){
+  document.querySelectorAll('.quiz-option').forEach(opt => {
+    opt.addEventListener('click', function(){
+      const radio = this.querySelector('input[type=radio]');
+      if(!radio) return;
+      radio.checked = true;
+      // Deselect siblings
+      const name = radio.name;
+      document.querySelectorAll(`input[name="${name}"]`).forEach(r => {
+        r.closest('.quiz-option').classList.remove('selected');
+      });
+      this.classList.add('selected');
+      // Enable the Next button for this step
+      const stepMap = {level:0, grade:1, field:2, dest:3, income:4};
+      const stepIdx = stepMap[name];
+      const nextBtn = document.getElementById('qn'+stepIdx);
+      if(nextBtn) nextBtn.disabled = false;
+    });
+  });
+});
+
+// ── QUIZ FINISH ───────────────────────────────────────────────────────────
+function quizFinish(){
+  // Collect answers
+  const level  = document.querySelector('input[name="level"]:checked')?.value;
+  const grade  = document.querySelector('input[name="grade"]:checked')?.value;
+  const field  = document.querySelector('input[name="field"]:checked')?.value;
+  const dest   = document.querySelector('input[name="dest"]:checked')?.value;
+  const income = document.querySelector('input[name="income"]:checked')?.value;
+
+  quizProfile = { level, grade, field, dest, income };
+
+  // Save to localStorage so it persists across sessions
+  try { localStorage.setItem(QUIZ_KEY, JSON.stringify(quizProfile)); } catch(e){}
+
+  renderQuizProfilePills();
+  showQuizStep(5);
+
+  if(typeof gtag !== 'undefined'){
+    gtag('event','quiz_complete',{event_category:'engagement',event_label:`${level}|${grade}|${field}`});
+  }
+}
+
+// ── PROFILE PILLS DISPLAY ─────────────────────────────────────────────────
+function renderQuizProfilePills(){
+  if(!quizProfile) return;
+  const labels = {
+    PostSPM:'Post-SPM', PreU:'Pre-U / Foundation', Diploma:'Diploma leaver',
+    Undergrad:'Undergraduate', Postgrad:'Postgraduate',
+    Straight:'Straight As', '7As':'7–8 As', '5As':'5–6 As', Any:'Any grade',
+    Engineering:'Engineering', IT:'IT / CS', Business:'Business',
+    Medicine:'Medicine', Law:'Law',
+    Local:'Local study', Overseas:'Overseas', Both:'Local & overseas',
+    B40:'B40 household', M40:'M40 household', T20:'T20 household', skip:'Income: not stated'
+  };
+  const pills = [quizProfile.level, quizProfile.grade, quizProfile.field, quizProfile.dest, quizProfile.income]
+    .filter(Boolean)
+    .map(v => `<span class="quiz-pill">${labels[v]||v}</span>`)
+    .join('');
+  const el = document.getElementById('quizProfilePills');
+  if(el) el.innerHTML = pills;
+}
+
+// ── APPLY MATCH & CLOSE ───────────────────────────────────────────────────
+function applyMatchAndClose(){
+  closeQuiz();
+  // Small delay so modal close animation finishes before re-render
+  setTimeout(() => {
+    render();
+    updateMatchStrip();
+    document.querySelector('.tabs-wrap').scrollIntoView({behavior:'smooth'});
+  }, 100);
+}
+
+function clearMatch(){
+  quizProfile = null;
+  try { localStorage.removeItem(QUIZ_KEY); } catch(e){}
+  document.getElementById('matchStrip').classList.remove('active');
+  render();
+}
+
+// ── MATCH STRIP ───────────────────────────────────────────────────────────
+function updateMatchStrip(){
+  if(!quizProfile) return;
+  const eligible = DATA.filter(s => eligibilityScore(s, quizProfile) === 'yes').length;
+  document.getElementById('matchCount').textContent = eligible;
+  document.getElementById('matchStrip').classList.add('active');
+}
+
+// ── RESET QUIZ ────────────────────────────────────────────────────────────
+function resetQuiz(){
+  quizProfile = null;
+  try { localStorage.removeItem(QUIZ_KEY); } catch(e){}
+  // Uncheck all radios and deselect options
+  document.querySelectorAll('.quiz-option').forEach(o => o.classList.remove('selected'));
+  document.querySelectorAll('.quiz-option input').forEach(r => r.checked = false);
+  document.querySelectorAll('.quiz-next').forEach(b => b.disabled = true);
+  showQuizStep(0);
+}
+
+// ── ELIGIBILITY SCORING ───────────────────────────────────────────────────
+// Returns 'yes' | 'maybe' | null
+// 'yes'   = student profile matches this scholarship's hard requirements
+// 'maybe' = partial match — one soft criterion doesn't align
+// null    = no profile set, show nothing
+//
+// Logic uses the existing structured fields already in your Supabase DB:
+//   s.entry[]     — entry levels accepted
+//   s.quals[]     — qualifications accepted
+//   s.gradeMin    — Straight / 7As / 5As / Any
+//   s.fieldTags[] — field tags
+//   s.dest        — Local / Overseas
+//   s.b40         — boolean
+//
+function eligibilityScore(s, profile){
+  if(!profile) return null;
+
+  const gradeOrder = {Straight:4, '7As':3, '5As':2, Any:1};
+  const studentGrade = gradeOrder[profile.grade] || 1;
+  const requiredGrade = gradeOrder[s.gradeMin] || 1;
+
+  // ── Hard checks — if any fail, return null (don't show badge at all for clear mismatches)
+  // Entry level check
+  const entryMap = {
+    PostSPM: ['PostSPM'],
+    PreU:    ['PreU','PostSPM'],
+    Diploma: ['Undergrad','Diploma'],
+    Undergrad:['Undergrad'],
+    Postgrad: ['Postgrad','Undergrad']
+  };
+  const studentEntries = entryMap[profile.level] || [profile.level];
+  const entryMatch = s.entry.some(e => studentEntries.includes(e));
+  if(!entryMatch) return null; // Wrong level entirely — don't show badge
+
+  // Grade check — student's grade must meet or exceed requirement
+  const gradeOk = studentGrade >= requiredGrade;
+
+  // Destination check
+  const destOk = profile.dest === 'Both' || s.dest === 'Local' || s.dest === profile.dest;
+
+  // Field check
+  const fieldOk = profile.field === 'Any'
+    || s.fieldTags.includes('Any')
+    || s.fieldTags.includes(profile.field);
+
+  // B40 check — if B40 specific scholarship, only show 'yes' to B40 students
+  const b40Ok = !s.b40 || profile.income === 'B40';
+
+  // ── Score
+  const hardPass = gradeOk && destOk && fieldOk && b40Ok;
+  const softIssues = [gradeOk, destOk, fieldOk, b40Ok].filter(v => !v).length;
+
+  if(hardPass) return 'yes';
+  if(softIssues <= 1) return 'maybe';
+  return null; // Too many mismatches — no badge shown
+}
+
+// ── INIT: apply saved quiz profile on load ────────────────────────────────
 // ── INIT ──────────────────────────────────────────────────────────────────
 // Kick off the Supabase fetch. Everything else runs inside initData()
 // once the data arrives.
