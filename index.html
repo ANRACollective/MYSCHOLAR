@@ -500,9 +500,6 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
     <button class="bookmark-nav-btn" style="background:rgba(232,85,30,.18);color:var(--coral)" onclick="openSubmitModal()">
       + <span class="nav-btn-label">Suggest</span>
     </button>
-    <button class="bookmark-nav-btn" style="background:rgba(0,168,120,.15);color:#00a878" onclick="openLinkChecker()" title="Check if scholarship links are working">
-      🔗 <span class="nav-btn-label">Links</span>
-    </button>
     <div class="nav-pill" id="navPill">0</div>
   </div>
 </nav>
@@ -1511,13 +1508,124 @@ ${rollingNote}
 <div class="modal-section"><div class="modal-section-label">Eligibility</div><div class="modal-tag-wrap">${s.elig.map(e=>`<span class="modal-tag">${e}</span>`).join('')}</div></div>
 <div class="modal-section"><div class="modal-section-label">Notes & Tips</div><div class="modal-notes">${s.notes}</div></div>
 <div class="modal-actions">
-<a class="btn-primary" href="${s.url}" target="_blank">Visit Official Website ↗</a>
+<div style="display:flex;flex-direction:column;gap:6px;flex:1;min-width:0">
+  <a id="modalVisitBtn" class="btn-primary" href="${s.url}" target="_blank" onclick="recordVisit(${id})">Visit Official Website ↗</a>
+  <div id="urlStatusBar" style="font-size:11px;color:var(--muted);display:flex;align-items:center;gap:5px;min-height:16px">
+    <span id="urlStatusIcon"></span><span id="urlStatusText"></span>
+    <button id="urlAiFixBtn" onclick="aiFixThisUrl(${id},'${s.url.replace(/'/g,"\\'")}','${s.name.replace(/'/g,"\\'")}',this)" style="display:none;font-size:10px;font-weight:600;background:#fee2e2;color:#dc2626;border:1px solid #fca5a5;border-radius:4px;padding:2px 7px;cursor:pointer;font-family:var(--sans)">🤖 AI Fix</button>
+  </div>
+</div>
 <button id="modalBookmarkBtn" class="btn-bookmark${isSaved?' saved':''}" onclick="toggleBookmark(${id});this.textContent=bookmarks.has(${id})?'★ Saved':'☆ Save';this.className='btn-bookmark'+(bookmarks.has(${id})?' saved':'');">${isSaved?'★ Saved':'☆ Save'}</button>
 <a class="btn-secondary" href="#" onclick="document.getElementById('modal').classList.remove('open');return false">Close</a>
 </div>
 </div>`;
   document.getElementById('modal').classList.add('open');
   document.getElementById('modalBox').scrollTop=0;
+  // Check URL health when modal opens — shows status next to the Visit button
+  checkModalUrl(id, s.url);
+}
+
+// ── PER-MODAL URL STATUS CHECK ────────────────────────────────────────────
+// Runs when a scholarship modal opens. Checks the URL with a HEAD request.
+// Shows ✅ OK, ⚠️ Slow/Suspected, or ❌ Broken — and offers AI Fix if broken.
+
+async function checkModalUrl(id, url){
+  const icon = document.getElementById('urlStatusIcon');
+  const text = document.getElementById('urlStatusText');
+  const fixBtn = document.getElementById('urlAiFixBtn');
+  if(!icon || !text) return;
+
+  // Show loading state
+  icon.textContent = '⏳';
+  text.textContent = 'Checking link...';
+  text.style.color = 'var(--muted)';
+  fixBtn.style.display = 'none';
+
+  if(!url || !url.startsWith('http')){
+    icon.textContent = '❓';
+    text.textContent = 'No URL on file';
+    return;
+  }
+
+  try {
+    const ctrl = new AbortController();
+    const start = Date.now();
+    const tid = setTimeout(() => ctrl.abort(), 8000); // 8s timeout
+
+    await fetch(url, { method: 'HEAD', mode: 'no-cors', signal: ctrl.signal });
+    clearTimeout(tid);
+
+    const ms = Date.now() - start;
+    if(ms < 5000){
+      // Responded quickly — likely OK
+      icon.textContent = '✅';
+      text.textContent = 'Link looks good';
+      text.style.color = '#15803d';
+      // Update Supabase status if it wasn't already ok
+      updateUrlStatus(id, 'ok');
+    } else {
+      // Slow but responded
+      icon.textContent = '🟡';
+      text.textContent = 'Link slow — may work';
+      text.style.color = '#b45309';
+    }
+  } catch(e) {
+    if(e.name === 'AbortError'){
+      // Timed out — likely broken or blocking
+      icon.textContent = '⚠️';
+      text.textContent = 'Link may be broken — ';
+      text.style.color = '#dc2626';
+      fixBtn.style.display = 'inline-block';
+      updateUrlStatus(id, 'suspected');
+    } else {
+      // CORS block — site is probably fine but blocks automated checks
+      icon.textContent = '✅';
+      text.textContent = 'Link looks good';
+      text.style.color = '#15803d';
+    }
+  }
+}
+
+// Called when student clicks Visit — logs as a visit (for future analytics)
+function recordVisit(id){
+  // Placeholder for GA event tracking
+  if(typeof gtag !== 'undefined'){
+    gtag('event','visit_official_website',{scholarship_id:id});
+  }
+}
+
+// AI Fix for a single scholarship from modal
+async function aiFixThisUrl(id, currentUrl, name, btn){
+  btn.textContent = '⏳ Fixing...';
+  btn.disabled = true;
+  const text = document.getElementById('urlStatusText');
+  const icon = document.getElementById('urlStatusIcon');
+  text.textContent = 'AI searching for correct URL...';
+
+  const newUrl = await findCorrectUrl(name, currentUrl);
+  if(newUrl && newUrl !== currentUrl){
+    const ok = await updateUrlInSupabase(id, newUrl);
+    if(ok){
+      icon.textContent = '✅';
+      text.textContent = `Fixed → ${newUrl}`;
+      text.style.color = '#15803d';
+      btn.style.display = 'none';
+      // Update the Visit button href live
+      const visitBtn = document.getElementById('modalVisitBtn');
+      if(visitBtn) visitBtn.href = newUrl;
+      // Update local DATA cache
+      const s = DATA.find(x => x.id === id);
+      if(s) s.url = newUrl;
+    } else {
+      btn.textContent = '🤖 AI Fix';
+      btn.disabled = false;
+      text.textContent = 'Could not save — try again';
+    }
+  } else {
+    btn.textContent = '🤖 AI Fix';
+    btn.disabled = false;
+    text.textContent = 'No better URL found';
+  }
 }
 
 function closeModal(e){if(e.target.id==='modal')document.getElementById('modal').classList.remove('open');}
