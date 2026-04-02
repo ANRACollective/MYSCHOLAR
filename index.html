@@ -200,8 +200,7 @@ nav{position:sticky;top:0;z-index:200;background:var(--midnight);padding:0 20px;
 .card-name{font-family:var(--serif);font-size:17px;font-weight:700;color:var(--midnight);line-height:1.25}
 .card-provider{font-size:12px;color:var(--muted)}
 .card-amount{font-size:13px;font-weight:500;color:var(--navy);background:var(--ice);border-radius:5px;padding:10px 12px;line-height:1.4;border-left:3px solid var(--border-mid);margin-bottom:13px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.card-tags{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-bottom:6px}
-.card-tags .tag{text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px}
 .tag{font-size:11px;padding:3px 8px;border-radius:4px;background:var(--ice-mid);color:var(--muted);border:1px solid var(--border);font-weight:500}
 .card-foot{padding:12px 20px;border-top:1px solid var(--border);background:var(--ice);display:flex;justify-content:space-between;align-items:center;gap:8px;flex-shrink:0;margin-top:auto}
 .card-deadline{font-size:11.5px;color:var(--muted)}.card-deadline strong{color:var(--coral);font-weight:600}
@@ -1309,21 +1308,26 @@ async function submitCorrection(id, scholarshipName, btn){
   const textEl=document.getElementById('corrText'+id);
   const msg=(textEl?textEl.value:'').trim();
   if(!msg){textEl&&textEl.focus();return;}
+  if(msg.length<5){
+    textEl.style.borderColor='#dc2626';
+    textEl.focus();
+    return;
+  }
   btn.textContent='Sending...';
   btn.disabled=true;
   try{
-    await fetch('https://formspree.io/f/YOUR_FORM_ID',{
+    await fetch('https://ywvfvjvxwhcfprfrkgqm.supabase.co/functions/v1/submit-correction',{
       method:'POST',
-      headers:{'Content-Type':'application/json','Accept':'application/json'},
+      headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         scholarship_id:id,
         scholarship_name:scholarshipName,
-        correction:msg,
-        submitted_at:new Date().toISOString()
+        correction:msg
       })
     });
-  }catch(e){}
-  // Show thanks regardless (graceful)
+  }catch(e){
+    console.warn('Correction submit error:',e);
+  }
   const form=document.getElementById('corrForm'+id);
   const inner=form?form.querySelector('.correction-form-inner'):null;
   const thanks=document.getElementById('corrThanks'+id);
