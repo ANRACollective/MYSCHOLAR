@@ -697,6 +697,10 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
       <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
       Facebook
     </a>
+    <a href="mailto:hello@myscholar.my">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      hello@myscholar.my
+    </a>
   </div>
   <strong>MyScholar Malaysia</strong> · myscholar.my · Free Scholarship Directory 2025/2026<br>
   Built by ANRA · Not affiliated with any scholarship body or government agency · No ads · No login · Always free<br>
@@ -1637,9 +1641,6 @@ ${rollingNote}
     <button class="modal-icon-btn" title="Flag an issue" onclick="toggleCorrectionForm('corrForm${id}',this)">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
     </button>
-    <button class="modal-icon-btn" title="Close" onclick="document.getElementById('modal').classList.remove('open')">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-    </button>
   </div>
   <div id="urlStatusBar" style="font-size:11px;color:var(--muted);display:flex;align-items:center;gap:5px;min-height:16px;margin-top:6px">
     <span id="urlStatusIcon"></span><span id="urlStatusText"></span>
@@ -1705,26 +1706,23 @@ async function checkModalUrl(id, url){
 
     const ms = Date.now() - start;
     if(ms < 5000){
-      // Responded quickly — likely OK
       icon.textContent = '✅';
       text.textContent = 'Link looks good';
       text.style.color = '#15803d';
-      // Update Supabase status if it wasn't already ok
-      updateUrlStatus(id, 'ok');
+      // Note: url_status is updated by the weekly Edge Function (check-urls),
+      // not on every modal open — avoids unnecessary Supabase writes per student visit
     } else {
-      // Slow but responded
       icon.textContent = '🟡';
       text.textContent = 'Link slow — may work';
       text.style.color = '#b45309';
     }
   } catch(e) {
     if(e.name === 'AbortError'){
-      // Timed out — likely broken or blocking
       icon.textContent = '⚠️';
       text.textContent = 'Link may be broken — ';
       text.style.color = '#dc2626';
       fixBtn.style.display = 'inline-block';
-      updateUrlStatus(id, 'suspected');
+      // Note: not writing to Supabase here — weekly cron handles url_status updates
     } else {
       // CORS block — site is probably fine but blocks automated checks
       icon.textContent = '✅';
