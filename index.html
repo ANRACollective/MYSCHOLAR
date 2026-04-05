@@ -49,7 +49,7 @@
 ═══════════════════════════════════════════════════════════════ -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://myscholar.my/">
-<meta property="og:title" content="MyScholar — Biasiswa Malaysia 2026 | 168 Scholarships for Malaysian Students">
+<meta property="og:title" content="MyScholar — Biasiswa Malaysia 2026 | 184 Scholarships for Malaysian Students">
 <meta property="og:description" content="Find your scholarship in minutes. 148 biasiswa Malaysia for SPM, STPM, Degree & Postgrad students — JPA, Petronas, MARA, Chevening, Shell & more. Free, filtered, verified.">
 <meta property="og:image" content="https://myscholar.my/myscholar-og.jpg">
 <meta property="og:image:width" content="1280">
@@ -61,7 +61,7 @@
      TWITTER / X CARD
 ═══════════════════════════════════════════════════════════════ -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="MyScholar — Biasiswa Malaysia 2026 | 168 Scholarships">
+<meta name="twitter:title" content="MyScholar — Biasiswa Malaysia 2026 | 184 Scholarships">
 <meta name="twitter:description" content="Find your scholarship in minutes. 148 biasiswa Malaysia for SPM, STPM, Degree & Postgrad. Free, filtered, verified.">
 <meta name="twitter:image" content="https://myscholar.my/myscholar-og.jpg">
 
@@ -135,6 +135,19 @@ nav{position:sticky;top:0;z-index:200;background:var(--midnight);padding:0 20px;
 .search-icon{position:absolute;left:16px;top:50%;transform:translateY(-50%);pointer-events:none}
 #si{width:100%;padding:14px 16px 14px 50px;border:none;border-radius:8px;font-family:var(--sans);font-size:15px;background:#fff;color:var(--midnight);outline:none;box-shadow:0 2px 12px rgba(0,0,0,.15)}
 #si::placeholder{color:#aab}
+/* ── BROWSE BY NEED ──────────────────────────────────────────────────────── */
+.browse-need{background:var(--white);border-bottom:1px solid var(--border);padding:14px 32px}
+.browse-need-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.browse-need-tiles{display:flex;gap:8px;flex-wrap:wrap}
+.need-tile{display:flex;align-items:center;gap:8px;padding:9px 16px;border:1.5px solid var(--border);border-radius:8px;background:var(--white);cursor:pointer;font-family:var(--sans);font-size:13px;font-weight:500;color:var(--midnight);transition:all .15s;white-space:nowrap;user-select:none}
+.need-tile:hover{border-color:var(--border-mid);background:var(--ice)}
+.need-tile.active{background:var(--midnight);color:#fff;border-color:var(--midnight)}
+.need-tile-icon{font-size:15px;line-height:1}
+@media(max-width:680px){
+  .browse-need{padding:12px 16px}
+  .browse-need-tiles{gap:7px}
+  .need-tile{font-size:12px;padding:8px 12px;gap:6px}
+}
 /* category tabs */
 .tabs-wrap{background:var(--white);border-bottom:1px solid var(--border);padding:0 32px;position:sticky;top:52px;z-index:100}
 .tabs{display:flex;overflow-x:auto;scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}
@@ -579,6 +592,26 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
     <button class="search-clear" id="searchClear" onclick="clearSearch()" title="Clear search">×</button>
   </div>
 </div>
+<div class="browse-need">
+  <div class="browse-need-label">Browse by need</div>
+  <div class="browse-need-tiles">
+    <button class="need-tile" id="needSPM" onclick="toggleNeed(this,'PostSPM')">
+      <span class="need-tile-icon">📝</span> Just finished SPM
+    </button>
+    <button class="need-tile" id="needFull" onclick="toggleNeed(this,'Full')">
+      <span class="need-tile-icon">★</span> Full scholarship
+    </button>
+    <button class="need-tile" id="needOverseas" onclick="toggleNeed(this,'Overseas')">
+      <span class="need-tile-icon">✈</span> Study overseas
+    </button>
+    <button class="need-tile" id="needPostgrad" onclick="toggleNeed(this,'Postgrad')">
+      <span class="need-tile-icon">🔬</span> Postgraduate
+    </button>
+    <button class="need-tile" id="needNoBond" onclick="toggleNeed(this,'NoBond')">
+      <span class="need-tile-icon">✓</span> No bond
+    </button>
+  </div>
+</div>
 <div class="open-now-banner" id="openNowBanner" style="display:none">
   <div class="banner-left">
     <div class="banner-dot"></div>
@@ -691,7 +724,7 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
     <div style="margin-top:20px;padding:16px 20px;background:rgba(255,255,255,.07);border-radius:8px;border:1px solid rgba(255,255,255,.1);font-size:13px;line-height:1.9;color:rgba(255,255,255,.5)">
       <div style="color:rgba(255,255,255,.8);font-weight:600;margin-bottom:6px;font-size:12px;letter-spacing:.08em;text-transform:uppercase">About this project</div>
       Built by <strong style="color:rgba(255,255,255,.8)">ANRA</strong> · Not affiliated with any scholarship body or government agency · Community-maintained · Completely free, no ads, no login required<br>
-      <span style="font-size:12px">Data last reviewed: <strong style="color:rgba(255,255,255,.7)">April 2026</strong> · 168 programmes across 12 categories · Sourced from official portals</span>
+      <span style="font-size:12px">Data last reviewed: <strong style="color:rgba(255,255,255,.7)">April 2026</strong> · 184 programmes across 12 categories · Sourced from official portals</span>
     </div>
     <div class="about-cta">
       <button onclick="openSubmitModal()">Know a scholarship we're missing? Tell us →</button>
@@ -711,7 +744,7 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
   </div>
   <strong>MyScholar Malaysia</strong> · myscholar.my · Free Scholarship Directory 2025/2026<br>
   Built by ANRA · Not affiliated with any scholarship body or government agency · No ads · No login · Always free<br>
-  Data last reviewed April 2026 · 168 programmes · Sourced from official portals · Always verify before applying<br>
+  Data last reviewed April 2026 · 184 programmes · Sourced from official portals · Always verify before applying<br>
   <a href="https://www.jpa.gov.my">JPA</a> · <a href="https://www.mara.gov.my">MARA</a> · <a href="https://www.yayasankhazanah.com.my">Khazanah</a> · <a href="https://www.petronas.com">Petronas</a> · <a href="https://www.bnm.gov.my">Bank Negara</a> · <a href="https://www.ptptn.gov.my">PTPTN</a> · <a href="https://kuokfoundation.com">Kuok Foundation</a> · <a href="https://ytlfoundation.org">YTL Foundation</a> · <a href="https://jeffreycheah.foundation">Jeffrey Cheah Foundation</a>
 </footer>
 
@@ -1084,7 +1117,7 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
       <!-- Filter + actions row -->
       <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center">
         <select id="auditFilter" onchange="renderAuditList()" style="font-size:12px;padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:var(--white);color:var(--midnight);font-family:var(--sans);cursor:pointer">
-          <option value="all">All (168)</option>
+          <option value="all">All (184)</option>
           <option value="unverified">🔘 Unverified</option>
           <option value="ok">✅ Verified OK</option>
           <option value="broken">❌ Broken</option>
@@ -2005,6 +2038,7 @@ function clearAll(){
   updateFilterUI();
   resetPage();
   render();
+  syncNeedTiles(); // keep Browse by Need tiles in sync
 }
 
 // ── URL AUDIT PANEL ──────────────────────────────────────────────────────────
@@ -2812,6 +2846,62 @@ function restoreCompareState(){
 }
 
 // ── INIT: apply saved quiz profile on load ────────────────────────────────
+// ── BROWSE BY NEED ────────────────────────────────────────────────────────
+// Maps each need tile to the chip filter it should activate.
+// Tapping a tile toggles the corresponding filter chip on/off,
+// resets to page 1, scrolls to the grid, and highlights the tile.
+const NEED_MAP = {
+  'PostSPM': 'PostSPM',
+  'Full':    'Full',
+  'Overseas':'Overseas',
+  'Postgrad':'Postgrad',
+  'NoBond':  'NoBond',
+};
+
+function toggleNeed(tile, key) {
+  const chipFilter = NEED_MAP[key];
+  if (!chipFilter) return;
+
+  const isActive = tile.classList.contains('active');
+
+  if (isActive) {
+    // Deactivate — remove filter
+    tile.classList.remove('active');
+    const chip = document.querySelector(`.chip[data-f="${chipFilter}"]`);
+    if (chip && activeChips.has(chipFilter)) {
+      chip.classList.remove('on');
+      activeChips.delete(chipFilter);
+    }
+  } else {
+    // Activate — add filter
+    tile.classList.add('active');
+    const chip = document.querySelector(`.chip[data-f="${chipFilter}"]`);
+    if (chip && !activeChips.has(chipFilter)) {
+      chip.classList.add('on');
+      activeChips.add(chipFilter);
+    }
+  }
+
+  updateFilterUI();
+  resetPage();
+  render();
+
+  // Scroll to results smoothly
+  document.querySelector('.tabs-wrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// Keep need tiles in sync if filters are cleared externally (e.g. "Clear all")
+function syncNeedTiles() {
+  document.querySelectorAll('.need-tile').forEach(tile => {
+    const onclick = tile.getAttribute('onclick');
+    const match = onclick && onclick.match(/'([^']+)'\)$/);
+    if (match) {
+      const key = match[1];
+      tile.classList.toggle('active', activeChips.has(key));
+    }
+  });
+}
+
 // ── INIT ──────────────────────────────────────────────────────────────────
 // Kick off the Supabase fetch. Everything else runs inside initData()
 // once the data arrives.
