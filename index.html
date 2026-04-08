@@ -11,7 +11,7 @@
 ═══════════════════════════════════════════════════════════════ -->
 <title>MyScholar | Biasiswa Malaysia 2026 — Scholarships for SPM, STPM, Degree & Postgrad</title>
 
-<meta name="description" content="Cari biasiswa Malaysia 2026 dengan mudah. 180+ scholarships for SPM leavers, STPM, undergraduate & postgraduate — JPA, Petronas, MARA, Chevening & more. Filter by field, grade & eligibility. Free.">
+<meta name="description" content="Cari biasiswa Malaysia 2026 dengan mudah. 150+ scholarships for SPM leavers, STPM, undergraduate & postgraduate — JPA, Petronas, MARA, Chevening & more. Filter by field, grade & eligibility. Free.">
 
 <!-- Target audience keywords — bilingual to capture both BM and English searches -->
 <meta name="keywords" content="biasiswa Malaysia 2026, biasiswa lepasan SPM, biasiswa lepasan STPM, scholarship Malaysia 2026, tawaran biasiswa 2026, biasiswa JPA 2026, biasiswa Petronas, biasiswa MARA, biasiswa undergraduate, biasiswa B40, pinjaman pelajaran, biasiswa degree, biasiswa diploma, biasiswa postgraduate, Malaysia scholarship finder, biasiswa terkini 2026, senarai biasiswa 2026, biasiswa kerajaan, biasiswa korporat, biasiswa penuh, biasiswa overseas">
@@ -23,8 +23,8 @@
 ═══════════════════════════════════════════════════════════════ -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://myscholar.my/">
-<meta property="og:title" content="MyScholar — Biasiswa Malaysia 2026 | 180+ Scholarships for Malaysian Students">
-<meta property="og:description" content="Find your scholarship in minutes. 180+ biasiswa Malaysia for SPM, STPM, Degree & Postgrad students — JPA, Petronas, MARA, Chevening, Shell & more. Free, filtered, verified.">
+<meta property="og:title" content="MyScholar — Biasiswa Malaysia 2026 | 150+ Scholarships for Malaysian Students">
+<meta property="og:description" content="Find your scholarship in minutes. 150+ biasiswa Malaysia for SPM, STPM, Degree & Postgrad students — JPA, Petronas, MARA, Chevening, Shell & more. Free, filtered, verified.">
 <meta property="og:image" content="https://myscholar.my/myscholar-og.jpg">
 <meta property="og:image:width" content="1280">
 <meta property="og:image:height" content="640">
@@ -35,8 +35,8 @@
      TWITTER / X CARD
 ═══════════════════════════════════════════════════════════════ -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="MyScholar — Biasiswa Malaysia 2026 | 180+ Scholarships">
-<meta name="twitter:description" content="Find your scholarship in minutes. 180+ biasiswa Malaysia for SPM, STPM, Degree & Postgrad. Free, filtered, verified.">
+<meta name="twitter:title" content="MyScholar — Biasiswa Malaysia 2026 | 150+ Scholarships">
+<meta name="twitter:description" content="Find your scholarship in minutes. 150+ biasiswa Malaysia for SPM, STPM, Degree & Postgrad. Free, filtered, verified.">
 <meta name="twitter:image" content="https://myscholar.my/myscholar-og.jpg">
 
 <!-- ═══════════════════════════════════════════════════════════════
@@ -51,7 +51,7 @@
   "name": "MyScholar Malaysia",
   "alternateName": "MyScholar — Biasiswa Malaysia 2026",
   "url": "https://myscholar.my",
-  "description": "Free Malaysian scholarship directory — 180+ programmes for SPM, STPM, undergraduate and postgraduate students. Filter by field, grade, eligibility and deadline.",
+  "description": "Free Malaysian scholarship directory — 150+ programmes for SPM, STPM, undergraduate and postgraduate students. Filter by field, grade, eligibility and deadline.",
   "inLanguage": ["en-MY", "ms-MY"],
   "potentialAction": {
     "@type": "SearchAction",
@@ -69,7 +69,7 @@
   "@type": "EducationalOrganization",
   "name": "MyScholar Malaysia",
   "url": "https://myscholar.my",
-  "description": "Malaysia scholarship finder — free directory of 180+ biasiswa for Malaysian students from SPM to PhD.",
+  "description": "Malaysia scholarship finder — free directory of 150+ biasiswa for Malaysian students from SPM to PhD.",
   "sameAs": ["https://myscholar.my"]
 }
 </script>
@@ -415,6 +415,8 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
 .btn-match:active{transform:scale(.98)}
 .btn-browse{font-family:var(--sans);font-size:14px;font-weight:500;background:rgba(255,255,255,.1);color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:14px 24px;cursor:pointer;transition:all .18s}
 .btn-browse:hover{background:rgba(255,255,255,.18);color:#fff}
+.hero-tip{margin-top:14px;font-size:12px;color:rgba(255,255,255,.4);display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap}
+.hero-tip-icon{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border:1px solid rgba(255,255,255,.25);border-radius:4px;flex-shrink:0}
 
 /* ── QUIZ MODAL ── */
 .quiz-overlay{display:none;position:fixed;inset:0;background:rgba(15,31,61,.6);z-index:998;align-items:flex-end;justify-content:center;padding:0;backdrop-filter:blur(3px)}
@@ -522,6 +524,13 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
       Find My Match
     </button>
     <button class="btn-browse" onclick="document.querySelector('.tabs-wrap').scrollIntoView({behavior:'smooth'})">Browse All →</button>
+  </div>
+  <div class="hero-tip">
+    Tip: tap
+    <span class="hero-tip-icon">
+      <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="8" height="18" rx="1"/><rect x="14" y="3" width="8" height="18" rx="1"/></svg>
+    </span>
+    on any card to compare scholarships side by side
   </div>
 </section>
 <div class="search-section">
@@ -1281,18 +1290,6 @@ function submitSuggestion(){
   if(!name||!url){alert('Please fill in the Scholarship Name and Official Website URL at minimum.');return;}
   const inner=document.getElementById('submitInner');
   inner.innerHTML=`<div class="submit-success"><div class="submit-success-icon">🎉</div><h2>Thank you!</h2><p style="color:var(--muted);font-size:14px;line-height:1.8">We've received your suggestion for <strong>${name}</strong>. We'll review it and add it to the directory if verified.<br><br>You can help more students by sharing MyScholar with your friends!</p><button class="submit-btn" style="margin-top:20px" onclick="closeSubmitModal()">Close</button></div>`;
-
-  // GA EVENT: correction_submitted
-  // Fires when a student successfully submits a scholarship suggestion or correction.
-  // In GA4 → Events → correction_submitted → 'scholarship_name' shows which scholarships
-  // students are flagging. High submission rate = community trust is growing.
-  if(typeof gtag !== 'undefined'){
-    gtag('event', 'correction_submitted', {
-      event_category: 'engagement',
-      scholarship_name: name
-    });
-  }
-
   // In a real deployment, you'd POST this to a backend/form service. For now it's a UX mock.
 }
 
@@ -1628,32 +1625,12 @@ function goToPage(p){
 function resetPage(){ currentPage = 1; }
 
 // ── SEARCH CLEAR ──────────────────────────────────────────────────────────
-// Debounce timer — fires search_query event only after student stops typing for 1.5 seconds.
-// This avoids logging every single keypress (e.g. "J", "JP", "JPA") and only captures
-// complete, intentional search terms that actually tell us what students are looking for.
-let _searchDebounce = null;
-
 function onSearchInput(){
   const q = document.getElementById('si').value;
   const clearBtn = document.getElementById('searchClear');
   clearBtn.classList.toggle('visible', q.length > 0);
   resetPage();
   render();
-
-  // GA EVENT: search_query
-  // Fires when student has typed at least 3 characters and paused for 1.5s.
-  // In GA4 → Events → search_query → 'search_term' parameter shows what students searched.
-  clearTimeout(_searchDebounce);
-  if(q.trim().length >= 3){
-    _searchDebounce = setTimeout(() => {
-      if(typeof gtag !== 'undefined'){
-        gtag('event', 'search_query', {
-          event_category: 'engagement',
-          search_term: q.trim().toLowerCase()
-        });
-      }
-    }, 1500);
-  }
 }
 
 function clearSearch(){
@@ -1740,19 +1717,6 @@ function toggleChip(el){
   updateFilterUI();
   resetPage();
   render();
-
-  // GA EVENT: filter_applied
-  // Fires every time a student turns a filter chip on or off.
-  // In GA4 → Events → filter_applied → 'filter_name' shows which filters get used most.
-  // 'filter_action' tells you if they're adding or removing — helps spot which filters confuse students.
-  if(typeof gtag !== 'undefined'){
-    gtag('event', 'filter_applied', {
-      event_category: 'engagement',
-      filter_name: f,
-      filter_action: activeChips.has(f) ? 'applied' : 'removed',
-      active_filter_count: activeChips.size
-    });
-  }
 }
 
 function setTab(el){
@@ -1959,21 +1923,7 @@ function quizFinish(){
   showQuizStep(5);
 
   if(typeof gtag !== 'undefined'){
-    // GA EVENT: quiz_completed
-    // Fires when a student finishes the eligibility quiz and sees their matched scholarships.
-    // In GA4 → Events → quiz_completed → breakdown by level/grade/field shows your
-    // actual audience profile. High 'Postgrad' rate? Add more postgrad scholarships.
-    // 'dest' and 'income' reveal whether students are targeting local vs overseas,
-    // and how many are from B40 backgrounds.
-    gtag('event', 'quiz_completed', {
-      event_category: 'engagement',
-      event_label: `${level}|${grade}|${field}`,
-      quiz_level: level,
-      quiz_grade: grade,
-      quiz_field: field,
-      quiz_dest: dest || 'not_set',
-      quiz_income: income || 'not_set'
-    });
+    gtag('event','quiz_complete',{event_category:'engagement',event_label:`${level}|${grade}|${field}`});
   }
 }
 
