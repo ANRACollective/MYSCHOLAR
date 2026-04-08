@@ -2858,5 +2858,11 @@ function restoreCompareState(){
   if(compareSet.size > 0) updateCompareTray();
 }
 
-// ── INIT: apply saved quiz profile on load ────────────────────────────────
-// ── INIT ────────────────────────────────────── 
+// -- INIT --
+// Kick off the Supabase fetch. Everything else runs inside initData()
+// once the data arrives.
+updateBookmarkCount();
+initData();
+</script>
+</body>
+</html>
