@@ -806,9 +806,9 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
       <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
       Facebook
     </a>
-    <a href="/cdn-cgi/l/email-protection#5a323f3636351a372329393235363b28743723">
+    <a href="javascript:void(0)" onclick="openEmailModalFromFooter()">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-      <span class="__cf_email__" data-cfemail="f098959c9c9fb09d898393989f9c9182de9d89">[email&#160;protected]</span>
+      Get updates
     </a>
   </div>
   <strong>MyScholar Malaysia</strong> · myscholar.my · Free Scholarship Directory 2025/2026<br>
@@ -3071,6 +3071,21 @@ function closeEmailModal() {
   document.getElementById('esmOverlay').classList.remove('visible');
   // Permanently suppress — student has seen and dismissed it
   localStorage.setItem(ESM_KEY, 'dismissed');
+}
+
+// Opens the modal manually from the footer "Get updates" button.
+// Bypasses the localStorage suppression — student clicked it intentionally.
+function openEmailModalFromFooter() {
+  // Reset form in case it was previously in success state
+  document.getElementById("esmForm").style.display    = "";
+  document.getElementById("esmSuccess").style.display = "none";
+  document.getElementById("esmSubmitBtn").disabled    = false;
+  document.getElementById("esmSubmitBtn").textContent = "Notify me u2192";
+  document.getElementById("esmEmailInput").value      = "";
+  document.getElementById("esmOverlay").classList.add("visible");
+  if(typeof gtag !== "undefined") {
+    gtag("event", "email_modal_shown", { event_category: "engagement", event_label: "footer" });
+  }
 }
 
 // ── SUBMIT LOGIC ───────────────────────────────────────────────────────────
