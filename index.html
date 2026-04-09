@@ -771,6 +771,7 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
   <div class="sort-wrap">Sort:
     <select id="sortSelect" onchange="render()">
       <option value="default">Default</option>
+      <option value="newest">Newly added</option>
       <option value="deadline">By deadline (soonest first)</option>
       <option value="name">A – Z</option>
       <option value="saved">Saved first</option>
@@ -1237,7 +1238,7 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
           onkeydown="if(event.key==='Enter')submitEmailSignup()"
         >
         <button class="esm-btn" id="esmSubmitBtn" onclick="submitEmailSignup()">
-          Notify me →
+          Notify me &#8594;
         </button>
       </div>
       <p class="esm-privacy">🔒 We don't share your email. Unsubscribe anytime.</p>
@@ -1355,6 +1356,7 @@ function normaliseRow(row) {
     indianCommunity:  false,
     elig:             [],
     last_verified:    row.last_verified || null,
+    created_at:       row.created_at    || null, // when this scholarship was added to the database
   };
 }
 
@@ -1969,6 +1971,15 @@ function render(){
     });
   } else if(sort==='name'){
     filteredItems.sort((a,b)=>a.name.localeCompare(b.name));
+  } else if(sort==='newest'){
+    // Sort by created_at descending — most recently added to the database first.
+    // Scholarships without a created_at (legacy rows) go to the bottom.
+    filteredItems.sort((a,b)=>{
+      if(!a.created_at && !b.created_at) return 0;
+      if(!a.created_at) return 1;
+      if(!b.created_at) return -1;
+      return new Date(b.created_at) - new Date(a.created_at);
+    });
   } else if(sort==='saved'){
     filteredItems.sort((a,b)=>{
       const as=bookmarks.has(a.id)?0:1;
@@ -3080,7 +3091,7 @@ function openEmailModalFromFooter() {
   document.getElementById("esmForm").style.display    = "";
   document.getElementById("esmSuccess").style.display = "none";
   document.getElementById("esmSubmitBtn").disabled    = false;
-  document.getElementById("esmSubmitBtn").textContent = "Notify me u2192";
+  document.getElementById("esmSubmitBtn").textContent = "Notify me →";
   document.getElementById("esmEmailInput").value      = "";
   document.getElementById("esmOverlay").classList.add("visible");
   if(typeof gtag !== "undefined") {
