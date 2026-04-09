@@ -535,6 +535,107 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
   .quiz-inner{padding:20px 20px 32px}
   .quiz-q{font-size:18px}
 }
+
+/* ── EMAIL SIGNUP MODAL ──────────────────────────────────────────────────── */
+/* Full-screen dark overlay — sits on top of everything (z-index 9999) */
+.esm-overlay{
+  position:fixed;inset:0;
+  background:rgba(15,31,61,.52);
+  z-index:9999;
+  display:flex;align-items:flex-end;justify-content:center; /* slides up from bottom on mobile */
+  padding:0;
+  opacity:0;pointer-events:none;
+  transition:opacity .3s ease;
+}
+/* Adding .visible makes the modal appear and interactive */
+.esm-overlay.visible{opacity:1;pointer-events:all}
+
+/* The white card */
+.esm-card{
+  background:#fff;
+  width:100%;max-width:460px;
+  border-radius:18px 18px 0 0;
+  padding:28px 24px 40px;
+  transform:translateY(40px);
+  transition:transform .38s cubic-bezier(.22,1,.36,1);
+  position:relative;
+}
+.esm-overlay.visible .esm-card{transform:translateY(0)}
+
+/* On desktop: centred floating card instead of bottom sheet */
+@media(min-width:600px){
+  .esm-overlay{align-items:center;padding:20px}
+  .esm-card{border-radius:14px;padding:32px 30px 36px}
+}
+
+/* Close × button */
+.esm-close{
+  position:absolute;top:14px;right:16px;
+  background:var(--ice);border:none;
+  width:28px;height:28px;border-radius:50%;
+  cursor:pointer;font-size:15px;color:var(--muted);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--sans);transition:background .15s;
+}
+.esm-close:hover{background:var(--border)}
+
+/* Emoji badge */
+.esm-badge{
+  width:46px;height:46px;
+  background:#f0f4ff;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;margin-bottom:14px;
+}
+.esm-title{
+  font-family:var(--serif);font-size:21px;font-weight:700;
+  color:var(--midnight);line-height:1.2;margin-bottom:6px;
+}
+.esm-sub{
+  font-size:13px;color:var(--muted);line-height:1.65;margin-bottom:20px;
+}
+.esm-sub strong{color:var(--midnight)}
+
+/* Email input + button row */
+.esm-input-row{display:flex;gap:8px;flex-direction:column}
+@media(min-width:400px){.esm-input-row{flex-direction:row}}
+
+.esm-input{
+  flex:1;
+  padding:12px 14px;
+  border:1.5px solid var(--border);border-radius:8px;
+  font-family:var(--sans);font-size:14px;color:var(--midnight);
+  outline:none;transition:border-color .15s;
+  -webkit-appearance:none; /* cleaner on iOS */
+}
+.esm-input:focus{border-color:var(--navy)}
+.esm-input::placeholder{color:#aab}
+
+.esm-btn{
+  padding:12px 20px;
+  background:var(--midnight);color:#fff;
+  border:none;border-radius:8px;
+  font-family:var(--sans);font-size:14px;font-weight:600;
+  cursor:pointer;white-space:nowrap;
+  transition:opacity .15s;flex-shrink:0;
+}
+.esm-btn:hover{opacity:.88}
+.esm-btn:disabled{opacity:.45;cursor:default}
+
+/* Success state — replaces form after submission */
+.esm-success{
+  display:none;text-align:center;padding:8px 0 4px;
+}
+.esm-success-icon{font-size:36px;margin-bottom:10px}
+.esm-success-title{
+  font-family:var(--serif);font-size:19px;font-weight:700;
+  color:var(--midnight);margin-bottom:6px;
+}
+.esm-success-sub{font-size:13px;color:var(--muted);line-height:1.6}
+
+/* Small privacy note below the form */
+.esm-privacy{
+  font-size:11px;color:var(--muted);margin-top:10px;line-height:1.5;
+}
 </style>
 </head>
 <body>
@@ -1100,6 +1201,55 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
       <div id="linkResults" style="max-height:400px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;background:var(--ice)"></div>
       <div id="linkSummary" style="font-size:12px;color:var(--muted);margin-top:10px;line-height:1.6"></div>
     </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     EMAIL SIGNUP MODAL
+     Triggered automatically: after 10s on page OR scrolling past first card,
+     whichever comes first. Only shown once (stored in localStorage).
+     Saves email to Supabase `subscribers` table via REST API INSERT.
+════════════════════════════════════════════════════════════════ -->
+<div class="esm-overlay" id="esmOverlay" onclick="if(event.target.id==='esmOverlay')closeEmailModal()">
+  <div class="esm-card" role="dialog" aria-modal="true" aria-labelledby="esmTitle">
+
+    <!-- Close button -->
+    <button class="esm-close" onclick="closeEmailModal()" aria-label="Close">✕</button>
+
+    <!-- Badge + headline -->
+    <div class="esm-badge">📬</div>
+    <h2 class="esm-title" id="esmTitle">New scholarships added every week</h2>
+    <p class="esm-sub">
+      Be the first to know when we add new programmes.<br>
+      <strong>No spam.</strong> Just new scholarships, straight to your inbox.
+    </p>
+
+    <!-- Form state (shown by default) -->
+    <div id="esmForm">
+      <div class="esm-input-row">
+        <input
+          type="email"
+          class="esm-input"
+          id="esmEmailInput"
+          placeholder="your@email.com"
+          autocomplete="email"
+          inputmode="email"
+          onkeydown="if(event.key==='Enter')submitEmailSignup()"
+        >
+        <button class="esm-btn" id="esmSubmitBtn" onclick="submitEmailSignup()">
+          Notify me →
+        </button>
+      </div>
+      <p class="esm-privacy">🔒 We don't share your email. Unsubscribe anytime.</p>
+    </div>
+
+    <!-- Success state (hidden until submission) -->
+    <div class="esm-success" id="esmSuccess">
+      <div class="esm-success-icon">🎉</div>
+      <div class="esm-success-title">You're in!</div>
+      <p class="esm-success-sub">We'll let you know when new scholarships are added. Good luck with your applications.</p>
+    </div>
+
   </div>
 </div>
 
@@ -2858,11 +3008,145 @@ function restoreCompareState(){
   if(compareSet.size > 0) updateCompareTray();
 }
 
+// ═══════════════════════════════════════════════════════════════════════════
+// EMAIL SIGNUP MODAL — Logic
+//
+// HOW IT WORKS:
+//   1. On page load, we set two triggers:
+//      a) A 10-second timer
+//      b) A scroll listener — fires when the user scrolls past 300px (past the first card)
+//   2. Whichever trigger fires first shows the modal
+//   3. We store a flag in localStorage so the modal NEVER shows again on repeat visits
+//   4. On submit, we INSERT the email into the Supabase `subscribers` table
+//   5. Google Analytics event fired on both show and successful signup
+// ═══════════════════════════════════════════════════════════════════════════
+
+// ── TRIGGER LOGIC ─────────────────────────────────────────────────────────
+// localStorage key — once set, modal is permanently suppressed for this browser
+const ESM_KEY = 'myscholar_email_modal_seen';
+
+let _esmScrollHandler = null; // keeps a reference so we can remove the listener later
+let _esmTimer = null;
+
+function initEmailModal() {
+  // Don't show if student has already seen it (signed up OR dismissed)
+  if(localStorage.getItem(ESM_KEY)) return;
+
+  // TRIGGER A: Show after 10 seconds
+  _esmTimer = setTimeout(() => {
+    showEmailModal('timer');
+  }, 10000);
+
+  // TRIGGER B: Show when student scrolls 300px down (past the first card row)
+  _esmScrollHandler = () => {
+    if(window.scrollY > 300) {
+      showEmailModal('scroll');
+    }
+  };
+  window.addEventListener('scroll', _esmScrollHandler, { passive: true });
+}
+
+function showEmailModal(trigger) {
+  // Clear both triggers so only one fires
+  clearTimeout(_esmTimer);
+  if(_esmScrollHandler) {
+    window.removeEventListener('scroll', _esmScrollHandler);
+    _esmScrollHandler = null;
+  }
+
+  // Mark as seen so it doesn't show again this session
+  // (We set permanently only after they close or submit — see below)
+  document.getElementById('esmOverlay').classList.add('visible');
+
+  // GA EVENT: track that the modal was shown, and which trigger fired it
+  if(typeof gtag !== 'undefined') {
+    gtag('event', 'email_modal_shown', {
+      event_category: 'engagement',
+      event_label: trigger // 'timer' or 'scroll'
+    });
+  }
+}
+
+function closeEmailModal() {
+  document.getElementById('esmOverlay').classList.remove('visible');
+  // Permanently suppress — student has seen and dismissed it
+  localStorage.setItem(ESM_KEY, 'dismissed');
+}
+
+// ── SUBMIT LOGIC ───────────────────────────────────────────────────────────
+async function submitEmailSignup() {
+  const input = document.getElementById('esmEmailInput');
+  const btn   = document.getElementById('esmSubmitBtn');
+  const email = input.value.trim().toLowerCase();
+
+  // Basic email format check before hitting the database
+  if(!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    input.style.borderColor = '#dc2626'; // red border on invalid email
+    input.focus();
+    setTimeout(() => input.style.borderColor = '', 1800); // reset after 1.8s
+    return;
+  }
+
+  // Disable button and show loading state
+  btn.disabled = true;
+  btn.textContent = 'Saving…';
+
+  try {
+    // INSERT into Supabase `subscribers` table
+    // `source` tag lets us know this came from the modal (vs future signup points)
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/subscribers`, {
+      method: 'POST',
+      headers: {
+        'apikey':        SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        'Content-Type':  'application/json',
+        'Prefer':        'return=minimal' // don't return the row, saves bandwidth
+      },
+      body: JSON.stringify({ email: email, source: 'modal' })
+    });
+
+    if(res.ok || res.status === 409) {
+      // 409 = Conflict (duplicate email) — treat as success, don't scare the user
+      showEmailSuccess(email);
+    } else {
+      throw new Error(`HTTP ${res.status}`);
+    }
+
+  } catch(err) {
+    // On any error, re-enable the button and show a toast
+    btn.disabled = false;
+    btn.textContent = 'Notify me →';
+    showToast('⚠️ Something went wrong — try again');
+    log('Email signup error:', err);
+  }
+}
+
+function showEmailSuccess(email) {
+  // Hide the form, show the success message
+  document.getElementById('esmForm').style.display    = 'none';
+  document.getElementById('esmSuccess').style.display = 'block';
+
+  // Permanently suppress modal for this browser
+  localStorage.setItem(ESM_KEY, 'subscribed');
+
+  // Auto-close after 3 seconds
+  setTimeout(() => closeEmailModal(), 3000);
+
+  // GA EVENT: successful signup — most important conversion metric
+  if(typeof gtag !== 'undefined') {
+    gtag('event', 'email_signup', {
+      event_category: 'conversion',
+      event_label: 'modal'
+    });
+  }
+}
+
 // -- INIT --
 // Kick off the Supabase fetch. Everything else runs inside initData()
 // once the data arrives.
 updateBookmarkCount();
 initData();
+initEmailModal(); // Start the 10s timer + scroll listener for the signup modal
 </script>
 </body>
 </html>
