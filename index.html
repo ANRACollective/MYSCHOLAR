@@ -183,11 +183,31 @@ nav{position:sticky;top:0;z-index:200;background:var(--midnight);padding:0 20px;
 .chip-tooltip .tooltip-text::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--midnight)}
 .chip-tooltip:hover .tooltip-text{display:block}
 /* active filter count */
-.filter-toggle{display:flex;align-items:center;gap:8px;padding:0 32px 0;background:var(--white);border-bottom:1px solid var(--border)}
-.filter-toggle-btn{font-size:12px;padding:10px 0;border:none;background:transparent;cursor:pointer;color:var(--navy);font-family:var(--sans);font-weight:600;display:flex;align-items:center;gap:6px}
+.filter-toggle{display:none}
+.filter-toggle-btn{display:none}
 .active-count{background:var(--coral);color:#fff;font-size:10px;padding:1px 6px;border-radius:20px;font-weight:700}
 .filter-panel{display:none}.filter-panel.open{display:block}
 .clear-btn{font-size:11px;color:var(--coral);cursor:pointer;border:none;background:transparent;font-family:var(--sans);font-weight:600;padding:0;margin-left:auto}
+/* ── QUICK FILTER PANEL ─────────────────────────────────────────────────── */
+.qf-panel{background:var(--white);border-bottom:1px solid var(--border);padding:14px 32px}
+.qf-section{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.qf-section:last-child{margin-bottom:0}
+.qf-label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.07em;text-transform:uppercase;min-width:80px;flex-shrink:0}
+.qf-chip{font-size:13px;padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--white);cursor:pointer;color:var(--midnight);transition:all .12s;white-space:nowrap;font-weight:500;user-select:none;display:inline-block}
+.qf-chip:hover{border-color:var(--border-mid);background:var(--ice)}
+.qf-chip.on{background:var(--midnight);color:#fff;border-color:var(--midnight)}
+.qf-more-row{background:var(--white);border-bottom:1px solid var(--border);padding:8px 32px;display:flex;align-items:center;justify-content:flex-end;gap:12px}
+.qf-more-btn{font-size:12px;color:var(--navy);font-weight:600;background:none;border:none;cursor:pointer;font-family:var(--sans);display:flex;align-items:center;gap:4px;padding:0;transition:color .15s}
+.qf-more-btn:hover{color:var(--midnight)}
+.qf-more-btn svg{transition:transform .2s}
+.qf-more-btn.open svg{transform:rotate(180deg)}
+.qf-active-badge{font-size:12px;color:var(--coral);font-weight:600}
+@media(max-width:680px){
+  .qf-panel{padding:12px 16px}
+  .qf-more-row{padding:8px 16px}
+  .qf-label{min-width:64px;font-size:10px}
+  .qf-chip{font-size:12px;padding:5px 11px}
+}
 /* bookmark button in nav area */
 .bookmark-nav-btn{font-size:12px;color:rgba(255,255,255,.5);background:rgba(255,255,255,.09);border:none;border-radius:20px;padding:4px 10px;cursor:pointer;font-family:var(--sans);display:flex;align-items:center;gap:4px;transition:all .2s;white-space:nowrap;flex-shrink:0}
 .bookmark-nav-btn:hover{color:#fff;background:rgba(255,255,255,.18)}
