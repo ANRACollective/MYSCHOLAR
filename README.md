@@ -1,70 +1,146 @@
-# 🎓 MyScholar Malaysia | The Ultimate Scholarship Directory 2026
+# MyScholar Malaysia
 
-> **"Financial barriers should not dictate a student's potential."**
+> A free scholarship finder for Malaysian students — no login, no paywall, no noise.
 
-MyScholar is a high-performance, centralized directory designed to aggregate and simplify the scholarship landscape for Malaysian students. We provide real-time tracking of **90+ active scholarships** and financial aid programs—from SPM leavers to Postgraduates.
-
-🔗 **Live Site:** [myscholar.my](https://myscholar.my)  
-🚀 **Host:** GitHub Pages (ANRACollective/myscholar)
+🔗 **Live site:** [myscholar.my](https://myscholar.my)
 
 ---
 
-## 🛠️ Performance & Evolution
-Since its inception, MyScholar has evolved from a basic list into a robust digital asset:
-- **Data Scaling:** Expanded from 20 to **90+ verified scholarship programs**.
-- **Tech Stack:** Built with pure HTML5, CSS3, and Vanilla JavaScript for sub-second loading speeds on mobile devices.
-- **SEO Optimized:** Implemented **JSON-LD Schema (SpecialAnnouncement)** and Open Graph tags to ensure high visibility on Google and social media.
-- **Analytics Driven:** Integrated Google Analytics (G-ZETBRDDMTV) to audit user traffic and optimize the "Scholarship Match" experience.
+## What is MyScholar?
+
+MyScholar is a free, searchable directory of scholarships, financial aid, and study loans available to Malaysian students — from SPM leavers to postgraduates.
+
+Navigating scholarships in Malaysia is fragmented. Deadlines are scattered across dozens of websites, eligibility requirements differ between programmes, and many students miss out simply because they never heard of something they qualified for. MyScholar puts everything in one place and keeps it free.
+
+It's still early days and I'm adding more scholarships regularly, but it's already usable.
 
 ---
 
-## 🔍 Key Features
-- **Precision Filters:** Filter by **Entry Level** (SPM, STPM, UEC, IGCSE), **Minimum Grade**, and **Field of Study**.
-- **Bilingual Reach:** Targeted indexing for both English and Malay search terms (e.g., "Biasiswa Lepasan SPM").
-- **Comprehensive Coverage:**
-    - **Government:** JPA (PPN, JKPJ, PIDN), MARA (YTP, TESP).
-    - **GLCs & Foundations:** PETRONAS, Khazanah, Sime Darby, Shell, Maybank.
-    - **State-Level:** Penang Future Foundation, Yayasan Selangor, and more.
-- **Privacy-First:** 100% free with **no login, no signup, and no user tracking**.
+## Current state
+
+- **200+ scholarships** across federal government, state governments, GLCs, listed corporates, banks, universities, community bodies, and foreign government programmes
+- Fully searchable and filterable — no login required
+- Mobile-first design, built for students browsing on their phones
+- Data stored in Supabase; frontend is a single-file HTML SPA hosted on GitHub Pages
 
 ---
 
-## 📊 Scholarship Data Overview (Sample)
+## Features
 
-| Provider | Key Programme | Entry Level | Status |
-|---|---|---|---|
-| **JPA** | Program Penajaan Nasional (PPN) | Post-SPM | Active 2026 |
-| **PETRONAS** | Education Sponsorship (PESP) | Post-SPM | Active 2026 |
-| **MIS** | Malaysia International Scholarship | Postgrad | Active 2026 |
-| **Khazanah** | Global / Watashipan Scholarship | Multi-level | Active 2026 |
-
----
-
-## 🚀 2026 Roadmap
-- [x] **SEO Overhaul:** Complete meta-tag and schema integration.
-- [ ] **Bahasa Malaysia Toggle:** Full localization for all scholarship descriptions.
-- [ ] **Match Quiz:** "3-Question Matcher" to instantly find eligible aid.
-- [ ] **Deadline Alerts:** Push notifications for upcoming closing dates.
-- [ ] **Community Contribution:** API-ready structure for external data submissions.
+- **Search** by scholarship name, provider, field of study, or grade requirement
+- **Quick filter chips** — by category, qualification level, destination (local/overseas), award type, and deadline window
+- **Scholarship quiz** — answer a few questions to see matched scholarships
+- **Detail modal** for every scholarship — amount, deadlines, grade requirements, bond conditions, eligibility criteria, and tips
+- **Suggest a correction** — any visitor can flag outdated info directly from the modal; corrections are emailed to the maintainer via Resend
+- No login, no signup, no paywall
 
 ---
 
-## 🛡️ Data Integrity & Audit
-All information is cross-referenced with official scholarship portals for the **2025/2026 academic cycle**. As an independent directory, we prioritize **accuracy and timeliness**. 
+## Who is this for?
 
-**Notice:** Requirements and deadlines are subject to change by providers. Users are encouraged to verify details via the "Official Site" link provided on each scholarship card.
-
----
-
-## 🤝 Contributing
-We welcome contributions to keep the directory the most accurate in Malaysia.
-1. **Fork** the repository.
-2. Update the scholarship object in `index.html`.
-3. Submit a **Pull Request** with the source URL for verification.
+- Students who have just received their **SPM, STPM, A-Level, O-Level, UEC, or IGCSE** results
+- Students currently in **foundation, diploma, or undergraduate** programmes
+- **Parents** helping their children plan for further education
+- **School counsellors and teachers** who want a quick reference for students
 
 ---
 
-### License
-Distributed under the **MIT License**. Build on it, share it, and keep education accessible for all.
+## Architecture
 
-*Maintained with pride by [Anton](https://github.com/ANRACollective).*
+| Layer | Tool |
+|---|---|
+| Frontend | Single-file HTML SPA (`index.html`) |
+| Hosting | GitHub Pages (`ANRACollective/MYSCHOLAR`) |
+| Database | Supabase — table: `scholarships`, view: `scholarships_full` |
+| Domain | `myscholar.my` via Exabytes, Cloudflare DNS |
+| Email | Resend (transactional), Cloudflare Email Routing |
+| Analytics | GA4 (`G-ZETBRDDMTV`) |
+
+The site is intentionally dependency-free on the frontend — no build step, no framework, no npm. The entire UI is one HTML file.
+
+---
+
+## Scholarship coverage
+
+Scholarships are sourced using an 8-actor model to systematically identify gaps:
+
+1. **Federal Government** — JPA, MARA, PTPTN, KPT, BRIM/STR-linked programmes
+2. **State Governments** — Yayasan Selangor, Penang Future Foundation, Yayasan Sarawak, and others
+3. **GLCs** — PETRONAS, Khazanah, Sime Darby, Telekom Malaysia, TNB, UEM, PNB
+4. **Listed Corporates** — Shell, Gamuda, Top Glove, AirAsia, IHH, and others
+5. **Banks** — Bank Negara Malaysia, Maybank, CIMB, RHB, Bank Rakyat, BSN
+6. **Universities** — bursaries and merit awards from public and private institutions
+7. **Community & Religious Bodies** — Chinese community foundations, Yayasan Wakaf, religious bodies
+8. **Foreign Governments** — UK Chevening, Australia Awards, Japan MEXT, US Fulbright, and others
+
+---
+
+## Analytics
+
+Four custom GA4 events are instrumented:
+
+- `search_query` — fired when a student submits a search term
+- `filter_applied` — fired when a filter chip is toggled
+- `correction_submitted` — fired when a correction form is submitted
+- `quiz_completed` — fired when the scholarship quiz finishes, with five parameters capturing the student's quiz responses
+
+---
+
+## Data accuracy
+
+All scholarship data is researched from official scholarship portals and audited periodically. Scholarship requirements, amounts, and deadlines change annually — always verify at the official scholarship website before applying.
+
+URL health is checked automatically every Monday via a scheduled `pg_cron` job using `pg_net`. Each scholarship link is classified as:
+
+- `ok` — confirmed live (includes sites that return 400/401/403 as bot protection)
+- `suspected` — timeout or server error; likely live but unverifiable
+- `broken` — 404 or DNS failure; flagged for manual review
+
+If you spot outdated information or a missing scholarship, use the **Suggest a Correction** button inside any scholarship card.
+
+---
+
+## Contributing
+
+The scholarship database is maintained directly in Supabase. If you're a developer and want to contribute, open an issue first to discuss the change.
+
+If you're a student or counsellor who knows of a scholarship that should be listed, the easiest path is the **Suggest a Correction** form on the live site — no GitHub account needed.
+
+---
+
+## Roadmap
+
+The product follows a three-phase arc:
+
+**Phase 1 — Directory** *(current)*
+- [x] 200+ scholarships with full details
+- [x] Search, filter, and quiz
+- [x] Suggest a correction workflow
+- [x] GA4 analytics instrumentation
+- [x] Automated URL health checks
+
+**Phase 2 — Engagement**
+- [ ] Email deadline alerts — students subscribe to get reminders before closing dates
+- [ ] Personalised scholarship matching based on quiz results
+- [ ] Bahasa Malaysia language toggle
+
+**Phase 3 — Ecosystem**
+- [ ] User accounts with synced bookmarks
+- [ ] Application tracker
+- [ ] Counsellor dashboard for school use
+
+---
+
+## License
+
+MIT License — free to use, share, and modify. If you build on this, please keep it free for students.
+
+---
+
+## Disclaimer
+
+This directory is for reference purposes only. MyScholar is not affiliated with any scholarship provider. Always refer to the official scholarship website for the most accurate and up-to-date information. Scholarship availability, eligibility criteria, and award amounts are subject to change without notice.
+
+---
+
+*Built for Malaysian students.*
