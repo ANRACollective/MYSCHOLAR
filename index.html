@@ -699,39 +699,47 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
 .esm-privacy{
   font-size:11px;color:var(--muted);margin-top:10px;line-height:1.5;
 }
+/* ── LANGUAGE TOGGLE ─────────────────────────────────────── */
+.lang-toggle{display:flex;align-items:center;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:20px;padding:3px;gap:2px;flex-shrink:0}
+.lt-opt{font-size:10px;font-weight:500;padding:3px 10px;border-radius:16px;cursor:pointer;color:rgba(255,255,255,.45);background:none;border:none;transition:all .15s;letter-spacing:.02em}
+.lt-opt.active{background:rgba(255,255,255,.18);color:#fff}
+.lt-opt:focus-visible{outline:2px solid var(--coral);outline-offset:2px}
 </style>
 </head>
 <body>
 <nav>
   <a class="nav-logo" href="#">My<span>Scholar</span></a>
   <div class="nav-r">
-    <a href="#about" class="nav-btn-label">About</a>
+    <a href="#about" class="nav-btn-label" data-i18n="navAbout">About</a>
     <button class="bookmark-nav-btn" id="bookmarkNavBtn" onclick="openBookmarkPanel()">
       <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-      <span class="nav-btn-label">Saved</span> (<span id="bookmarkCount">0</span>)
+      <span class="nav-btn-label" data-i18n="navSaved">Saved</span> (<span id="bookmarkCount">0</span>)
     </button>
     <button class="bookmark-nav-btn" style="background:rgba(232,85,30,.18);color:var(--coral)" onclick="openSubmitModal()">
-      + <span class="nav-btn-label">Suggest</span>
+      + <span class="nav-btn-label" data-i18n="navSuggest">Suggest</span>
     </button>
-    <div class="nav-pill" id="navPill">0</div>
+    <div class="lang-toggle" role="group" aria-label="Language">
+      <button class="lt-opt active" id="lt-en" onclick="setLang('en')" aria-pressed="true">EN</button>
+      <button class="lt-opt" id="lt-bm" onclick="setLang('bm')" aria-pressed="false">BM</button>
+    </div>
   </div>
 </nav>
 <section class="hero">
-  <div class="eyebrow">Malaysia · 2025 / 2026 Academic Year</div>
-  <h1>Find Your<br><em>Scholarship.</em></h1>
-  <p class="hero-sub">A free directory of scholarships, financial aid, and study loans for Malaysian students — SPM to postgraduate.</p>
+  <div class="eyebrow" data-i18n="heroEyebrow">Malaysia · 2025 / 2026 Academic Year</div>
+  <h1 data-i18n="heroH1">Find Your<br><em>Scholarship.</em></h1>
+  <p class="hero-sub" data-i18n="heroSub">A free directory of scholarships, financial aid, and study loans for Malaysian students — SPM to postgraduate.</p>
   <div class="hero-stats">
-    <div><div class="hs-num" id="heroCount">0</div><div class="hs-lbl">Programmes</div></div>
-    <div><div class="hs-num">11</div><div class="hs-lbl">Categories</div></div>
-    <div><div class="hs-num">7</div><div class="hs-lbl">Exam Pathways</div></div>
-    <div><div class="hs-num">100%</div><div class="hs-lbl">Free</div></div>
+    <div><div class="hs-num" id="heroCount">0</div><div class="hs-lbl" data-i18n="heroStatProg">Programmes</div></div>
+    <div><div class="hs-num">11</div><div class="hs-lbl" data-i18n="heroStatCat">Categories</div></div>
+    <div><div class="hs-num">7</div><div class="hs-lbl" data-i18n="heroStatPath">Exam Pathways</div></div>
+    <div><div class="hs-num">100%</div><div class="hs-lbl" data-i18n="heroStatFree">Free</div></div>
   </div>
   <div class="hero-cta">
     <button class="btn-match" onclick="openQuiz()">
       <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-      Find My Match
+      <span data-i18n="heroBtnMatch">Find My Match</span>
     </button>
-    <button class="btn-browse" onclick="document.querySelector('.tabs-wrap').scrollIntoView({behavior:'smooth'})">Browse All →</button>
+    <button class="btn-browse" data-i18n="heroBtnBrowse" onclick="document.querySelector('.tabs-wrap').scrollIntoView({behavior:'smooth'})">Browse All →</button>
   </div>
   <p style="margin-top:14px;font-size:12px;color:rgba(255,255,255,.35);text-align:center;letter-spacing:.01em">
     Tip: tap <span style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:4px;padding:1px 6px;font-size:11px;font-family:monospace">⊞</span> on any card to compare scholarships side by side
@@ -749,7 +757,7 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
     <div class="banner-dot"></div>
     <span class="banner-text"><strong id="openNowCount">0</strong> scholarships are open for applications right now</span>
   </div>
-  <button class="banner-cta" onclick="filterOpenNow()">Show open only →</button>
+  <button class="banner-cta" data-i18n="bannerCta" onclick="filterOpenNow()">Show open only →</button>
 </div>
 <div class="match-strip" id="matchStrip">
   <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
@@ -758,17 +766,17 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
 </div>
 <div class="tabs-wrap">
   <div class="tabs">
-    <button class="tab active" data-cat="all" onclick="setTab(this)">All</button>
-    <button class="tab gov" data-cat="Government" onclick="setTab(this)">🏛 Government</button>
-    <button class="tab glc" data-cat="GLC" onclick="setTab(this)">🏢 GLC / Yayasan</button>
-    <button class="tab bank" data-cat="Banking" onclick="setTab(this)">🏦 Banking</button>
-    <button class="tab corp" data-cat="Corporate" onclick="setTab(this)">🏭 Corporate</button>
-    <button class="tab loan" data-cat="Loan" onclick="setTab(this)">📋 Loans</button>
-    <button class="tab state" data-cat="State" onclick="setTab(this)">📍 State</button>
-    <button class="tab intl" data-cat="International" onclick="setTab(this)">🌍 International</button>
-    <button class="tab uni" data-cat="University" onclick="setTab(this)">🎓 University</button>
-    <button class="tab found" data-cat="Foundation" onclick="setTab(this)">🏛️ Foundation & Media</button>
-    <button class="tab pg" data-cat="Postgraduate" onclick="setTab(this)">🔬 Postgraduate</button>
+    <button class="tab active" data-cat="all" data-i18n="tabAll" onclick="setTab(this)">All</button>
+    <button class="tab gov" data-cat="Government" data-i18n="tabGov" onclick="setTab(this)">🏛 Government</button>
+    <button class="tab glc" data-cat="GLC" data-i18n="tabGlc" onclick="setTab(this)">🏢 GLC / Yayasan</button>
+    <button class="tab bank" data-cat="Banking" data-i18n="tabBank" onclick="setTab(this)">🏦 Banking</button>
+    <button class="tab corp" data-cat="Corporate" data-i18n="tabCorp" onclick="setTab(this)">🏭 Corporate</button>
+    <button class="tab loan" data-cat="Loan" data-i18n="tabLoan" onclick="setTab(this)">📋 Loans</button>
+    <button class="tab state" data-cat="State" data-i18n="tabState" onclick="setTab(this)">📍 State</button>
+    <button class="tab intl" data-cat="International" data-i18n="tabIntl" onclick="setTab(this)">🌍 International</button>
+    <button class="tab uni" data-cat="University" data-i18n="tabUni" onclick="setTab(this)">🎓 University</button>
+    <button class="tab found" data-cat="Foundation" data-i18n="tabFound" onclick="setTab(this)">🏛️ Foundation & Media</button>
+    <button class="tab pg" data-cat="Postgraduate" data-i18n="tabPg" onclick="setTab(this)">🔬 Postgraduate</button>
   </div>
 </div>
 <!-- ── QUICK FILTERS — always visible, phrased as student needs ── -->
@@ -776,33 +784,33 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
 <!-- Advanced filters (field, grade, eligibility etc) sit behind "+ More filters" -->
 <div class="qf-panel" id="qfPanel">
   <div class="qf-section">
-    <span class="qf-label">I am</span>
-    <div class="qf-chip" data-f="PostSPM" onclick="toggleChip(this)">Post-SPM</div>
-    <div class="qf-chip" data-f="PreU" onclick="toggleChip(this)">Pre-University</div>
-    <div class="qf-chip" data-f="Undergrad" onclick="toggleChip(this)">Undergraduate</div>
-    <div class="qf-chip" data-f="Postgrad" onclick="toggleChip(this)">Postgraduate</div>
+    <span class="qf-label" data-i18n="qfIam">I am</span>
+    <div class="qf-chip" data-f="PostSPM" data-i18n="chipPostSPM" onclick="toggleChip(this)">Post-SPM</div>
+    <div class="qf-chip" data-f="PreU" data-i18n="chipPreU" onclick="toggleChip(this)">Pre-University</div>
+    <div class="qf-chip" data-f="Undergrad" data-i18n="chipUndergrad" onclick="toggleChip(this)">Undergraduate</div>
+    <div class="qf-chip" data-f="Postgrad" data-i18n="chipPostgrad" onclick="toggleChip(this)">Postgraduate</div>
   </div>
   <div class="qf-section">
-    <span class="qf-label">Looking for</span>
-    <div class="qf-chip" data-f="Full" onclick="toggleChip(this)">★ Full scholarship</div>
-    <div class="qf-chip" data-f="Overseas" onclick="toggleChip(this)">✈ Overseas study</div>
-    <div class="qf-chip" data-f="NoBond" onclick="toggleChip(this)">✓ No bond</div>
-    <div class="qf-chip" data-f="B40" onclick="toggleChip(this)">B40 / Income-based</div>
+    <span class="qf-label" data-i18n="qfLooking">Looking for</span>
+    <div class="qf-chip" data-f="Full" data-i18n="chipFull" onclick="toggleChip(this)">★ Full scholarship</div>
+    <div class="qf-chip" data-f="Overseas" data-i18n="chipOverseas" onclick="toggleChip(this)">✈ Overseas study</div>
+    <div class="qf-chip" data-f="NoBond" data-i18n="chipNoBond" onclick="toggleChip(this)">✓ No bond</div>
+    <div class="qf-chip" data-f="B40" data-i18n="chipB40" onclick="toggleChip(this)">B40 / Income-based</div>
   </div>
   <div class="qf-section">
-    <span class="qf-label">Deadline</span>
-    <div class="qf-chip chip-tooltip" data-f="OpenNow" onclick="toggleChip(this)">🟢 Open now<span class="tooltip-text">Applications are currently open based on the listed opening and closing months.</span></div>
-    <div class="qf-chip chip-tooltip" data-f="Soon" onclick="toggleChip(this)">🟡 Closing soon<span class="tooltip-text">Deadline is within the next 60 days — apply soon!</span></div>
-    <div class="qf-chip chip-tooltip" data-f="Rolling" onclick="toggleChip(this)">🔄 Rolling / ongoing<span class="tooltip-text">No fixed closing date — applications accepted year-round.</span></div>
+    <span class="qf-label" data-i18n="qfDeadline">Deadline</span>
+    <div class="qf-chip chip-tooltip" data-f="OpenNow" onclick="toggleChip(this)"><span data-i18n="chipOpenNow">🟢 Open now</span><span class="tooltip-text" data-i18n="tooltipOpenNow">Applications are currently open based on the listed opening and closing months.</span></div>
+    <div class="qf-chip chip-tooltip" data-f="Soon" onclick="toggleChip(this)"><span data-i18n="chipSoon">🟡 Closing soon</span><span class="tooltip-text" data-i18n="tooltipSoon">Deadline is within the next 60 days — apply soon!</span></div>
+    <div class="qf-chip chip-tooltip" data-f="Rolling" onclick="toggleChip(this)"><span data-i18n="chipRolling">🔄 Rolling / ongoing</span><span class="tooltip-text" data-i18n="tooltipRolling">No fixed closing date — applications accepted year-round.</span></div>
   </div>
 </div>
 <!-- More filters row: shows active count + expands advanced filters -->
 <div class="qf-more-row">
   <span class="qf-active-badge" id="activeCount" style="display:none">0 filters active</span>
   <span style="display:flex;align-items:center;gap:12px;margin-left:auto">
-    <button class="clear-btn" id="clearBtn" onclick="clearAll()" style="display:none">Clear all</button>
+    <button class="clear-btn" id="clearBtn" data-i18n="clearAll" onclick="clearAll()" style="display:none">Clear all</button>
     <button class="qf-more-btn" id="qfMoreBtn" onclick="toggleFilters()">
-      More filters
+      <span data-i18n="moreFilters">More filters</span>
       <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
     </button>
   </span>
@@ -810,34 +818,34 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
 <!-- Advanced filters — hidden by default, revealed by "+ More filters" -->
 <div class="filter-panel" id="filterPanel">
   <div class="filter-row">
-    <span class="filter-label">📚 Field of study</span>
-    <div class="chip" data-f="fAny" onclick="toggleChip(this)">Any Field</div>
-    <div class="chip" data-f="fSTEM" onclick="toggleChip(this)">STEM / Science</div>
-    <div class="chip" data-f="fEngineering" onclick="toggleChip(this)">Engineering</div>
-    <div class="chip" data-f="fMedicine" onclick="toggleChip(this)">Medicine / Health</div>
-    <div class="chip" data-f="fBusiness" onclick="toggleChip(this)">Business / Finance</div>
-    <div class="chip" data-f="fIT" onclick="toggleChip(this)">IT / Computer Science</div>
-    <div class="chip" data-f="fLaw" onclick="toggleChip(this)">Law</div>
+    <span class="filter-label" data-i18n="filterField">📚 Field of study</span>
+    <div class="chip" data-f="fAny" data-i18n="chipAnyField" onclick="toggleChip(this)">Any Field</div>
+    <div class="chip" data-f="fSTEM" data-i18n="chipSTEM" onclick="toggleChip(this)">STEM / Science</div>
+    <div class="chip" data-f="fEngineering" data-i18n="chipEngineering" onclick="toggleChip(this)">Engineering</div>
+    <div class="chip" data-f="fMedicine" data-i18n="chipMedicine" onclick="toggleChip(this)">Medicine / Health</div>
+    <div class="chip" data-f="fBusiness" data-i18n="chipBusiness" onclick="toggleChip(this)">Business / Finance</div>
+    <div class="chip" data-f="fIT" data-i18n="chipIT" onclick="toggleChip(this)">IT / Computer Science</div>
+    <div class="chip" data-f="fLaw" data-i18n="chipLaw" onclick="toggleChip(this)">Law</div>
   </div>
   <div class="filter-row">
-    <span class="filter-label">📊 Min grade</span>
-    <div class="chip" data-f="gStraight" onclick="toggleChip(this)">Straight As (9A+)</div>
-    <div class="chip" data-f="g7" onclick="toggleChip(this)">7–8 As</div>
-    <div class="chip" data-f="g5" onclick="toggleChip(this)">5–6 As</div>
-    <div class="chip" data-f="gAny" onclick="toggleChip(this)">Any / No minimum</div>
+    <span class="filter-label" data-i18n="filterGrade">📊 Min grade</span>
+    <div class="chip" data-f="gStraight" data-i18n="chipStraight" onclick="toggleChip(this)">Straight As (9A+)</div>
+    <div class="chip" data-f="g7" data-i18n="chipG7" onclick="toggleChip(this)">7–8 As</div>
+    <div class="chip" data-f="g5" data-i18n="chipG5" onclick="toggleChip(this)">5–6 As</div>
+    <div class="chip" data-f="gAny" data-i18n="chipGAny" onclick="toggleChip(this)">Any / No minimum</div>
   </div>
   <div class="filter-row">
-    <span class="filter-label">👥 Eligibility</span>
-    <div class="chip chip-tooltip" data-f="eAll" onclick="toggleChip(this)">Open to All<span class="tooltip-text">Open regardless of ethnicity — all Malaysian citizens eligible.</span></div>
-    <div class="chip chip-tooltip" data-f="eBumi" onclick="toggleChip(this)">Bumiputera Only<span class="tooltip-text">Reserved for Bumiputera applicants as defined by Malaysian law.</span></div>
-    <div class="chip chip-tooltip" data-f="eForeigner" onclick="toggleChip(this)">Open to Non-Malaysians<span class="tooltip-text">International students or non-Malaysian citizens may also apply.</span></div>
+    <span class="filter-label" data-i18n="filterEligibility">👥 Eligibility</span>
+    <div class="chip chip-tooltip" data-f="eAll" onclick="toggleChip(this)"><span data-i18n="chipEAll">Open to All</span><span class="tooltip-text" data-i18n="tooltipEAll">Open regardless of ethnicity — all Malaysian citizens eligible.</span></div>
+    <div class="chip chip-tooltip" data-f="eBumi" onclick="toggleChip(this)"><span data-i18n="chipEBumi">Bumiputera Only</span><span class="tooltip-text" data-i18n="tooltipEBumi">Reserved for Bumiputera applicants as defined by Malaysian law.</span></div>
+    <div class="chip chip-tooltip" data-f="eForeigner" onclick="toggleChip(this)"><span data-i18n="chipEForeigner">Open to Non-Malaysians</span><span class="tooltip-text" data-i18n="tooltipEForeigner">International students or non-Malaysian citizens may also apply.</span></div>
   </div>
   <div class="filter-row">
-    <span class="filter-label">✦ Other</span>
-    <div class="chip" data-f="UEC" onclick="toggleChip(this)">UEC / O-Level / IGCSE</div>
-    <div class="chip" data-f="SPM" onclick="toggleChip(this)">SPM Leavers</div>
-    <div class="chip" data-f="STPM" onclick="toggleChip(this)">STPM / A-Level</div>
-    <div class="chip" data-f="Global" onclick="toggleChip(this)">🌐 Global Scholarships</div>
+    <span class="filter-label" data-i18n="filterOther">✦ Other</span>
+    <div class="chip" data-f="UEC" data-i18n="chipUEC" onclick="toggleChip(this)">UEC / O-Level / IGCSE</div>
+    <div class="chip" data-f="SPM" data-i18n="chipSPM" onclick="toggleChip(this)">SPM Leavers</div>
+    <div class="chip" data-f="STPM" data-i18n="chipSTPN" onclick="toggleChip(this)">STPM / A-Level</div>
+    <div class="chip" data-f="Global" data-i18n="chipGlobal" onclick="toggleChip(this)">🌐 Global Scholarships</div>
   </div>
 </div>
 <!-- Hidden old filter-toggle div (kept for JS compatibility) -->
@@ -845,7 +853,7 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
   <button class="filter-toggle-btn" onclick="toggleFilters()">Filters</button>
 </div>
 <div class="results-bar">
-  <div class="results-count">Showing <strong id="countDisplay">0</strong> programmes<span class="page-info" id="pageInfo"></span></div>
+  <div class="results-count"><span data-i18n="showing">Showing</span> <strong id="countDisplay">0</strong> <span data-i18n="programmes">programmes</span><span class="page-info" id="pageInfo"></span></div>
   <div class="sort-wrap">Sort:
     <select id="sortSelect" onchange="render()">
       <option value="default">Default</option>
@@ -866,16 +874,16 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
 <div class="copy-toast" id="copyToast">🔗 Link copied!</div>
 <section class="about-section" id="about">
   <div class="about-inner">
-    <div class="about-eyebrow">About MyScholar</div>
-    <h2>Built for Malaysian students</h2>
-    <p>No student should miss out on a scholarship because they didn't know it existed. This directory covers government, GLC, corporate, banking, state-level, international, and university scholarships — including global programmes open to Malaysians. For SPM, STPM, O-Level, UEC, IGCSE graduates through postgraduate. Always verify deadlines and requirements at the official website before applying.</p>
+    <div class="about-eyebrow" data-i18n="aboutEyebrow">About MyScholar</div>
+    <h2 data-i18n="aboutH2">Built for Malaysian students</h2>
+    <p data-i18n="aboutP">No student should miss out on a scholarship because they didn't know it existed. This directory covers government, GLC, corporate, banking, state-level, international, and university scholarships — including global programmes open to Malaysians. For SPM, STPM, O-Level, UEC, IGCSE graduates through postgraduate. Always verify deadlines and requirements at the official website before applying.</p>
     <div style="margin-top:20px;padding:16px 20px;background:rgba(255,255,255,.07);border-radius:8px;border:1px solid rgba(255,255,255,.1);font-size:13px;line-height:1.9;color:rgba(255,255,255,.5)">
       <div style="color:rgba(255,255,255,.8);font-weight:600;margin-bottom:6px;font-size:12px;letter-spacing:.08em;text-transform:uppercase">About this project</div>
       Built by <strong style="color:rgba(255,255,255,.8)">ANRA</strong> · Not affiliated with any scholarship body or government agency · Community-maintained · Completely free, no ads, no login required<br>
       <span style="font-size:12px">Data last reviewed: <strong style="color:rgba(255,255,255,.7)">April 2026</strong> · 200+ programmes across 11 categories · Sourced from official portals</span>
     </div>
     <div class="about-cta">
-      <button onclick="openSubmitModal()">Know a scholarship we're missing? Tell us →</button>
+      <button data-i18n="aboutCta" onclick="openSubmitModal()">Know a scholarship we're missing? Tell us →</button>
     </div>
   </div>
 </section>
@@ -887,7 +895,7 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
     </a>
     <a href="javascript:void(0)" onclick="openEmailModalFromFooter()">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-      Get updates
+      <span data-i18n="footerGetUpdates">Get updates</span>
     </a>
   </div>
   <strong>MyScholar Malaysia</strong> · myscholar.my · Free Scholarship Directory 2025/2026<br>
@@ -3330,6 +3338,199 @@ if(new URLSearchParams(location.search).get('reset_modal') === '1') {
 }
 
 initEmailModal(); // Start the 10s timer + scroll listener for the signup modal
+</script>
+
+<script>
+// ══════════════════════════════════════════════════════════════
+// LANGUAGE TOGGLE — Bahasa Melayu / English
+// ──────────────────────────────────────────────────────────────
+// HOW IT WORKS:
+// 1. All translatable elements have a data-i18n="key" attribute
+// 2. setLang('bm') loops through them and swaps the text
+// 3. The choice is saved to localStorage so it persists on reload
+// 4. Scholarship names, provider names, and exam terms (SPM, STPM,
+//    B40, GLC etc.) are intentionally NOT translated — they are
+//    official proper nouns used identically in both languages.
+// ══════════════════════════════════════════════════════════════
+
+const TRANSLATIONS = {
+  en: {
+    navAbout:'About', navSaved:'Saved', navSuggest:'Suggest',
+    heroEyebrow:'Malaysia · 2025 / 2026 Academic Year',
+    heroH1:'Find Your<br><em>Scholarship.</em>',
+    heroSub:'A free directory of scholarships, financial aid, and study loans for Malaysian students — SPM to postgraduate.',
+    heroStatProg:'Programmes', heroStatCat:'Categories', heroStatPath:'Exam Pathways', heroStatFree:'Free',
+    heroBtnMatch:'Find My Match', heroBtnBrowse:'Browse All →',
+    bannerCta:'Show open only →',
+    tabAll:'All', tabGov:'🏛 Government', tabGlc:'🏢 GLC / Yayasan', tabBank:'🏦 Banking',
+    tabCorp:'🏭 Corporate', tabLoan:'📋 Loans', tabState:'📍 State', tabIntl:'🌍 International',
+    tabUni:'🎓 University', tabFound:'🏛️ Foundation & Media', tabPg:'🔬 Postgraduate',
+    qfIam:'I am', qfLooking:'Looking for', qfDeadline:'Deadline',
+    chipPostSPM:'Post-SPM', chipPreU:'Pre-University', chipUndergrad:'Undergraduate', chipPostgrad:'Postgraduate',
+    chipFull:'★ Full scholarship', chipOverseas:'✈ Overseas study', chipNoBond:'✓ No bond', chipB40:'B40 / Income-based',
+    chipOpenNow:'🟢 Open now', chipSoon:'🟡 Closing soon', chipRolling:'🔄 Rolling / ongoing',
+    tooltipOpenNow:'Applications are currently open based on the listed opening and closing months.',
+    tooltipSoon:'Deadline is within the next 60 days — apply soon!',
+    tooltipRolling:'No fixed closing date — applications accepted year-round.',
+    filterField:'📚 Field of study', filterGrade:'📊 Min grade', filterEligibility:'👥 Eligibility', filterOther:'✦ Other',
+    chipAnyField:'Any Field', chipSTEM:'STEM / Science', chipEngineering:'Engineering',
+    chipMedicine:'Medicine / Health', chipBusiness:'Business / Finance', chipIT:'IT / Computer Science', chipLaw:'Law',
+    chipStraight:'Straight As (9A+)', chipG7:'7–8 As', chipG5:'5–6 As', chipGAny:'Any / No minimum',
+    chipEAll:'Open to All', chipEBumi:'Bumiputera Only', chipEForeigner:'Open to Non-Malaysians',
+    tooltipEAll:'Open regardless of ethnicity — all Malaysian citizens eligible.',
+    tooltipEBumi:'Reserved for Bumiputera applicants as defined by Malaysian law.',
+    tooltipEForeigner:'International students or non-Malaysian citizens may also apply.',
+    chipUEC:'UEC / O-Level / IGCSE', chipSPM:'SPM Leavers', chipSTPN:'STPM / A-Level', chipGlobal:'🌐 Global Scholarships',
+    moreFilters:'More filters', clearAll:'Clear all',
+    showing:'Showing', programmes:'programmes',
+    sortDefault:'Default', sortNewest:'Newly added', sortDeadline:'By deadline (soonest first)', sortName:'A – Z', sortSaved:'Saved first',
+    aboutEyebrow:'About MyScholar', aboutH2:'Built for Malaysian students',
+    aboutP:"No student should miss out on a scholarship because they didn't know it existed. This directory covers government, GLC, corporate, banking, state-level, international, and university scholarships — including global programmes open to Malaysians. For SPM, STPM, O-Level, UEC, IGCSE graduates through postgraduate. Always verify deadlines and requirements at the official website before applying.",
+    aboutCta:"Know a scholarship we're missing? Tell us →",
+    footerGetUpdates:'Get updates',
+  },
+  bm: {
+    // Nav
+    navAbout:'Tentang',           // standard BM for "About" on gov sites
+    navSaved:'Disimpan',          // past tense of simpan, used in app UIs
+    navSuggest:'Cadangkan',       // from cadang = to propose/suggest
+    // Hero
+    heroEyebrow:'Malaysia · Tahun Akademik 2025 / 2026',
+    heroH1:'Temui<br><em>Biasiswa</em> Kamu.',   // "Temui" = discover/find, warmer than "Cari"
+    heroSub:'Direktori biasiswa percuma untuk pelajar Malaysia — daripada lepasan SPM hingga peringkat pascasiswazah.',
+    heroStatProg:'Program',       // term used by MOHE, JPA, MARA for scholarship listings
+    heroStatCat:'Kategori',
+    heroStatPath:'Laluan Peperiksaan',  // standard education BM term
+    heroStatFree:'Percuma',
+    heroBtnMatch:'Cari Padanan Saya',   // natural, not robotic
+    heroBtnBrowse:'Semak Semua →',
+    bannerCta:'Tunjuk yang dibuka sahaja →',
+    // Category tabs
+    tabAll:'Semua',
+    tabGov:'🏛 Kerajaan',         // used by JPA, KPM, MOE
+    tabGlc:'🏢 GLC / Yayasan',   // proper nouns, kept as-is
+    tabBank:'🏦 Perbankan',
+    tabCorp:'🏭 Korporat',        // used in BM financial press
+    tabLoan:'📋 Pinjaman',        // used by PTPTN, MARA
+    tabState:'📍 Negeri',
+    tabIntl:'🌍 Antarabangsa',    // used by MOHE, MIS portal
+    tabUni:'🎓 Universiti',
+    tabFound:'🏛️ Yayasan & Media',
+    tabPg:'🔬 Pascasiswazah',     // exact term used by MOHE, UPM, UM
+    // Quick filter labels
+    qfIam:'Saya seorang',         // natural spoken BM
+    qfLooking:'Mencari',
+    qfDeadline:'Tarikh Akhir',    // standard term on all scholarship forms
+    // Level chips — using official Malaysian scholarship portal terminology
+    chipPostSPM:'Lepasan SPM',    // exact term used by JPA, MARA, Petronas
+    chipPreU:'Pra-Universiti',    // used by KPM, MOHE
+    chipUndergrad:'Ijazah Sarjana Muda',  // standard MOHE term
+    chipPostgrad:'Pascasiswazah', // used by MOHE, all public universities
+    chipFull:'★ Biasiswa penuh',  // "penuh" used by Khazanah, Shell, JPA
+    chipOverseas:'✈ Pengajian luar negara', // standard term used by JPA, MARA
+    chipNoBond:'✓ Tanpa bon',     // used in JPA, Petronas scholarship terms
+    chipB40:'B40 / Berasaskan pendapatan',  // B40 stays — official Malaysian classification
+    chipOpenNow:'🟢 Dibuka sekarang',
+    chipSoon:'🟡 Hampir tutup',   // natural BM, not literal translation
+    chipRolling:'🔄 Berterusan / tiada tarikh tetap', // used in scholarship portals
+    tooltipOpenNow:'Permohonan sedang dibuka berdasarkan bulan pembukaan dan penutupan yang disenaraikan.',
+    tooltipSoon:'Tarikh akhir adalah dalam tempoh 60 hari — mohon segera!',
+    tooltipRolling:'Tiada tarikh tutup tetap — permohonan diterima sepanjang tahun.',
+    // Advanced filter labels
+    filterField:'📚 Bidang pengajian',    // used by UPU, JPA application forms
+    filterGrade:'📊 Gred minimum',
+    filterEligibility:'👥 Kelayakan',     // standard term on all scholarship forms
+    filterOther:'✦ Lain-lain',
+    // Field chips
+    chipAnyField:'Sebarang bidang',
+    chipSTEM:'STEM / Sains',       // STEM kept — used in BM in Malaysian schools
+    chipEngineering:'Kejuruteraan',
+    chipMedicine:'Perubatan / Kesihatan',
+    chipBusiness:'Perniagaan / Kewangan',
+    chipIT:'IT / Sains Komputer',  // "Sains Komputer" used by KPM
+    chipLaw:'Undang-undang',
+    // Grade chips
+    chipStraight:'Semua A (9A+)',
+    chipG7:'7–8 A',
+    chipG5:'5–6 A',
+    chipGAny:'Sebarang / Tiada minimum',
+    // Eligibility chips
+    chipEAll:'Terbuka untuk Semua',
+    chipEBumi:'Bumiputera Sahaja',  // exact phrasing used in eligibility criteria
+    chipEForeigner:'Terbuka untuk Bukan Warganegara',
+    tooltipEAll:'Terbuka tanpa mengira kaum — semua warganegara Malaysia layak.',
+    tooltipEBumi:'Dikhaskan untuk pemohon Bumiputera seperti yang ditakrifkan oleh undang-undang Malaysia.',
+    tooltipEForeigner:'Pelajar antarabangsa atau bukan warganegara Malaysia juga boleh memohon.',
+    // Other chips
+    chipUEC:'UEC / O-Level / IGCSE', // exam brand names — kept as-is
+    chipSPM:'Lepasan SPM',
+    chipSTPN:'STPM / A-Level',
+    chipGlobal:'🌐 Biasiswa Global',
+    // More filters / clear
+    moreFilters:'Penapis lanjutan',  // "penapis" is the standard BM UI term
+    clearAll:'Kosongkan semua',
+    // Results bar
+    showing:'Menunjukkan',
+    programmes:'program',
+    sortDefault:'Lalai',
+    sortNewest:'Terbaru ditambah',
+    sortDeadline:'Mengikut tarikh akhir (terdekat dahulu)',
+    sortName:'A – Z',
+    sortSaved:'Disimpan dahulu',
+    // About section
+    aboutEyebrow:'Tentang MyScholar',
+    aboutH2:'Dibina untuk pelajar Malaysia',
+    aboutP:'Tiada pelajar yang sepatutnya terlepas biasiswa hanya kerana tidak mengetahui kewujudannya. Direktori ini merangkumi biasiswa kerajaan, GLC, korporat, perbankan, negeri, antarabangsa, dan universiti — termasuk program global yang terbuka untuk rakyat Malaysia. Untuk lepasan SPM, STPM, O-Level, UEC, IGCSE hingga peringkat pascasiswazah. Sentiasa semak tarikh akhir dan syarat di laman web rasmi sebelum memohon.',
+    aboutCta:'Tahu biasiswa yang kami terlepas? Beritahu kami →',
+    footerGetUpdates:'Dapatkan kemas kini',
+  }
+};
+
+// ── Main language-switching function ───────────────────────────
+// Call setLang('bm') or setLang('en') from anywhere to switch language.
+function setLang(lang) {
+  const t = TRANSLATIONS[lang];
+
+  // Update toggle button active state
+  document.getElementById('lt-en').classList.toggle('active', lang === 'en');
+  document.getElementById('lt-bm').classList.toggle('active', lang === 'bm');
+  document.getElementById('lt-en').setAttribute('aria-pressed', lang === 'en');
+  document.getElementById('lt-bm').setAttribute('aria-pressed', lang === 'bm');
+
+  // Swap every element that has a data-i18n attribute
+  // This loop reads the key and replaces the inner HTML with the translation
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t[key] !== undefined) el.innerHTML = t[key];
+  });
+
+  // Search placeholder is an attribute, not inner text — needs special handling
+  const si = document.getElementById('si');
+  if (si) si.placeholder = lang === 'bm' ? 'Cari nama biasiswa, pembekal, bidang, kata kunci…' : 'Search by name, provider, field, keyword…';
+
+  // Sort dropdown — swap each option by its value
+  const sortMap = {
+    default: t.sortDefault, newest: t.sortNewest,
+    deadline: t.sortDeadline, name: t.sortName, saved: t.sortSaved
+  };
+  document.querySelectorAll('#sortSelect option').forEach(opt => {
+    if (sortMap[opt.value]) opt.textContent = sortMap[opt.value];
+  });
+
+  // Save preference so it persists when the user returns
+  localStorage.setItem('myscholar_lang', lang);
+
+  // Track BM adoption in GA4 — appears as "language_toggle" event with label "bm" or "en"
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'language_toggle', { event_category: 'engagement', event_label: lang });
+  }
+}
+
+// ── On page load: restore saved language preference ─────────────
+document.addEventListener('DOMContentLoaded', () => {
+  const saved = localStorage.getItem('myscholar_lang') || 'en';
+  setLang(saved);
+});
 </script>
 </body>
 </html>
