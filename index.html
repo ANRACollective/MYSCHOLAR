@@ -1405,7 +1405,7 @@ function showLoadingState() {
     </div>`).join('');
   document.getElementById('heroCount').textContent = '…';
   document.getElementById('countDisplay').textContent = '…';
-  document.getElementById('navPill').textContent = '…';
+  const _np1 = document.getElementById('navPill'); if (_np1) _np1.textContent = '…';
 }
 
 function showErrorState(msg) {
@@ -2114,7 +2114,7 @@ function render(){
 
   // Update counts
   document.getElementById('countDisplay').textContent = n;
-  document.getElementById('navPill').textContent = `${n}`;
+  const _np2 = document.getElementById('navPill'); if (_np2) _np2.textContent = `${n}`;
   document.getElementById('pageInfo').textContent =
     n > PAGE_SIZE ? ` · Page ${currentPage} of ${totalPages}` : '';
 
