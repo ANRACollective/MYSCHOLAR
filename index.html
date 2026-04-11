@@ -2142,10 +2142,13 @@ function goToPage(p){
 // Reset to page 1 whenever filters/search/sort change
 function resetPage(){ currentPage = 1; }
 
-// ── SEARCH CLEAR ──────────────────────────────────────────────────────────
-// Debounce timer — fires search_query event only after student stops typing for 1.5 seconds.
-// This avoids logging every single keypress ("J", "JP", "JPA") and only captures
-// complete, intentional search terms. In GA4: Events → search_query → search_term parameter.
+// ── SESSION ID ────────────────────────────────────────────────────────────
+// A random ID generated once per visit. Groups all searches from one student
+// together without storing any personal data. Resets when they close the tab.
+const _sessionId = Math.random().toString(36).slice(2, 10);
+
+// Debounce timer — fires after student stops typing for 1.5 seconds.
+// Avoids logging every keypress. Only captures complete, intentional searches.
 let _searchDebounce = null;
 
 function onSearchInput(){
@@ -2155,16 +2158,45 @@ function onSearchInput(){
   resetPage();
   render();
 
-  // GA EVENT: search_query — fires after 1.5s pause, min 3 chars
+  // Fire logging after 1.5s pause, minimum 3 characters typed
   clearTimeout(_searchDebounce);
   if(q.trim().length >= 3){
     _searchDebounce = setTimeout(() => {
+      const term = q.trim().toLowerCase();
+
+      // Count how many results are currently showing
+      const resultsCount = filteredItems ? filteredItems.length : null;
+
+      // Collect which filter chips are currently active
+      const activeFilters = activeChips ? Array.from(activeChips) : [];
+
+      // ── GA4 EVENT (existing) ──────────────────────────────────────────
       if(typeof gtag !== 'undefined'){
         gtag('event', 'search_query', {
           event_category: 'engagement',
-          search_term: q.trim().toLowerCase()
+          search_term: term
         });
       }
+
+      // ── SUPABASE LOG (new) ────────────────────────────────────────────
+      // Writes the search to your own database so you can analyse it anytime.
+      // Uses INSERT only — anon key cannot read this table back.
+      fetch(`${SUPABASE_URL}/rest/v1/search_logs`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'Prefer': 'return=minimal'   // don't send data back, keeps it fast
+        },
+        body: JSON.stringify({
+          search_term:    term,
+          results_count:  resultsCount,
+          filters_active: activeFilters.length ? activeFilters : null,
+          session_id:     _sessionId
+        })
+      }).catch(() => {}); // Silent fail — never interrupt the student's experience
+
     }, 1500);
   }
 }
