@@ -684,6 +684,18 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
 }
 .esm-success-sub{font-size:13px;color:var(--muted);line-height:1.6}
 
+/* Internship interest row — Option C */
+.esm-divider{display:flex;align-items:center;gap:8px;margin:14px 0 10px}
+.esm-divider-line{flex:1;height:1px;background:var(--border)}
+.esm-divider-txt{font-size:10px;color:var(--muted);white-space:nowrap;letter-spacing:.04em}
+.esm-interest-row{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border:1.5px solid var(--coral);border-radius:8px;cursor:pointer;background:#fff8f6;user-select:none;transition:all .15s}
+.esm-interest-row.unchecked{border-color:var(--border);background:transparent}
+.esm-interest-check{width:18px;height:18px;border-radius:4px;background:var(--coral);border:1.5px solid var(--coral);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.esm-interest-check.unchecked{background:transparent;border-color:var(--border)}
+.esm-interest-check.unchecked svg{display:none}
+.esm-interest-text{display:flex;flex-direction:column;gap:2px}
+.esm-interest-title{font-size:12px;font-weight:600;color:var(--midnight)}
+.esm-interest-desc{font-size:11px;color:var(--muted);line-height:1.4}
 /* Small privacy note below the form */
 .esm-privacy{
   font-size:11px;color:var(--muted);margin-top:10px;line-height:1.5;
@@ -1285,11 +1297,13 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
     <button class="esm-close" onclick="closeEmailModal()" aria-label="Close">✕</button>
 
     <!-- Badge + headline -->
-    <div class="esm-badge">📬</div>
+    <div class="esm-badge">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0f1f3d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+    </div>
     <h2 class="esm-title" id="esmTitle">New scholarships added every week</h2>
     <p class="esm-sub">
-      Be the first to know when we add new programmes.<br>
-      <strong>No spam.</strong> Just new scholarships, straight to your inbox.
+      Be the first to know when we add new programmes.
+      <strong>No spam.</strong> Just updates, straight to your inbox.
     </p>
 
     <!-- Form state (shown by default) -->
@@ -1308,13 +1322,29 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
           Notify me &#8594;
         </button>
       </div>
-      <p class="esm-privacy"> We don't share your email. Unsubscribe anytime.</p>
+
+      <!-- Internship interest — pre-ticked, sits below a divider -->
+      <div class="esm-divider">
+        <div class="esm-divider-line"></div>
+        <span class="esm-divider-txt">also interested in</span>
+        <div class="esm-divider-line"></div>
+      </div>
+      <div class="esm-interest-row" id="esmInternshipRow" onclick="toggleInternshipInterest()">
+        <div class="esm-interest-check" id="esmInternshipCheck">
+          <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
+        </div>
+        <div class="esm-interest-text">
+          <span class="esm-interest-title">Internship directory — launching Q3 2026</span>
+          <span class="esm-interest-desc">Free. Curated. No login. Notify me when it's live.</span>
+        </div>
+      </div>
+
+      <p class="esm-privacy">We don't share your email. Unsubscribe anytime.</p>
     </div>
 
     <!-- Success state (hidden until submission) -->
     <div class="esm-success" id="esmSuccess">
-      <div class="esm-success-icon">🎉</div>
-      <div class="esm-success-title">You're in!</div>
+      <div class="esm-success-title">You're in.</div>
       <p class="esm-success-sub">We'll let you know when new scholarships are added. Good luck with your applications.</p>
       <button onclick="closeEmailModal()" style="margin-top:18px;padding:10px 24px;background:var(--midnight);color:#fff;border:none;border-radius:8px;font-family:var(--sans);font-size:14px;font-weight:600;cursor:pointer;opacity:1;transition:opacity .15s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">Back to scholarships →</button>
     </div>
@@ -3202,10 +3232,19 @@ function openEmailModalFromFooter() {
   document.getElementById("esmSubmitBtn").disabled    = false;
   document.getElementById("esmSubmitBtn").textContent = "Notify me →";
   document.getElementById("esmEmailInput").value      = "";
+  // Reset internship checkbox to pre-ticked default
+  document.getElementById("esmInternshipCheck").classList.remove("unchecked");
+  document.getElementById("esmInternshipRow").classList.remove("unchecked");
   document.getElementById("esmOverlay").classList.add("visible");
   if(typeof gtag !== "undefined") {
     gtag("event", "email_modal_shown", { event_category: "engagement", event_label: "footer" });
   }
+}
+
+// Toggle internship interest checkbox on/off
+function toggleInternshipInterest() {
+  document.getElementById('esmInternshipCheck').classList.toggle('unchecked');
+  document.getElementById('esmInternshipRow').classList.toggle('unchecked');
 }
 
 // ── SUBMIT LOGIC ───────────────────────────────────────────────────────────
@@ -3237,7 +3276,11 @@ async function submitEmailSignup() {
         'Content-Type':  'application/json',
         'Prefer':        'return=minimal' // don't return the row, saves bandwidth
       },
-      body: JSON.stringify({ email: email, source: 'modal' })
+      body: JSON.stringify({
+        email: email,
+        source: 'modal',
+        internship_interest: !document.getElementById('esmInternshipCheck').classList.contains('unchecked')
+      })
     });
 
     if(res.ok || res.status === 409) {
