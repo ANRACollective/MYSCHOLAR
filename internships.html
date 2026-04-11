@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <!--
   ╔══════════════════════════════════════════════════════════════════╗
-  ║  MyScholar.my — Internships Placeholder                          ║
+  ║  MyScholar.my — Internships Directory                           ║
   ║  URL: myscholar.my/internships                                   ║
-  ║  Purpose: Waitlist capture before full internship directory       ║
-  ║  Architecture: Single-file HTML, no backend required             ║
-  ║  Email capture: Formspree (replace YOUR_FORM_ID before deploy)   ║
+  ║  Architecture: Single-file HTML, Supabase backend               ║
+  ║  Design: Dark mode, list feed, glass UI                         ║
   ║  Built by ANRA · myscholar.my · April 2026                      ║
   ╚══════════════════════════════════════════════════════════════════╝
 -->
@@ -14,29 +13,28 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>MyScholar Internships — Free Malaysian Internship Directory · Coming Soon</title>
-
-<meta name="description" content="A free directory of structured internship programmes for Malaysian students — Khazanah, Maybank, TNB, GLCs and more. No login required. Launching Q3 2026.">
-<meta name="keywords" content="internship Malaysia 2026, internship pelajar Malaysia, internship Khazanah, internship Maybank, internship TNB, internship Petronas, internship GLC Malaysia, student internship Malaysia">
+<title>MyScholar Internships — Free Malaysian Internship Directory</title>
+<meta name="description" content="100+ curated internship programmes for Malaysian students — Khazanah, Petronas, Maybank, Grab, GLCs and more. Free, no login required.">
+<meta name="keywords" content="internship Malaysia 2026, internship pelajar Malaysia, internship Khazanah, internship Maybank, internship TNB, internship Petronas, internship GLC Malaysia, praktikum Malaysia">
 
 <link rel="canonical" href="https://myscholar.my/internships">
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://myscholar.my/internships">
-<meta property="og:title" content="MyScholar Internships — Coming Soon">
-<meta property="og:description" content="A free directory of structured internship programmes for Malaysian students. No login. Launching Q3 2026.">
+<meta property="og:title" content="MyScholar Internships — Free Malaysian Internship Directory">
+<meta property="og:description" content="100+ curated internship programmes for Malaysian students. Free, no login required.">
 <meta property="og:image" content="https://myscholar.my/myscholar-og.jpg">
 <meta property="og:locale" content="en_MY">
 <meta property="og:site_name" content="MyScholar Malaysia">
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="MyScholar Internships — Coming Soon">
-<meta name="twitter:description" content="Free internship directory for Malaysian students. Launching Q3 2026.">
+<meta name="twitter:title" content="MyScholar Internships — Free Malaysian Internship Directory">
+<meta name="twitter:description" content="100+ curated internship programmes for Malaysian students. Free, no login.">
 <meta name="twitter:image" content="https://myscholar.my/myscholar-og.jpg">
 
-<!-- Favicon — reuse same icons as main site -->
+<!-- Favicon -->
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
 <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -51,548 +49,614 @@
   gtag('config', 'G-ZETBRDDMTV');
 </script>
 
-<!-- Fonts — same as main site, likely already cached -->
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-/* ── DESIGN TOKENS — identical to main site ──────────────────────── */
+/* ══════════════════════════════════════════════════════════════
+   DESIGN TOKENS — Dark mode internship palette
+   ══════════════════════════════════════════════════════════════ */
 :root{
-  --midnight:#0f1f3d;
-  --navy:#1e3a6e;
-  --coral:#e8551e;
-  --ice:#f0f4ff;
-  --ice-mid:#e4ebfa;
-  --white:#ffffff;
-  --teal:#00a878;
-  --border:#dde4f5;
-  --border-mid:#c8d3ee;
-  --muted:#3d4663;
+  --bg:#0b1120;
+  --bg-elevated:#131b2e;
+  --bg-card:#172033;
+  --bg-card-hover:#1c2840;
+  --bg-glass:rgba(255,255,255,0.06);
+  --bg-glass-hover:rgba(255,255,255,0.12);
+  --glass-border:rgba(255,255,255,0.1);
+  --glass-border-hover:rgba(255,255,255,0.2);
+  --text-primary:#f1f5f9;
+  --text-secondary:#94a3b8;
+  --text-muted:#64748b;
+  --accent:#38bdf8;
+  --accent-glow:rgba(56,189,248,0.15);
+  --urgent:#f87171;
+  --urgent-bg:rgba(248,113,113,0.1);
+  --success:#34d399;
+  --success-bg:rgba(52,211,153,0.1);
+  --border:rgba(255,255,255,0.08);
+  --border-hover:rgba(255,255,255,0.15);
   --serif:'Playfair Display',Georgia,serif;
   --sans:'DM Sans',system-ui,sans-serif;
+
+  /* Industry colour map — 12 industries */
+  --c-finance:#60a5fa;
+  --c-energy:#fbbf24;
+  --c-tech:#f472b6;
+  --c-gov:#34d399;
+  --c-health:#a78bfa;
+  --c-eng:#fb923c;
+  --c-media:#f43f5e;
+  --c-consult:#38bdf8;
+  --c-fmcg:#4ade80;
+  --c-legal:#e879f9;
+  --c-edu:#fcd34d;
+  --c-ngo:#67e8f9;
 }
 
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;overflow-x:hidden}
-body{
-  font-family:var(--sans);
-  background:var(--midnight);
-  color:var(--white);
-  min-height:100vh;
-  -webkit-font-smoothing:antialiased;
-  overflow-x:hidden;
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--text-primary);min-height:100vh;-webkit-font-smoothing:antialiased}
+
+/* ── HEADER ─────────────────────────────── */
+.header{padding:28px 16px 16px;max-width:700px;margin:0 auto}
+.brand{font-family:var(--serif);font-size:28px;font-weight:900;color:var(--text-primary);letter-spacing:-0.5px;text-decoration:none;display:inline-block}
+.brand span{color:var(--accent)}
+nav{display:flex;gap:20px;margin-top:14px}
+nav a{color:var(--text-muted);text-decoration:none;font-size:13px;font-weight:500;padding-bottom:5px;border-bottom:2px solid transparent;transition:all 0.2s}
+nav a.active{color:var(--accent);border-bottom-color:var(--accent)}
+nav a:hover{color:var(--text-secondary)}
+.subtitle{font-size:14px;color:var(--text-secondary);margin-top:10px;font-weight:300}
+
+/* ── SEARCH ─────────────────────────────── */
+.search-wrap{max-width:700px;margin:22px auto 0;padding:0 16px}
+.search-input{width:100%;padding:13px 18px;border-radius:12px;border:1.5px solid var(--border);background:var(--bg-card);color:var(--text-primary);font-family:var(--sans);font-size:14px;outline:none;transition:all 0.2s}
+.search-input::placeholder{color:var(--text-muted)}
+.search-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
+
+/* ── FILTERS ────────────────────────────── */
+.filters{max-width:700px;margin:16px auto 0;padding:0 16px}
+.chip-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.chip{padding:7px 15px;border-radius:18px;border:1.5px solid var(--border);background:transparent;color:var(--text-secondary);font-size:12px;font-weight:500;cursor:pointer;transition:all 0.2s;user-select:none}
+.chip:hover{border-color:var(--accent);color:var(--accent)}
+.chip.active{background:var(--accent);color:var(--bg);border-color:var(--accent);font-weight:600}
+.toggle-row{display:flex;gap:8px;margin-bottom:8px}
+.toggle{padding:7px 15px;border-radius:18px;border:1.5px solid var(--border);background:transparent;color:var(--text-secondary);font-size:12px;font-weight:500;cursor:pointer;transition:all 0.2s;user-select:none}
+.toggle.on{background:var(--success);color:#064e3b;border-color:var(--success);font-weight:600}
+.summary{font-size:12px;color:var(--text-muted);padding:8px 0}
+
+/* ── LOADING STATE ──────────────────────── */
+.loading{text-align:center;padding:48px 16px;color:var(--text-muted);font-size:14px}
+.loading-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--accent);margin:0 3px;animation:pulse 1.2s infinite}
+.loading-dot:nth-child(2){animation-delay:0.2s}
+.loading-dot:nth-child(3){animation-delay:0.4s}
+@keyframes pulse{0%,80%,100%{opacity:0.3;transform:scale(0.8)}40%{opacity:1;transform:scale(1)}}
+
+/* ── LIST FEED ──────────────────────────── */
+.feed{max-width:700px;margin:8px auto 32px;padding:0 16px;display:flex;flex-direction:column;gap:12px}
+
+.row{background:var(--bg-card);border-radius:14px;padding:18px;border:1px solid var(--border);border-left:4px solid var(--text-muted);transition:all 0.3s;cursor:pointer}
+.row:hover{background:var(--bg-card-hover);border-color:var(--border-hover);transform:translateY(-1px);box-shadow:0 8px 24px rgba(0,0,0,0.2)}
+
+/* ── INDUSTRY LEFT BORDER COLORS ────────── */
+.row.ind-finance{border-left-color:var(--c-finance)}
+.row.ind-energy{border-left-color:var(--c-energy)}
+.row.ind-tech{border-left-color:var(--c-tech)}
+.row.ind-gov{border-left-color:var(--c-gov)}
+.row.ind-health{border-left-color:var(--c-health)}
+.row.ind-eng{border-left-color:var(--c-eng)}
+.row.ind-media{border-left-color:var(--c-media)}
+.row.ind-consult{border-left-color:var(--c-consult)}
+.row.ind-fmcg{border-left-color:var(--c-fmcg)}
+.row.ind-legal{border-left-color:var(--c-legal)}
+.row.ind-edu{border-left-color:var(--c-edu)}
+.row.ind-ngo{border-left-color:var(--c-ngo)}
+
+.row-top{display:flex;align-items:center;gap:14px;margin-bottom:8px}
+
+/* ── LOGO ───────────────────────────────── */
+.logo-wrap{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;position:relative;background:var(--bg-elevated);border:1px solid var(--border)}
+.logo-wrap img{width:100%;height:100%;object-fit:contain;padding:6px;position:absolute;top:0;left:0;background:var(--bg-elevated);border-radius:12px}
+.logo-wrap .fallback{font-size:18px;font-weight:700;color:var(--text-secondary);z-index:0}
+
+.row-header{flex:1;min-width:0}
+.company-line{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.company{font-size:18px;font-weight:700;color:var(--text-primary);letter-spacing:-0.3px}
+
+/* ── INDUSTRY PILLS ─────────────────────── */
+.ind-pill{font-size:10px;font-weight:600;padding:3px 9px;border-radius:8px;text-transform:uppercase;letter-spacing:0.4px}
+.pill-finance{background:rgba(96,165,250,0.1);color:var(--c-finance)}
+.pill-energy{background:rgba(251,191,36,0.1);color:var(--c-energy)}
+.pill-tech{background:rgba(244,114,182,0.1);color:var(--c-tech)}
+.pill-gov{background:rgba(52,211,153,0.1);color:var(--c-gov)}
+.pill-health{background:rgba(167,139,250,0.1);color:var(--c-health)}
+.pill-eng{background:rgba(249,115,22,0.1);color:var(--c-eng)}
+.pill-media{background:rgba(244,63,94,0.1);color:var(--c-media)}
+.pill-consult{background:rgba(56,189,248,0.1);color:var(--c-consult)}
+.pill-fmcg{background:rgba(74,222,128,0.1);color:var(--c-fmcg)}
+.pill-legal{background:rgba(232,121,249,0.1);color:var(--c-legal)}
+.pill-edu{background:rgba(252,211,77,0.1);color:var(--c-edu)}
+.pill-ngo{background:rgba(103,232,249,0.1);color:var(--c-ngo)}
+
+.programme{font-size:13px;color:var(--text-secondary);font-weight:400;margin-top:2px}
+
+/* ── ROLES PREVIEW ──────────────────────── */
+.roles-preview{font-size:12.5px;color:var(--text-muted);line-height:1.5;margin-top:10px;padding:8px 12px;background:var(--bg-elevated);border-radius:8px;border:1px solid var(--border)}
+
+/* ── META ROW ───────────────────────────── */
+.meta{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:12px;font-size:12.5px;color:var(--text-muted)}
+.meta-item{display:flex;align-items:center;gap:5px}
+.meta-item .ic{font-size:14px}
+.stipend{color:var(--success);font-weight:700;font-size:13px}
+.stipend-unknown{color:var(--text-muted);font-style:italic}
+.rolling-pill{display:inline-block;background:var(--success-bg);color:var(--success);font-size:10px;font-weight:600;padding:2px 8px;border-radius:6px}
+
+/* ── GLASS APPLY BUTTON ─────────────────── */
+.apply-row{margin-top:14px;display:flex;align-items:center;justify-content:space-between}
+.apply-btn{display:inline-flex;align-items:center;gap:6px;padding:10px 24px;background:var(--bg-glass);color:var(--text-primary);border:1.5px solid var(--glass-border);border-radius:10px;font-family:var(--sans);font-size:13px;font-weight:600;text-decoration:none;cursor:pointer;transition:all 0.25s;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);letter-spacing:0.2px}
+.apply-btn:hover{background:var(--bg-glass-hover);border-color:var(--glass-border-hover);box-shadow:0 0 20px rgba(56,189,248,0.1);color:var(--accent)}
+.apply-btn .arrow{transition:transform 0.2s}
+.apply-btn:hover .arrow{transform:translateX(3px)}
+.view-hint{font-size:11px;color:var(--text-muted);font-style:italic}
+@media(max-width:500px){
+  .apply-btn{width:100%;justify-content:center;padding:12px}
+  .view-hint{display:none}
+  .apply-row{flex-direction:column}
 }
 
-/* ── NAV — copied exactly from main site ─────────────────────────── */
-nav{
-  position:sticky;
-  top:0;
-  z-index:200;
-  background:var(--midnight);
-  padding:0 20px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  height:52px;
-  border-bottom:2px solid var(--coral);
-  width:100%;
-}
-.nav-logo{
-  font-family:var(--serif);
-  color:#fff;
-  font-size:20px;
-  letter-spacing:-.3px;
-  text-decoration:none;
-}
-.nav-logo span{color:var(--coral)}
+/* ── EMPTY STATE ────────────────────────── */
+.empty{text-align:center;padding:48px 16px;color:var(--text-muted);font-size:14px}
 
-.nav-back{
-  font-size:12px;
-  color:rgba(255,255,255,.5);
-  text-decoration:none;
-  display:flex;
-  align-items:center;
-  gap:4px;
-  transition:color .2s;
-}
-.nav-back:hover{color:#fff}
-.nav-back svg{width:14px;height:14px;flex-shrink:0}
+/* ── DETAIL MODAL ───────────────────────── */
+.modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:1000;justify-content:center;align-items:flex-end;padding:0}
+.modal-overlay.open{display:flex}
+@media(min-width:600px){.modal-overlay{align-items:center;padding:24px}}
 
-/* ── PAGE WRAPPER ─────────────────────────────────────────────────── */
-.page{
-  min-height:calc(100vh - 52px);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  padding:60px 24px 80px;
-  position:relative;
-  overflow:hidden;
-}
+.modal{background:var(--bg-elevated);border-radius:20px 20px 0 0;width:100%;max-width:560px;max-height:85vh;overflow-y:auto;padding:0;border:1px solid var(--border);box-shadow:0 -8px 40px rgba(0,0,0,0.4);animation:slideUp 0.3s ease;position:relative}
+@media(min-width:600px){.modal{border-radius:16px;max-height:80vh}}
+@keyframes slideUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
 
-/* Subtle grid texture — same technique as hero on main site */
-.page::before{
-  content:'';
-  position:absolute;
-  inset:0;
-  background:
-    repeating-linear-gradient(90deg, rgba(255,255,255,.013) 0, rgba(255,255,255,.013) 1px, transparent 1px, transparent 80px),
-    repeating-linear-gradient(0deg,  rgba(255,255,255,.013) 0, rgba(255,255,255,.013) 1px, transparent 1px, transparent 80px);
-  pointer-events:none;
-}
+.modal-handle{width:40px;height:4px;background:var(--text-muted);border-radius:2px;margin:12px auto 0;opacity:0.4}
+@media(min-width:600px){.modal-handle{display:none}}
 
-/* Soft warm glow behind the content area */
-.page::after{
-  content:'';
-  position:absolute;
-  top:20%;
-  left:50%;
-  transform:translateX(-50%);
-  width:600px;
-  height:400px;
-  background:radial-gradient(ellipse, rgba(232,85,30,.08) 0%, transparent 70%);
-  pointer-events:none;
-}
+.modal-header{padding:20px 24px 0;display:flex;align-items:flex-start;gap:16px}
+.modal-logo{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;position:relative;background:var(--bg-card);border:1px solid var(--border)}
+.modal-logo img{width:100%;height:100%;object-fit:contain;padding:8px;position:absolute;top:0;left:0;background:var(--bg-card);border-radius:14px}
+.modal-logo .fallback{font-size:22px;font-weight:700;color:var(--text-secondary)}
+.modal-info{flex:1}
+.modal-company{font-size:22px;font-weight:700;color:var(--text-primary);letter-spacing:-0.3px}
+.modal-programme{font-size:14px;color:var(--text-secondary);margin-top:2px}
+.modal-pills{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px}
 
-/* ── CONTENT BLOCK ────────────────────────────────────────────────── */
-.content{
-  position:relative;
-  z-index:1;
-  max-width:480px;
-  width:100%;
-  text-align:center;
-}
+.modal-body{padding:20px 24px 24px}
+.modal-desc{font-size:14px;color:var(--text-secondary);line-height:1.65;margin-bottom:20px}
 
-/* Eyebrow label */
-.eyebrow{
-  font-size:10px;
-  letter-spacing:.18em;
-  color:var(--coral);
-  text-transform:uppercase;
-  font-weight:600;
-  margin-bottom:16px;
-  display:block;
-}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+@media(max-width:400px){.detail-grid{grid-template-columns:1fr}}
+.detail-card{background:var(--bg-card);border-radius:10px;padding:12px;border:1px solid var(--border)}
+.detail-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px}
+.detail-value{font-size:14px;font-weight:600;color:var(--text-primary)}
+.detail-value.green{color:var(--success)}
 
-/* Main heading */
-h1{
-  font-family:var(--serif);
-  font-size:clamp(42px,7vw,72px);
-  color:#fff;
-  line-height:1.05;
-  font-weight:900;
-  margin-bottom:18px;
-}
-h1 em{
-  color:var(--coral);
-  font-style:normal;
-}
+.modal-section{margin-bottom:16px}
+.modal-section-title{font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px}
+.modal-section p{font-size:13px;color:var(--text-secondary);line-height:1.6}
+.modal-tags{display:flex;flex-wrap:wrap;gap:6px}
+.modal-tag{padding:5px 12px;border-radius:8px;background:var(--bg-card);border:1px solid var(--border);font-size:12px;color:var(--text-secondary)}
 
-/* Subheading */
-.sub{
-  font-size:15px;
-  color:rgba(255,255,255,.45);
-  line-height:1.75;
-  font-weight:300;
-  margin-bottom:44px;
-  max-width:380px;
-  margin-left:auto;
-  margin-right:auto;
-}
+.modal-tip{font-size:12px;color:var(--text-muted);background:var(--bg-card);border-radius:8px;padding:10px 12px;border:1px solid var(--border);margin-bottom:16px;line-height:1.5}
+.modal-tip strong{color:var(--text-secondary)}
 
-/* ── EMAIL CAPTURE CARD ───────────────────────────────────────────── */
-.capture-card{
-  background:#fff;
-  border-radius:12px;
-  padding:24px;
-  margin-bottom:28px;
-  /* Subtle lift */
-  box-shadow:0 4px 32px rgba(0,0,0,.25);
-}
+.modal-apply{display:block;width:100%;padding:14px;background:var(--accent);color:var(--bg);border:none;border-radius:12px;font-family:var(--sans);font-size:15px;font-weight:700;cursor:pointer;text-align:center;text-decoration:none;transition:all 0.2s;letter-spacing:0.2px}
+.modal-apply:hover{opacity:0.9;transform:translateY(-1px)}
 
-.capture-label{
-  font-size:11px;
-  font-weight:700;
-  color:var(--muted);
-  letter-spacing:.08em;
-  text-transform:uppercase;
-  margin-bottom:12px;
-  text-align:left;
-}
+.modal-close{position:absolute;top:16px;right:20px;background:var(--bg-card);border:1px solid var(--border);color:var(--text-secondary);width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:all 0.2s;z-index:2}
+.modal-close:hover{background:var(--bg-card-hover);color:var(--text-primary)}
 
-.capture-row{
-  display:flex;
-  gap:8px;
-}
+/* ── FOOTER ─────────────────────────────── */
+.footer{text-align:center;padding:20px 16px 32px;font-size:11px;color:var(--text-muted);max-width:700px;margin:0 auto}
+.footer a{color:var(--accent);text-decoration:none}
 
-/* Email input */
-#emailInput{
-  flex:1;
-  padding:12px 14px;
-  border:1.5px solid var(--border);
-  border-radius:8px;
-  font-family:var(--sans);
-  font-size:14px;
-  color:var(--midnight);
-  background:var(--ice);
-  outline:none;
-  transition:border-color .15s;
-  min-width:0; /* prevents flex overflow on mobile */
-}
-#emailInput:focus{border-color:var(--coral)}
-#emailInput::placeholder{color:#aab}
-
-/* Submit button */
-#notifyBtn{
-  background:var(--coral);
-  color:#fff;
-  border:none;
-  padding:12px 18px;
-  border-radius:8px;
-  font-family:var(--sans);
-  font-size:14px;
-  font-weight:600;
-  cursor:pointer;
-  white-space:nowrap;
-  transition:background .15s, transform .1s;
-  flex-shrink:0;
-}
-#notifyBtn:hover{background:#d14418}
-#notifyBtn:active{transform:scale(.97)}
-#notifyBtn:disabled{background:#ccc;cursor:not-allowed}
-
-/* Inline error message */
-.capture-error{
-  font-size:12px;
-  color:#dc2626;
-  text-align:left;
-  margin-top:8px;
-  display:none;
-}
-
-/* Success state — replaces the form */
-.capture-success{
-  display:none;
-  align-items:center;
-  gap:12px;
-  padding:4px 0;
-}
-.success-icon{
-  width:36px;
-  height:36px;
-  background:#dcfce7;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-shrink:0;
-}
-.success-icon svg{width:18px;height:18px;color:#16a34a}
-.success-text{text-align:left}
-.success-text strong{
-  display:block;
-  font-size:14px;
-  color:var(--midnight);
-  font-weight:600;
-  margin-bottom:2px;
-}
-.success-text span{
-  font-size:12px;
-  color:var(--muted);
-}
-
-/* ── WAITLIST COUNTER ─────────────────────────────────────────────── */
-.waitlist{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:4px;
-  margin-bottom:40px;
-}
-.waitlist-num{
-  font-family:var(--serif);
-  font-size:42px;
-  color:#fff;
-  font-weight:700;
-  line-height:1;
-  /* Animates when count updates */
-  transition:opacity .3s;
-}
-.waitlist-label{
-  font-size:10px;
-  color:rgba(255,255,255,.32);
-  text-transform:uppercase;
-  letter-spacing:.1em;
-}
-
-/* ── BACK LINK ────────────────────────────────────────────────────── */
-.back-link{
-  font-size:13px;
-  color:rgba(255,255,255,.4);
-  text-decoration:none;
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  transition:color .2s;
-  border-bottom:1px solid rgba(255,255,255,.12);
-  padding-bottom:2px;
-}
-.back-link:hover{color:rgba(255,255,255,.8)}
-.back-link strong{color:var(--coral);font-weight:600}
-
-/* ── FOOTER ───────────────────────────────────────────────────────── */
-footer{
-  position:relative;
-  z-index:1;
-  text-align:center;
-  padding:20px 24px 32px;
-  border-top:1px solid rgba(255,255,255,.06);
-}
-.footer-text{
-  font-size:11px;
-  color:rgba(255,255,255,.22);
-}
-.footer-text a{
-  color:rgba(255,255,255,.4);
-  text-decoration:none;
-}
-.footer-text a:hover{color:#fff}
-
-/* ── MOBILE ───────────────────────────────────────────────────────── */
-@media(max-width:480px){
-  .page{padding:48px 20px 64px}
-  h1{font-size:46px}
-  .sub{font-size:14px;margin-bottom:36px}
-  .capture-card{padding:18px}
-  .capture-row{flex-direction:column}
-  #notifyBtn{width:100%}
-}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 </style>
 </head>
-
 <body>
 
-<!-- ── NAV ─────────────────────────────────────────────────────────────── -->
-<nav>
-  <a href="/" class="nav-logo">My<span>Scholar</span></a>
-  <a href="/" class="nav-back">
-    <!-- Left arrow icon -->
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M19 12H5M12 5l-7 7 7 7"/>
-    </svg>
-    Back to scholarships
-  </a>
-</nav>
+<!-- ═══════ HEADER ═══════ -->
+<div class="header">
+  <a href="https://myscholar.my" class="brand">My<span>Scholar</span></a>
+  <nav>
+    <a href="https://myscholar.my">Scholarships</a>
+    <a href="/internships" class="active">Internships</a>
+  </nav>
+  <p class="subtitle">100+ curated internship programmes for Malaysian students</p>
+</div>
 
-<!-- ── MAIN PAGE ────────────────────────────────────────────────────────── -->
-<div class="page">
-  <div class="content">
+<!-- ═══════ SEARCH ═══════ -->
+<div class="search-wrap">
+  <input class="search-input" id="search" type="text" placeholder="Search company or programme...">
+</div>
 
-    <!-- Eyebrow -->
-    <span class="eyebrow">Coming Q3 2026</span>
+<!-- ═══════ FILTERS ═══════ -->
+<div class="filters">
+  <!-- Industry chips — populated dynamically from data -->
+  <div class="chip-row" id="chips">
+    <div class="chip active" data-industry="all">All</div>
+  </div>
+  <div class="toggle-row">
+    <div class="toggle" id="paidToggle">Paid Only</div>
+    <div class="toggle" id="openToggle">Open Now</div>
+  </div>
+  <div class="summary" id="summary"></div>
+</div>
 
-    <!-- Headline -->
-    <h1>Find your<br><em>internship.</em></h1>
-
-    <!-- Subheading -->
-    <p class="sub">
-      A free directory of structured internship programmes for Malaysian students — Khazanah, Maybank, TNB, Petronas, GLCs and more. No login required.
-    </p>
-
-    <!-- Email capture card -->
-    <div class="capture-card">
-      <div class="capture-label">Get notified when we launch</div>
-
-      <!-- Form — submits to Formspree; replace YOUR_FORM_ID below -->
-      <div id="captureForm">
-        <div class="capture-row">
-          <input
-            id="emailInput"
-            type="email"
-            placeholder="your@email.com"
-            autocomplete="email"
-            inputmode="email"
-          />
-          <button id="notifyBtn" onclick="submitEmail()">Notify me</button>
-        </div>
-        <div class="capture-error" id="captureError">Please enter a valid email address.</div>
-      </div>
-
-      <!-- Success state — shown after submission -->
-      <div class="capture-success" id="captureSuccess">
-        <div class="success-icon">
-          <!-- Checkmark SVG -->
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20 6L9 17l-5-5"/>
-          </svg>
-        </div>
-        <div class="success-text">
-          <strong>You're on the list!</strong>
-          <span>We'll email you once when internships launch.</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Waitlist counter -->
-    <div class="waitlist">
-      <div class="waitlist-num" id="waitlistCount">—</div>
-      <div class="waitlist-label">Students on the waitlist</div>
-    </div>
-
-    <!-- Link back to main site -->
-    <a href="/" class="back-link">
-      Meanwhile, browse <strong>200+ scholarships</strong> at myscholar.my →
-    </a>
-
+<!-- ═══════ FEED ═══════ -->
+<div class="feed" id="feed">
+  <div class="loading">
+    <span class="loading-dot"></span>
+    <span class="loading-dot"></span>
+    <span class="loading-dot"></span>
+    <br><br>Loading internships...
   </div>
 </div>
 
-<!-- ── FOOTER ────────────────────────────────────────────────────────────── -->
-<footer>
-  <p class="footer-text">
-    A project by <a href="/">myscholar.my</a> &nbsp;·&nbsp;
-    Free for all Malaysian students &nbsp;·&nbsp;
-    <a href="mailto:hello@myscholar.my">hello@myscholar.my</a>
-  </p>
-</footer>
+<!-- ═══════ DETAIL MODAL ═══════ -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modal">
+    <div class="modal-handle"></div>
+    <button class="modal-close" id="modalClose">&times;</button>
+    <div class="modal-header" id="modalHeader"></div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<!-- ═══════ FOOTER ═══════ -->
+<div class="footer">
+  <a href="https://myscholar.my">myscholar.my</a> &mdash; Free scholarship & internship finder for Malaysian students
+</div>
 
 <script>
-// ─────────────────────────────────────────────────────────────────────────────
-// CONFIGURATION
-// Formspree removed. All signups go to the Supabase Edge Function which:
-//   1. Inserts email into the `internship_waitlist` table
-//   2. Sends a Resend notification to hello@myscholar.my
-// ─────────────────────────────────────────────────────────────────────────────
-
-// Edge Function endpoint (no secrets needed on the frontend)
-const EDGE_FN_URL = 'https://ywvfvjvxwhcfprfrkgqm.supabase.co/functions/v1/internship-waitlist';
-
-// Supabase REST — used only to read the waitlist count (anon key, safe to expose)
+/* ══════════════════════════════════════════════════════════════
+   SUPABASE CONFIG
+   ══════════════════════════════════════════════════════════════ */
 const SUPABASE_URL = 'https://ywvfvjvxwhcfprfrkgqm.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl3dmZ2anZ4d2hjZnByZnJrZ3FtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNTQ5MzEsImV4cCI6MjA5MDYzMDkzMX0.5EzrJuW1fdPca2ZEKGPXXgbd_XYDqKzzu6e-iRQT9po';
 
-// ─────────────────────────────────────────────────────────────────────────────
-// EMAIL VALIDATION
-// ─────────────────────────────────────────────────────────────────────────────
-function isValidEmail(email){
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+const TODAY = new Date();
+
+/* ── Industry → colour key mapping ─────── */
+const IND_MAP = {
+  'Finance & Banking':  'finance',
+  'Energy & Utilities': 'energy',
+  'Technology':         'tech',
+  'Government / GLC':   'gov',
+  'Healthcare':         'health',
+  'Engineering':        'eng',
+  'Media & Comms':      'media',
+  'Consulting':         'consult',
+  'FMCG & Retail':      'fmcg',
+  'Legal':              'legal',
+  'Education':          'edu',
+  'Non-profit / NGO':   'ngo'
+};
+
+// Short labels for filter chips
+const IND_SHORT = {
+  'Finance & Banking':  'Finance',
+  'Energy & Utilities': 'Energy',
+  'Technology':         'Tech',
+  'Government / GLC':   'Gov / GLC',
+  'Healthcare':         'Healthcare',
+  'Engineering':        'Engineering',
+  'Media & Comms':      'Media',
+  'Consulting':         'Consulting',
+  'FMCG & Retail':      'FMCG',
+  'Legal':              'Legal',
+  'Education':          'Education',
+  'Non-profit / NGO':   'NGO'
+};
+
+let DATA = []; // populated from Supabase
+
+/* ══════════════════════════════════════════════════════════════
+   FETCH DATA FROM SUPABASE
+   ══════════════════════════════════════════════════════════════ */
+async function fetchInternships() {
+  try {
+    const res = await fetch(
+      SUPABASE_URL + '/rest/v1/internships?is_active=eq.true&order=company.asc',
+      {
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': 'Bearer ' + SUPABASE_KEY
+        }
+      }
+    );
+    if (!res.ok) throw new Error('Supabase fetch failed: ' + res.status);
+    DATA = await res.json();
+
+    // Build industry filter chips from actual data
+    buildFilterChips();
+    render();
+
+    // Track page load
+    gtag('event', 'internships_loaded', { count: DATA.length });
+  } catch (err) {
+    console.error('Failed to load internships:', err);
+    document.getElementById('feed').innerHTML =
+      '<div class="empty">Failed to load internships. Please refresh the page.</div>';
+  }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// SUBMIT EMAIL
-// POSTs to the Supabase Edge Function `internship-waitlist` which:
-//   1. Inserts the email into the internship_waitlist table
-//   2. Sends a Resend notification to hello@myscholar.my
-// ─────────────────────────────────────────────────────────────────────────────
-async function submitEmail(){
-  const input = document.getElementById('emailInput');
-  const btn   = document.getElementById('notifyBtn');
-  const error = document.getElementById('captureError');
-  const email = input.value.trim().toLowerCase();
+/* ══════════════════════════════════════════════════════════════
+   BUILD FILTER CHIPS DYNAMICALLY
+   ══════════════════════════════════════════════════════════════ */
+function buildFilterChips() {
+  // Collect all unique industries from the data
+  const industries = new Set();
+  DATA.forEach(item => {
+    if (item.industry && Array.isArray(item.industry)) {
+      item.industry.forEach(ind => industries.add(ind));
+    }
+  });
 
-  // Reset any previous error state
-  error.style.display = 'none';
-  input.style.borderColor = '';
-
-  // Client-side validation before hitting the server
-  if(!isValidEmail(email)){
-    error.textContent = 'Please enter a valid email address.';
-    error.style.display = 'block';
-    input.style.borderColor = '#dc2626';
-    input.focus();
-    return;
-  }
-
-  // Show loading state on the button
-  btn.textContent = 'Sending…';
-  btn.disabled = true;
-
-  try{
-    // POST to Edge Function — no secrets needed on the frontend,
-    // the function uses the service role key internally
-    const res = await fetch(EDGE_FN_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email })
+  const chipRow = document.getElementById('chips');
+  // Keep the "All" chip, add industry chips
+  const sorted = [...industries].sort();
+  sorted.forEach(ind => {
+    const chip = document.createElement('div');
+    chip.className = 'chip';
+    chip.dataset.industry = ind;
+    chip.textContent = IND_SHORT[ind] || ind;
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('#chips .chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      render();
+      gtag('event', 'internship_filter', { filter: ind });
     });
+    chipRow.appendChild(chip);
+  });
+}
 
-    const data = await res.json();
+/* ══════════════════════════════════════════════════════════════
+   HELPERS
+   ══════════════════════════════════════════════════════════════ */
 
-    // Duplicate email (23505) is treated as success — smooth UX
-    if(!res.ok && !data.success){
-      throw new Error(data.error || `HTTP ${res.status}`);
+// Get primary industry key for an item (first in array)
+function primaryInd(item) {
+  if (!item.industry || !item.industry.length) return 'consult';
+  return IND_MAP[item.industry[0]] || 'consult';
+}
+
+// Format duration from min/max months
+function fmtDuration(item) {
+  const min = item.duration_min_months;
+  const max = item.duration_max_months;
+  if (!min && !max) return 'Varies';
+  if (min === max) return min + ' month' + (min !== 1 ? 's' : '');
+  return min + '–' + max + ' months';
+}
+
+// Format intake/deadline text
+function fmtIntake(item) {
+  if (item.rolling) return '<span class="rolling-pill">Rolling</span>';
+  return item.intake_text || 'Check website';
+}
+
+// Is the allowance stated?
+function isPaid(item) {
+  if (!item.allowance_text) return false;
+  const lower = item.allowance_text.toLowerCase();
+  return !lower.includes('not publicly') && !lower.includes('unpaid') && !lower.includes('none');
+}
+
+// Build logo HTML
+function logoHTML(item, size) {
+  const sz = size || 80;
+  const domain = item.logo_domain;
+  const name = item.company;
+  if (!domain) return '<span class="fallback">' + name[0] + '</span>';
+  const url = 'https://img.logo.dev/' + domain + '?token=pk_anonymous&size=' + sz + '&format=png';
+  return '<span class="fallback">' + name[0] + '</span><img src="' + url + '" alt="' + name + '" onerror="this.remove()">';
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RENDER LIST
+   ══════════════════════════════════════════════════════════════ */
+function render() {
+  const feed = document.getElementById('feed');
+  const industry = document.querySelector('#chips .chip.active')?.dataset.industry || 'all';
+  const paidOnly = document.getElementById('paidToggle').classList.contains('on');
+  const q = document.getElementById('search').value.toLowerCase().trim();
+
+  feed.innerHTML = '';
+  let count = 0;
+
+  DATA.forEach((item, idx) => {
+    // Industry filter
+    if (industry !== 'all') {
+      if (!item.industry || !item.industry.includes(industry)) return;
     }
-
-    // GA4 event — visible in GA4 → Reports → Events → 'internship_waitlist_signup'
-    if(typeof gtag !== 'undefined'){
-      gtag('event', 'internship_waitlist_signup', {
-        event_category: 'internships',
-        event_label: 'waitlist',
-      });
+    // Paid filter
+    if (paidOnly && !isPaid(item)) return;
+    // Search filter
+    if (q) {
+      const haystack = (item.company + ' ' + item.programme_name + ' ' + (item.roles_available || '')).toLowerCase();
+      if (!haystack.includes(q)) return;
     }
+    count++;
 
-    // Show the success card and hide the form
-    document.getElementById('captureForm').style.display = 'none';
-    document.getElementById('captureSuccess').style.display = 'flex';
+    const pk = primaryInd(item);
+    const el = document.createElement('div');
+    el.className = 'row ind-' + pk;
+    el.style.animation = 'fadeIn 0.25s ease ' + (Math.min(count, 20) * 0.03) + 's both';
+    el.onclick = () => openModal(idx);
 
-    // Bump the counter optimistically (+1 without refetching)
-    bumpCount();
+    // Build industry pills (show first 2)
+    const pills = (item.industry || []).slice(0, 2).map(ind => {
+      const key = IND_MAP[ind] || 'consult';
+      return '<span class="ind-pill pill-' + key + '">' + (IND_SHORT[ind] || ind) + '</span>';
+    }).join('');
 
-  } catch(err){
-    // Re-enable the button so the student can try again
-    btn.textContent = 'Notify me';
-    btn.disabled = false;
-    error.textContent = 'Something went wrong. Please try again.';
-    error.style.display = 'block';
-    console.warn('Waitlist signup error:', err);
+    // Roles preview (truncate to ~80 chars)
+    let rolesPreview = item.roles_available || '';
+    if (rolesPreview.length > 90) rolesPreview = rolesPreview.substring(0, 87) + '...';
+
+    // Stipend display
+    const stipendHTML = isPaid(item)
+      ? '<span class="meta-item stipend"><span class="ic">&#x1F4B0;</span>' + item.allowance_text + '</span>'
+      : '<span class="meta-item stipend-unknown"><span class="ic">&#x1F4B0;</span>Not stated</span>';
+
+    el.innerHTML =
+      '<div class="row-top">' +
+        '<div class="logo-wrap">' + logoHTML(item) + '</div>' +
+        '<div class="row-header">' +
+          '<div class="company-line">' +
+            '<span class="company">' + item.company + '</span>' +
+            pills +
+          '</div>' +
+          '<div class="programme">' + item.programme_name + '</div>' +
+        '</div>' +
+      '</div>' +
+      (rolesPreview ? '<div class="roles-preview">' + rolesPreview + '</div>' : '') +
+      '<div class="meta">' +
+        '<span class="meta-item"><span class="ic">&#x1F4CD;</span>' + fmtDuration(item) + '</span>' +
+        stipendHTML +
+        '<span class="meta-item"><span class="ic">&#x1F4C5;</span>' + fmtIntake(item) + '</span>' +
+      '</div>' +
+      '<div class="apply-row">' +
+        '<a href="' + (item.url || '#') + '" target="_blank" rel="noopener" class="apply-btn" onclick="event.stopPropagation();gtag(\'event\',\'internship_apply\',{company:\'' + item.company.replace(/'/g, '') + '\'})">Apply <span class="arrow">&rarr;</span></a>' +
+        '<span class="view-hint">Tap for details</span>' +
+      '</div>';
+
+    feed.appendChild(el);
+  });
+
+  // Summary
+  document.getElementById('summary').textContent = count + ' internship' + (count !== 1 ? 's' : '') + ' found';
+
+  // Empty state
+  if (count === 0) {
+    feed.innerHTML = '<div class="empty">No internships match your filters. Try broadening your search.</div>';
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// ALLOW ENTER KEY in email field
-// ─────────────────────────────────────────────────────────────────────────────
-document.getElementById('emailInput').addEventListener('keydown', function(e){
-  if(e.key === 'Enter') submitEmail();
+/* ══════════════════════════════════════════════════════════════
+   DETAIL MODAL
+   ══════════════════════════════════════════════════════════════ */
+function openModal(idx) {
+  const item = DATA[idx];
+  const overlay = document.getElementById('modalOverlay');
+  const header = document.getElementById('modalHeader');
+  const body = document.getElementById('modalBody');
+
+  // Industry pills
+  const pills = (item.industry || []).map(ind => {
+    const key = IND_MAP[ind] || 'consult';
+    return '<span class="ind-pill pill-' + key + '">' + ind + '</span>';
+  }).join('');
+
+  header.innerHTML =
+    '<div class="modal-logo">' + logoHTML(item, 120) + '</div>' +
+    '<div class="modal-info">' +
+      '<div class="modal-company">' + item.company + '</div>' +
+      '<div class="modal-programme">' + item.programme_name + '</div>' +
+      '<div class="modal-pills">' + pills + '</div>' +
+    '</div>';
+
+  // Build body
+  let html = '';
+
+  // Description (if available) or roles
+  if (item.description) {
+    html += '<p class="modal-desc">' + item.description + '</p>';
+  }
+
+  // Detail grid
+  html += '<div class="detail-grid">' +
+    '<div class="detail-card"><div class="detail-label">Allowance</div><div class="detail-value' + (isPaid(item) ? ' green' : '') + '">' + (item.allowance_text || 'Not stated') + '</div></div>' +
+    '<div class="detail-card"><div class="detail-label">Duration</div><div class="detail-value">' + fmtDuration(item) + '</div></div>' +
+    '<div class="detail-card"><div class="detail-label">Study Level</div><div class="detail-value">' + (item.study_level || 'Any') + '</div></div>' +
+    '<div class="detail-card"><div class="detail-label">Intake</div><div class="detail-value">' + (item.intake_text || 'Check website') + '</div></div>' +
+    '</div>';
+
+  // Roles
+  if (item.roles_available) {
+    html += '<div class="modal-section">' +
+      '<div class="modal-section-title">Roles Available</div>' +
+      '<p>' + item.roles_available + '</p>' +
+      '</div>';
+  }
+
+  // Eligibility
+  if (item.eligibility) {
+    html += '<div class="modal-section">' +
+      '<div class="modal-section-title">Eligibility</div>' +
+      '<p>' + item.eligibility + '</p>' +
+      '</div>';
+  }
+
+  // Tips
+  if (item.tips) {
+    html += '<div class="modal-tip"><strong>Tip:</strong> ' + item.tips + '</div>';
+  }
+
+  // Apply CTA
+  html += '<a href="' + (item.url || '#') + '" target="_blank" rel="noopener" class="modal-apply" onclick="gtag(\'event\',\'internship_apply_modal\',{company:\'' + item.company.replace(/'/g, '') + '\'})">Apply to ' + item.company + ' &rarr;</a>';
+
+  body.innerHTML = html;
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  // Track modal open
+  gtag('event', 'internship_detail_view', { company: item.company });
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('modalClose').onclick = closeModal;
+document.getElementById('modalOverlay').onclick = (e) => { if (e.target === e.currentTarget) closeModal(); };
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+
+/* ══════════════════════════════════════════════════════════════
+   FILTER EVENT LISTENERS
+   ══════════════════════════════════════════════════════════════ */
+
+// "All" chip click handler (already in DOM)
+document.querySelector('#chips .chip[data-industry="all"]').addEventListener('click', () => {
+  document.querySelectorAll('#chips .chip').forEach(c => c.classList.remove('active'));
+  document.querySelector('#chips .chip[data-industry="all"]').classList.add('active');
+  render();
 });
 
-// ─────────────────────────────────────────────────────────────────────────────
-// WAITLIST COUNTER
-// Reads the live count from internship_waitlist via Supabase REST.
-// Supabase returns total in the Content-Range header: "0-N/TOTAL"
-// ─────────────────────────────────────────────────────────────────────────────
-async function loadCount(){
-  try{
-    const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/internship_waitlist?select=id`,
-      { headers: { 'apikey': SUPABASE_KEY, 'Prefer': 'count=exact' } }
-    );
-    const range = res.headers.get('Content-Range');
-    if(range){
-      const count = parseInt(range.split('/')[1], 10);
-      if(!isNaN(count)){
-        document.getElementById('waitlistCount').textContent = count;
-      }
+// Toggle clicks
+['paidToggle', 'openToggle'].forEach(id => {
+  document.getElementById(id).addEventListener('click', function() {
+    this.classList.toggle('on');
+    render();
+    gtag('event', 'internship_toggle', { toggle: id, state: this.classList.contains('on') ? 'on' : 'off' });
+  });
+});
+
+// Search input
+let searchTimeout;
+document.getElementById('search').addEventListener('input', function() {
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => {
+    render();
+    if (this.value.trim()) {
+      gtag('event', 'internship_search', { query: this.value.trim() });
     }
-  } catch(e){
-    console.info('Waitlist count unavailable.');
-  }
-}
+  }, 200); // debounce 200ms
+});
 
-// Optimistically bump displayed count by 1 after signup (no extra fetch needed)
-function bumpCount(){
-  const el = document.getElementById('waitlistCount');
-  const current = parseInt(el.textContent, 10);
-  if(!isNaN(current)){
-    el.style.opacity = '0';
-    setTimeout(() => {
-      el.textContent = current + 1;
-      el.style.opacity = '1';
-    }, 200);
-  }
-}
-
-// Load count on page load
-loadCount();
+/* ══════════════════════════════════════════════════════════════
+   INIT
+   ══════════════════════════════════════════════════════════════ */
+fetchInternships();
 </script>
-
 </body>
 </html>
