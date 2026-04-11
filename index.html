@@ -677,7 +677,6 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
 .esm-success{
   display:none;text-align:center;padding:8px 0 4px;
 }
-.esm-success-icon{font-size:36px;margin-bottom:10px}
 .esm-success-title{
   font-family:var(--serif);font-size:19px;font-weight:700;
   color:var(--midnight);margin-bottom:6px;
@@ -3308,10 +3307,12 @@ function showEmailSuccess(email) {
   localStorage.setItem(ESM_KEY, 'subscribed');
 
   // GA EVENT: successful signup — most important conversion metric
+  // internship_interest tells us how many signups also want the internship directory
   if(typeof gtag !== 'undefined') {
     gtag('event', 'email_signup', {
       event_category: 'conversion',
-      event_label: 'modal'
+      event_label: 'modal',
+      internship_interest: !document.getElementById('esmInternshipCheck').classList.contains('unchecked')
     });
   }
 }
