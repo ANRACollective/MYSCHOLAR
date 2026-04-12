@@ -100,19 +100,30 @@ Any
 Matt covers all four tiers per Find run, in order.
 
 ### Tier 1 — Job Aggregators (broad discovery)
-| Source | Search URL |
-|---|---|
-| Jora Malaysia | `https://www.jora.com/j?q=internship&l=Malaysia` |
-| LinkedIn Jobs | `https://www.linkedin.com/jobs/internship-jobs-malaysia/` |
-| Hiredly | `https://hiredly.com/jobs?query=internship&country=my` |
-| Jobstreet Malaysia | `https://www.jobstreet.com.my/en/job-search/internship-jobs/` |
+| Source | Search URL | What it's best for |
+|---|---|---|
+| Jora Malaysia | `https://my.jora.com/Internship-jobs-in-Malaysia` | Individual roles from SMEs, tech companies, MNCs. Aggregates from JobStreet, SEEK, company XML feeds, and career pages. Best for finding companies not on Prosple. Also use field-specific URLs: `my.jora.com/It-Internship-jobs-in-Malaysia`, `my.jora.com/Finance-Internship-jobs-in-Malaysia` etc. |
+| LinkedIn Jobs | `https://www.linkedin.com/jobs/internship-jobs-malaysia/` | Broad discovery, useful for startups |
+| Hiredly | `https://hiredly.com/jobs?query=internship&country=my` | Malaysian-focused, SME and startup roles |
+| Jobstreet Malaysia | `https://www.jobstreet.com.my/en/job-search/internship-jobs/` | High volume, broad coverage |
+
+**How Jora sources listings:** Jora is a job aggregator (search engine), not a job board. It crawls company career pages directly via XML feeds, and also pulls from partner boards (JobStreet, SEEK, etc.). Employers can submit their XML feed URL to Jora. This means Jora often shows listings that are already on other boards — prioritise listings from company names that do NOT appear on Prosple.
 
 ### Tier 2 — Structured Programme Directories
-| Source | URL |
-|---|---|
-| Talentcorp FSTEP | `https://fstep.com.my` |
-| MyFutureJobs | `https://www.myfuturejobs.gov.my` |
-| GradMalaysia | `https://gradmalaysia.com/internships/` |
+| Source | URL | What it's best for |
+|---|---|---|
+| **Prosple Malaysia** | `https://my.prosple.com/internships-malaysia` | **Best source for named, structured internship programmes from major employers.** Employers create accounts and post directly. URL pattern: `my.prosple.com/graduate-employers/[company-slug]/jobs-internships/[programme-slug]`. As of Apr 2026, 700+ live internships. Use this as the PRIMARY source for Tier 2. |
+| Talentcorp FSTEP | `https://fstep.com.my` | Government-sponsored placements |
+| MyFutureJobs | `https://www.myfuturejobs.gov.my` | Government-linked roles |
+| GradMalaysia | `https://gradmalaysia.com/internships/` | Graduate-focused directory |
+
+**How Prosple sources listings:** Prosple is a structured graduate recruitment platform — employers create accounts and upload their own listings. It is specifically designed for named, structured internship and graduate programmes. When Matt finds a listing on Prosple, the company's programme page URL (`my.prosple.com/graduate-employers/...`) can be used to confirm programme details, but the direct company career page should always be used as the `url` field in the DB record (Prosple is a referral layer, not the source of truth for applications). Prosple listings signal that the programme is active and employer-verified.
+
+**Matt's Tier 1 + 2 strategy (learned Apr 2026):**
+- Run Prosple first for structured programmes — it yields well-formatted, employer-confirmed data with programme names, durations, and eligibility clearly stated.
+- Run Jora second for individual role listings — good for discovering companies (especially tech MNCs and SMEs) that don't use Prosple. Filter by field to reduce noise: use Jora's category URLs rather than the generic internship search.
+- Treat a Prosple listing as confirmation that a programme is active and employer-managed. Always verify the direct company career URL before inserting.
+- Treat a Jora listing as a lead — check whether the company has a formal programme (§5a) before deciding on record structure.
 
 ### Tier 3 — Company Career Pages (direct)
 Matt targets all 8 actor categories:
@@ -120,12 +131,16 @@ Matt targets all 8 actor categories:
 | Actor | Priority targets |
 |---|---|
 | Federal GLCs | Khazanah Nasional, Petronas, Telekom Malaysia, TNB, CIMB, Maybank, RHB, AmBank, MISC, Permodalan Nasional Berhad |
+| State GLCs | Sarawak Energy, PETROS (Petroleum Sarawak Berhad) |
 | Listed Corporates | Gamuda, Sime Darby, IHH Healthcare, IOI Group, Hartalega |
-| Banks | HSBC Malaysia, Standard Chartered Malaysia, OCBC Malaysia, Bank Negara Malaysia |
-| Technology | Grab, Axiata, Maxis, Astro, Carsome, Revenue Monster, Shopee Malaysia |
+| Banks | HSBC Malaysia, Standard Chartered Malaysia, OCBC Malaysia, Bank Negara Malaysia, UOB Malaysia |
+| Technology | Grab, Axiata, Maxis, Astro, Carsome, Revenue Monster, Shopee Malaysia, iFAST Corporation Malaysia |
 | FMCG | Nestlé Malaysia, Unilever Malaysia, Dutch Lady, Mr DIY, Carlsberg Malaysia |
 | Consulting / Big 4 | PwC Malaysia, Deloitte Malaysia, KPMG Malaysia, EY Malaysia, McKinsey KL |
 | Healthcare | KPJ Healthcare, IHH Healthcare, Ramsay Sime Darby |
+| Energy MNCs | Shell Malaysia, BP Malaysia, SLB (Schlumberger) Malaysia |
+| Engineering MNCs | Robert Bosch Malaysia, GE Aerospace Malaysia, Intel Malaysia, Infineon, Keysight, Renesas |
+| Investment Banks | CITIC CLSA Malaysia |
 | International / NGOs | UNICEF Malaysia, UNDP Malaysia, World Bank KL, UN Geneva (open to Malaysians) |
 
 ### Tier 4 — Global Programmes Open to Malaysians
