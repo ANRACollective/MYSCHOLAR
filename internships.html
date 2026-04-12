@@ -272,9 +272,76 @@ nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:
 .mtip strong{color:var(--t2)}
 .mapply{display:block;width:100%;padding:14px;background:var(--accent);color:var(--bg);border:none;border-radius:12px;font-family:var(--sans);font-size:15px;font-weight:700;cursor:pointer;text-align:center;text-decoration:none;transition:all .2s}
 .mapply:hover{opacity:.9;transform:translateY(-1px)}
-.ft{text-align:center;padding:20px 16px 32px;font-size:11px;color:var(--t3);max-width:720px;margin:0 auto}
+.ft{text-align:center;padding:0 16px 32px;font-size:11px;color:var(--t3);max-width:720px;margin:0 auto}
 .ft a{color:var(--accent);text-decoration:none}
+/* About footer section */
+.ft-about{border-top:1px solid var(--border);padding:28px 0 20px;margin-bottom:4px}
+.ft-about-title{font-size:12px;font-weight:600;color:var(--t2);letter-spacing:.02em;margin-bottom:10px}
+.ft-about-body{font-size:12px;color:var(--t3);line-height:1.75;max-width:480px;margin:0 auto}
+.ft-divider{width:32px;height:1px;background:var(--border);margin:16px auto}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── CAREER MATCH QUIZ ─────────────────────────────────────────────────── */
+/* CTA card in hero */
+.quiz-cta-wrap{margin-top:32px;text-align:center;padding:0 20px;position:relative}
+.quiz-cta-card{display:inline-flex;flex-direction:column;align-items:center;gap:5px;background:rgba(56,189,248,.06);border:1px solid rgba(56,189,248,.25);border-radius:16px;padding:22px 36px;cursor:pointer;transition:all .3s;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);max-width:320px;width:100%;box-shadow:0 0 0 1px rgba(56,189,248,.1),0 0 28px rgba(56,189,248,.18),0 0 60px rgba(56,189,248,.07);animation:qzGlow 3s ease-in-out infinite;font-family:var(--sans);border-style:solid}
+.quiz-cta-card:hover{background:rgba(56,189,248,.1);border-color:rgba(56,189,248,.45);box-shadow:0 0 0 1px rgba(56,189,248,.3),0 0 36px rgba(56,189,248,.3),0 0 80px rgba(56,189,248,.12);animation:none;transform:translateY(-1px)}
+@keyframes qzGlow{0%,100%{box-shadow:0 0 0 1px rgba(56,189,248,.1),0 0 28px rgba(56,189,248,.18),0 0 60px rgba(56,189,248,.07)}50%{box-shadow:0 0 0 1px rgba(56,189,248,.2),0 0 38px rgba(56,189,248,.26),0 0 80px rgba(56,189,248,.1)}}
+.quiz-cta-main{font-family:var(--serif);font-size:24px;font-weight:700;color:#fff;line-height:1.1;letter-spacing:-.3px}
+.quiz-cta-meta{font-size:11px;color:rgba(56,189,248,.55);margin-top:2px;letter-spacing:.05em;font-weight:500}
+/* Quiz overlay — same pattern as internship detail modal */
+.qz-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:1000;justify-content:center;align-items:flex-end}
+.qz-ov.open{display:flex}
+@media(min-width:600px){.qz-ov{align-items:center;padding:24px}}
+.qz-modal{background:var(--bg2);border-radius:20px 20px 0 0;width:100%;max-width:520px;max-height:88vh;overflow-y:auto;border:1px solid var(--border);box-shadow:0 -8px 40px rgba(0,0,0,.5);animation:sUp .3s ease;position:relative;padding-bottom:32px}
+@media(min-width:600px){.qz-modal{border-radius:16px;max-height:82vh}}
+.qz-bar{width:40px;height:4px;background:var(--t3);border-radius:2px;margin:12px auto 0;opacity:.4}
+@media(min-width:600px){.qz-bar{display:none}}
+.qz-x{position:absolute;top:16px;right:20px;background:var(--bg-card);border:1px solid var(--border);color:var(--t2);width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:all .2s;z-index:2;font-family:var(--sans)}
+.qz-x:hover{background:var(--bg-card-h);color:var(--t1)}
+.qz-hdr{padding:20px 24px 0}
+.qz-eyebrow{font-size:10px;letter-spacing:.14em;color:var(--accent);text-transform:uppercase;font-weight:600;margin-bottom:8px}
+.qz-title{font-family:var(--serif);font-size:22px;font-weight:700;color:var(--t1);line-height:1.2;margin-bottom:4px}
+.qz-sub{font-size:12px;color:var(--t3);font-weight:300;line-height:1.5}
+.qz-prog-wrap{padding:18px 24px 0}
+.qz-prog-info{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.qz-prog-label{font-size:11px;color:var(--t3);font-weight:500}
+.qz-prog-count{font-size:11px;color:var(--accent);font-weight:600}
+.qz-prog-track{height:3px;background:var(--border);border-radius:2px;overflow:hidden}
+.qz-prog-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .4s ease}
+.qz-body{padding:20px 24px 0}
+.qz-q{font-size:16px;font-weight:600;color:var(--t1);line-height:1.45;margin-bottom:18px;min-height:48px}
+.qz-opts{display:flex;flex-direction:column;gap:10px}
+.qz-opt{background:var(--bg-card);border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;cursor:pointer;transition:all .2s;display:flex;align-items:flex-start;gap:12px;text-align:left}
+.qz-opt:hover{border-color:var(--accent);background:var(--bg-card-h)}
+.qz-opt.selected{border-color:var(--accent);background:var(--accent-g)}
+.qz-opt-icon{font-size:18px;line-height:1;flex-shrink:0;margin-top:1px}
+.qz-opt-text{font-size:13.5px;color:var(--t2);line-height:1.45;font-weight:400;transition:color .2s}
+.qz-opt.selected .qz-opt-text{color:var(--t1)}
+.qz-next-wrap{padding:20px 24px 0}
+.qz-next{width:100%;padding:14px;background:var(--accent);color:var(--bg);border:none;border-radius:12px;font-family:var(--sans);font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;opacity:.35;pointer-events:none}
+.qz-next.ready{opacity:1;pointer-events:auto}
+.qz-next.ready:hover{opacity:.88;transform:translateY(-1px)}
+/* Result screen */
+.qz-result{padding:24px;display:none}
+.qz-result-eyebrow{font-size:10px;letter-spacing:.14em;color:var(--green);text-transform:uppercase;font-weight:600;margin-bottom:10px}
+.qz-result-title{font-family:var(--serif);font-size:22px;font-weight:700;color:var(--t1);margin-bottom:6px}
+.qz-result-sub{font-size:13px;color:var(--t3);margin-bottom:24px;line-height:1.6}
+.qz-matches{display:flex;flex-direction:column;gap:12px;margin-bottom:24px}
+.qz-match{border-radius:12px;border:1.5px solid var(--border);padding:16px;display:flex;align-items:center;gap:14px;background:var(--bg-card)}
+.qz-match.primary{border-color:var(--match-color,var(--accent));background:rgba(var(--match-rgb,56,189,248),.06)}
+.qz-match-rank{font-size:10px;font-weight:700;color:var(--match-color,var(--accent));text-transform:uppercase;letter-spacing:.08em;background:rgba(var(--match-rgb,56,189,248),.12);padding:4px 8px;border-radius:6px;white-space:nowrap;flex-shrink:0}
+.qz-match-info{flex:1;min-width:0}
+.qz-match-name{font-size:16px;font-weight:700;color:var(--t1);margin-bottom:3px}
+.qz-match-desc{font-size:12px;color:var(--t3);line-height:1.45}
+.qz-match-score{font-family:var(--serif);font-size:26px;font-weight:700;color:var(--match-color,var(--accent));flex-shrink:0}
+.qz-apply{display:block;width:100%;padding:14px;background:var(--accent);color:var(--bg);border:none;border-radius:12px;font-family:var(--sans);font-size:14px;font-weight:700;cursor:pointer;text-align:center;transition:all .2s;margin-bottom:12px}
+.qz-apply:hover{opacity:.88;transform:translateY(-1px)}
+.qz-retake{display:block;width:100%;padding:11px;background:transparent;color:var(--t3);border:1.5px solid var(--border);border-radius:12px;font-family:var(--sans);font-size:13px;cursor:pointer;transition:all .2s;text-align:center}
+.qz-retake:hover{color:var(--t1);border-color:var(--border-h)}
+.qz-note{font-size:11px;color:var(--t3);text-align:center;margin-top:16px;line-height:1.5}
+.qz-step{animation:fadeQ .2s ease}
+@keyframes fadeQ{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 </style>
 </head>
 <body>
@@ -299,6 +366,13 @@ nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:
     <div class="hs-item"><span class="hs-num">100+</span><span class="hs-lbl">Programmes</span></div>
     <div class="hs-item"><span class="hs-num">9</span><span class="hs-lbl">Industries</span></div>
     <div class="hs-item"><span class="hs-num">100%</span><span class="hs-lbl">Free</span></div>
+  </div>
+  <!-- Career Match Quiz CTA -->
+  <div class="quiz-cta-wrap">
+    <button class="quiz-cta-card" id="quizOpen">
+      <span class="quiz-cta-main">Find Your Fit</span>
+      <span class="quiz-cta-meta">8 questions</span>
+    </button>
   </div>
 </div>
 
@@ -334,7 +408,54 @@ nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:
   </div>
 </div>
 
-<div class="ft"><a href="https://myscholar.my">myscholar.my</a> · MyIntern is part of the MyScholar ecosystem</div>
+<div class="ft">
+  <div class="ft-about">
+    <div class="ft-about-title">MyIntern by MyScholar</div>
+    <p class="ft-about-body">A curated directory of internship programmes for Malaysian students, independently maintained by MyScholar. All listings are manually reviewed and updated regularly — not scraped or automated. We prioritise accuracy over volume. To report an outdated entry, use the correction link on each listing.</p>
+  </div>
+  <div class="ft-divider"></div>
+  <a href="https://myscholar.my">myscholar.my</a> · MyIntern is part of the MyScholar ecosystem
+</div>
+
+<!-- ── CAREER MATCH QUIZ MODAL ────────────────────────────────────────────── -->
+<div class="qz-ov" id="qzOv">
+  <div class="qz-modal" id="qzModal">
+    <div class="qz-bar"></div>
+    <button class="qz-x" id="qzClose">&times;</button>
+    <!-- Quiz flow -->
+    <div id="qzFlow">
+      <div class="qz-hdr">
+        <div class="qz-eyebrow">Career Match</div>
+        <div class="qz-title">What kind of intern are you?</div>
+        <div class="qz-sub">8 quick questions. No right or wrong answers.</div>
+      </div>
+      <div class="qz-prog-wrap">
+        <div class="qz-prog-info">
+          <span class="qz-prog-label" id="qzProgLabel">Question 1 of 8</span>
+          <span class="qz-prog-count" id="qzProgPct">0%</span>
+        </div>
+        <div class="qz-prog-track"><div class="qz-prog-fill" id="qzProgFill" style="width:0%"></div></div>
+      </div>
+      <div class="qz-body">
+        <div class="qz-q" id="qzQuestion"></div>
+        <div class="qz-opts" id="qzOpts"></div>
+      </div>
+      <div class="qz-next-wrap">
+        <button class="qz-next" id="qzNext">Next →</button>
+      </div>
+    </div>
+    <!-- Result screen -->
+    <div class="qz-result" id="qzResult">
+      <div class="qz-result-eyebrow">Your match</div>
+      <div class="qz-result-title">You'd fit well in...</div>
+      <div class="qz-result-sub" id="qzResultSub"></div>
+      <div class="qz-matches" id="qzMatches"></div>
+      <button class="qz-apply" id="qzApply">Show me matching internships →</button>
+      <button class="qz-retake" id="qzRetake">Retake quiz</button>
+      <p class="qz-note">Results filter the listings below. You can clear the filter anytime.</p>
+    </div>
+  </div>
+</div>
 
 <script>
 const SB='https://ywvfvjvxwhcfprfrkgqm.supabase.co';
@@ -397,21 +518,218 @@ function buildChips(){
     const c=document.createElement('div');
     c.className='chip';c.dataset.ind=ind;
     c.textContent=IS[ind]||ind;
-    c.onclick=()=>{document.querySelectorAll('#chips .chip').forEach(x=>x.classList.remove('active'));c.classList.add('active');render();gtag('event','intern_filter',{filter:ind})};
+    c.onclick=()=>{quizFilter=null;document.querySelectorAll('#chips .chip').forEach(x=>x.classList.remove('active'));c.classList.add('active');render();gtag('event','intern_filter',{filter:ind})};
     el.appendChild(c);
   });
 }
+
+/* ── Quiz state ─────────────────────────── */
+// quizFilter: null = no quiz active, array of industry names = quiz result active
+let quizFilter=null;
+
+/* ── Quiz question & scoring data ──────── */
+const QZ_INDUSTRIES={
+  'Finance & Banking':{key:'fin',color:'var(--c-fin)',rgb:'96,165,250',desc:'Financial analysis, banking operations, investment research, risk and compliance.'},
+  'Technology':{key:'tec',color:'var(--c-tec)',rgb:'244,114,182',desc:'Software, data, product, cybersecurity, and digital transformation roles.'},
+  'Consulting':{key:'con',color:'var(--c-con)',rgb:'56,189,248',desc:'Strategy, management consulting, advisory, and problem-solving across industries.'},
+  'Government / GLC':{key:'gov',color:'var(--c-gov)',rgb:'52,211,153',desc:'Public policy, government operations, GLCs — stable, structured, reputable.'},
+  'Engineering':{key:'eng',color:'var(--c-eng)',rgb:'249,115,22',desc:'Civil, mechanical, electrical, chemical — building and maintaining the real world.'},
+  'Energy & Utilities':{key:'ene',color:'var(--c-ene)',rgb:'251,191,36',desc:'Oil & gas, renewables, utilities — technical and operational roles.'},
+  'Healthcare':{key:'hea',color:'var(--c-hea)',rgb:'167,139,250',desc:'Hospitals, pharma, biotech, public health — helping people directly.'},
+  'Media & Comms':{key:'med',color:'var(--c-med)',rgb:'244,63,94',desc:'Content, journalism, PR, digital marketing, and creative communications.'},
+  'FMCG & Retail':{key:'fmc',color:'var(--c-fmc)',rgb:'74,222,128',desc:'Consumer goods, brand management, marketing, and retail operations.'},
+  'Legal':{key:'leg',color:'var(--c-leg)',rgb:'232,121,249',desc:'Legal research, compliance, corporate law, and regulatory work.'},
+  'Education':{key:'edu',color:'var(--c-edu)',rgb:'252,211,77',desc:'EdTech, training, curriculum, and roles that build human capacity.'},
+  'Non-profit / NGO':{key:'ngo',color:'var(--c-ngo)',rgb:'103,232,249',desc:'Community development, advocacy, social impact, and mission-driven work.'}
+};
+const QZ_QUESTIONS=[
+  {q:'A good day at work looks like...',opts:[
+    {icon:'📊',text:'Spotting a pattern in data that no one else noticed',scores:['Finance & Banking','Technology','Consulting']},
+    {icon:'💡',text:'Pitching an idea and convincing the room',scores:['Consulting','Media & Comms','FMCG & Retail']},
+    {icon:'🔧',text:'Building something and watching it actually work',scores:['Engineering','Technology','Energy & Utilities']},
+    {icon:'🤝',text:'Helping someone navigate something difficult',scores:['Healthcare','Education','Non-profit / NGO']}
+  ]},
+  {q:'I work best when...',opts:[
+    {icon:'📋',text:'There are clear rules and structured processes to follow',scores:['Government / GLC','Finance & Banking','Legal']},
+    {icon:'⚡',text:'I can move fast and figure things out as I go',scores:['Technology','FMCG & Retail','Consulting']},
+    {icon:'🎨',text:'I have space to experiment and be creative',scores:['Media & Comms','FMCG & Retail','Education']},
+    {icon:'❤️',text:'The work has a direct, visible impact on real people',scores:['Healthcare','Non-profit / NGO','Education']}
+  ]},
+  {q:'My ideal workplace setting is...',opts:[
+    {icon:'🏙️',text:'A corporate office — established, structured, professional',scores:['Finance & Banking','Government / GLC','Legal']},
+    {icon:'🚀',text:'A fast-moving team where I own my own area',scores:['Technology','Consulting','FMCG & Retail']},
+    {icon:'🎬',text:'A creative studio or content environment',scores:['Media & Comms','FMCG & Retail','Education']},
+    {icon:'🏗️',text:'A site, lab, or somewhere I can see the physical output',scores:['Engineering','Energy & Utilities','Healthcare']}
+  ]},
+  {q:'The type of organisation I want to work for...',opts:[
+    {icon:'🏛️',text:'GLC or government-linked — stable, recognised, purpose-driven',scores:['Government / GLC','Finance & Banking','Energy & Utilities']},
+    {icon:'🌐',text:'Large MNC — international exposure, global brand',scores:['Finance & Banking','Technology','FMCG & Retail']},
+    {icon:'🌱',text:'Startup or scale-up — high ownership, learn fast',scores:['Technology','Consulting']},
+    {icon:'🌍',text:'NGO, social enterprise, or mission-first organisation',scores:['Non-profit / NGO','Education','Healthcare']}
+  ]},
+  {q:'What I most want to produce at work...',opts:[
+    {icon:'📈',text:'Analysis, reports, or strategic recommendations',scores:['Finance & Banking','Consulting','Government / GLC']},
+    {icon:'💻',text:'Apps, systems, or technical products people actually use',scores:['Technology','Engineering']},
+    {icon:'📣',text:'Content, campaigns, or brand experiences',scores:['Media & Comms','FMCG & Retail']},
+    {icon:'⚖️',text:'Policy, legal advice, or compliance frameworks',scores:['Legal','Government / GLC','Consulting']}
+  ]},
+  {q:'In 10 years, I picture myself...',opts:[
+    {icon:'🎖️',text:'A senior leader at a respected institution or firm',scores:['Finance & Banking','Government / GLC','Legal']},
+    {icon:'🏆',text:'Running something — my own venture or a product team',scores:['Technology','Consulting','FMCG & Retail']},
+    {icon:'🔬',text:'A deep specialist — the go-to expert in my field',scores:['Engineering','Energy & Utilities','Healthcare']},
+    {icon:'🌟',text:'Making a lasting difference in communities or lives',scores:['Non-profit / NGO','Education','Healthcare']}
+  ]},
+  {q:'On internship pay and compensation...',opts:[
+    {icon:'💰',text:'I want to be paid as competitively as possible',scores:['Finance & Banking','Technology','Energy & Utilities']},
+    {icon:'🏅',text:'I\'ll take less pay for the right brand name on my CV',scores:['Government / GLC','Finance & Banking','FMCG & Retail']},
+    {icon:'📚',text:'Pay matters less — I want transformative learning',scores:['Non-profit / NGO','Education','Engineering']},
+    {icon:'✅',text:'A fair stipend that covers my costs is enough',scores:['Consulting','Healthcare','Media & Comms']}
+  ]},
+  {q:'In a team, I naturally tend to...',opts:[
+    {icon:'🔍',text:'Dig into the numbers and present clear findings',scores:['Finance & Banking','Consulting','Technology']},
+    {icon:'📢',text:'Coordinate, communicate, and keep everyone aligned',scores:['Media & Comms','FMCG & Retail','Education']},
+    {icon:'⚙️',text:'Build, debug, or engineer the actual solution',scores:['Technology','Engineering','Energy & Utilities']},
+    {icon:'🫶',text:'Listen, advise, and advocate for others',scores:['Healthcare','Non-profit / NGO','Legal']}
+  ]}
+];
+
+/* ── Quiz logic ─────────────────────────── */
+let qzCurrent=0,qzSelected=null,qzScores={};
+
+function qzReset(){
+  qzCurrent=0;qzSelected=null;qzScores={};
+  Object.keys(QZ_INDUSTRIES).forEach(k=>qzScores[k]=0);
+}
+
+function qzRenderQuestion(){
+  qzSelected=null;
+  const q=QZ_QUESTIONS[qzCurrent];
+  const pct=Math.round((qzCurrent/QZ_QUESTIONS.length)*100);
+  document.getElementById('qzProgLabel').textContent='Question '+(qzCurrent+1)+' of '+QZ_QUESTIONS.length;
+  document.getElementById('qzProgPct').textContent=pct+'%';
+  document.getElementById('qzProgFill').style.width=pct+'%';
+  const qEl=document.getElementById('qzQuestion');
+  qEl.className='qz-q qz-step';qEl.textContent=q.q;
+  const optsEl=document.getElementById('qzOpts');
+  optsEl.className='qz-opts qz-step';optsEl.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const div=document.createElement('div');
+    div.className='qz-opt';
+    div.innerHTML='<span class="qz-opt-icon">'+opt.icon+'</span><span class="qz-opt-text">'+opt.text+'</span>';
+    div.onclick=()=>{
+      qzSelected=i;
+      document.querySelectorAll('.qz-opt').forEach((el,idx)=>el.classList.toggle('selected',idx===i));
+      document.getElementById('qzNext').classList.add('ready');
+    };
+    optsEl.appendChild(div);
+  });
+  const btn=document.getElementById('qzNext');
+  btn.className='qz-next';
+  btn.textContent=qzCurrent===QZ_QUESTIONS.length-1?'See my results →':'Next →';
+}
+
+function qzShowResults(){
+  document.getElementById('qzProgFill').style.width='100%';
+  document.getElementById('qzProgPct').textContent='100%';
+  // Sort by score, pick top 2
+  const sorted=Object.entries(qzScores).filter(([,s])=>s>0).sort((a,b)=>b[1]-a[1]);
+  const top=sorted.slice(0,2);
+  const maxScore=QZ_QUESTIONS.length*2;
+  document.getElementById('qzFlow').style.display='none';
+  const resultEl=document.getElementById('qzResult');
+  resultEl.style.display='block';
+  if(top.length>=2){
+    document.getElementById('qzResultSub').textContent='Based on your answers, you\'d fit well in '+top[0][0]+' or '+top[1][0]+' internships. Here are the open listings.';
+  } else if(top.length===1){
+    document.getElementById('qzResultSub').textContent='Based on your answers, '+top[0][0]+' looks like a strong fit for you.';
+  } else {
+    document.getElementById('qzResultSub').textContent='You\'re open to everything — browse all listings below.';
+  }
+  // Build match cards
+  const matchesEl=document.getElementById('qzMatches');
+  matchesEl.innerHTML='';
+  top.forEach(([name,score],i)=>{
+    const info=QZ_INDUSTRIES[name]||{color:'var(--accent)',rgb:'56,189,248',desc:''};
+    const pct=Math.round((score/maxScore)*100);
+    const card=document.createElement('div');
+    card.className='qz-match'+(i===0?' primary':'');
+    card.style.setProperty('--match-color',info.color);
+    card.style.setProperty('--match-rgb',info.rgb);
+    card.innerHTML='<div class="qz-match-rank">'+(i===0?'🎯 Best fit':'2nd match')+'</div>'
+      +'<div class="qz-match-info"><div class="qz-match-name">'+name+'</div><div class="qz-match-desc">'+(info.desc||'')+'</div></div>'
+      +'<div class="qz-match-score">'+pct+'%</div>';
+    matchesEl.appendChild(card);
+  });
+  // Apply button: set quizFilter and trigger render
+  const topNames=top.map(([name])=>name);
+  document.getElementById('qzApply').onclick=function(){
+    quizFilter=topNames.length?topNames:null;
+    // Clear the industry chip selection so quiz filter takes over
+    document.querySelectorAll('#chips .chip').forEach(c=>c.classList.remove('active'));
+    document.querySelector('#chips .chip[data-ind="all"]').classList.add('active');
+    qzClose();
+    render();
+    // Scroll to listings
+    document.getElementById('feed').scrollIntoView({behavior:'smooth',block:'start'});
+    // GA4 event
+    gtag('event','quiz_completed',{industry1:topNames[0]||'',industry2:topNames[1]||''});
+  };
+}
+
+document.getElementById('qzNext').onclick=function(){
+  if(qzSelected===null)return;
+  // Score the selected option
+  QZ_QUESTIONS[qzCurrent].opts[qzSelected].scores.forEach(ind=>{qzScores[ind]=(qzScores[ind]||0)+2});
+  qzCurrent++;
+  if(qzCurrent<QZ_QUESTIONS.length){qzRenderQuestion();}else{qzShowResults();}
+};
+
+function qzOpen(){
+  qzReset();
+  document.getElementById('qzFlow').style.display='block';
+  document.getElementById('qzResult').style.display='none';
+  qzRenderQuestion();
+  document.getElementById('qzOv').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function qzClose(){
+  document.getElementById('qzOv').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.getElementById('quizOpen').onclick=qzOpen;
+document.getElementById('qzClose').onclick=qzClose;
+document.getElementById('qzOv').onclick=e=>{if(e.target===e.currentTarget)qzClose()};
+document.addEventListener('keydown',e=>{if(e.key==='Escape')qzClose()});
+document.getElementById('qzRetake').onclick=function(){
+  document.getElementById('qzResult').style.display='none';
+  document.getElementById('qzFlow').style.display='block';
+  qzReset();qzRenderQuestion();
+};
 
 /* ── Render ─────────────────────────────── */
 function render(){
   const feed=document.getElementById('feed');
   const ind=document.querySelector('#chips .chip.active')?.dataset.ind||'all';
   const po=document.getElementById('paidT').classList.contains('on');
+  // openT: filter to listings that are rolling or have a future deadline
+  const oo=document.getElementById('openT').classList.contains('on');
+  const today=new Date();today.setHours(0,0,0,0);
   const q=document.getElementById('search').value.toLowerCase().trim();
   feed.innerHTML='';let c=0;
   DATA.forEach((item,idx)=>{
-    if(ind!=='all'&&(!item.industry||!item.industry.includes(ind)))return;
+    // Industry chip filter (single) OR quiz multi-industry filter
+    if(quizFilter){
+      // Quiz active: show if item matches any of the top 2 quiz industries
+      if(!quizFilter.some(qi=>item.industry&&item.industry.includes(qi)))return;
+    } else {
+      if(ind!=='all'&&(!item.industry||!item.industry.includes(ind)))return;
+    }
     if(po&&!hasPay(item))return;
+    // openT fix: rolling items are always "open"; others check deadline_date if available
+    if(oo){
+      const isOpen=item.rolling||(item.deadline_date&&new Date(item.deadline_date)>=today);
+      if(!isOpen)return;
+    }
     if(q){const h=(item.company+' '+item.programme_name+' '+(item.roles_available||'')).toLowerCase();if(!h.includes(q))return}
     c++;
     const k=pk(item),el=document.createElement('div');
@@ -456,7 +774,13 @@ document.getElementById('ov').onclick=e=>{if(e.target===e.currentTarget)closeMod
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
 
 /* ── Filter events ─────────────────────── */
-document.querySelector('#chips .chip[data-ind="all"]').onclick=()=>{document.querySelectorAll('#chips .chip').forEach(c=>c.classList.remove('active'));document.querySelector('#chips .chip[data-ind="all"]').classList.add('active');render()};
+// Clicking any chip clears the quiz filter so manual filter takes over
+document.querySelector('#chips .chip[data-ind="all"]').onclick=()=>{
+  quizFilter=null;
+  document.querySelectorAll('#chips .chip').forEach(c=>c.classList.remove('active'));
+  document.querySelector('#chips .chip[data-ind="all"]').classList.add('active');
+  render();
+};
 ['paidT','openT'].forEach(id=>{document.getElementById(id).onclick=function(){this.classList.toggle('on');render();gtag('event','intern_toggle',{t:id,s:this.classList.contains('on')?'on':'off'})}});
 let st;document.getElementById('search').oninput=function(){clearTimeout(st);st=setTimeout(()=>{render();if(this.value.trim())gtag('event','intern_search',{q:this.value.trim()})},200)};
 

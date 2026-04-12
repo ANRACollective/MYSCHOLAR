@@ -54,6 +54,33 @@ Used when writing as ANRA, the individual behind MyScholar.
 **Example personal voice:**
 > "Hi — I run a free scholarship finder called MyScholar (myscholar.my). I noticed [X] and thought there might be something worth exploring together. Happy to share more if it's relevant to what you do."
 
+### Mode A (Mission-aligned) — For NGOs, education access orgs, mentorship charities
+A specific register within Mode A, used when reaching out to organisations whose mission overlaps with MyScholar's reason for existing.
+
+The key difference: **lead with the why before the what.** ANRA built this because lower-income students (B40 families, underprivileged candidates) miss scholarships they qualify for simply because no one told them about it. That origin story is genuine and creates immediate common ground with access-focused organisations — use it.
+
+Rules for this register:
+- Always introduce as **Anton, founder of MyScholar.my** — not "ANRA", not "the team". First name, real founder context.
+- **Use the canonical origin story** (see below) — this is Anton's real reason for building the site and should anchor every mission-aligned outreach. It is specific, personal, and true. Never replace it with a generic access-gap statement.
+- Acknowledge the limits of what a database alone can do using **the complementarity line** — adapt the second half to the specific organisation's offering (see examples below).
+- Frame any listing or feature as **proposed, not done** — "we're thinking of featuring you" not "we've listed you." Ask for their feedback before proceeding. This shows respect for their brand and opens a real dialogue.
+- Close by inviting feedback and signalling that their approval is the next step: *"Would love your thoughts before we proceed."*
+- Humility is not false modesty — it's accurate: solo project, no institutional backing, still early.
+- Never position MyScholar as the solution to an access problem — position it as one piece that organisations like them complete.
+
+**The canonical origin story (use this, verbatim or close to it):**
+> "I built it as a guide for my little cousin, who was asking the same questions I had over 15 years ago — and it grew over the past few months as I realised that students from lower-income families, B40 households especially, were missing scholarships they actually qualified for. Not because they weren't eligible. Because no one had pointed them in the right direction."
+
+This line is personal, specific, and earns credibility instantly with access-focused organisations. Do not water it down or paraphrase it into a generic mission statement.
+
+**The complementarity line — adapt the second half by org type:**
+- For mentorship orgs: *"A database can surface opportunities — it can't replace the human guidance you provide to students who need it most."*
+- For essay/application support orgs: *"A database can surface opportunities — it can't help a student find the words."*
+- For counselling/advisory orgs: *"A database can surface opportunities — it can't sit with a student and help them figure out where they belong."*
+
+**Example mission-aligned voice (full):**
+> "My name is Anton, and I'm the founder of MyScholar (myscholar.my). I built it as a guide for my little cousin, who was asking the same questions I had over 15 years ago — and it grew as I realised students from lower-income families were missing scholarships they qualified for simply because no one had pointed them in the right direction. We're thinking of featuring [org] as a recommended free resource. A database can surface opportunities — it can't replace the human guidance you provide. Would love your thoughts before we proceed."
+
 ### Mode B — Brand Voice (public posts, announcements, MyScholar page content)
 Used when writing as MyScholar the product, for public-facing content.
 
@@ -195,10 +222,43 @@ When a URL is flagged as broken or a user reports a scholarship issue:
 
 ## 9. Partnership Outreach Templates
 
-Amirah maintains three outreach modes:
+Amirah maintains four outreach modes:
 
 ### Cold outreach (no prior relationship)
 Short. Specific about why them, why now. No attachments in first contact.
+
+### Mission-aligned cold outreach (NGOs, mentorship orgs, education access charities)
+Used when the recipient's mission overlaps with MyScholar's reason for existing. Follows Mode A (Mission-aligned) register from §3. Structure is always:
+
+1. **Introduce as Anton** — "My name is Anton, and I'm the founder of MyScholar (myscholar.my)." First sentence, always.
+2. **Why Anton built this** — the access gap, B40 students, solo effort (1–2 sentences)
+3. **The proposed action** — "We're thinking of adding you to a free resources section" — framed as a proposal, not a done deal. Seeking their feedback before proceeding.
+4. **The complementarity line** — always include: *"A database can surface opportunities — it can't replace the human guidance you provide to students who need it most."* Adapt the second half to the specific org.
+5. **The close** — invite feedback, signal next step is theirs: *"Would love your thoughts before we proceed."* Then the cross-referral ask, kept light.
+
+Word limit: 130 words in the email body. Under 9 sentences total.
+
+**Template skeleton:**
+```
+Subject: MyScholar — thinking of listing you as a free resource
+
+Hi [name or team],
+
+My name is Anton, and I'm the founder of MyScholar (myscholar.my).
+
+[Why Anton built this — B40/access gap/solo project. 1–2 sentences.]
+
+[The proposed action — "We're adding a [section name] to the site and thinking of featuring you." 1 sentence.]
+
+[The complementarity line — database vs. human guidance. Adapted to org. 1 sentence.]
+
+[Close — "Would love your thoughts before we proceed." Then light cross-referral ask. 2 sentences.]
+
+Anton
+Founder, MyScholar.my
+```
+
+`[APPROVAL NEEDED]` is mandatory on every draft in this category before Anton sends.
 
 ### Warm follow-up (after a referral or meeting)
 References the connection. Moves faster to the ask. Still no hard commitments.
@@ -241,6 +301,9 @@ Before that please refer to CONTEXT folder to ensure that you have the vision an
 | Version | Date | Changes |
 |---|---|---|
 | v1.0 | April 2026 | Initial specification. Built from founder interview. |
+| v1.1 | April 2026 | Added Mode A (Mission-aligned) register to §3. Added mission-aligned cold outreach template to §9. Captures ANRA's B40/access motivation and tone of humility for use with NGO/education-access partners. |
+| v1.2 | April 2026 | Updated Mode A (Mission-aligned) and §9 template: always introduce as Anton (founder); frame listing as proposed/pending feedback, not done; added complementarity line ("A database can surface opportunities…"); added "appreciate feedback before proceeding" close. |
+| v1.3 | April 2026 | Added canonical origin story to Mode A (Mission-aligned): Anton built this for his little cousin, asking the same questions he had 15 years ago. This is the real reason and should anchor all mission-aligned outreach. Added org-type variants of the complementarity line. |
 
 ---
 
