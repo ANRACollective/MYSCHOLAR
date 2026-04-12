@@ -1,7 +1,12 @@
 /**
- * JACK SEO Generator v2 -- MyScholar.my
+ * JACK SEO Generator v3 -- MyScholar.my
  * Run: node jack-run.js
- * Output: ./seo/ folder with all landing page HTMLs
+ * Output: ../SEO/ folder with all landing page HTMLs
+ *
+ * v3 changes: lang=en-MY, hreflang tags, font preconnect,
+ *             ItemList schema on internship pages,
+ *             corrected nav/CTA links for internship pages,
+ *             type-aware footer copy
  */
 const fs = require('fs');
 const path = require('path');
@@ -37,7 +42,14 @@ try {
 console.log('  Total: ' + KEYWORDS.length + ' keywords');
 console.log('');
 
-// ── HTML BUILDER ─────────────────────────────────────────────────
+// ── HTML BUILDER v3 ──────────────────────────────────────────────
+// Changes from v2:
+//   - lang="en-MY" on all pages
+//   - hreflang tags (en-MY, ms-MY, x-default)
+//   - rel="preconnect" for Google Fonts
+//   - ItemList schema on internship pages (alongside WebPage schema)
+//   - Nav/CTA/back links corrected: internship pages → /internships, not /
+//   - Footer copy is type-aware (scholarship vs internship)
 function buildHTML(entry) {
   const isInternship = entry.type === 'internship';
   const mainColor = isInternship ? '#ffb347' : '#e8551e';
@@ -48,6 +60,7 @@ function buildHTML(entry) {
 
   const kwAll = [kw.primary, kw.primary_bm].concat(kw.longtail_en).concat(kw.longtail_bm).join(', ');
 
+  // WebPage schema — present on all pages
   const jsonLd = JSON.stringify({
     "@context":"https://schema.org","@type":"WebPage",
     "name":m.title,"description":m.description,"url":canonicalUrl,
@@ -59,19 +72,44 @@ function buildHTML(entry) {
     ]}
   }, null, 2);
 
+  // ItemList schema — internship pages only.
+  // Signals to Google that this page is a collection of internship opportunities,
+  // making it eligible for richer treatment in Jobs-related search features.
+  const itemListJsonLd = isInternship ? JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": m.title,
+    "description": m.description,
+    "url": canonicalUrl,
+    "itemListOrder": "https://schema.org/ItemListUnordered",
+    "numberOfItems": 100,
+    "isPartOf": {
+      "@type": "WebSite",
+      "name": "MyScholar Malaysia",
+      "url": "https://myscholar.my"
+    }
+  }, null, 2) : null;
+
+  // Directory root differs by type — internship pages must link to /internships, not /
+  const dirUrl = isInternship ? '/internships' : '/';
+  const dirLabel = isInternship ? 'All Internships' : 'All Scholarships';
+  const footerCopy = isInternship
+    ? "Malaysia's free internship directory. No login. No paywall. Just internships."
+    : "Malaysia's free scholarship directory. No login. No paywall. Just scholarships.";
+
   const enPills = kw.longtail_en.map(function(k) {
-    return '    <a href="/?q=' + encodeURIComponent(k) + '" class="kw-pill">' + k + '</a>';
+    return '    <a href="' + dirUrl + '?q=' + encodeURIComponent(k) + '" class="kw-pill">' + k + '</a>';
   }).join('\n');
 
   const bmPills = kw.longtail_bm.map(function(k) {
-    return '    <a href="/?q=' + encodeURIComponent(k) + '" class="kw-pill bm">' + k + '</a>';
+    return '    <a href="' + dirUrl + '?q=' + encodeURIComponent(k) + '" class="kw-pill bm">' + k + '</a>';
   }).join('\n');
 
   const typeLabel = isInternship ? 'Internships' : 'Scholarships';
   const eyebrow = isInternship ? 'Internships Malaysia' : 'Biasiswa Malaysia';
 
   return `<!DOCTYPE html>
-<html lang="en">
+<html lang="en-MY">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -79,6 +117,9 @@ function buildHTML(entry) {
 <meta name="description" content="${m.description}">
 <meta name="keywords" content="${kwAll}">
 <link rel="canonical" href="${canonicalUrl}">
+<link rel="alternate" hreflang="en-MY" href="${canonicalUrl}">
+<link rel="alternate" hreflang="ms-MY" href="${canonicalUrl}">
+<link rel="alternate" hreflang="x-default" href="${canonicalUrl}">
 <meta property="og:title" content="${m.title}">
 <meta property="og:description" content="${m.description}">
 <meta property="og:url" content="${canonicalUrl}">
@@ -96,10 +137,13 @@ function buildHTML(entry) {
 <script type="application/ld+json">
 ${jsonLd}
 </script>
+${itemListJsonLd ? `<script type="application/ld+json">\n${itemListJsonLd}\n</script>` : ''}
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZETBRDDMTV"></script>
 <script>
 window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","G-ZETBRDDMTV");gtag("event","landing_page_view",{page_keyword:"${kw.primary}",page_slug:"${entry.slug}",page_type:"${entry.type}"});
 </script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{--midnight:#0f1f3d;--coral:${mainColor};--ice:#f0f4ff;--white:#ffffff;--serif:"Playfair Display",Georgia,serif;--sans:"DM Sans",system-ui,sans-serif}
@@ -131,7 +175,7 @@ footer a{color:rgba(255,255,255,.5);text-decoration:none}
 <body>
 <nav>
   <a href="/" class="nav-logo">My<span>Scholar</span></a>
-  <a href="/" style="font-size:12px;color:rgba(255,255,255,.5);text-decoration:none">&larr; All ${typeLabel}</a>
+  <a href="${dirUrl}" style="font-size:12px;color:rgba(255,255,255,.5);text-decoration:none">&larr; ${dirLabel}</a>
 </nav>
 <div class="hero">
   <div class="eyebrow">${eyebrow} &middot; myscholar.my</div>
@@ -143,9 +187,9 @@ footer a{color:rgba(255,255,255,.5);text-decoration:none}
   <h1 id="h1-bm" style="display:none">${l.h1_bm}</h1>
   <p class="intro" id="intro-en">${l.intro_en}</p>
   <p class="intro" id="intro-bm" style="display:none">${l.intro_bm}</p>
-  <a href="/?q=${encodeURIComponent(kw.primary)}" class="cta-btn" id="cta-en">${l.cta_en}</a>
-  <a href="/?q=${encodeURIComponent(kw.primary_bm)}" class="cta-btn" id="cta-bm" style="display:none">${l.cta_bm}</a>
-  <a href="/" class="back">&larr; Back to full directory</a>
+  <a href="${dirUrl}?q=${encodeURIComponent(kw.primary)}" class="cta-btn" id="cta-en">${l.cta_en}</a>
+  <a href="${dirUrl}?q=${encodeURIComponent(kw.primary_bm)}" class="cta-btn" id="cta-bm" style="display:none">${l.cta_bm}</a>
+  <a href="${dirUrl}" class="back">&larr; Back to full directory</a>
 </div>
 <div class="kw-section">
   <h2>Related Searches</h2>
@@ -155,7 +199,7 @@ ${bmPills}
   </div>
 </div>
 <footer>
-  <p>&copy; 2026 <a href="https://myscholar.my">MyScholar.my</a> &mdash; Malaysia's free scholarship directory. No login. No paywall. Just scholarships.</p>
+  <p>&copy; 2026 <a href="https://myscholar.my">MyScholar.my</a> &mdash; ${footerCopy}</p>
 </footer>
 <script>
 function setLang(l,btn){
@@ -174,7 +218,7 @@ function setLang(l,btn){
 
 // ── GENERATE ─────────────────────────────────────────────────────
 console.log('======================================================');
-console.log('  JACK SEO Generator v2 -- MyScholar.my');
+console.log('  JACK SEO Generator v3 -- MyScholar.my');
 console.log('======================================================');
 console.log('');
 
