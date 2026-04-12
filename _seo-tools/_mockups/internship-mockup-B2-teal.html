@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyScholar Internships — B2: Teal Forward</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f0faf6;
+  --bg-card:#ffffff;
+  --bg-card-hover:#e8f5ef;
+  --text-primary:#0f2b1f;
+  --text-secondary:#3d6b56;
+  --text-muted:#6b8f7e;
+  --accent:#059669;
+  --accent-light:#d1fae5;
+  --accent-dark:#047857;
+  --urgent:#dc2626;
+  --urgent-bg:#fef2f2;
+  --highlight:#10b981;
+  --highlight-bg:#ecfdf5;
+  --border:#c6e4d6;
+  --border-hover:#86cfb2;
+  --serif:'Playfair Display',Georgia,serif;
+  --sans:'DM Sans',system-ui,sans-serif;
+  /* sector colours */
+  --sector-glc:#059669;
+  --sector-banking:#2563eb;
+  --sector-tech:#db2777;
+  --sector-gov:#d97706;
+  --sector-corp:#7c3aed;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--text-primary);min-height:100vh;-webkit-font-smoothing:antialiased}
+
+/* ── HEADER ─────────────────────────────── */
+.header{padding:24px 16px 16px;max-width:680px;margin:0 auto}
+.brand{font-family:var(--serif);font-size:26px;font-weight:900;color:var(--text-primary);letter-spacing:-0.5px}
+.brand span{color:var(--accent)}
+nav{display:flex;gap:20px;margin-top:12px}
+nav a{color:var(--text-muted);text-decoration:none;font-size:13px;font-weight:500;padding-bottom:4px;border-bottom:2px solid transparent;transition:all 0.2s}
+nav a.active{color:var(--accent);border-bottom-color:var(--accent)}
+nav a:hover{color:var(--text-secondary)}
+.subtitle{font-size:14px;color:var(--text-secondary);margin-top:8px;font-weight:300}
+
+/* ── SEARCH ─────────────────────────────── */
+.search-wrap{max-width:680px;margin:20px auto 0;padding:0 16px}
+.search-input{width:100%;padding:12px 16px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg-card);color:var(--text-primary);font-family:var(--sans);font-size:14px;outline:none;transition:border 0.2s}
+.search-input::placeholder{color:var(--text-muted)}
+.search-input:focus{border-color:var(--accent)}
+
+/* ── FILTERS ────────────────────────────── */
+.filters{max-width:680px;margin:16px auto 0;padding:0 16px}
+.chip-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.chip{padding:7px 14px;border-radius:18px;border:1.5px solid var(--border);background:var(--bg-card);color:var(--text-secondary);font-size:12px;font-weight:500;cursor:pointer;transition:all 0.2s;user-select:none}
+.chip:hover{border-color:var(--accent);color:var(--accent)}
+.chip.active{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:600}
+.toggle-row{display:flex;gap:8px;margin-bottom:8px}
+.toggle{padding:7px 14px;border-radius:18px;border:1.5px solid var(--border);background:var(--bg-card);color:var(--text-secondary);font-size:12px;font-weight:500;cursor:pointer;transition:all 0.2s;user-select:none}
+.toggle.on{background:var(--accent-dark);color:#fff;border-color:var(--accent-dark);font-weight:600}
+.summary{font-size:12px;color:var(--text-muted);padding:8px 0}
+
+/* ── LIST FEED ──────────────────────────── */
+.feed{max-width:680px;margin:8px auto 32px;padding:0 16px;display:flex;flex-direction:column;gap:10px}
+
+.row{background:var(--bg-card);border-radius:12px;padding:16px;border:1px solid var(--border);border-left:4px solid var(--text-muted);transition:all 0.25s;cursor:default;box-shadow:0 1px 3px rgba(5,150,105,0.04)}
+.row:hover{background:var(--bg-card-hover);border-color:var(--border-hover);box-shadow:0 3px 12px rgba(5,150,105,0.08)}
+.row.hidden{display:none}
+.row.sector-glc{border-left-color:var(--sector-glc)}
+.row.sector-banking{border-left-color:var(--sector-banking)}
+.row.sector-tech{border-left-color:var(--sector-tech)}
+.row.sector-government{border-left-color:var(--sector-gov)}
+.row.sector-corporate{border-left-color:var(--sector-corp)}
+
+.row-top{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.avatar{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff;flex-shrink:0}
+.avatar.glc{background:var(--sector-glc)}
+.avatar.banking{background:var(--sector-banking)}
+.avatar.tech{background:var(--sector-tech)}
+.avatar.government{background:var(--sector-gov)}
+.avatar.corporate{background:var(--sector-corp)}
+
+.row-header{flex:1;min-width:0}
+.company-line{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.company{font-size:15px;font-weight:600;color:var(--text-primary)}
+.sector-pill{font-size:10px;font-weight:600;padding:2px 8px;border-radius:8px;text-transform:uppercase;letter-spacing:0.3px}
+.pill-glc{background:#ecfdf5;color:var(--sector-glc)}
+.pill-banking{background:#eff6ff;color:var(--sector-banking)}
+.pill-tech{background:#fdf2f8;color:var(--sector-tech)}
+.pill-government{background:#fffbeb;color:var(--sector-gov)}
+.pill-corporate{background:#f5f3ff;color:var(--sector-corp)}
+
+.programme{font-size:13px;color:var(--text-secondary);font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.meta{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:10px;font-size:12px;color:var(--text-muted)}
+.meta-item{display:flex;align-items:center;gap:4px}
+.meta-item .ic{font-size:13px}
+.stipend{color:var(--accent);font-weight:600}
+.deadline-urgent{color:var(--urgent);font-weight:600}
+.urgent-badge{display:inline-block;background:var(--urgent-bg);color:var(--urgent);font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;text-transform:uppercase;letter-spacing:0.3px;margin-right:4px}
+.rolling-pill{display:inline-block;background:var(--highlight-bg);color:var(--highlight);font-size:10px;font-weight:600;padding:2px 7px;border-radius:6px}
+
+.apply-row{margin-top:12px}
+.apply-btn{display:inline-block;padding:8px 20px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-family:var(--sans);font-size:13px;font-weight:600;text-decoration:none;cursor:pointer;transition:all 0.2s}
+.apply-btn:hover{background:var(--accent-dark);transform:translateY(-1px)}
+@media(max-width:500px){.apply-btn{display:block;width:100%;text-align:center;padding:11px}}
+
+.footer{text-align:center;padding:16px;font-size:11px;color:var(--text-muted)}
+.footer a{color:var(--accent);text-decoration:none}
+
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="brand">My<span>Scholar</span></div>
+  <nav>
+    <a href="https://myscholar.my">Scholarships</a>
+    <a href="#" class="active">Internships</a>
+  </nav>
+  <p class="subtitle">Curated internship programmes for Malaysian students</p>
+</div>
+
+<div class="search-wrap">
+  <input class="search-input" id="search" type="text" placeholder="Search company or programme...">
+</div>
+
+<div class="filters">
+  <div class="chip-row" id="chips">
+    <div class="chip active" data-sector="all">All</div>
+    <div class="chip" data-sector="GLC">GLC</div>
+    <div class="chip" data-sector="Banking">Banking</div>
+    <div class="chip" data-sector="Tech">Tech</div>
+    <div class="chip" data-sector="Government">Government</div>
+  </div>
+  <div class="toggle-row">
+    <div class="toggle" id="paidToggle">Paid Only</div>
+    <div class="toggle" id="openToggle">Open Now</div>
+  </div>
+  <div class="summary" id="summary"></div>
+</div>
+
+<div class="feed" id="feed"></div>
+
+<div class="footer"><a href="https://myscholar.my">myscholar.my</a> &mdash; Free scholarship & internship finder for Malaysian students</div>
+
+<script>
+const TODAY=new Date(2026,3,12);
+const DATA=[
+  {company:"Khazanah Nasional",programme:"Khazanah Young Professionals Programme",sector:"GLC",location:"Kuala Lumpur",duration:"12 weeks",stipend:"RM2,500/mo",paid:true,deadline:"2026-05-15",rolling:false},
+  {company:"Maybank",programme:"Maybank GO Internship",sector:"Banking",location:"Nationwide",duration:"10 weeks",stipend:"RM1,800/mo",paid:true,deadline:null,rolling:true},
+  {company:"Petronas",programme:"PETRONAS Internship Programme",sector:"GLC",location:"KL / Kerteh",duration:"6 months",stipend:"RM2,000/mo",paid:true,deadline:"2026-04-30",rolling:false},
+  {company:"Bank Negara",programme:"BNM Internship Scheme",sector:"Government",location:"Kuala Lumpur",duration:"3 months",stipend:"RM1,500/mo",paid:true,deadline:"2026-04-28",rolling:false},
+  {company:"Grab",programme:"GrabStar Internship",sector:"Tech",location:"Kuala Lumpur",duration:"12 weeks",stipend:"RM2,200/mo",paid:true,deadline:"2026-05-31",rolling:false},
+  {company:"TNB",programme:"TNB Internship Programme",sector:"GLC",location:"Nationwide",duration:"3–6 months",stipend:"RM1,200/mo",paid:true,deadline:null,rolling:true},
+  {company:"CIMB",programme:"CIMB Fusion Internship",sector:"Banking",location:"Kuala Lumpur",duration:"10 weeks",stipend:"RM1,500/mo",paid:true,deadline:"2026-05-15",rolling:false},
+  {company:"MDEC",programme:"Malaysia Digital Internship",sector:"Government",location:"KL / Remote",duration:"6 months",stipend:"RM1,000/mo",paid:true,deadline:"2026-05-20",rolling:false}
+];
+
+function isUrgent(d){if(!d)return false;return((new Date(d)-TODAY)/(864e5))<=14&&(new Date(d)>=TODAY)}
+function isOpen(i){return i.rolling||!i.deadline||(new Date(i.deadline)>=TODAY)}
+function fmtDl(i){
+  if(i.rolling)return'<span class="rolling-pill">Rolling</span>';
+  if(!i.deadline)return'—';
+  const d=new Date(i.deadline),s=d.toLocaleDateString('en-MY',{day:'numeric',month:'short'});
+  return(isUrgent(i.deadline)?'<span class="urgent-badge">Closing soon</span>':'')+s;
+}
+function sc(s){return s.toLowerCase()}
+
+function render(){
+  const feed=document.getElementById('feed');
+  const sector=document.querySelector('#chips .chip.active')?.dataset.sector||'all';
+  const paidOnly=document.getElementById('paidToggle').classList.contains('on');
+  const openOnly=document.getElementById('openToggle').classList.contains('on');
+  const q=document.getElementById('search').value.toLowerCase().trim();
+  feed.innerHTML='';let c=0;
+  DATA.forEach((item,i)=>{
+    if(sector!=='all'&&item.sector!==sector)return;
+    if(paidOnly&&!item.paid)return;
+    if(openOnly&&!isOpen(item))return;
+    if(q&&!item.company.toLowerCase().includes(q)&&!item.programme.toLowerCase().includes(q))return;
+    c++;
+    const el=document.createElement('div');
+    el.className='row sector-'+sc(item.sector);
+    el.style.animation='fadeIn 0.3s ease '+(c*0.04)+'s both';
+    el.innerHTML=`
+      <div class="row-top">
+        <div class="avatar ${sc(item.sector)}">${item.company[0]}</div>
+        <div class="row-header">
+          <div class="company-line">
+            <span class="company">${item.company}</span>
+            <span class="sector-pill pill-${sc(item.sector)}">${item.sector}</span>
+          </div>
+          <div class="programme">${item.programme}</div>
+        </div>
+      </div>
+      <div class="meta">
+        <span class="meta-item"><span class="ic">&#x1F4CD;</span>${item.location}</span>
+        <span class="meta-item"><span class="ic">&#x23F1;</span>${item.duration}</span>
+        <span class="meta-item stipend"><span class="ic">&#x1F4B0;</span>${item.stipend}</span>
+        <span class="meta-item ${isUrgent(item.deadline)?'deadline-urgent':''}"><span class="ic">&#x1F4C5;</span>${fmtDl(item)}</span>
+      </div>
+      <div class="apply-row"><a href="#" class="apply-btn">Apply &#x2192;</a></div>`;
+    feed.appendChild(el);
+  });
+  document.getElementById('summary').textContent=c+' internship'+(c!==1?'s':'')+' found';
+}
+
+document.querySelectorAll('#chips .chip').forEach(c=>{c.addEventListener('click',()=>{document.querySelectorAll('#chips .chip').forEach(x=>x.classList.remove('active'));c.classList.add('active');render()})});
+['paidToggle','openToggle'].forEach(id=>{document.getElementById(id).addEventListener('click',function(){this.classList.toggle('on');render()})});
+document.getElementById('search').addEventListener('input',render);
+render();
+</script>
+</body>
+</html>

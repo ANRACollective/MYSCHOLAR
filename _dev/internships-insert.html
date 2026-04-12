@@ -1,0 +1,575 @@
+<!--
+  ╔══════════════════════════════════════════════════════════════════╗
+  ║  MYSCHOLAR — INTERNSHIPS SECTION                                  ║
+  ║  Three clearly marked insertion blocks for index.html             ║
+  ║                                                                   ║
+  ║  BLOCK 1: CSS — paste inside <style> just before the closing </style>
+  ║  BLOCK 2: HTML — replace the existing <nav> with this new one,   ║
+  ║            then paste the internship section HTML after           ║
+  ║            the existing <div class="pagination"> line             ║
+  ║  BLOCK 3: JS — paste just before the final </script> tag         ║
+  ║                                                                   ║
+  ║  The internship section is HIDDEN by default (display:none).     ║
+  ║  To go live: remove the style="display:none" from the            ║
+  ║  id="sectionToggle" div in the nav.                               ║
+  ╚══════════════════════════════════════════════════════════════════╝
+-->
+
+
+<!-- ═══════════════════════════════════════════════════════════════
+     BLOCK 1: CSS
+     Paste this inside the existing <style> block, just before </style>
+════════════════════════════════════════════════════════════════ -->
+
+/* ── SECTION TOGGLE (nav pill) ───────────────────────────────────────────── */
+.section-toggle{display:flex;align-items:center;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:20px;overflow:hidden;flex-shrink:0}
+.section-toggle button{font-family:var(--sans);font-size:12px;font-weight:600;padding:5px 14px;border:none;background:transparent;color:rgba(255,255,255,.55);cursor:pointer;transition:all .18s;white-space:nowrap;letter-spacing:.02em}
+.section-toggle button.st-active{background:#fff;color:var(--midnight);border-radius:18px}
+.section-toggle button:first-child.st-active{background:var(--coral);color:#fff}
+@media(max-width:480px){
+  .section-toggle button{font-size:11px;padding:4px 10px}
+}
+
+/* ── INTERNSHIP PAGE BACKGROUND ─────────────────────────────────────────── */
+/* When internship mode is active, the body bg shifts to warm amber-white   */
+body.intern-mode{background:#fffbf2}
+
+/* ── INTERNSHIP HERO ─────────────────────────────────────────────────────── */
+.intern-hero{background:var(--midnight);padding:48px 32px 64px;text-align:center;position:relative;overflow:hidden;display:none}
+body.intern-mode .intern-hero{display:block}
+.intern-hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(255,255,255,.013) 0,rgba(255,255,255,.013) 1px,transparent 1px,transparent 80px),repeating-linear-gradient(0deg,rgba(255,255,255,.013) 0,rgba(255,255,255,.013) 1px,transparent 1px,transparent 80px);pointer-events:none}
+.intern-hero::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:36px;background:linear-gradient(to bottom,transparent,#fffbf2)}
+.intern-eyebrow{font-size:10px;letter-spacing:.18em;color:#EF9F27;text-transform:uppercase;font-weight:600;margin-bottom:12px}
+.intern-hero h1{font-family:var(--serif);font-size:clamp(36px,5.5vw,66px);color:#fff;line-height:1.08;margin-bottom:14px;font-weight:900}
+.intern-hero h1 em{color:#EF9F27;font-style:normal}
+.intern-hero-sub{font-size:14px;color:rgba(255,255,255,.42);max-width:460px;margin:0 auto 36px;font-weight:300;line-height:1.75}
+.intern-stats{display:flex;justify-content:center;gap:48px;flex-wrap:wrap}
+.intern-stat-num{font-family:var(--serif);font-size:34px;color:#fff;font-weight:700;line-height:1}
+.intern-stat-lbl{font-size:10px;color:rgba(255,255,255,.32);margin-top:4px;letter-spacing:.08em;text-transform:uppercase}
+@media(max-width:680px){
+  .intern-hero{padding:40px 16px 56px}
+  .intern-stats{grid-template-columns:1fr 1fr;display:grid;gap:20px 36px;justify-items:center}
+}
+
+/* ── INTERNSHIP SEARCH BAR ───────────────────────────────────────────────── */
+.intern-search-section{background:#c07a00;padding:18px 32px;display:none}
+body.intern-mode .intern-search-section{display:block}
+.intern-search-section .search-wrap{max-width:720px;margin:0 auto;position:relative}
+.intern-search-section #isi{width:100%;padding:13px 16px 13px 50px;border:none;border-radius:8px;font-family:var(--sans);font-size:15px;background:#fff;color:var(--midnight);outline:none;box-shadow:0 2px 12px rgba(0,0,0,.15)}
+.intern-search-section #isi::placeholder{color:#aab}
+@media(max-width:680px){.intern-search-section{padding:14px 16px}}
+
+/* ── INTERNSHIP FILTER PANEL ─────────────────────────────────────────────── */
+.intern-qf-panel{background:#fff8ee;border-bottom:1px solid #e8d9b0;padding:14px 32px;display:none}
+body.intern-mode .intern-qf-panel{display:block}
+.intern-qf-section{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.intern-qf-section:last-child{margin-bottom:0}
+.intern-qf-label{font-size:11px;font-weight:700;color:#854f0b;letter-spacing:.07em;text-transform:uppercase;min-width:80px;flex-shrink:0}
+/* Industry chips */
+.intern-chip{font-size:13px;padding:6px 14px;border-radius:20px;border:1.5px solid #d4b87a;background:#fff;cursor:pointer;color:#633806;transition:all .12s;white-space:nowrap;font-weight:500;user-select:none;display:inline-block}
+.intern-chip:hover{border-color:#c07a00;background:#fff8ee}
+.intern-chip.on{background:#854f0b;color:#faeeda;border-color:#854f0b}
+/* Rolling chip — teal accent (matches rolling on scholarship side) */
+.intern-chip.rolling-chip.on{background:#0f6e56;color:#e1f5ee;border-color:#0f6e56}
+@media(max-width:680px){
+  .intern-qf-panel{padding:12px 16px}
+  .intern-qf-label{min-width:64px;font-size:10px}
+  .intern-chip{font-size:12px;padding:5px 11px}
+}
+
+/* ── INTERNSHIP RESULTS BAR ──────────────────────────────────────────────── */
+.intern-results-bar{max-width:1280px;margin:0 auto;padding:14px 32px 4px;display:none;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+body.intern-mode .intern-results-bar{display:flex}
+.intern-results-count{font-size:14px;color:var(--muted)}
+.intern-results-count strong{color:var(--midnight);font-weight:600}
+.intern-sort-wrap{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+.intern-sort-wrap select{font-size:12px;border:1px solid #d4b87a;border-radius:4px;padding:5px 10px;background:#fff;color:var(--midnight);font-family:var(--sans);cursor:pointer;outline:none}
+@media(max-width:680px){.intern-results-bar{padding:10px 16px 4px}}
+
+/* ── INTERNSHIP GRID WRAPPER ─────────────────────────────────────────────── */
+.intern-grid-wrap{max-width:1280px;margin:0 auto;padding:12px 32px 80px;display:none}
+body.intern-mode .intern-grid-wrap{display:block}
+@media(max-width:680px){.intern-grid-wrap{padding:12px 16px 80px}}
+
+/* ── INTERNSHIP CARD ─────────────────────────────────────────────────────── */
+/* Inherits .card base styles — only overrides the amber-specific parts       */
+.intern-card{background:#fff;border:1px solid #e8d9b0;border-radius:10px;overflow:hidden;cursor:pointer;display:flex;flex-direction:column;transition:transform .18s,box-shadow .18s,border-color .18s;animation:fadeUp .3s ease both}
+.intern-card:hover{transform:translateY(-3px);box-shadow:0 10px 32px rgba(120,70,10,.12);border-color:#d4b87a}
+.intern-stripe{height:3px;background:#c07a00}
+.intern-card-body{padding:18px 20px 14px;flex:1;display:flex;flex-direction:column}
+.intern-card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:8px}
+.intern-company{font-family:var(--serif);font-size:17px;font-weight:700;color:var(--midnight);line-height:1.2;flex:1;min-width:0}
+.intern-allowance{font-size:13px;font-weight:600;color:#854f0b;background:#fff8ee;border:1px solid #e8d9b0;border-radius:5px;padding:3px 9px;white-space:nowrap;flex-shrink:0;align-self:flex-start}
+.intern-programme{font-size:13px;color:var(--muted);margin-bottom:10px}
+.intern-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;flex:1}
+.intern-tag{font-size:11.5px;padding:3px 9px;border-radius:4px;background:#fff8ee;color:#633806;border:1px solid #e8d9b0;font-weight:500}
+.intern-tag.rolling-tag{background:#e1f5ee;color:#085041;border-color:#9FE1CB}
+.intern-tag.year-tag{background:#faeeda;color:#854f0b;border-color:#d4b87a}
+.intern-card-foot{padding:10px 20px;border-top:1px solid #e8d9b0;background:#fffbf2;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-shrink:0}
+.intern-meta{font-size:12.5px;color:var(--muted)}
+.intern-meta strong{color:#633806;font-weight:600}
+.intern-cta{font-size:12px;font-weight:600;color:#854f0b;display:flex;align-items:center;gap:4px}
+.intern-cta svg{transition:transform .15s}
+.intern-card:hover .intern-cta svg{transform:translateX(3px)}
+.intern-no-results{grid-column:1/-1;text-align:center;padding:80px 20px;color:var(--muted)}
+.intern-no-results h3{font-family:var(--serif);font-size:22px;color:var(--midnight);margin-bottom:8px}
+
+/* ── INTERNSHIP DETAIL MODAL ─────────────────────────────────────────────── */
+.intern-modal-stripe{height:5px;background:#c07a00;border-radius:12px 12px 0 0}
+.intern-modal-allowance{background:#fff8ee;border-left:3px solid #d4b87a;border-radius:5px;padding:12px 16px;font-size:14px;font-weight:600;color:#854f0b;margin-bottom:18px;line-height:1.5}
+.intern-modal-tag{font-size:11px;padding:3px 9px;border-radius:4px;background:#fff8ee;color:#633806;border:1px solid #e8d9b0}
+.intern-btn-primary{display:block;flex:1;text-align:center;padding:11px 16px;border-radius:8px;font-size:13.5px;font-weight:600;text-decoration:none;transition:opacity .15s,transform .1s;cursor:pointer;border:none;font-family:var(--sans);background:#854f0b;color:#faeeda}
+.intern-btn-primary:hover{opacity:.88}
+
+/* ── HIDE SCHOLARSHIP SECTIONS IN INTERN MODE ───────────────────────────── */
+body.intern-mode .hero,
+body.intern-mode .search-section,
+body.intern-mode .open-now-banner,
+body.intern-mode .match-strip,
+body.intern-mode .tabs-wrap,
+body.intern-mode .qf-panel,
+body.intern-mode .qf-more-row,
+body.intern-mode .filter-panel,
+body.intern-mode .results-bar,
+body.intern-mode .grid-wrap,
+body.intern-mode .pagination{display:none!important}
+
+
+<!-- ═══════════════════════════════════════════════════════════════
+     BLOCK 2A: UPDATED NAV
+     Replace your existing <nav>…</nav> with this
+════════════════════════════════════════════════════════════════ -->
+
+<nav>
+  <a class="nav-logo" href="#">My<span>Scholar</span></a>
+  <div class="nav-r">
+    <!--
+      SECTION TOGGLE — currently hidden (style="display:none")
+      Remove the style="display:none" when you're ready to go live with internships
+    -->
+    <div class="section-toggle" id="sectionToggle" style="display:none">
+      <button id="stScholarships" class="st-active" onclick="switchSection('scholarships')">Scholarships</button>
+      <button id="stInternships" onclick="switchSection('internships')">Internships</button>
+    </div>
+    <a href="#about" class="nav-btn-label">About</a>
+    <button class="bookmark-nav-btn" id="bookmarkNavBtn" onclick="openBookmarkPanel()">
+      <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+      <span class="nav-btn-label">Saved</span> (<span id="bookmarkCount">0</span>)
+    </button>
+    <button class="bookmark-nav-btn" style="background:rgba(232,85,30,.18);color:var(--coral)" onclick="openSubmitModal()">
+      + <span class="nav-btn-label">Suggest</span>
+    </button>
+    <div class="nav-pill" id="navPill">0</div>
+  </div>
+</nav>
+
+
+<!-- ═══════════════════════════════════════════════════════════════
+     BLOCK 2B: INTERNSHIP SECTION HTML
+     Paste this immediately after the existing <div class="pagination" id="paginationBar"></div>
+     and before the <button class="back-to-top"…> button
+════════════════════════════════════════════════════════════════ -->
+
+<!-- ── INTERNSHIP HERO ──────────────────────────────────────────────────── -->
+<section class="intern-hero">
+  <div class="intern-eyebrow">Malaysia · 2026 Internship Directory</div>
+  <h1>Find Your<br><em>Internship.</em></h1>
+  <p class="intern-hero-sub">100 curated, recurring internship programmes — from GLCs, banks, Big 4, tech companies and more. Free, no login required.</p>
+  <div class="intern-stats">
+    <div><div class="intern-stat-num" id="internHeroCount">100</div><div class="intern-stat-lbl">Programmes</div></div>
+    <div><div class="intern-stat-num">12</div><div class="intern-stat-lbl">Industries</div></div>
+    <div><div class="intern-stat-num">RM 0</div><div class="intern-stat-lbl">Cost to you</div></div>
+    <div><div class="intern-stat-num">100%</div><div class="intern-stat-lbl">Verified URLs</div></div>
+  </div>
+</section>
+
+<!-- ── INTERNSHIP SEARCH ─────────────────────────────────────────────────── -->
+<div class="intern-search-section">
+  <div class="search-wrap">
+    <svg class="search-icon" width="18" height="18" fill="none" stroke="#aab" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" id="isi" placeholder="Search by company, role, industry…" oninput="internSearchInput()">
+  </div>
+</div>
+
+<!-- ── INTERNSHIP FILTERS ─────────────────────────────────────────────────── -->
+<div class="intern-qf-panel" id="internQfPanel">
+  <div class="intern-qf-section">
+    <span class="intern-qf-label">Industry</span>
+    <div class="intern-chip on" data-industry="all" onclick="toggleInternChip(this)">All</div>
+    <div class="intern-chip" data-industry="Finance & Banking" onclick="toggleInternChip(this)">Finance & Banking</div>
+    <div class="intern-chip" data-industry="Technology" onclick="toggleInternChip(this)">Technology</div>
+    <div class="intern-chip" data-industry="Engineering" onclick="toggleInternChip(this)">Engineering</div>
+    <div class="intern-chip" data-industry="Consulting" onclick="toggleInternChip(this)">Consulting</div>
+    <div class="intern-chip" data-industry="Government / GLC" onclick="toggleInternChip(this)">Government / GLC</div>
+    <div class="intern-chip" data-industry="FMCG & Retail" onclick="toggleInternChip(this)">FMCG & Retail</div>
+    <div class="intern-chip" data-industry="Legal" onclick="toggleInternChip(this)">Legal</div>
+    <div class="intern-chip" data-industry="Healthcare" onclick="toggleInternChip(this)">Healthcare</div>
+    <div class="intern-chip" data-industry="Media & Comms" onclick="toggleInternChip(this)">Media & Comms</div>
+    <div class="intern-chip" data-industry="Energy & Utilities" onclick="toggleInternChip(this)">Energy & Utilities</div>
+    <div class="intern-chip" data-industry="Non-profit / NGO" onclick="toggleInternChip(this)">Non-profit / NGO</div>
+    <div class="intern-chip" data-industry="Education" onclick="toggleInternChip(this)">Education</div>
+  </div>
+  <div class="intern-qf-section">
+    <span class="intern-qf-label">Intake</span>
+    <div class="intern-chip rolling-chip" data-intake="rolling" onclick="toggleInternChip(this)">Rolling / Any time</div>
+    <div class="intern-chip" data-intake="jan" onclick="toggleInternChip(this)">January intake</div>
+    <div class="intern-chip" data-intake="jun" onclick="toggleInternChip(this)">June / July intake</div>
+  </div>
+</div>
+
+<!-- ── INTERNSHIP RESULTS BAR ─────────────────────────────────────────────── -->
+<div class="intern-results-bar">
+  <div class="intern-results-count">Showing <strong id="internCountDisplay">0</strong> programmes</div>
+  <div class="intern-sort-wrap">Sort:
+    <select id="internSortSelect" onchange="renderInternships()">
+      <option value="default">Default</option>
+      <option value="allowance">By allowance (highest first)</option>
+      <option value="az">A – Z</option>
+    </select>
+  </div>
+</div>
+
+<!-- ── INTERNSHIP GRID ────────────────────────────────────────────────────── -->
+<div class="intern-grid-wrap">
+  <div class="grid" id="internGrid"></div>
+</div>
+
+<!-- ── INTERNSHIP DETAIL MODAL ───────────────────────────────────────────── -->
+<div class="modal-overlay" id="internModal" onclick="if(event.target.id==='internModal')closeInternModal()">
+  <div class="modal" id="internModalBox">
+    <button class="modal-close" onclick="closeInternModal()">✕</button>
+    <div id="internModalInner"></div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════════
+     BLOCK 3: JAVASCRIPT
+     Paste this just before the closing </script> tag (before initEmailModal())
+════════════════════════════════════════════════════════════════ -->
+
+// ═══════════════════════════════════════════════════════════════════════════
+// INTERNSHIPS FEATURE
+// Completely self-contained — does not touch any existing scholarship code.
+// Data fetched from Supabase `internships` table on demand (lazy load).
+// ═══════════════════════════════════════════════════════════════════════════
+
+let INTERN_DATA = [];          // populated once on first switchSection('internships')
+let internLoaded = false;      // guard against double-fetch
+let internActiveIndustry = 'all';
+let internActiveIntake   = null;
+let internSearchTerm     = '';
+
+// ── SECTION SWITCHER ────────────────────────────────────────────────────────
+function switchSection(section) {
+  const body = document.body;
+  const btnS = document.getElementById('stScholarships');
+  const btnI = document.getElementById('stInternships');
+
+  if (section === 'internships') {
+    body.classList.add('intern-mode');
+    btnI.classList.add('st-active');
+    btnS.classList.remove('st-active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Lazy-load internship data on first visit
+    if (!internLoaded) initInternships();
+    // GA event
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'section_switch', { event_label: 'internships' });
+    }
+  } else {
+    body.classList.remove('intern-mode');
+    btnS.classList.add('st-active');
+    btnI.classList.remove('st-active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'section_switch', { event_label: 'scholarships' });
+    }
+  }
+}
+
+// ── FETCH INTERNSHIPS FROM SUPABASE ─────────────────────────────────────────
+async function initInternships() {
+  showInternLoadingState();
+  try {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/internships?select=*&is_active=eq.true&order=id.asc`,
+      {
+        headers: {
+          'apikey':        SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          'Content-Type':  'application/json',
+        }
+      }
+    );
+    if (!res.ok) throw new Error(`Supabase ${res.status}`);
+    const rows = await res.json();
+    if (!Array.isArray(rows) || rows.length === 0) throw new Error('No internship data returned.');
+    INTERN_DATA = rows;
+    internLoaded = true;
+    document.getElementById('internHeroCount').textContent = rows.length;
+    renderInternships();
+  } catch (err) {
+    document.getElementById('internGrid').innerHTML = `
+      <div class="intern-no-results" style="grid-column:1/-1">
+        <h3>Could not load internships</h3>
+        <p style="font-size:13px;color:#dc2626;margin-top:8px">${err.message}</p>
+        <button onclick="initInternships()" style="margin-top:16px;padding:10px 20px;background:#854f0b;color:#faeeda;border:none;border-radius:7px;cursor:pointer;font-family:var(--sans);font-weight:600">↺ Retry</button>
+      </div>`;
+  }
+}
+
+function showInternLoadingState() {
+  document.getElementById('internGrid').innerHTML = Array(6).fill('').map(() => `
+    <div class="intern-card" style="min-height:200px;animation:skeletonPulse 1.4s ease infinite">
+      <div class="intern-stripe"></div>
+      <div class="intern-card-body">
+        <div style="height:14px;background:#e8d9b0;border-radius:4px;margin-bottom:10px;width:55%"></div>
+        <div style="height:20px;background:#e8d9b0;border-radius:4px;margin-bottom:8px;width:85%"></div>
+        <div style="height:12px;background:#e8d9b0;border-radius:4px;width:45%"></div>
+      </div>
+    </div>`).join('');
+}
+
+// ── FILTER CHIPS ────────────────────────────────────────────────────────────
+function toggleInternChip(el) {
+  const industry = el.dataset.industry;
+  const intake   = el.dataset.intake;
+
+  if (industry) {
+    // Industry chips — single-select (deselect all, select tapped)
+    document.querySelectorAll('.intern-chip[data-industry]').forEach(c => c.classList.remove('on'));
+    el.classList.add('on');
+    internActiveIndustry = industry;
+  }
+
+  if (intake) {
+    // Intake chips — toggle on/off
+    if (el.classList.contains('on')) {
+      el.classList.remove('on');
+      internActiveIntake = null;
+    } else {
+      document.querySelectorAll('.intern-chip[data-intake]').forEach(c => c.classList.remove('on'));
+      el.classList.add('on');
+      internActiveIntake = intake;
+    }
+  }
+
+  renderInternships();
+
+  // GA event
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'filter_applied', {
+      event_category: 'internships',
+      event_label: industry || intake
+    });
+  }
+}
+
+// ── SEARCH ──────────────────────────────────────────────────────────────────
+function internSearchInput() {
+  internSearchTerm = document.getElementById('isi').value.trim().toLowerCase();
+  renderInternships();
+  if (internSearchTerm.length > 2 && typeof gtag !== 'undefined') {
+    gtag('event', 'search_query', {
+      event_category: 'internships',
+      event_label: internSearchTerm
+    });
+  }
+}
+
+// ── RENDER ──────────────────────────────────────────────────────────────────
+function renderInternships() {
+  if (!internLoaded) return;
+
+  let data = [...INTERN_DATA];
+
+  // Industry filter
+  if (internActiveIndustry && internActiveIndustry !== 'all') {
+    data = data.filter(i => Array.isArray(i.industry) && i.industry.includes(internActiveIndustry));
+  }
+
+  // Intake filter
+  if (internActiveIntake === 'rolling') {
+    data = data.filter(i => i.rolling);
+  } else if (internActiveIntake === 'jan') {
+    data = data.filter(i => Array.isArray(i.intake_months) && i.intake_months.includes(1));
+  } else if (internActiveIntake === 'jun') {
+    data = data.filter(i =>
+      Array.isArray(i.intake_months) && (i.intake_months.includes(6) || i.intake_months.includes(7))
+    );
+  }
+
+  // Search
+  if (internSearchTerm) {
+    data = data.filter(i =>
+      (i.company || '').toLowerCase().includes(internSearchTerm) ||
+      (i.programme_name || '').toLowerCase().includes(internSearchTerm) ||
+      (i.roles_available || '').toLowerCase().includes(internSearchTerm) ||
+      (Array.isArray(i.industry) ? i.industry.join(' ').toLowerCase() : '').includes(internSearchTerm)
+    );
+  }
+
+  // Sort
+  const sort = document.getElementById('internSortSelect').value;
+  if (sort === 'az') {
+    data.sort((a, b) => a.company.localeCompare(b.company));
+  } else if (sort === 'allowance') {
+    // Extract leading number from allowance string for rough sort
+    const allowVal = s => {
+      const m = (s.allowance_text || '').match(/[\d,]+/);
+      return m ? parseInt(m[0].replace(',','')) : 0;
+    };
+    data.sort((a, b) => allowVal(b) - allowVal(a));
+  }
+
+  document.getElementById('internCountDisplay').textContent = data.length;
+
+  if (data.length === 0) {
+    document.getElementById('internGrid').innerHTML = `
+      <div class="intern-no-results">
+        <h3>No internships found</h3>
+        <p>Try a different industry or clear the intake filter.</p>
+      </div>`;
+    return;
+  }
+
+  document.getElementById('internGrid').innerHTML = data.map(i => renderInternCard(i)).join('');
+}
+
+// ── CARD RENDERER ────────────────────────────────────────────────────────────
+function renderInternCard(i) {
+  // Industry tags — show max 2
+  const industries = Array.isArray(i.industry) ? i.industry : [];
+  const tagHtml = industries.slice(0,2).map(t =>
+    `<span class="intern-tag">${t}</span>`
+  ).join('');
+
+  // Rolling / intake badge
+  const intakeBadge = i.rolling
+    ? `<span class="intern-tag rolling-tag">Rolling intake</span>`
+    : (i.intake_text ? `<span class="intern-tag">${i.intake_text.split('—')[0].trim()}</span>` : '');
+
+  // Min year badge
+  const yearBadge = i.min_year_of_study
+    ? `<span class="intern-tag year-tag">Min. Year ${i.min_year_of_study}</span>`
+    : '';
+
+  // Duration
+  const dur = i.duration_min_months === i.duration_max_months
+    ? `${i.duration_min_months} months`
+    : `${i.duration_min_months}–${i.duration_max_months} months`;
+
+  // Allowance display
+  const allowance = i.allowance_text && i.allowance_text !== 'Not publicly stated'
+    ? i.allowance_text
+    : 'Allowance not stated';
+
+  return `
+    <div class="intern-card" onclick="openInternModal(${i.id})">
+      <div class="intern-stripe"></div>
+      <div class="intern-card-body">
+        <div class="intern-card-top">
+          <div class="intern-company">${i.company}</div>
+          <div class="intern-allowance">${allowance}</div>
+        </div>
+        <div class="intern-programme">${i.programme_name}</div>
+        <div class="intern-tags">
+          ${tagHtml}
+          ${intakeBadge}
+          ${yearBadge}
+        </div>
+      </div>
+      <div class="intern-card-foot">
+        <span class="intern-meta">${dur} · ${i.study_level}</span>
+        <span class="intern-cta">
+          View details
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </div>
+    </div>`;
+}
+
+// ── MODAL ────────────────────────────────────────────────────────────────────
+function openInternModal(id) {
+  const i = INTERN_DATA.find(r => r.id === id);
+  if (!i) return;
+
+  const industries = Array.isArray(i.industry) ? i.industry : [];
+  const dur = i.duration_min_months === i.duration_max_months
+    ? `${i.duration_min_months} months`
+    : `${i.duration_min_months}–${i.duration_max_months} months`;
+
+  const allowance = i.allowance_text || 'Not publicly stated';
+  const intakeDisplay = i.rolling ? 'Rolling — apply any time' : (i.intake_text || 'Check official site');
+  const yearReq = i.min_year_of_study ? `Minimum Year ${i.min_year_of_study}` : 'All years';
+
+  document.getElementById('internModalInner').innerHTML = `
+    <div class="intern-modal-stripe"></div>
+    <div class="modal-inner">
+      <div class="modal-badges">
+        ${industries.map(t => `<span class="intern-modal-tag">${t}</span>`).join('')}
+        ${i.rolling ? '<span class="intern-modal-tag" style="background:#e1f5ee;color:#085041;border-color:#9FE1CB">Rolling intake</span>' : ''}
+      </div>
+      <div class="modal-title">${i.company}</div>
+      <div class="modal-provider">${i.programme_name}</div>
+      <div class="intern-modal-allowance">${allowance}</div>
+      <div class="modal-grid">
+        <div class="modal-field"><div class="modal-field-label">Duration</div><div class="modal-field-val">${dur}</div></div>
+        <div class="modal-field"><div class="modal-field-label">Study level</div><div class="modal-field-val">${i.study_level}</div></div>
+        <div class="modal-field"><div class="modal-field-label">Intake period</div><div class="modal-field-val">${intakeDisplay}</div></div>
+        <div class="modal-field"><div class="modal-field-label">Year requirement</div><div class="modal-field-val">${yearReq}</div></div>
+      </div>
+      ${i.roles_available ? `
+      <div class="modal-section">
+        <div class="modal-section-label">Roles available</div>
+        <div style="font-size:13px;color:var(--midnight);line-height:1.6">${i.roles_available}</div>
+      </div>` : ''}
+      ${i.eligibility ? `
+      <div class="modal-section">
+        <div class="modal-section-label">Eligibility</div>
+        <div style="font-size:13px;color:var(--midnight);line-height:1.6">${i.eligibility}</div>
+      </div>` : ''}
+      ${i.tips ? `
+      <div class="modal-section">
+        <div class="modal-section-label">Tips</div>
+        <div class="modal-notes">${i.tips}</div>
+      </div>` : ''}
+      <div class="modal-actions">
+        <div class="modal-actions-row">
+          ${i.url && i.url_status !== 'broken'
+            ? `<a href="${i.url}" target="_blank" rel="noopener" class="intern-btn-primary" onclick="trackInternApply(${i.id})">Apply on official site →</a>`
+            : `<span class="intern-btn-primary" style="opacity:.45;cursor:default">Link unavailable — check official site</span>`
+          }
+        </div>
+      </div>
+      <div style="margin-top:12px;font-size:11px;color:var(--muted);text-align:center;line-height:1.6">
+        Data last verified ${i.last_verified || 'April 2026'} · Always confirm details at the official site before applying.
+      </div>
+    </div>`;
+
+  document.getElementById('internModal').classList.add('open');
+
+  // GA event
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'internship_modal_open', {
+      event_category: 'internships',
+      event_label: i.company
+    });
+  }
+}
+
+function closeInternModal() {
+  document.getElementById('internModal').classList.remove('open');
+}
+
+function trackInternApply(id) {
+  const i = INTERN_DATA.find(r => r.id === id);
+  if (!i) return;
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'internship_apply_click', {
+      event_category: 'internships',
+      event_label: i.company
+    });
+  }
+}

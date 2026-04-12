@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<!--
+  MyScholar.my — Custom 404 Page
+  Place this file in the ROOT of your GitHub repository (same level as index.html).
+  GitHub Pages will automatically serve it when someone hits a broken URL.
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Page Not Found · MyScholar</title>
+  <meta name="robots" content="noindex">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --midnight: #0f1f3d;
+      --coral: #e8551e;
+      --ice: #f0f4ff;
+      --muted: #6b7899;
+      --serif: 'Playfair Display', Georgia, serif;
+      --sans: 'DM Sans', system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--sans);
+      background: var(--midnight);
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 24px;
+    }
+    /* Grid background — matches hero */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        repeating-linear-gradient(90deg, rgba(255,255,255,.013) 0, rgba(255,255,255,.013) 1px, transparent 1px, transparent 80px),
+        repeating-linear-gradient(0deg,  rgba(255,255,255,.013) 0, rgba(255,255,255,.013) 1px, transparent 1px, transparent 80px);
+      pointer-events: none;
+    }
+    .logo {
+      font-family: var(--serif);
+      font-size: 24px;
+      color: #fff;
+      text-decoration: none;
+      margin-bottom: 48px;
+      display: block;
+      position: relative;
+    }
+    .logo span { color: var(--coral); }
+    .code {
+      font-family: var(--serif);
+      font-size: clamp(80px, 20vw, 160px);
+      font-weight: 900;
+      color: var(--coral);
+      line-height: 1;
+      margin-bottom: 16px;
+      position: relative;
+    }
+    h1 {
+      font-family: var(--serif);
+      font-size: clamp(22px, 5vw, 36px);
+      font-weight: 700;
+      margin-bottom: 12px;
+      position: relative;
+    }
+    p {
+      font-size: 15px;
+      color: rgba(255,255,255,.5);
+      max-width: 400px;
+      line-height: 1.7;
+      margin-bottom: 36px;
+      position: relative;
+    }
+    .btn {
+      display: inline-block;
+      background: var(--coral);
+      color: #fff;
+      text-decoration: none;
+      padding: 14px 32px;
+      border-radius: 8px;
+      font-family: var(--sans);
+      font-weight: 600;
+      font-size: 15px;
+      transition: opacity .2s;
+      position: relative;
+    }
+    .btn:hover { opacity: .88; }
+    .hint {
+      margin-top: 24px;
+      font-size: 12px;
+      color: rgba(255,255,255,.25);
+      position: relative;
+    }
+  </style>
+</head>
+<body>
+  <a href="/" class="logo">My<span>Scholar</span></a>
+  <div class="code">404</div>
+  <h1>Page not found</h1>
+  <p>The link you followed may be broken or the page may have moved. Head back to the directory to find your scholarship.</p>
+  <a href="/" class="btn">← Back to MyScholar</a>
+  <p class="hint">myscholar.my · Free Malaysia Scholarship Finder</p>
+</body>
+</html>

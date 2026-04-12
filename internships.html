@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<!--
+  ╔══════════════════════════════════════════════════════════════════╗
+  ║  MyIntern by MyScholar — Internship Directory                    ║
+  ║  URL: myscholar.my/internships                                   ║
+  ║  Data: Supabase (ywvfvjvxwhcfprfrkgqm) → internships table     ║
+  ║  Design: Dark glass mode                                        ║
+  ║  Built by ANRA · myscholar.my · April 2026                      ║
+  ╚══════════════════════════════════════════════════════════════════╝
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyIntern | Internship Malaysia 2026 — Curated Programmes for Students</title>
+<meta name="description" content="A curated directory of 100+ internship programmes for Malaysian students. Khazanah, Petronas, Grab, Maybank and more. No login required.">
+<meta name="keywords" content="internship Malaysia 2026, internship pelajar Malaysia, praktikum Malaysia, internship GLC, internship Khazanah, internship Petronas, internship Maybank, internship Grab">
+<link rel="canonical" href="https://myscholar.my/internships">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://myscholar.my/internships">
+<meta property="og:title" content="MyIntern — Curated Internship Directory for Malaysian Students">
+<meta property="og:description" content="100+ internship programmes. From GLCs to startups. No login required.">
+<meta property="og:image" content="https://myscholar.my/myscholar-og.jpg">
+<meta property="og:locale" content="en_MY">
+<meta property="og:site_name" content="MyScholar Malaysia">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="MyIntern — Internship Directory for Malaysian Students">
+<meta name="twitter:description" content="100+ internship programmes. From GLCs to startups. No login.">
+<meta name="twitter:image" content="https://myscholar.my/myscholar-og.jpg">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZETBRDDMTV"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-ZETBRDDMTV');</script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b1120;--bg2:#131b2e;--bg-card:#172033;--bg-card-h:#1c2840;
+  --glass:rgba(255,255,255,.06);--glass-h:rgba(255,255,255,.12);
+  --glass-b:rgba(255,255,255,.1);--glass-bh:rgba(255,255,255,.2);
+  --t1:#f1f5f9;--t2:#94a3b8;--t3:#64748b;
+  --accent:#38bdf8;--accent-g:rgba(56,189,248,.15);
+  --red:#f87171;--red-bg:rgba(248,113,113,.1);
+  --green:#34d399;--green-bg:rgba(52,211,153,.1);
+  --border:rgba(255,255,255,.08);--border-h:rgba(255,255,255,.15);
+  --serif:'Playfair Display',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif;
+  --c-fin:#60a5fa;--c-ene:#fbbf24;--c-tec:#f472b6;--c-gov:#34d399;
+  --c-hea:#a78bfa;--c-eng:#fb923c;--c-med:#f43f5e;--c-con:#38bdf8;
+  --c-fmc:#4ade80;--c-leg:#e879f9;--c-edu:#fcd34d;--c-ngo:#67e8f9;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--t1);min-height:100vh;-webkit-font-smoothing:antialiased}
+
+/* ── HEADER ────────────────────────────── */
+.hdr{padding:32px 20px 0;max-width:720px;margin:0 auto}
+.hdr-top{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.brand{font-family:var(--serif);font-size:30px;font-weight:900;color:var(--t1);letter-spacing:-.5px;text-decoration:none}
+.brand em{color:var(--accent);font-style:normal}
+.by-line{font-size:12px;color:var(--t3);font-weight:400}
+.by-line a{color:var(--t3);text-decoration:none;transition:color .2s}
+.by-line a:hover{color:var(--t2)}
+
+nav{display:flex;gap:20px;margin-top:14px}
+nav a{color:var(--t3);text-decoration:none;font-size:13px;font-weight:500;padding-bottom:5px;border-bottom:2px solid transparent;transition:all .2s}
+nav a.active{color:var(--accent);border-bottom-color:var(--accent)}
+nav a:hover{color:var(--t2)}
+
+.tagline{font-size:14px;color:var(--t2);margin-top:10px;font-weight:300;line-height:1.6;padding-bottom:18px;border-bottom:1px solid var(--border)}
+
+/* ── SEARCH ────────────────────────────── */
+.search-w{max-width:720px;margin:24px auto 0;padding:0 20px}
+.search-i{width:100%;padding:13px 18px;border-radius:12px;border:1.5px solid var(--border);background:var(--bg-card);color:var(--t1);font-family:var(--sans);font-size:14px;outline:none;transition:all .2s}
+.search-i::placeholder{color:var(--t3)}
+.search-i:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-g)}
+
+/* ── FILTER SECTIONS ───────────────────── */
+.filters{max-width:720px;margin:18px auto 0;padding:0 20px}
+.f-section{margin-bottom:12px}
+.f-label{font-size:10px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px}
+.f-row{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:7px 14px;border-radius:18px;border:1.5px solid var(--border);background:transparent;color:var(--t2);font-size:12px;font-weight:500;cursor:pointer;transition:all .2s;user-select:none}
+.chip:hover{border-color:var(--accent);color:var(--accent)}
+.chip.active{background:var(--accent);color:var(--bg);border-color:var(--accent);font-weight:600}
+/* Preference toggles — different visual from industry chips */
+.pref{padding:7px 14px;border-radius:18px;border:1.5px dashed var(--border);background:transparent;color:var(--t3);font-size:12px;font-weight:500;cursor:pointer;transition:all .2s;user-select:none}
+.pref:hover{border-color:var(--green);color:var(--green)}
+.pref.on{background:var(--green);color:#064e3b;border-color:var(--green);border-style:solid;font-weight:600}
+.summary{font-size:12px;color:var(--t3);margin-top:6px}
+
+/* ── LOADING ───────────────────────────── */
+.loading{text-align:center;padding:48px 16px;color:var(--t3);font-size:14px}
+.dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--accent);margin:0 3px;animation:dot 1.2s infinite}
+.dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}
+@keyframes dot{0%,80%,100%{opacity:.3;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
+
+/* ── FEED ──────────────────────────────── */
+.feed{max-width:720px;margin:12px auto 32px;padding:0 20px;display:flex;flex-direction:column;gap:12px}
+.row{background:var(--bg-card);border-radius:14px;padding:18px;border:1px solid var(--border);border-left:4px solid var(--t3);transition:all .3s;cursor:pointer}
+.row:hover{background:var(--bg-card-h);border-color:var(--border-h);transform:translateY(-1px);box-shadow:0 8px 24px rgba(0,0,0,.2)}
+/* Industry left borders */
+.row.b-fin{border-left-color:var(--c-fin)}.row.b-ene{border-left-color:var(--c-ene)}
+.row.b-tec{border-left-color:var(--c-tec)}.row.b-gov{border-left-color:var(--c-gov)}
+.row.b-hea{border-left-color:var(--c-hea)}.row.b-eng{border-left-color:var(--c-eng)}
+.row.b-med{border-left-color:var(--c-med)}.row.b-con{border-left-color:var(--c-con)}
+.row.b-fmc{border-left-color:var(--c-fmc)}.row.b-leg{border-left-color:var(--c-leg)}
+.row.b-edu{border-left-color:var(--c-edu)}.row.b-ngo{border-left-color:var(--c-ngo)}
+
+.row-top{display:flex;align-items:center;gap:14px;margin-bottom:8px}
+/* Logo */
+.logo-w{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;position:relative;background:var(--bg2);border:1px solid var(--border)}
+.logo-w img{width:100%;height:100%;object-fit:contain;padding:4px;position:absolute;top:0;left:0;border-radius:12px;background:rgba(255,255,255,.95)}
+.logo-w .fb{font-size:18px;font-weight:700;color:var(--t2);z-index:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;border-radius:12px}
+.row-hd{flex:1;min-width:0}
+.co-line{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.co{font-size:18px;font-weight:700;color:var(--t1);letter-spacing:-.3px}
+.pill{font-size:9px;font-weight:600;padding:3px 8px;border-radius:7px;text-transform:uppercase;letter-spacing:.4px}
+.p-fin{background:rgba(96,165,250,.1);color:var(--c-fin)}.p-ene{background:rgba(251,191,36,.1);color:var(--c-ene)}
+.p-tec{background:rgba(244,114,182,.1);color:var(--c-tec)}.p-gov{background:rgba(52,211,153,.1);color:var(--c-gov)}
+.p-hea{background:rgba(167,139,250,.1);color:var(--c-hea)}.p-eng{background:rgba(249,115,22,.1);color:var(--c-eng)}
+.p-med{background:rgba(244,63,94,.1);color:var(--c-med)}.p-con{background:rgba(56,189,248,.1);color:var(--c-con)}
+.p-fmc{background:rgba(74,222,128,.1);color:var(--c-fmc)}.p-leg{background:rgba(232,121,249,.1);color:var(--c-leg)}
+.p-edu{background:rgba(252,211,77,.1);color:var(--c-edu)}.p-ngo{background:rgba(103,232,249,.1);color:var(--c-ngo)}
+.prog{font-size:13px;color:var(--t2);margin-top:2px}
+.roles{font-size:12.5px;color:var(--t3);line-height:1.5;margin-top:10px;padding:8px 12px;background:var(--bg2);border-radius:8px;border:1px solid var(--border)}
+.meta{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:12px;font-size:12.5px;color:var(--t3)}
+.mi{display:flex;align-items:center;gap:5px}
+.mi .ic{font-size:14px}
+.paid{color:var(--green);font-weight:700;font-size:13px}
+.unpaid{color:var(--t3);font-style:italic}
+.rolling{display:inline-block;background:var(--green-bg);color:var(--green);font-size:10px;font-weight:600;padding:2px 8px;border-radius:6px}
+/* Glass button */
+.act-row{margin-top:14px;display:flex;align-items:center;justify-content:space-between}
+.gbtn{display:inline-flex;align-items:center;gap:6px;padding:10px 24px;background:var(--glass);color:var(--t1);border:1.5px solid var(--glass-b);border-radius:10px;font-family:var(--sans);font-size:13px;font-weight:600;text-decoration:none;cursor:pointer;transition:all .25s;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.gbtn:hover{background:var(--glass-h);border-color:var(--glass-bh);box-shadow:0 0 20px rgba(56,189,248,.1);color:var(--accent)}
+.gbtn .arr{transition:transform .2s}
+.gbtn:hover .arr{transform:translateX(3px)}
+.hint{font-size:11px;color:var(--t3);font-style:italic}
+@media(max-width:500px){.gbtn{width:100%;justify-content:center;padding:12px}.hint{display:none}.act-row{flex-direction:column}}
+.empty{text-align:center;padding:48px 16px;color:var(--t3);font-size:14px}
+
+/* ── MODAL ─────────────────────────────── */
+.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:1000;justify-content:center;align-items:flex-end}
+.ov.open{display:flex}
+@media(min-width:600px){.ov{align-items:center;padding:24px}}
+.modal{background:var(--bg2);border-radius:20px 20px 0 0;width:100%;max-width:560px;max-height:85vh;overflow-y:auto;border:1px solid var(--border);box-shadow:0 -8px 40px rgba(0,0,0,.4);animation:sUp .3s ease;position:relative}
+@media(min-width:600px){.modal{border-radius:16px;max-height:80vh}}
+@keyframes sUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+.modal-bar{width:40px;height:4px;background:var(--t3);border-radius:2px;margin:12px auto 0;opacity:.4}
+@media(min-width:600px){.modal-bar{display:none}}
+.mx{position:absolute;top:16px;right:20px;background:var(--bg-card);border:1px solid var(--border);color:var(--t2);width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:all .2s;z-index:2}
+.mx:hover{background:var(--bg-card-h);color:var(--t1)}
+.mhdr{padding:20px 24px 0;display:flex;align-items:flex-start;gap:16px}
+.mlogo{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;position:relative;background:var(--bg-card);border:1px solid var(--border)}
+.mlogo img{width:100%;height:100%;object-fit:contain;padding:8px;position:absolute;top:0;left:0;border-radius:14px;background:rgba(255,255,255,.95)}
+.mlogo .fb{font-size:22px;font-weight:700;color:var(--t2);width:100%;height:100%;display:flex;align-items:center;justify-content:center;border-radius:14px}
+.minfo{flex:1}
+.mco{font-size:22px;font-weight:700;color:var(--t1);letter-spacing:-.3px}
+.mprog{font-size:14px;color:var(--t2);margin-top:2px}
+.mpills{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px}
+.mbody{padding:20px 24px 24px}
+.mdesc{font-size:14px;color:var(--t2);line-height:1.65;margin-bottom:20px}
+.dgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+@media(max-width:400px){.dgrid{grid-template-columns:1fr}}
+.dcard{background:var(--bg-card);border-radius:10px;padding:12px;border:1px solid var(--border)}
+.dlbl{font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.dval{font-size:14px;font-weight:600;color:var(--t1)}
+.dval.g{color:var(--green)}
+.msec{margin-bottom:16px}
+.msec-t{font-size:12px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.msec p{font-size:13px;color:var(--t2);line-height:1.6}
+.mtip{font-size:12px;color:var(--t3);background:var(--bg-card);border-radius:8px;padding:10px 12px;border:1px solid var(--border);margin-bottom:16px;line-height:1.5}
+.mtip strong{color:var(--t2)}
+.mapply{display:block;width:100%;padding:14px;background:var(--accent);color:var(--bg);border:none;border-radius:12px;font-family:var(--sans);font-size:15px;font-weight:700;cursor:pointer;text-align:center;text-decoration:none;transition:all .2s}
+.mapply:hover{opacity:.9;transform:translateY(-1px)}
+.ft{text-align:center;padding:20px 16px 32px;font-size:11px;color:var(--t3);max-width:720px;margin:0 auto}
+.ft a{color:var(--accent);text-decoration:none}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-top">
+    <span class="brand">My<em>Intern</em></span>
+    <span class="by-line">by <a href="https://myscholar.my">MyScholar</a></span>
+  </div>
+  <nav>
+    <a href="https://myscholar.my">Scholarships</a>
+    <a href="/internships" class="active">Internships</a>
+  </nav>
+  <p class="tagline">A curated directory of internship programmes for Malaysian students.</p>
+</div>
+
+<div class="search-w">
+  <input class="search-i" id="search" type="text" placeholder="Search company or programme...">
+</div>
+
+<div class="filters">
+  <div class="f-section">
+    <div class="f-label">Industry</div>
+    <div class="f-row" id="chips"><div class="chip active" data-ind="all">All</div></div>
+  </div>
+  <div class="f-section">
+    <div class="f-label">Preferences</div>
+    <div class="f-row">
+      <div class="pref" id="paidT">Paid Only</div>
+      <div class="pref" id="openT">Open Now</div>
+    </div>
+  </div>
+  <div class="summary" id="sum"></div>
+</div>
+
+<div class="feed" id="feed">
+  <div class="loading"><span class="dot"></span><span class="dot"></span><span class="dot"></span><br><br>Loading internships...</div>
+</div>
+
+<div class="ov" id="ov">
+  <div class="modal" id="modal">
+    <div class="modal-bar"></div>
+    <button class="mx" id="mx">&times;</button>
+    <div class="mhdr" id="mhdr"></div>
+    <div class="mbody" id="mbody"></div>
+  </div>
+</div>
+
+<div class="ft"><a href="https://myscholar.my">myscholar.my</a> · MyIntern is part of the MyScholar ecosystem</div>
+
+<script>
+const SB='https://ywvfvjvxwhcfprfrkgqm.supabase.co';
+const SK='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl3dmZ2anZ4d2hjZnByZnJrZ3FtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNTQ5MzEsImV4cCI6MjA5MDYzMDkzMX0.5EzrJuW1fdPca2ZEKGPXXgbd_XYDqKzzu6e-iRQT9po';
+
+/* ── Industry key map ──────────────────── */
+const IM={'Finance & Banking':'fin','Energy & Utilities':'ene','Technology':'tec',
+  'Government / GLC':'gov','Healthcare':'hea','Engineering':'eng',
+  'Media & Comms':'med','Consulting':'con','FMCG & Retail':'fmc',
+  'Legal':'leg','Education':'edu','Non-profit / NGO':'ngo'};
+const IS={'Finance & Banking':'Finance','Energy & Utilities':'Energy','Technology':'Tech',
+  'Government / GLC':'Gov / GLC','Healthcare':'Healthcare','Engineering':'Engineering',
+  'Media & Comms':'Media','Consulting':'Consulting','FMCG & Retail':'FMCG',
+  'Legal':'Legal','Education':'Education','Non-profit / NGO':'NGO'};
+
+let DATA=[];
+
+/* ── Logo: multi-source cascade ── */
+/* 1. Clearbit (high-quality full logo — works for most international domains)
+   2. Google Favicon 128px (reliable fallback — works for virtually any domain)
+   3. Styled initial letter (always works) */
+function logoHTML(item,sz){
+  const d=item.logo_domain, n=item.company, initial=n[0];
+  const hue=n.charCodeAt(0)*7%360;
+  const fbStyle='background:hsl('+hue+',50%,25%);color:hsl('+hue+',70%,70%)';
+  if(!d) return '<span class="fb" style="'+fbStyle+'">'+initial+'</span>';
+  const cb='https://logo.clearbit.com/'+d;
+  const gf='https://www.google.com/s2/favicons?domain='+d+'&sz=128';
+  // Hide the fallback initial once the image loads successfully
+  return '<span class="fb" style="'+fbStyle+'">'+initial+'</span>'
+    +'<img src="'+cb+'" alt="'+n+'" onload="this.previousElementSibling.style.display=\'none\'" onerror="this.onerror=function(){this.style.display=\'none\';this.previousElementSibling.style.display=\'flex\'}.bind(this);this.src=\''+gf+'\'" loading="lazy">';
+}
+
+/* ── Helpers ────────────────────────────── */
+function pk(item){return item.industry&&item.industry.length?IM[item.industry[0]]||'con':'con'}
+function fmtDur(item){
+  const a=item.duration_min_months,b=item.duration_max_months;
+  if(!a&&!b) return 'Varies';
+  if(a===b) return a+' month'+(a!==1?'s':'');
+  return a+'–'+b+' months';
+}
+function fmtIntake(item){
+  if(item.rolling) return '<span class="rolling">Rolling</span>';
+  return item.intake_text||'Check website';
+}
+function hasPay(item){
+  if(!item.allowance_text) return false;
+  const l=item.allowance_text.toLowerCase();
+  return !l.includes('not publicly')&&!l.includes('unpaid')&&!l.includes('none');
+}
+
+/* ── Build filter chips ────────────────── */
+function buildChips(){
+  const inds=new Map();
+  DATA.forEach(d=>{if(d.industry)d.industry.forEach(i=>inds.set(i,(inds.get(i)||0)+1))});
+  const el=document.getElementById('chips');
+  // Update the "All" chip count
+  el.querySelector('.chip[data-ind="all"]').textContent='All';
+  [...inds.entries()].sort((a,b)=>a[0].localeCompare(b[0])).forEach(([ind,count])=>{
+    const c=document.createElement('div');
+    c.className='chip';c.dataset.ind=ind;
+    c.textContent=IS[ind]||ind;
+    c.onclick=()=>{document.querySelectorAll('#chips .chip').forEach(x=>x.classList.remove('active'));c.classList.add('active');render();gtag('event','intern_filter',{filter:ind})};
+    el.appendChild(c);
+  });
+}
+
+/* ── Render ─────────────────────────────── */
+function render(){
+  const feed=document.getElementById('feed');
+  const ind=document.querySelector('#chips .chip.active')?.dataset.ind||'all';
+  const po=document.getElementById('paidT').classList.contains('on');
+  const q=document.getElementById('search').value.toLowerCase().trim();
+  feed.innerHTML='';let c=0;
+  DATA.forEach((item,idx)=>{
+    if(ind!=='all'&&(!item.industry||!item.industry.includes(ind)))return;
+    if(po&&!hasPay(item))return;
+    if(q){const h=(item.company+' '+item.programme_name+' '+(item.roles_available||'')).toLowerCase();if(!h.includes(q))return}
+    c++;
+    const k=pk(item),el=document.createElement('div');
+    el.className='row b-'+k;
+    el.style.animation='fadeIn .25s ease '+Math.min(c,20)*.03+'s both';
+    el.onclick=()=>openModal(idx);
+    const pills=(item.industry||[]).slice(0,2).map(i=>'<span class="pill p-'+(IM[i]||'con')+'">'+(IS[i]||i)+'</span>').join('');
+    let roles=item.roles_available||'';if(roles.length>90)roles=roles.substring(0,87)+'...';
+    const stip=hasPay(item)?'<span class="mi paid"><span class="ic">&#x1F4B0;</span>'+item.allowance_text+'</span>':'<span class="mi unpaid"><span class="ic">&#x1F4B0;</span>Not stated</span>';
+    el.innerHTML='<div class="row-top"><div class="logo-w">'+logoHTML(item)+'</div><div class="row-hd"><div class="co-line"><span class="co">'+item.company+'</span>'+pills+'</div><div class="prog">'+item.programme_name+'</div></div></div>'
+      +(roles?'<div class="roles">'+roles+'</div>':'')
+      +'<div class="meta"><span class="mi"><span class="ic">&#x23F1;</span>'+fmtDur(item)+'</span>'+stip+'<span class="mi"><span class="ic">&#x1F4C5;</span>'+fmtIntake(item)+'</span></div>'
+      +'<div class="act-row"><a href="'+(item.url||'#')+'" target="_blank" rel="noopener" class="gbtn" onclick="event.stopPropagation();gtag(\'event\',\'intern_apply\',{co:\''+item.company.replace(/'/g,'')+'\'})">Apply <span class="arr">&rarr;</span></a><span class="hint">Tap for details</span></div>';
+    feed.appendChild(el);
+  });
+  document.getElementById('sum').textContent=c+' internship'+(c!==1?'s':'')+' found';
+  if(!c)feed.innerHTML='<div class="empty">No internships match your filters.</div>';
+}
+
+/* ── Modal ──────────────────────────────── */
+function openModal(idx){
+  const item=DATA[idx],ov=document.getElementById('ov');
+  const pills=(item.industry||[]).map(i=>'<span class="pill p-'+(IM[i]||'con')+'">'+i+'</span>').join('');
+  document.getElementById('mhdr').innerHTML='<div class="mlogo">'+logoHTML(item,120)+'</div><div class="minfo"><div class="mco">'+item.company+'</div><div class="mprog">'+item.programme_name+'</div><div class="mpills">'+pills+'</div></div>';
+  let h='';
+  if(item.description)h+='<p class="mdesc">'+item.description+'</p>';
+  h+='<div class="dgrid"><div class="dcard"><div class="dlbl">Allowance</div><div class="dval'+(hasPay(item)?' g':'')+'">'+( item.allowance_text||'Not stated')+'</div></div>'
+    +'<div class="dcard"><div class="dlbl">Duration</div><div class="dval">'+fmtDur(item)+'</div></div>'
+    +'<div class="dcard"><div class="dlbl">Study Level</div><div class="dval">'+(item.study_level||'Any')+'</div></div>'
+    +'<div class="dcard"><div class="dlbl">Intake</div><div class="dval">'+(item.intake_text||'Check website')+'</div></div></div>';
+  if(item.roles_available)h+='<div class="msec"><div class="msec-t">Roles Available</div><p>'+item.roles_available+'</p></div>';
+  if(item.eligibility)h+='<div class="msec"><div class="msec-t">Eligibility</div><p>'+item.eligibility+'</p></div>';
+  if(item.tips)h+='<div class="mtip"><strong>Tip:</strong> '+item.tips+'</div>';
+  h+='<a href="'+(item.url||'#')+'" target="_blank" rel="noopener" class="mapply" onclick="gtag(\'event\',\'intern_apply_modal\',{co:\''+item.company.replace(/'/g,'')+'\'})">Apply to '+item.company+' &rarr;</a>';
+  document.getElementById('mbody').innerHTML=h;
+  ov.classList.add('open');document.body.style.overflow='hidden';
+  gtag('event','intern_detail',{co:item.company});
+}
+function closeModal(){document.getElementById('ov').classList.remove('open');document.body.style.overflow=''}
+document.getElementById('mx').onclick=closeModal;
+document.getElementById('ov').onclick=e=>{if(e.target===e.currentTarget)closeModal()};
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+
+/* ── Filter events ─────────────────────── */
+document.querySelector('#chips .chip[data-ind="all"]').onclick=()=>{document.querySelectorAll('#chips .chip').forEach(c=>c.classList.remove('active'));document.querySelector('#chips .chip[data-ind="all"]').classList.add('active');render()};
+['paidT','openT'].forEach(id=>{document.getElementById(id).onclick=function(){this.classList.toggle('on');render();gtag('event','intern_toggle',{t:id,s:this.classList.contains('on')?'on':'off'})}});
+let st;document.getElementById('search').oninput=function(){clearTimeout(st);st=setTimeout(()=>{render();if(this.value.trim())gtag('event','intern_search',{q:this.value.trim()})},200)};
+
+/* ── Init ──────────────────────────────── */
+fetch(SB+'/rest/v1/internships?is_visible=eq.true&order=company.asc',{headers:{apikey:SK,Authorization:'Bearer '+SK}})
+  .then(r=>{if(!r.ok)throw new Error(r.status);return r.json()})
+  .then(d=>{DATA=d;buildChips();render();gtag('event','intern_loaded',{count:DATA.length})})
+  .catch(e=>{console.error(e);document.getElementById('feed').innerHTML='<div class="empty">Failed to load. Please refresh.</div>'});
+</script>
+</body>
+</html>
