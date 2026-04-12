@@ -67,7 +67,7 @@ nav a{color:var(--t3);text-decoration:none;font-size:13px;font-weight:500;paddin
 nav a.active{color:var(--accent);border-bottom-color:var(--accent)}
 nav a:hover{color:var(--t2)}
 
-.tagline{font-size:14px;color:var(--t2);margin-top:10px;font-weight:300;line-height:1.6}
+.tagline{font-size:14px;color:var(--t2);margin-top:10px;font-weight:300;line-height:1.6;padding-bottom:18px;border-bottom:1px solid var(--border)}
 
 /* ── SEARCH ────────────────────────────── */
 .search-w{max-width:720px;margin:24px auto 0;padding:0 20px}
@@ -110,7 +110,7 @@ nav a:hover{color:var(--t2)}
 .row-top{display:flex;align-items:center;gap:14px;margin-bottom:8px}
 /* Logo */
 .logo-w{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;position:relative;background:var(--bg2);border:1px solid var(--border)}
-.logo-w img{width:100%;height:100%;object-fit:contain;padding:4px;position:absolute;top:0;left:0;border-radius:12px}
+.logo-w img{width:100%;height:100%;object-fit:contain;padding:4px;position:absolute;top:0;left:0;border-radius:12px;background:rgba(255,255,255,.95)}
 .logo-w .fb{font-size:18px;font-weight:700;color:var(--t2);z-index:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;border-radius:12px}
 .row-hd{flex:1;min-width:0}
 .co-line{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
@@ -153,7 +153,7 @@ nav a:hover{color:var(--t2)}
 .mx:hover{background:var(--bg-card-h);color:var(--t1)}
 .mhdr{padding:20px 24px 0;display:flex;align-items:flex-start;gap:16px}
 .mlogo{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;position:relative;background:var(--bg-card);border:1px solid var(--border)}
-.mlogo img{width:100%;height:100%;object-fit:contain;padding:8px;position:absolute;top:0;left:0;border-radius:14px}
+.mlogo img{width:100%;height:100%;object-fit:contain;padding:8px;position:absolute;top:0;left:0;border-radius:14px;background:rgba(255,255,255,.95)}
 .mlogo .fb{font-size:22px;font-weight:700;color:var(--t2);width:100%;height:100%;display:flex;align-items:center;justify-content:center;border-radius:14px}
 .minfo{flex:1}
 .mco{font-size:22px;font-weight:700;color:var(--t1);letter-spacing:-.3px}
@@ -249,12 +249,14 @@ let DATA=[];
    3. Styled initial letter (always works) */
 function logoHTML(item,sz){
   const d=item.logo_domain, n=item.company, initial=n[0];
-  if(!d) return '<span class="fb" style="background:hsl('+(n.charCodeAt(0)*7%360)+',50%,25%);color:hsl('+(n.charCodeAt(0)*7%360)+',70%,70%)">'+initial+'</span>';
+  const hue=n.charCodeAt(0)*7%360;
+  const fbStyle='background:hsl('+hue+',50%,25%);color:hsl('+hue+',70%,70%)';
+  if(!d) return '<span class="fb" style="'+fbStyle+'">'+initial+'</span>';
   const cb='https://logo.clearbit.com/'+d;
   const gf='https://www.google.com/s2/favicons?domain='+d+'&sz=128';
-  // Styled initial behind the images as ultimate fallback
-  return '<span class="fb" style="background:hsl('+(n.charCodeAt(0)*7%360)+',50%,25%);color:hsl('+(n.charCodeAt(0)*7%360)+',70%,70%)">'+initial+'</span>'
-    +'<img src="'+cb+'" alt="'+n+'" onerror="this.onerror=null;this.src=\''+gf+'\'" loading="lazy">';
+  // Hide the fallback initial once the image loads successfully
+  return '<span class="fb" style="'+fbStyle+'">'+initial+'</span>'
+    +'<img src="'+cb+'" alt="'+n+'" onload="this.previousElementSibling.style.display=\'none\'" onerror="this.onerror=function(){this.style.display=\'none\';this.previousElementSibling.style.display=\'flex\'}.bind(this);this.src=\''+gf+'\'" loading="lazy">';
 }
 
 /* ── Helpers ────────────────────────────── */
@@ -277,10 +279,12 @@ function hasPay(item){
 
 /* ── Build filter chips ────────────────── */
 function buildChips(){
-  const inds=new Set();
-  DATA.forEach(d=>{if(d.industry)d.industry.forEach(i=>inds.add(i))});
+  const inds=new Map();
+  DATA.forEach(d=>{if(d.industry)d.industry.forEach(i=>inds.set(i,(inds.get(i)||0)+1))});
   const el=document.getElementById('chips');
-  [...inds].sort().forEach(ind=>{
+  // Update the "All" chip count
+  el.querySelector('.chip[data-ind="all"]').textContent='All';
+  [...inds.entries()].sort((a,b)=>a[0].localeCompare(b[0])).forEach(([ind,count])=>{
     const c=document.createElement('div');
     c.className='chip';c.dataset.ind=ind;
     c.textContent=IS[ind]||ind;
