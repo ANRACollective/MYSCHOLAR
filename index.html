@@ -835,8 +835,9 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
   <div class="qf-section">
     <span class="qf-label" data-i18n="qfDeadline">Deadline</span>
     <div class="qf-chip chip-tooltip" data-f="OpenNow" onclick="toggleChip(this)"><span data-i18n="chipOpenNow">🟢 Open now</span><span class="tooltip-text" data-i18n="tooltipOpenNow">Applications are currently open based on the listed opening and closing months.</span></div>
-    <div class="qf-chip chip-tooltip" data-f="Soon" onclick="toggleChip(this)"><span data-i18n="chipSoon">🟡 Closing soon</span><span class="tooltip-text" data-i18n="tooltipSoon">Deadline is within the next 60 days — apply soon!</span></div>
-    <div class="qf-chip chip-tooltip" data-f="Rolling" onclick="toggleChip(this)"><span data-i18n="chipRolling">🔄 Rolling / ongoing</span><span class="tooltip-text" data-i18n="tooltipRolling">No fixed closing date — applications accepted year-round.</span></div>
+    <div class="qf-chip chip-tooltip" data-f="Soon" onclick="toggleChip(this)"><span data-i18n="chipSoon">Closing soon</span><span class="tooltip-text" data-i18n="tooltipSoon">Deadline is within the next 30 days — apply now.</span></div>
+    <div class="qf-chip chip-tooltip" data-f="3Months" onclick="toggleChip(this)"><span data-i18n="chip3Months">Within 3 months</span><span class="tooltip-text" data-i18n="tooltip3Months">Deadline is within the next 3 months — start preparing.</span></div>
+    <div class="qf-chip chip-tooltip" data-f="Rolling" onclick="toggleChip(this)"><span data-i18n="chipRolling">Rolling / ongoing</span><span class="tooltip-text" data-i18n="tooltipRolling">No fixed closing date — applications accepted year-round.</span></div>
   </div>
 </div>
 <!-- More filters row: shows active count + expands advanced filters -->
@@ -1532,6 +1533,7 @@ function normaliseRow(row) {
     dl:               row.dl,
     dl_months:        row.dl_months  || [],
     dl_open:          row.dl_open    || [],
+    deadline_date:    row.deadline_date || null, // exact closing date — enables precise day-count urgency
     gradeMin:         row.gradeMin,
     grade:            row.grade,
     notes:            row.notes,
@@ -1642,7 +1644,16 @@ function isOpenNow(s){
 }
 
 function isClosingSoon(s){
-  if(s.rolling||!s.dl_months) return false;
+  if(s.rolling) return false;
+  // Prefer exact deadline_date (30-day window) over month-array estimate
+  if(s.deadline_date){
+    const today=new Date(); today.setHours(0,0,0,0);
+    const dl=new Date(s.deadline_date); dl.setHours(0,0,0,0);
+    const diff=(dl-today)/(1000*60*60*24);
+    return diff>=0&&diff<=30;
+  }
+  // Fallback: month-based 60-day window for scholarships without an exact date
+  if(!s.dl_months||!s.dl_months.length) return false;
   const yr=now.getFullYear();
   for(const m of s.dl_months){
     const dd=new Date(yr,m-1,28);
@@ -1652,8 +1663,36 @@ function isClosingSoon(s){
   return false;
 }
 
+function isClosingIn3Months(s){
+  if(s.rolling) return false;
+  // Prefer exact deadline_date (90-day window)
+  if(s.deadline_date){
+    const today=new Date(); today.setHours(0,0,0,0);
+    const dl=new Date(s.deadline_date); dl.setHours(0,0,0,0);
+    const diff=(dl-today)/(1000*60*60*24);
+    return diff>=0&&diff<=90;
+  }
+  // Fallback: month-based
+  if(!s.dl_months||!s.dl_months.length) return false;
+  const yr=now.getFullYear();
+  for(const m of s.dl_months){
+    const dd=new Date(yr,m-1,28);
+    const diff=(dd-now)/(1000*60*60*24);
+    if(diff>=0&&diff<=90) return true;
+  }
+  return false;
+}
+
 function deadlineStatus(s){
   if(s.rolling) return 'rolling';
+  // Precise urgency tiers — only when we have an exact date
+  if(s.deadline_date){
+    const today=new Date(); today.setHours(0,0,0,0);
+    const dl=new Date(s.deadline_date); dl.setHours(0,0,0,0);
+    const diff=(dl-today)/(1000*60*60*24);
+    if(diff>=0&&diff<=7)  return 'urgent'; // red countdown badge
+    if(diff>=0&&diff<=30) return 'soon';   // amber date badge
+  }
   if(isClosingSoon(s)) return 'soon';
   if(isOpenNow(s)) return 'open';
   return 'closed';
@@ -1846,6 +1885,7 @@ function matches(s){
     // deadline
     if(f==='OpenNow'&&!isOpenNow(s))return false;
     if(f==='Soon'&&!isClosingSoon(s))return false;
+    if(f==='3Months'&&!isClosingIn3Months(s))return false;
     if(f==='Rolling'&&!s.rolling)return false;
     // entry level
     if(f==='PostSPM'&&!s.entry.includes('PostSPM'))return false;
@@ -1890,11 +1930,23 @@ function buildCard(s,i){
   const qtExtra=s.quals.length>2?`<span class="tag">+${s.quals.length-2}</span>`:'';
   const ft=s.fields[0]?`<span class="tag">${s.fields[0]}${s.fields.length>1?` +${s.fields.length-1}`:''}</span>`:'';
   const ds=deadlineStatus(s);
-  const urgentCard=ds==='soon';
+  const urgentCard=ds==='urgent'||ds==='soon';
   const isSaved=bookmarks.has(s.id);
+  // Calculate exact days remaining when deadline_date is set
+  let daysLeft=null;
+  if(s.deadline_date){
+    const today=new Date(); today.setHours(0,0,0,0);
+    const dl=new Date(s.deadline_date); dl.setHours(0,0,0,0);
+    daysLeft=Math.round((dl-today)/(1000*60*60*24));
+  }
   let statusBadge='';
   if(ds==='rolling') statusBadge='<span class="badge" style="background:#f0f4ff;color:#6b7899;font-size:10px;padding:2px 7px;border-radius:3px;font-weight:700;text-transform:uppercase;letter-spacing:.05em" title="Applications are accepted year-round or on an ongoing basis — no fixed closing date.">Rolling</span>';
-  else if(ds==='soon') statusBadge='<span class="badge bg-soon">Closing Soon</span>';
+  else if(ds==='urgent') statusBadge=daysLeft===0
+    ?'<span class="badge bg-urgent" style="font-size:10px;padding:2px 7px;border-radius:3px;font-weight:700;text-transform:uppercase;letter-spacing:.05em">Closes today</span>'
+    :`<span class="badge bg-urgent" style="font-size:10px;padding:2px 7px;border-radius:3px;font-weight:700;text-transform:uppercase;letter-spacing:.05em" title="Deadline in ${daysLeft} day${daysLeft===1?'':'s'}">${daysLeft}d left</span>`;
+  else if(ds==='soon') statusBadge=daysLeft!==null
+    ?`<span class="badge bg-soon" style="font-size:10px;padding:2px 7px;border-radius:3px;font-weight:700;text-transform:uppercase;letter-spacing:.05em">Closes ${new Date(s.deadline_date).toLocaleDateString('en-MY',{day:'numeric',month:'short'})}</span>`
+    :'<span class="badge bg-soon">Closing soon</span>';
   else if(ds==='open') statusBadge='<span class="badge" style="background:#f0fdf4;color:#15803d;font-size:10px;padding:2px 7px;border-radius:3px;font-weight:700;text-transform:uppercase;letter-spacing:.05em">Open</span>';
   const entryBadges=s.entry.map(e=>{
     const labels={PostSPM:'Post-SPM',PreU:'Pre-U',Undergrad:'Undergrad',Postgrad:'Postgrad'};
@@ -2163,8 +2215,14 @@ function render(){
     filteredItems.sort((a,b)=>{
       if(a.rolling&&!b.rolling)return 1;
       if(!a.rolling&&b.rolling)return -1;
-      const am=a.dl_months?a.dl_months[0]:13;
-      const bm=b.dl_months?b.dl_months[0]:13;
+      // Exact deadline_date sorts before month-estimate; rolling goes last
+      const aDate=a.deadline_date?new Date(a.deadline_date).getTime():null;
+      const bDate=b.deadline_date?new Date(b.deadline_date).getTime():null;
+      if(aDate&&bDate) return aDate-bDate;
+      if(aDate&&!bDate) return -1;
+      if(!aDate&&bDate) return 1;
+      const am=a.dl_months&&a.dl_months.length?a.dl_months[0]:13;
+      const bm=b.dl_months&&b.dl_months.length?b.dl_months[0]:13;
       return am-bm;
     });
   } else if(sort==='name'){
@@ -3452,9 +3510,10 @@ const TRANSLATIONS = {
     qfIam:'I am', qfLooking:'Looking for', qfDeadline:'Deadline',
     chipPostSPM:'Post-SPM', chipPreU:'Pre-University', chipUndergrad:'Undergraduate', chipPostgrad:'Postgraduate',
     chipFull:'★ Full scholarship', chipOverseas:'✈ Overseas study', chipNoBond:'✓ No bond', chipB40:'B40 / Income-based',
-    chipOpenNow:'🟢 Open now', chipSoon:'🟡 Closing soon', chipRolling:'🔄 Rolling / ongoing',
+    chipOpenNow:'Open now', chipSoon:'Closing soon', chip3Months:'Within 3 months', chipRolling:'Rolling / ongoing',
     tooltipOpenNow:'Applications are currently open based on the listed opening and closing months.',
-    tooltipSoon:'Deadline is within the next 60 days — apply soon!',
+    tooltipSoon:'Deadline is within the next 30 days — apply now.',
+    tooltip3Months:'Deadline is within the next 3 months — start preparing.',
     tooltipRolling:'No fixed closing date — applications accepted year-round.',
     filterField:'📚 Field of study', filterGrade:'📊 Min grade', filterEligibility:'👥 Eligibility', filterOther:'✦ Other',
     chipAnyField:'Any Field', chipSTEM:'STEM / Science', chipEngineering:'Engineering',
@@ -3555,11 +3614,13 @@ const TRANSLATIONS = {
     chipOverseas:'✈ Pengajian luar negara', // standard term used by JPA, MARA
     chipNoBond:'✓ Tanpa bon',     // used in JPA, Petronas scholarship terms
     chipB40:'B40 / Berasaskan pendapatan',  // B40 stays — official Malaysian classification
-    chipOpenNow:'🟢 Dibuka sekarang',
-    chipSoon:'🟡 Hampir tutup',   // natural BM, not literal translation
-    chipRolling:'🔄 Berterusan / tiada tarikh tetap', // used in scholarship portals
+    chipOpenNow:'Dibuka sekarang',
+    chipSoon:'Hampir tutup',      // natural BM, not literal translation
+    chip3Months:'Dalam 3 bulan',
+    chipRolling:'Berterusan / tiada tarikh tetap', // used in scholarship portals
     tooltipOpenNow:'Permohonan sedang dibuka berdasarkan bulan pembukaan dan penutupan yang disenaraikan.',
-    tooltipSoon:'Tarikh akhir adalah dalam tempoh 60 hari — mohon segera!',
+    tooltipSoon:'Tarikh akhir adalah dalam tempoh 30 hari — mohon segera.',
+    tooltip3Months:'Tarikh akhir adalah dalam tempoh 3 bulan — mula bersedia.',
     tooltipRolling:'Tiada tarikh tutup tetap — permohonan diterima sepanjang tahun.',
     // Advanced filter labels
     filterField:'📚 Bidang pengajian',    // used by UPU, JPA application forms
