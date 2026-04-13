@@ -2213,15 +2213,20 @@ function render(){
 
   // Sort
   if(sort==='deadline'){
+    const sortToday=new Date(); sortToday.setHours(0,0,0,0);
     filteredItems.sort((a,b)=>{
       if(a.rolling&&!b.rolling)return 1;
       if(!a.rolling&&b.rolling)return -1;
-      // Exact deadline_date sorts before month-estimate; rolling goes last
-      const aDate=a.deadline_date?new Date(a.deadline_date).getTime():null;
-      const bDate=b.deadline_date?new Date(b.deadline_date).getTime():null;
-      if(aDate&&bDate) return aDate-bDate;
-      if(aDate&&!bDate) return -1;
-      if(!aDate&&bDate) return 1;
+      // Only use deadline_date if it is today or in the future.
+      // Past dates (e.g. July 2025) must not sort to the top.
+      const aDate=a.deadline_date?new Date(a.deadline_date):null;
+      const bDate=b.deadline_date?new Date(b.deadline_date):null;
+      const aFuture=aDate&&aDate>=sortToday;
+      const bFuture=bDate&&bDate>=sortToday;
+      if(aFuture&&bFuture) return aDate-bDate;  // both future: soonest first
+      if(aFuture&&!bFuture) return -1;           // only a is future: a goes up
+      if(!aFuture&&bFuture) return 1;            // only b is future: b goes up
+      // Neither has a usable future date: fall back to dl_months
       const am=a.dl_months&&a.dl_months.length?a.dl_months[0]:13;
       const bm=b.dl_months&&b.dl_months.length?b.dl_months[0]:13;
       return am-bm;
