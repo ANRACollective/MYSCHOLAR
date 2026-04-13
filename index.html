@@ -519,6 +519,29 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
 /* ── COPY TOAST ── */
 .copy-toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(10px);background:var(--midnight);color:#fff;font-size:12px;padding:8px 18px;border-radius:20px;z-index:9999;opacity:0;transition:all .25s;pointer-events:none;white-space:nowrap}
 .copy-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+/* ── ADVISORY RESOURCES SECTION ── */
+.advisory-section{background:linear-gradient(160deg,#eef2f9 0%,#f7f9fc 40%,#ffffff 100%);border-top:1px solid var(--border);padding:52px 32px}
+.advisory-inner{max-width:720px;margin:0 auto;text-align:center}
+.advisory-eyebrow{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--coral);font-weight:600;margin-bottom:10px}
+.advisory-heading{font-family:var(--serif);font-size:26px;color:var(--midnight);font-weight:700;line-height:1.2;margin-bottom:10px}
+.advisory-sub{font-size:14px;color:var(--muted);line-height:1.8;max-width:480px;margin:0 auto 28px;font-weight:300}
+.advisory-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;text-align:left}
+.advisory-card{display:flex;flex-direction:column;gap:10px;padding:20px 22px;border:1px solid var(--border);border-left:3px solid var(--teal);border-radius:10px;background:#ffffff;text-decoration:none;color:inherit;transition:transform .18s,box-shadow .18s,border-color .18s;box-shadow:0 2px 8px rgba(15,31,61,.05)}
+.advisory-card:hover{border-color:var(--border-mid);border-left-color:var(--teal);box-shadow:0 8px 28px rgba(15,31,61,.11);transform:translateY(-3px)}
+.advisory-card-head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.advisory-card-identity{display:flex;align-items:center;gap:10px}
+.advisory-card-logo{width:26px;height:26px;border-radius:6px;object-fit:cover;flex-shrink:0;background:var(--ice);border:1px solid var(--border)}
+.advisory-card-name{font-size:14px;font-weight:700;color:var(--midnight)}
+.advisory-card-tag{font-size:10px;font-weight:700;color:var(--teal);background:#e0f5ef;border-radius:4px;padding:2px 8px;letter-spacing:.03em;white-space:nowrap;flex-shrink:0}
+.advisory-card-desc{font-size:13px;color:var(--muted);line-height:1.65;flex:1}
+.advisory-card-url{font-size:12px;color:var(--navy);font-weight:600}
+.advisory-note{font-size:12px;color:var(--muted);line-height:1.8}
+.advisory-suggest{font-size:12px;color:var(--coral);font-weight:600;background:none;border:none;cursor:pointer;font-family:var(--sans);padding:0;transition:opacity .15s}
+.advisory-suggest:hover{opacity:.7}
+@media(max-width:680px){
+  .advisory-section{padding:36px 16px}
+  .advisory-grid{grid-template-columns:1fr}
+}
 /* ── RESULTS INFO UPDATE ── */
 .page-info{font-size:12px;color:var(--muted);margin-left:8px}
 
@@ -878,6 +901,55 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
 </div>
 <div class="grid-wrap"><div class="grid" id="cardGrid"></div></div>
 <div class="pagination" id="paginationBar"></div>
+
+<!-- ── FREE ADVISORY RESOURCES ────────────────────────────────────────
+     Added: April 2026
+     Purpose: Signpost free advisory/mentorship resources for students
+     who need help with their scholarship applications — closes the gap
+     between "found a scholarship" and "successfully applied".
+     GA4 event: advisory_click (resource label, outbound category)
+──────────────────────────────────────────────────────────────────── -->
+<section class="advisory-section">
+  <div class="advisory-inner">
+    <p class="advisory-eyebrow">Need help applying?</p>
+    <h2 class="advisory-heading">Free support for Malaysian students</h2>
+    <p class="advisory-sub">Finding a scholarship is step one. These organisations offer free mentorship and application help — no cost, no catch.</p>
+    <div class="advisory-grid">
+
+      <a href="https://projectaccessmy.com"
+         target="_blank" rel="noopener noreferrer"
+         class="advisory-card"
+         onclick="gtag('event','advisory_click',{resource:'project_access_malaysia',event_category:'outbound'})">
+        <div class="advisory-card-head">
+          <span class="advisory-card-identity">
+            <img class="advisory-card-logo" src="https://www.google.com/s2/favicons?domain=projectaccessmy.com&sz=64" alt="" loading="lazy">
+            <span class="advisory-card-name">Project Access Malaysia</span>
+          </span>
+          <span class="advisory-card-tag">Mentorship</span>
+        </div>
+        <p class="advisory-card-desc">Scholarship guidance and mentorship for secondary school students, prioritising underprivileged candidates.</p>
+        <span class="advisory-card-url">projectaccessmy.com →</span>
+      </a>
+
+      <a href="https://collegelah.com"
+         target="_blank" rel="noopener noreferrer"
+         class="advisory-card"
+         onclick="gtag('event','advisory_click',{resource:'collegelah',event_category:'outbound'})">
+        <div class="advisory-card-head">
+          <span class="advisory-card-identity">
+            <img class="advisory-card-logo" src="https://www.google.com/s2/favicons?domain=collegelah.com&sz=64" alt="" loading="lazy">
+            <span class="advisory-card-name">Collegelah</span>
+          </span>
+          <span class="advisory-card-tag">Essays + Mentorship</span>
+        </div>
+        <p class="advisory-card-desc">Free mentorship via the scholarship application bar, plus free application essay support directly on their site.</p>
+        <span class="advisory-card-url">collegelah.com →</span>
+      </a>
+
+    </div>
+    <p class="advisory-note">Know a free resource that should be here? <button class="advisory-suggest" onclick="openSubmitModal()">Suggest one →</button></p>
+  </div>
+</section>
 
 <!-- Back to top -->
 <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">↑</button>
