@@ -1665,12 +1665,13 @@ function isClosingSoon(s){
 
 function isClosingIn3Months(s){
   if(s.rolling) return false;
-  // Prefer exact deadline_date (90-day window)
+  // 31–90 days only — excludes the "Closing soon" window (0–30 days)
+  // so the two chips show non-overlapping sets of scholarships
   if(s.deadline_date){
     const today=new Date(); today.setHours(0,0,0,0);
     const dl=new Date(s.deadline_date); dl.setHours(0,0,0,0);
     const diff=(dl-today)/(1000*60*60*24);
-    return diff>=0&&diff<=90;
+    return diff>30&&diff<=90;
   }
   // Fallback: month-based
   if(!s.dl_months||!s.dl_months.length) return false;
@@ -1678,7 +1679,7 @@ function isClosingIn3Months(s){
   for(const m of s.dl_months){
     const dd=new Date(yr,m-1,28);
     const diff=(dd-now)/(1000*60*60*24);
-    if(diff>=0&&diff<=90) return true;
+    if(diff>30&&diff<=90) return true;
   }
   return false;
 }
