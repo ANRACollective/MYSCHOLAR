@@ -39,6 +39,15 @@ try {
   console.log('  Wave 2: not found, skipping');
 }
 
+// Wave 3: from wave3.js (company internships, university scholarships, missing categories)
+try {
+  const w3 = require('./wave3.js');
+  KEYWORDS.push(...w3);
+  console.log('  Wave 3: ' + w3.length + ' keywords');
+} catch(e) {
+  console.log('  Wave 3: not found, skipping');
+}
+
 console.log('  Total: ' + KEYWORDS.length + ' keywords');
 console.log('');
 
