@@ -48,6 +48,15 @@ try {
   console.log('  Wave 3: not found, skipping');
 }
 
+// Wave 4: from wave4.js (MNC internships, Big 4, missing states, role internships, niche scholarships)
+try {
+  const w4 = require('./wave4.js');
+  KEYWORDS.push(...w4);
+  console.log('  Wave 4: ' + w4.length + ' keywords');
+} catch(e) {
+  console.log('  Wave 4: not found, skipping');
+}
+
 console.log('  Total: ' + KEYWORDS.length + ' keywords');
 console.log('');
 
@@ -279,7 +288,7 @@ fs.writeFileSync(path.join(OUT, 'keyword-report.md'), report, 'utf8');
 console.log('  + keyword-report.md');
 
 console.log('');
-console.log('======================================================');
+console.log('===================');
 console.log('  DONE -- ' + count + ' pages generated');
 console.log('  Output: ./seo/');
 console.log('======================================================');
