@@ -195,6 +195,7 @@ nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:
 
 /* ── FEED ──────────────────────────────── */
 .feed{max-width:720px;margin:12px auto 32px;padding:0 20px;display:flex;flex-direction:column;gap:12px}
+@media(min-width:768px){.feed{display:grid;grid-template-columns:1fr 1fr;max-width:900px;gap:12px}}
 .row{background:var(--bg-card);border-radius:14px;padding:18px;border:1px solid var(--border);border-left:4px solid var(--t3);transition:all .3s;cursor:pointer}
 .row:hover{background:var(--bg-card-h);border-color:var(--border-h);transform:translateY(-1px);box-shadow:0 8px 24px rgba(0,0,0,.2)}
 /* Industry left borders */
@@ -737,10 +738,8 @@ function render(){
     el.style.animation='fadeIn .25s ease '+Math.min(c,20)*.03+'s both';
     el.onclick=()=>openModal(idx);
     const pills=(item.industry||[]).slice(0,2).map(i=>'<span class="pill p-'+(IM[i]||'con')+'">'+(IS[i]||i)+'</span>').join('');
-    let roles=item.roles_available||'';if(roles.length>90)roles=roles.substring(0,87)+'...';
     const stip=hasPay(item)?'<span class="mi paid"><span class="ic">&#x1F4B0;</span>'+item.allowance_text+'</span>':'<span class="mi unpaid"><span class="ic">&#x1F4B0;</span>Not stated</span>';
     el.innerHTML='<div class="row-top"><div class="logo-w">'+logoHTML(item)+'</div><div class="row-hd"><div class="co-line"><span class="co">'+item.company+'</span>'+pills+'</div><div class="prog">'+item.programme_name+'</div></div></div>'
-      +(roles?'<div class="roles">'+roles+'</div>':'')
       +'<div class="meta"><span class="mi"><span class="ic">&#x23F1;</span>'+fmtDur(item)+'</span>'+stip+'<span class="mi"><span class="ic">&#x1F4C5;</span>'+fmtIntake(item)+'</span></div>'
       +'<div class="act-row"><a href="'+(item.url||'#')+'" target="_blank" rel="noopener" class="gbtn" onclick="event.stopPropagation();gtag(\'event\',\'intern_apply\',{co:\''+item.company.replace(/'/g,'')+'\'})">Apply <span class="arr">&rarr;</span></a><span class="hint">Tap for details</span></div>';
     feed.appendChild(el);
@@ -815,7 +814,7 @@ function injectJobSchema(data){
 /* ── Init ──────────────────────────────── */
 fetch(SB+'/rest/v1/internships?is_visible=eq.true&order=company.asc',{headers:{apikey:SK,Authorization:'Bearer '+SK}})
   .then(r=>{if(!r.ok)throw new Error(r.status);return r.json()})
-  .then(d=>{DATA=d;buildChips();render();injectJobSchema(DATA);gtag('event','intern_loaded',{count:DATA.length})})
+  .then(d=>{DATA=d;document.querySelector('.hs-num').textContent=DATA.length;buildChips();render();injectJobSchema(DATA);gtag('event','intern_loaded',{count:DATA.length})})
   .catch(e=>{console.error(e);document.getElementById('feed').innerHTML='<div class="empty">Failed to load. Please refresh.</div>'});
 </script>
 </body>
