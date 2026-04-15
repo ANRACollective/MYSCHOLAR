@@ -117,7 +117,7 @@ body{font-family:var(--sans);background:var(--ice);color:var(--midnight);font-si
 nav{position:sticky;top:0;z-index:200;background:var(--midnight);padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:52px;border-bottom:2px solid var(--coral);width:100%;max-width:100%;overflow:hidden}
 /* ── Nav left: product toggle ── */
 .nav-l{display:flex;align-items:center;flex-shrink:0}
-.nav-brand{font-family:var(--serif);font-size:20px;letter-spacing:-.3px;text-decoration:none;color:#fff;transition:opacity .2s}
+.nav-brand{font-family:var(--serif);font-size:24px;letter-spacing:-.4px;text-decoration:none;color:#fff;font-weight:900;transition:opacity .2s}
 .nav-brand .coral{color:var(--coral)}
 .nav-brand .blue{color:var(--sky)}
 /* MyIntern link — visible and inviting, sky-blue glow pulse on the "Intern" text */
@@ -128,10 +128,26 @@ nav{position:sticky;top:0;z-index:200;background:var(--midnight);padding:0 20px;
 .nav-sep{color:rgba(255,255,255,.2);font-size:18px;margin:0 8px;font-weight:300;user-select:none}
 .pt-new{font-size:8px;font-weight:700;color:#0b1120;background:var(--sky);padding:2px 5px;border-radius:4px;letter-spacing:.5px;text-transform:uppercase;line-height:1.3;vertical-align:middle;margin-left:3px;animation:badgePulse 2.5s infinite}
 @keyframes badgePulse{0%,100%{opacity:1;box-shadow:0 0 6px rgba(56,189,248,.4)}50%{opacity:.7;box-shadow:0 0 14px rgba(56,189,248,.8)}}
-@media(max-width:680px){.nav-brand{font-size:17px}.nav-sep{font-size:15px;margin:0 5px}}
+@media(max-width:680px){.nav-brand{font-size:20px}.products-btn{font-size:10.5px;padding:3px 9px}}
 .nav-r{display:flex;align-items:center;gap:8px;overflow:hidden;min-width:0}
 .nav-r a{color:rgba(255,255,255,.5);font-size:12px;text-decoration:none;letter-spacing:.04em;transition:color .2s;flex-shrink:0}.nav-r a:hover{color:#fff}
 .nav-pill{font-size:11px;color:rgba(255,255,255,.4);background:rgba(255,255,255,.09);padding:3px 8px;border-radius:20px;white-space:nowrap;flex-shrink:0}
+/* ── Products button + dropdown ── */
+.products-btn{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.14);border-radius:20px;color:rgba(255,255,255,.65);font-family:var(--sans);font-size:11.5px;font-weight:600;padding:4px 12px;cursor:pointer;transition:all .18s;flex-shrink:0;letter-spacing:.02em}
+.products-btn:hover,.products-btn.active{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.28);color:#fff}
+.products-dropdown{position:fixed;top:56px;left:20px;background:var(--midnight);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:10px;width:270px;box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.04);z-index:300;opacity:0;transform:translateY(-6px);pointer-events:none;transition:opacity .18s,transform .18s}
+.products-dropdown.open{opacity:1;transform:translateY(0);pointer-events:auto}
+.pd-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:9px;text-decoration:none;transition:background .15s;margin-bottom:3px;cursor:pointer}
+.pd-item:last-child{margin-bottom:0}
+.pd-item:not(.pd-dim):hover{background:rgba(255,255,255,.07)}
+.pd-dim{cursor:default;opacity:.45}
+.pd-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.pd-info{flex:1}
+.pd-name{font-size:13px;font-weight:600;color:#fff}
+.pd-sub{font-size:11px;color:rgba(255,255,255,.35);margin-top:2px}
+.pd-arrow{font-size:12px;color:rgba(255,255,255,.25)}
+.pd-check{font-size:11px;color:var(--coral);font-weight:700}
+.pd-soon{font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.3);background:rgba(255,255,255,.07);padding:2px 7px;border-radius:4px}
 .hero{background:var(--midnight);padding:60px 32px 76px;text-align:center;position:relative;overflow:hidden}
 .hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(255,255,255,.013) 0,rgba(255,255,255,.013) 1px,transparent 1px,transparent 80px),repeating-linear-gradient(0deg,rgba(255,255,255,.013) 0,rgba(255,255,255,.013) 1px,transparent 1px,transparent 80px);pointer-events:none}
 .hero::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:40px;background:linear-gradient(to bottom,transparent,var(--ice))}
@@ -728,10 +744,15 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
 <body>
 <nav>
   <div class="nav-l">
-    <a class="nav-brand active" href="#">My<span class="coral">Scholar</span></a><span class="nav-sep">/</span><a class="nav-brand inactive" href="/internships" onclick="gtag('event','nav_myintern_click')">My<span class="blue">Intern</span><span class="pt-new">NEW</span></a>
+    <!-- Single brand — clean, no product clutter in the nav -->
+    <a class="nav-brand" href="/">My<span class="coral">Scholar</span></a>
   </div>
   <div class="nav-r">
-    <a href="#about" class="nav-btn-label" data-i18n="navAbout">About</a>
+    <!-- Products button — opens dropdown showing all 3 products -->
+    <button class="products-btn" id="productsBtn" onclick="toggleProductsMenu()" aria-haspopup="true" aria-expanded="false">
+      <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Products
+    </button>
     <button class="bookmark-nav-btn" id="bookmarkNavBtn" onclick="openBookmarkPanel()">
       <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
       <span class="nav-btn-label" data-i18n="navSaved">Saved</span> (<span id="bookmarkCount">0</span>)
@@ -742,6 +763,57 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
     </div>
   </div>
 </nav>
+
+<!-- Products dropdown — position:fixed so it clears sticky nav -->
+<div class="products-dropdown" id="productsDropdown" role="menu" aria-label="Products">
+  <a class="pd-item" href="/" role="menuitem">
+    <div class="pd-dot" style="background:var(--coral)"></div>
+    <div class="pd-info">
+      <div class="pd-name">MyScholar</div>
+      <div class="pd-sub">Scholarships &amp; financial aid</div>
+    </div>
+    <span class="pd-check">✓</span>
+  </a>
+  <a class="pd-item" href="/internships" onclick="gtag('event','nav_myintern_click')" role="menuitem">
+    <div class="pd-dot" style="background:var(--sky)"></div>
+    <div class="pd-info">
+      <div class="pd-name">MyIntern</div>
+      <div class="pd-sub">Internship programmes</div>
+    </div>
+    <span class="pd-arrow">→</span>
+  </a>
+  <div class="pd-item pd-dim" role="menuitem" aria-disabled="true">
+    <div class="pd-dot" style="background:var(--teal)"></div>
+    <div class="pd-info">
+      <div class="pd-name">MyTuition</div>
+      <div class="pd-sub">Tuition centres by distance &amp; rating</div>
+    </div>
+    <span class="pd-soon">Soon</span>
+  </div>
+</div>
+<script>
+// ── Products dropdown toggle ──
+function toggleProductsMenu() {
+  const d   = document.getElementById('productsDropdown');
+  const btn = document.getElementById('productsBtn');
+  const open = d.classList.toggle('open');
+  btn.classList.toggle('active', open);
+  btn.setAttribute('aria-expanded', open);
+  if (open) gtag('event', 'products_menu_open'); // GA4
+}
+// Close when clicking anywhere outside
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('#productsBtn') && !e.target.closest('#productsDropdown')) {
+    const d = document.getElementById('productsDropdown');
+    if (d && d.classList.contains('open')) {
+      d.classList.remove('open');
+      const btn = document.getElementById('productsBtn');
+      btn.classList.remove('active');
+      btn.setAttribute('aria-expanded', 'false');
+    }
+  }
+});
+</script>
 <section class="hero">
   <div class="eyebrow" data-i18n="heroEyebrow">Malaysia · 2025 / 2026 Academic Year</div>
   <h1 data-i18n="heroH1">Find Your<br><em>Scholarship.</em></h1>
