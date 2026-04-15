@@ -374,6 +374,7 @@ nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:
     <button class="products-btn" id="productsBtn" onclick="toggleProductsMenu()" aria-haspopup="true" aria-expanded="false">
       <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
       Products
+      <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="margin-left:1px;transition:transform .18s" id="productsBtnChevron"><path d="M6 9l6 6 6-6"/></svg>
     </button>
   </div>
 </nav>
@@ -410,9 +411,11 @@ nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:
 function toggleProductsMenu() {
   const d   = document.getElementById('productsDropdown');
   const btn = document.getElementById('productsBtn');
+  const chv = document.getElementById('productsBtnChevron');
   const open = d.classList.toggle('open');
   btn.classList.toggle('active', open);
   btn.setAttribute('aria-expanded', open);
+  if (chv) chv.style.transform = open ? 'rotate(180deg)' : '';
   if (open) gtag('event', 'products_menu_open');
 }
 document.addEventListener('click', function(e) {

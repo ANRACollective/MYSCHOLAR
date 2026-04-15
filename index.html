@@ -454,9 +454,24 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
 .share-btn{background:none;border:none;cursor:pointer;padding:4px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:all .15s;flex-shrink:0;font-size:13px}
 .share-btn:hover{color:var(--navy);background:rgba(30,58,110,.08)}
 /* ── COMPARE BUTTON ON CARD ── */
-.compare-btn{background:none;border:none;cursor:pointer;padding:4px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:all .15s;flex-shrink:0}
-.compare-btn:hover{color:var(--navy);background:rgba(30,58,110,.08)}
-.compare-btn.in-compare{color:var(--navy);background:rgba(30,58,110,.12)}
+.compare-btn{background:none;border:none;cursor:pointer;padding:4px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--navy);transition:all .15s;flex-shrink:0;opacity:.7}
+.compare-btn:hover{color:var(--navy);background:rgba(30,58,110,.1);opacity:1}
+.compare-btn.in-compare{color:var(--coral);background:rgba(232,85,30,.08);opacity:1}
+/* ── Compare button tooltip ── */
+.cmp-tip-wrap{position:relative;display:inline-flex}
+.cmp-tip-wrap .cmp-tip-text{
+  display:none;position:absolute;bottom:calc(100% + 8px);right:0;
+  background:var(--midnight);color:#fff;
+  font-size:11px;line-height:1.5;font-family:var(--sans);font-weight:400;
+  padding:7px 11px;border-radius:7px;width:160px;white-space:normal;
+  z-index:500;box-shadow:0 4px 16px rgba(0,0,0,.22);pointer-events:none;
+  letter-spacing:.01em;
+}
+.cmp-tip-wrap .cmp-tip-text::after{
+  content:'';position:absolute;top:100%;right:10px;
+  border:5px solid transparent;border-top-color:var(--midnight);
+}
+.cmp-tip-wrap:hover .cmp-tip-text{display:block}
 /* ── COMPARE TRAY (sticky bottom) ── */
 .compare-tray{position:fixed;bottom:0;left:0;right:0;background:var(--midnight);color:#fff;z-index:400;padding:12px 20px;display:flex;align-items:center;gap:12px;transform:translateY(100%);transition:transform .28s cubic-bezier(.32,.72,0,1);box-shadow:0 -4px 24px rgba(15,31,61,.25)}
 .compare-tray.visible{transform:translateY(0)}
@@ -754,6 +769,7 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
     <button class="products-btn" id="productsBtn" onclick="toggleProductsMenu()" aria-haspopup="true" aria-expanded="false">
       <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
       Products
+      <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="margin-left:1px;transition:transform .18s" id="productsBtnChevron"><path d="M6 9l6 6 6-6"/></svg>
     </button>
     <button class="bookmark-nav-btn" id="bookmarkNavBtn" onclick="openBookmarkPanel()">
       <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
@@ -798,9 +814,11 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
 function toggleProductsMenu() {
   const d   = document.getElementById('productsDropdown');
   const btn = document.getElementById('productsBtn');
+  const chv = document.getElementById('productsBtnChevron');
   const open = d.classList.toggle('open');
   btn.classList.toggle('active', open);
   btn.setAttribute('aria-expanded', open);
+  if (chv) chv.style.transform = open ? 'rotate(180deg)' : '';
   if (open) gtag('event', 'products_menu_open'); // GA4
 }
 // Close when clicking anywhere outside
@@ -2048,9 +2066,12 @@ ${eligBadge}
 <button class="share-btn" onclick="shareScholarship(${s.id},event)" title="Copy link to this scholarship">
   <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/></svg>
 </button>
-<button class="compare-btn${compareSet.has(s.id)?' in-compare':''}" onclick="toggleCompare(${s.id},event)" title="${compareSet.has(s.id)?'Remove from compare':'Add to compare'}">
-  <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="8" height="18" rx="1"/><rect x="14" y="3" width="8" height="18" rx="1"/></svg>
-</button>
+<span class="cmp-tip-wrap">
+  <button class="compare-btn${compareSet.has(s.id)?' in-compare':''}" onclick="toggleCompare(${s.id},event)">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="8" height="18" rx="1"/><rect x="14" y="3" width="8" height="18" rx="1"/></svg>
+  </button>
+  <span class="cmp-tip-text">${compareSet.has(s.id)?'Remove from comparison':'Compare side by side — select up to 3'}</span>
+</span>
 <div class="card-cta">View <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
 </div>
 </div>
