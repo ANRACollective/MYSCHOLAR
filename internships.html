@@ -445,7 +445,7 @@ document.addEventListener('click', function(e) {
   <div class="quiz-cta-wrap">
     <button class="quiz-cta-card" id="quizOpen">
       <span class="quiz-cta-main">Match Me</span>
-      <span class="quiz-cta-meta">8 quick questions</span>
+      <span class="quiz-cta-meta">6 quick questions</span>
     </button>
   </div>
 </div>
@@ -638,17 +638,11 @@ const QZ_QUESTIONS=[
   {q:'The type of organisation I want to work for...',opts:[
     {icon:'🏛️',text:'GLC or government-linked — stable, recognised, purpose-driven',scores:['Government / GLC','Finance & Banking','Energy & Utilities']},
     {icon:'🌐',text:'Large MNC — international exposure, global brand',scores:['Finance & Banking','Technology','FMCG & Retail']},
-    {icon:'🌱',text:'Startup or scale-up — high ownership, learn fast',scores:['Technology','Consulting']},
+    {icon:'⚡',text:'Startup or scale-up — high ownership, learn fast',scores:['Technology','Consulting']},
     {icon:'🌍',text:'NGO, social enterprise, or mission-first organisation',scores:['Non-profit / NGO','Education','Healthcare']}
   ]},
-  {q:'What I most want to produce at work...',opts:[
-    {icon:'📈',text:'Analysis, reports, or strategic recommendations',scores:['Finance & Banking','Consulting','Government / GLC']},
-    {icon:'💻',text:'Apps, systems, or technical products people actually use',scores:['Technology','Engineering']},
-    {icon:'📣',text:'Content, campaigns, or brand experiences',scores:['Media & Comms','FMCG & Retail']},
-    {icon:'⚖️',text:'Policy, legal advice, or compliance frameworks',scores:['Legal','Government / GLC','Consulting']}
-  ]},
   {q:'In 10 years, I picture myself...',opts:[
-    {icon:'🎖️',text:'A senior leader at a respected institution or firm',scores:['Finance & Banking','Government / GLC','Legal']},
+    {icon:'🏢',text:'A senior leader at a respected institution or firm',scores:['Finance & Banking','Government / GLC','Legal']},
     {icon:'🏆',text:'Running something — my own venture or a product team',scores:['Technology','Consulting','FMCG & Retail']},
     {icon:'🔬',text:'A deep specialist — the go-to expert in my field',scores:['Engineering','Energy & Utilities','Healthcare']},
     {icon:'🌟',text:'Making a lasting difference in communities or lives',scores:['Non-profit / NGO','Education','Healthcare']}
@@ -659,12 +653,6 @@ const QZ_QUESTIONS=[
     {icon:'📚',text:'Pay matters less — I want transformative learning',scores:['Non-profit / NGO','Education','Engineering']},
     {icon:'✅',text:'A fair stipend that covers my costs is enough',scores:['Consulting','Healthcare','Media & Comms']}
   ]},
-  {q:'In a team, I naturally tend to...',opts:[
-    {icon:'🔍',text:'Dig into the numbers and present clear findings',scores:['Finance & Banking','Consulting','Technology']},
-    {icon:'📢',text:'Coordinate, communicate, and keep everyone aligned',scores:['Media & Comms','FMCG & Retail','Education']},
-    {icon:'⚙️',text:'Build, debug, or engineer the actual solution',scores:['Technology','Engineering','Energy & Utilities']},
-    {icon:'🫶',text:'Listen, advise, and advocate for others',scores:['Healthcare','Non-profit / NGO','Legal']}
-  ]}
 ];
 
 /* ── Quiz logic ─────────────────────────── */

@@ -384,8 +384,8 @@ nav{position:sticky;top:0;z-index:200;background:var(--midnight);padding:0 20px;
 .about-cta{margin-top:24px}
 .about-cta button{background:var(--coral);color:#fff;border:none;border-radius:7px;padding:12px 24px;font-family:var(--sans);font-size:14px;font-weight:600;cursor:pointer;transition:opacity .2s}
 .about-cta button:hover{opacity:.88}
-footer{background:#080f1e;color:rgba(255,255,255,.28);text-align:center;padding:28px 32px;font-size:12px;line-height:2.2}
-footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);text-decoration:none}footer a:hover{color:rgba(255,255,255,.7)}
+footer{background:#080f1e;color:rgba(255,255,255,.55);text-align:center;padding:28px 32px;font-size:12px;line-height:2.2}
+footer strong{color:rgba(255,255,255,.9)}footer a{color:rgba(255,255,255,.5);text-decoration:none}footer a:hover{color:rgba(255,255,255,.85)}
 .footer-social{display:flex;justify-content:center;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
 .footer-social a{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:rgba(255,255,255,.5);background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:7px 14px;text-decoration:none;transition:all .2s;letter-spacing:.01em}
 .footer-social a:hover{background:rgba(255,255,255,.12);color:rgba(255,255,255,.9);border-color:rgba(255,255,255,.2)}
@@ -413,7 +413,7 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
   .modal-actions-row{gap:6px}
   /* ── HERO ── */
   .hero{padding:44px 16px 60px}
-  .hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:20px 40px;justify-items:center}
+  .hero-stats{display:flex;justify-content:center;gap:52px}
   /* ── FILTERS ── */
   .filter-row{flex-wrap:wrap}
   .filter-label{min-width:100%;margin-bottom:2px}
@@ -457,6 +457,9 @@ footer strong{color:rgba(255,255,255,.6)}footer a{color:rgba(255,255,255,.35);te
 .compare-btn{background:none;border:none;cursor:pointer;padding:4px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--navy);transition:all .15s;flex-shrink:0;opacity:.7}
 .compare-btn:hover{color:var(--navy);background:rgba(30,58,110,.1);opacity:1}
 .compare-btn.in-compare{color:var(--coral);background:rgba(232,85,30,.08);opacity:1}
+/* ── Hero tip line ── */
+.hero-tip{margin-top:18px;font-size:12px;color:rgba(255,255,255,.75);text-align:center;letter-spacing:.01em;display:flex;align-items:center;justify-content:center;gap:5px;flex-wrap:wrap}
+.hero-tip-kbd{display:inline-flex;align-items:center;justify-content:center;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:5px;padding:2px 6px;color:#fff;vertical-align:middle}
 /* ── Compare button tooltip ── */
 .cmp-tip-wrap{position:relative;display:inline-flex}
 .cmp-tip-wrap .cmp-tip-text{
@@ -840,8 +843,6 @@ document.addEventListener('click', function(e) {
   <p class="hero-sub" data-i18n="heroSub">A free directory of scholarships, financial aid, and study loans for Malaysian students — SPM to postgraduate.</p>
   <div class="hero-stats">
     <div><div class="hs-num" id="heroCount">0</div><div class="hs-lbl">Programmes</div></div>
-    <div><div class="hs-num hs-sym">✓</div><div class="hs-lbl">Verified listings</div></div>
-    <div><div class="hs-num hs-sym">↻</div><div class="hs-lbl">Updated regularly</div></div>
     <div><div class="hs-num">100%</div><div class="hs-lbl">Free</div></div>
   </div>
   <div class="hero-cta">
@@ -851,6 +852,9 @@ document.addEventListener('click', function(e) {
     </button>
     <button class="btn-browse" data-i18n="heroBtnBrowse" onclick="document.querySelector('.tabs-wrap').scrollIntoView({behavior:'smooth'})">Browse All →</button>
   </div>
+  <p class="hero-tip">
+    Tip: tap <span class="hero-tip-kbd"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="8" height="18" rx="1"/><rect x="14" y="3" width="8" height="18" rx="1"/></svg></span> on any card to compare scholarships side by side
+  </p>
 </section>
 <div class="search-section">
   <div class="search-wrap">
@@ -1034,10 +1038,10 @@ document.addEventListener('click', function(e) {
     <div class="about-eyebrow" data-i18n="aboutEyebrow">About MyScholar</div>
     <h2 data-i18n="aboutH2">Built for Malaysian students</h2>
     <p data-i18n="aboutP">No student should miss out on a scholarship because they didn't know it existed. This directory covers government, GLC, corporate, banking, state-level, international, and university scholarships — including global programmes open to Malaysians. For SPM, STPM, O-Level, UEC, IGCSE graduates through postgraduate. Always verify deadlines and requirements at the official website before applying.</p>
-    <div style="margin-top:20px;padding:16px 20px;background:rgba(255,255,255,.07);border-radius:8px;border:1px solid rgba(255,255,255,.1);font-size:13px;line-height:1.9;color:rgba(255,255,255,.5)">
-      <div style="color:rgba(255,255,255,.8);font-weight:600;margin-bottom:6px;font-size:12px;letter-spacing:.08em;text-transform:uppercase">About this project</div>
-      Built by <strong style="color:rgba(255,255,255,.8)">ANRA</strong> · Not affiliated with any scholarship body or government agency · Community-maintained · Completely free, no ads, no login required<br>
-      <span style="font-size:12px">Data last reviewed: <strong style="color:rgba(255,255,255,.7)">April 2026</strong> · 200+ programmes across 11 categories · Sourced from official portals</span>
+    <div style="margin-top:20px;padding:16px 20px;background:rgba(255,255,255,.07);border-radius:8px;border:1px solid rgba(255,255,255,.12);font-size:13px;line-height:1.9;color:rgba(255,255,255,.75)">
+      <div style="color:rgba(255,255,255,.95);font-weight:600;margin-bottom:6px;font-size:12px;letter-spacing:.08em;text-transform:uppercase">About this project</div>
+      Built by <strong style="color:#fff">ANRA</strong> · Free, no ads, no login · Not affiliated with any scholarship body or government agency<br>
+      <span style="font-size:12px;color:rgba(255,255,255,.6)">Data last reviewed: <strong style="color:rgba(255,255,255,.85)" id="aboutLastReviewed">—</strong> · Sourced from official portals</span>
     </div>
     <div class="about-cta">
       <button data-i18n="aboutCta" onclick="openSubmitModal()">Know a scholarship we're missing? Tell us →</button>
@@ -1055,9 +1059,8 @@ document.addEventListener('click', function(e) {
       <span data-i18n="footerGetUpdates">Get updates</span>
     </a>
   </div>
-  <strong>MyScholar Malaysia</strong> · myscholar.my · Free Scholarship Directory 2025/2026<br>
-  Built by ANRA · Not affiliated with any scholarship body or government agency · No ads · No login · Always free<br>
-  Data last reviewed April 2026 · 200+ programmes · Sourced from official portals · Always verify before applying<br>
+  <strong>MyScholar.my</strong> · Free scholarship directory for Malaysian students · SPM to postgraduate<br>
+  Data last reviewed <span id="footerLastReviewed">—</span> · Sourced from official portals · Always verify before applying<br>
   <a href="https://www.jpa.gov.my">JPA</a> · <a href="https://www.mara.gov.my">MARA</a> · <a href="https://www.yayasankhazanah.com.my">Khazanah</a> · <a href="https://www.petronas.com">Petronas</a> · <a href="https://www.bnm.gov.my">Bank Negara</a> · <a href="https://www.ptptn.gov.my">PTPTN</a> · <a href="https://kuokfoundation.com">Kuok Foundation</a> · <a href="https://ytlfoundation.org">YTL Foundation</a> · <a href="https://jeffreycheah.foundation">Jeffrey Cheah Foundation</a>
 </footer>
 
@@ -1487,19 +1490,28 @@ document.addEventListener('click', function(e) {
         </button>
       </div>
 
-      <!-- Internship interest — pre-ticked, sits below a divider -->
+      <!-- Interest topics — unchecked by default, sits below a divider -->
       <div class="esm-divider">
         <div class="esm-divider-line"></div>
-        <span class="esm-divider-txt">also interested in</span>
+        <span class="esm-divider-txt">I'm also interested in</span>
         <div class="esm-divider-line"></div>
       </div>
-      <div class="esm-interest-row" id="esmInternshipRow" onclick="toggleInternshipInterest()">
-        <div class="esm-interest-check" id="esmInternshipCheck">
+      <div class="esm-interest-row unchecked" id="esmInternshipRow" onclick="toggleInternshipInterest()">
+        <div class="esm-interest-check unchecked" id="esmInternshipCheck">
           <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
         </div>
         <div class="esm-interest-text">
-          <span class="esm-interest-title">Internship directory — launching Q3 2026</span>
+          <span class="esm-interest-title">Internship listings — launching Q3 2026</span>
           <span class="esm-interest-desc">Free. Curated. No login. Notify me when it's live.</span>
+        </div>
+      </div>
+      <div class="esm-interest-row unchecked" id="esmTuitionRow" onclick="toggleTuitionInterest()" style="margin-top:8px">
+        <div class="esm-interest-check unchecked" id="esmTuitionCheck">
+          <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
+        </div>
+        <div class="esm-interest-text">
+          <span class="esm-interest-title">Tuition centre recommendations</span>
+          <span class="esm-interest-desc">Tips on finding the right tuition for your level and subjects.</span>
         </div>
       </div>
 
@@ -2060,12 +2072,18 @@ ${eligBadge}
 <div class="card-foot">
 <div class="card-deadline${urgentCard?' urgent-dl':''}">Deadline: <strong>${s.dl}</strong></div>
 <div class="card-foot-right">
-<button class="bookmark-btn${isSaved?' saved':''}" onclick="toggleBookmark(${s.id},event)" title="${isSaved?'Remove bookmark':'Save scholarship'}">
-  <svg width="15" height="15" fill="${isSaved?'currentColor':'none'}" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-</button>
-<button class="share-btn" onclick="shareScholarship(${s.id},event)" title="Copy link to this scholarship">
-  <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/></svg>
-</button>
+<span class="cmp-tip-wrap">
+  <button class="bookmark-btn${isSaved?' saved':''}" onclick="toggleBookmark(${s.id},event)">
+    <svg width="15" height="15" fill="${isSaved?'currentColor':'none'}" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+  </button>
+  <span class="cmp-tip-text">${isSaved?'Remove bookmark':'Save this scholarship'}</span>
+</span>
+<span class="cmp-tip-wrap">
+  <button class="share-btn" onclick="shareScholarship(${s.id},event)">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/></svg>
+  </button>
+  <span class="cmp-tip-text">Copy link to this scholarship</span>
+</span>
 <span class="cmp-tip-wrap">
   <button class="compare-btn${compareSet.has(s.id)?' in-compare':''}" onclick="toggleCompare(${s.id},event)">
     <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="8" height="18" rx="1"/><rect x="14" y="3" width="8" height="18" rx="1"/></svg>
@@ -3461,9 +3479,11 @@ function openEmailModalFromFooter() {
   document.getElementById("esmSubmitBtn").disabled    = false;
   document.getElementById("esmSubmitBtn").textContent = "Notify me →";
   document.getElementById("esmEmailInput").value      = "";
-  // Reset internship checkbox to pre-ticked default
-  document.getElementById("esmInternshipCheck").classList.remove("unchecked");
-  document.getElementById("esmInternshipRow").classList.remove("unchecked");
+  // Reset both interest checkboxes to unchecked default
+  document.getElementById("esmInternshipCheck").classList.add("unchecked");
+  document.getElementById("esmInternshipRow").classList.add("unchecked");
+  document.getElementById("esmTuitionCheck").classList.add("unchecked");
+  document.getElementById("esmTuitionRow").classList.add("unchecked");
   document.getElementById("esmOverlay").classList.add("visible");
   if(typeof gtag !== "undefined") {
     gtag("event", "email_modal_shown", { event_category: "engagement", event_label: "footer" });
@@ -3474,6 +3494,12 @@ function openEmailModalFromFooter() {
 function toggleInternshipInterest() {
   document.getElementById('esmInternshipCheck').classList.toggle('unchecked');
   document.getElementById('esmInternshipRow').classList.toggle('unchecked');
+}
+
+// Toggle tuition interest checkbox on/off
+function toggleTuitionInterest() {
+  document.getElementById('esmTuitionCheck').classList.toggle('unchecked');
+  document.getElementById('esmTuitionRow').classList.toggle('unchecked');
 }
 
 // ── SUBMIT LOGIC ───────────────────────────────────────────────────────────
@@ -3508,7 +3534,8 @@ async function submitEmailSignup() {
       body: JSON.stringify({
         email: email,
         source: 'modal',
-        internship_interest: !document.getElementById('esmInternshipCheck').classList.contains('unchecked')
+        internship_interest: !document.getElementById('esmInternshipCheck').classList.contains('unchecked'),
+        tuition_interest: !document.getElementById('esmTuitionCheck').classList.contains('unchecked')
       })
     });
 
@@ -3542,7 +3569,8 @@ function showEmailSuccess(email) {
     gtag('event', 'email_signup', {
       event_category: 'conversion',
       event_label: 'modal',
-      internship_interest: !document.getElementById('esmInternshipCheck').classList.contains('unchecked')
+      internship_interest: !document.getElementById('esmInternshipCheck').classList.contains('unchecked'),
+      tuition_interest: !document.getElementById('esmTuitionCheck').classList.contains('unchecked')
     });
   }
 }
@@ -3558,6 +3586,30 @@ if(new URLSearchParams(location.search).get('reset_modal') === '1') {
   localStorage.removeItem(ESM_KEY);
   console.log('[MyScholar] Modal reset. Reload the page without the param to test.');
 }
+
+// ── DATA LAST REVIEWED ────────────────────────────────────────────────────────
+// Fetches the exact review date from Supabase `site_config` and injects it into
+// the About section and footer. To update: change the value in Supabase Dashboard
+// → Table Editor → site_config → data_last_reviewed, or run:
+//   UPDATE site_config SET value = '17 Apr 2026', updated_at = now()
+//   WHERE key = 'data_last_reviewed';
+async function loadLastReviewedDate() {
+  try {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/site_config?key=eq.data_last_reviewed&select=value`,
+      { headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }
+    );
+    if (!res.ok) return;
+    const rows = await res.json();
+    if (!rows.length) return;
+    const date = rows[0].value;
+    document.getElementById('aboutLastReviewed').textContent = date;
+    document.getElementById('footerLastReviewed').textContent = date;
+  } catch(e) {
+    log('Could not load last reviewed date:', e);
+  }
+}
+loadLastReviewedDate();
 
 initEmailModal(); // Start the 10s timer + scroll listener for the signup modal
 </script>
