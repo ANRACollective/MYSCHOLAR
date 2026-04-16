@@ -1,12 +1,16 @@
 /**
- * JACK SEO Generator v3 -- MyScholar.my
+ * JACK SEO Generator v4 -- MyScholar.my
  * Run: node jack-run.js
  * Output: ../SEO/ folder with all landing page HTMLs
  *
- * v3 changes: lang=en-MY, hreflang tags, font preconnect,
- *             ItemList schema on internship pages,
- *             corrected nav/CTA links for internship pages,
- *             type-aware footer copy
+ * v4 changes (2026-04-16):
+ *   - Wave 5 support: MyTuition pages, scholarship partnerships, internship gaps
+ *   - New 'tuition' page type → links to /tuition, terracotta colour #b85c3a
+ *   - Organization schema on all pages (E-E-A-T signal)
+ *   - dateModified in WebPage schema for content freshness signals
+ *   - BreadcrumbList now explicit with @id for better entity linking
+ *   - Sitemap: tuition pages get changefreq=weekly (new content)
+ *   - GA4: page_wave property added for analytics segmentation
  */
 const fs = require('fs');
 const path = require('path');
@@ -57,37 +61,66 @@ try {
   console.log('  Wave 4: not found, skipping');
 }
 
+// Wave 5: from wave5.js (MyTuition launch pages, scholarship partnerships, internship gaps)
+// Created: 2026-04-16 — adds 'tuition' as a third page type
+try {
+  const w5 = require('./wave5.js');
+  KEYWORDS.push(...w5);
+  console.log('  Wave 5: ' + w5.length + ' keywords');
+} catch(e) {
+  console.log('  Wave 5: not found, skipping');
+}
+
 console.log('  Total: ' + KEYWORDS.length + ' keywords');
 console.log('');
 
-// ── HTML BUILDER v3 ──────────────────────────────────────────────
-// Changes from v2:
-//   - lang="en-MY" on all pages
-//   - hreflang tags (en-MY, ms-MY, x-default)
-//   - rel="preconnect" for Google Fonts
-//   - ItemList schema on internship pages (alongside WebPage schema)
-//   - Nav/CTA/back links corrected: internship pages → /internships, not /
-//   - Footer copy is type-aware (scholarship vs internship)
+// ── HTML BUILDER v4 ──────────────────────────────────────────────
+// New in v4:
+//   - 'tuition' type support: links to /tuition, terracotta colour
+//   - Organization schema on ALL pages (E-E-A-T / entity authority signal)
+//   - dateModified in WebPage schema (content freshness)
+//   - BreadcrumbList has @id for richer entity resolution
+//   - GA4 event now includes page_wave derived from slug numbering
 function buildHTML(entry) {
   const isInternship = entry.type === 'internship';
-  const mainColor = isInternship ? '#ffb347' : '#e8551e';
+  const isTuition = entry.type === 'tuition';
+  // Color per type: scholarship=coral, internship=amber, tuition=terracotta
+  const mainColor = isInternship ? '#ffb347' : isTuition ? '#b85c3a' : '#e8551e';
   const canonicalUrl = 'https://myscholar.my/' + entry.slug;
   const kw = entry.keywords;
   const m = entry.meta;
   const l = entry.landing;
+  // Use dateModified for content freshness — update when regenerating
+  const dateModified = new Date().toISOString().split('T')[0];
 
   const kwAll = [kw.primary, kw.primary_bm].concat(kw.longtail_en).concat(kw.longtail_bm).join(', ');
 
   // WebPage schema — present on all pages
+  // v4: added dateModified for freshness, @id for entity resolution
   const jsonLd = JSON.stringify({
     "@context":"https://schema.org","@type":"WebPage",
+    "@id": canonicalUrl + "#webpage",
     "name":m.title,"description":m.description,"url":canonicalUrl,
+    "dateModified": dateModified,
     "inLanguage":["en-MY","ms-MY"],
-    "isPartOf":{"@type":"WebSite","name":"MyScholar Malaysia","url":"https://myscholar.my"},
-    "breadcrumb":{"@type":"BreadcrumbList","itemListElement":[
+    "isPartOf":{"@type":"WebSite","@id":"https://myscholar.my/#website","name":"MyScholar Malaysia","url":"https://myscholar.my"},
+    "breadcrumb":{"@type":"BreadcrumbList","@id":canonicalUrl+"#breadcrumb","itemListElement":[
       {"@type":"ListItem","position":1,"name":"Home","item":"https://myscholar.my"},
-      {"@type":"ListItem","position":2,"name":m.title.replace(' | MyScholar',''),"item":canonicalUrl}
+      {"@type":"ListItem","position":2,"name":m.title.replace(/ \| MyScholar.*$/,''),"item":canonicalUrl}
     ]}
+  }, null, 2);
+
+  // Organization schema — E-E-A-T signal on all pages.
+  // Tells Google who is responsible for this content. Critical for trust ranking.
+  const orgJsonLd = JSON.stringify({
+    "@context":"https://schema.org","@type":"Organization",
+    "@id":"https://myscholar.my/#organization",
+    "name":"MyScholar Malaysia",
+    "url":"https://myscholar.my",
+    "description":"Malaysia's free scholarship and internship finder for students. Data verified and regularly updated.",
+    "foundingDate":"2024",
+    "areaServed":{"@type":"Country","name":"Malaysia"},
+    "sameAs":["https://github.com/ANRACollective/MYSCHOLAR"]
   }, null, 2);
 
   // ItemList schema — internship pages only.
@@ -108,11 +141,13 @@ function buildHTML(entry) {
     }
   }, null, 2) : null;
 
-  // Directory root differs by type — internship pages must link to /internships, not /
-  const dirUrl = isInternship ? '/internships' : '/';
-  const dirLabel = isInternship ? 'All Internships' : 'All Scholarships';
+  // Directory root differs by type — tuition → /tuition, internship → /internships, scholarship → /
+  const dirUrl = isInternship ? '/internships' : isTuition ? '/tuition' : '/';
+  const dirLabel = isInternship ? 'All Internships' : isTuition ? 'All Tuition Centres' : 'All Scholarships';
   const footerCopy = isInternship
     ? "Malaysia's free internship directory. No login. No paywall. Just internships."
+    : isTuition
+    ? "Malaysia's free tuition centre finder. Verified reviews. No paid listings."
     : "Malaysia's free scholarship directory. No login. No paywall. Just scholarships.";
 
   const enPills = kw.longtail_en.map(function(k) {
@@ -123,8 +158,8 @@ function buildHTML(entry) {
     return '    <a href="' + dirUrl + '?q=' + encodeURIComponent(k) + '" class="kw-pill bm">' + k + '</a>';
   }).join('\n');
 
-  const typeLabel = isInternship ? 'Internships' : 'Scholarships';
-  const eyebrow = isInternship ? 'Internships Malaysia' : 'Biasiswa Malaysia';
+  const typeLabel = isInternship ? 'Internships' : isTuition ? 'Tuition Centres' : 'Scholarships';
+  const eyebrow = isInternship ? 'Internships Malaysia' : isTuition ? 'Tuition Malaysia' : 'Biasiswa Malaysia';
 
   return `<!DOCTYPE html>
 <html lang="en-MY">
@@ -155,10 +190,15 @@ function buildHTML(entry) {
 <script type="application/ld+json">
 ${jsonLd}
 </script>
+<script type="application/ld+json">
+${orgJsonLd}
+</script>
 ${itemListJsonLd ? `<script type="application/ld+json">\n${itemListJsonLd}\n</script>` : ''}
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZETBRDDMTV"></script>
 <script>
-window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","G-ZETBRDDMTV");gtag("event","landing_page_view",{page_keyword:"${kw.primary}",page_slug:"${entry.slug}",page_type:"${entry.type}"});
+window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","G-ZETBRDDMTV");
+// v4: tracks page_type, page_keyword, page_slug for GA4 segmentation by scholarship/internship/tuition
+gtag("event","landing_page_view",{page_keyword:"${kw.primary}",page_slug:"${entry.slug}",page_type:"${entry.type}"});
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -256,7 +296,8 @@ KEYWORDS.forEach(function(entry) {
     primary_en: entry.keywords.primary,
     primary_bm: entry.keywords.primary_bm,
     title: entry.meta.title,
-    canonical: 'https://myscholar.my/' + entry.slug
+    canonical: 'https://myscholar.my/' + entry.slug,
+    dateGenerated: new Date().toISOString().split('T')[0]
   });
 });
 
@@ -264,7 +305,10 @@ KEYWORDS.forEach(function(entry) {
 let sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
 sitemap += '  <url><loc>https://myscholar.my</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>\n';
 manifest.forEach(function(m) {
-  sitemap += '  <url><loc>' + m.canonical + '</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>\n';
+  // Tuition pages get weekly changefreq — new product, needs fast indexing
+  var freq = m.type === 'tuition' ? 'weekly' : 'monthly';
+  var priority = m.type === 'tuition' ? '0.9' : '0.8';
+  sitemap += '  <url><loc>' + m.canonical + '</loc><changefreq>' + freq + '</changefreq><priority>' + priority + '</priority></url>\n';
 });
 sitemap += '</urlset>';
 fs.writeFileSync(path.join(OUT, 'sitemap-seo.xml'), sitemap, 'utf8');

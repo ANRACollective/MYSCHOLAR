@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JACK — SEO Agent · MyScholar.my</title>
+<title>JACK v4 — SEO Agent · MyScholar.my</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -755,7 +755,7 @@ header {
 <header>
   <div class="header-left">
     <div class="status-dot"></div>
-    <div class="logo">JACK</div>
+    <div class="logo">JACK <span style="font-size:10px;color:var(--muted);font-weight:400">v4</span></div>
     <div class="logo-sub">Just Activate Content & Keywords</div>
   </div>
   <div class="header-right">
@@ -792,6 +792,7 @@ header {
         <select id="contentType">
           <option value="scholarship">Scholarship</option>
           <option value="internship">Internship</option>
+          <option value="tuition">Tuition Centre</option>
           <option value="both">Both</option>
         </select>
       </div>
@@ -1093,7 +1094,7 @@ async function callClaude(systemPrompt, userPrompt) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
+      model: 'claude-sonnet-4-6',
       max_tokens: 1000,
       system: systemPrompt,
       messages: [{ role: 'user', content: userPrompt }]
@@ -1259,8 +1260,24 @@ async function pullFromSupabase() {
 async function generateSEOPackage(keyword, type) {
   const lang = document.getElementById('lang')?.value || 'both';
 
-  const system = `You are JACK, the SEO agent for MyScholar.my — Malaysia's free scholarship and internship finder.
-MyScholar's voice: understated, first-person honest, never grand mission statements, never AI-sounding language.
+  const system = `You are JACK v4, the SEO agent for MyScholar.my — Malaysia's free scholarship, internship, and tuition finder.
+
+VOICE: MyScholar is understated, first-person honest, never grand mission statements, never AI-sounding. "It's still early days and I'm adding more regularly, but it's already usable." This kind of honesty is intentional — don't polish it away.
+
+CONTENT TYPES:
+- scholarship → links to / directory, coral colour #e8551e
+- internship → links to /internships directory, amber colour #ffb347
+- tuition → links to /tuition directory, terracotta colour #b85c3a
+
+SEO BEST PRACTICES 2026 (apply to all output):
+- E-E-A-T signals: intro copy must demonstrate genuine knowledge of the Malaysian context, not generic filler
+- Content freshness: mention 2026 where relevant, avoid evergreen vagueness
+- Search intent match: scholarship pages serve students applying NOW; tuition pages serve parents/students finding a centre; internship pages serve students job-hunting
+- Long-tail specificity: BM keywords must be natural Malaysian Bahasa, not translated English
+- Never write "Discover" or "Unlock" or AI cliché CTAs — keep it factual and direct
+
+IMPORTANT: FAQPage schema is restricted to government/health sites in 2026. Do NOT suggest FAQ schema. Use HowTo schema if process-oriented content is needed.
+
 Always generate bilingual content unless told otherwise. BM = Bahasa Malaysia, not direct English translation.
 Return ONLY valid JSON, no markdown, no backticks, no preamble.`;
 
@@ -1305,7 +1322,12 @@ function buildLandingHTML(pkg, keyword, type) {
   const slug = pkg.slug || slugify(keyword);
   const canonicalUrl = `https://myscholar.my/${slug}`;
   const isInternship = type === 'internship';
-  const mainColor = isInternship ? '#ffb347' : '#e8551e';
+  const isTuition = type === 'tuition';
+  // Three-way colour: coral=scholarship, amber=internship, terracotta=tuition
+  const mainColor = isInternship ? '#ffb347' : isTuition ? '#b85c3a' : '#e8551e';
+  const dirUrl = isInternship ? '/internships' : isTuition ? '/tuition' : '/';
+  const dirLabel = isInternship ? 'All Internships' : isTuition ? 'All Tuition Centres' : 'All Scholarships';
+  const dateModified = new Date().toISOString().split('T')[0];
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -1329,16 +1351,35 @@ function buildLandingHTML(pkg, keyword, type) {
 {
   "@context": "https://schema.org",
   "@type": "WebPage",
+  "@id": "${canonicalUrl}#webpage",
   "name": "${pkg.meta.title}",
   "description": "${pkg.meta.description}",
   "url": "${canonicalUrl}",
+  "dateModified": "${dateModified}",
   "inLanguage": ["en-MY", "ms-MY"],
-  "isPartOf": {"@type": "WebSite", "name": "MyScholar Malaysia", "url": "https://myscholar.my"}
+  "isPartOf": {"@type": "WebSite", "@id": "https://myscholar.my/#website", "name": "MyScholar Malaysia", "url": "https://myscholar.my"},
+  "breadcrumb": {"@type": "BreadcrumbList", "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://myscholar.my"},
+    {"@type": "ListItem", "position": 2, "name": "${pkg.meta.title.replace(/ \| MyScholar.*$/, '')}", "item": "${canonicalUrl}"}
+  ]}
+}
+<\/script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": "https://myscholar.my/#organization",
+  "name": "MyScholar Malaysia",
+  "url": "https://myscholar.my",
+  "description": "Malaysia's free scholarship, internship, and tuition finder. Data verified and regularly updated.",
+  "areaServed": {"@type": "Country", "name": "Malaysia"}
 }
 <\/script>
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZETBRDDMTV"><\/script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZETBRDDMTV');gtag('event','landing_page_view',{page_keyword:'${keyword}',page_type:'${type}'});<\/script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZETBRDDMTV');
+// v4: track all three page types for GA4 segmentation
+gtag('event','landing_page_view',{page_keyword:'${keyword}',page_type:'${type}',page_slug:'${slug}'});<\/script>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{--midnight:#0f1f3d;--coral:${mainColor};--ice:#f0f4ff;--white:#ffffff;--serif:'Playfair Display',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif}
@@ -1362,10 +1403,10 @@ h1{font-family:var(--serif);font-size:clamp(32px,5vw,56px);line-height:1.1;margi
 <body>
 <nav>
   <a href="/" class="nav-logo">My<span>Scholar</span></a>
-  <a href="/" style="font-size:12px;color:rgba(255,255,255,.5);text-decoration:none">← All ${isInternship ? 'Internships' : 'Scholarships'}</a>
+  <a href="${dirUrl}" style="font-size:12px;color:rgba(255,255,255,.5);text-decoration:none">← ${dirLabel}</a>
 </nav>
 <div class="hero">
-  <div class="eyebrow">${isInternship ? 'Internships Malaysia' : 'Biasiswa Malaysia'} · myscholar.my</div>
+  <div class="eyebrow">${isTuition ? 'Tuition Malaysia' : isInternship ? 'Internships Malaysia' : 'Biasiswa Malaysia'} · myscholar.my</div>
   <div class="lang-toggle">
     <button class="lt-btn active" onclick="setLang('en',this)">EN</button>
     <button class="lt-btn" onclick="setLang('bm',this)">BM</button>
@@ -1374,9 +1415,9 @@ h1{font-family:var(--serif);font-size:clamp(32px,5vw,56px);line-height:1.1;margi
   <h1 id="h1-bm" style="display:none">${pkg.landing_page.h1_bm}</h1>
   <p class="intro" id="intro-en">${pkg.landing_page.intro_en}</p>
   <p class="intro" id="intro-bm" style="display:none">${pkg.landing_page.intro_bm}</p>
-  <a href="/?q=${encodeURIComponent(keyword)}" class="cta-btn" id="cta-en">${pkg.landing_page.cta_en}</a>
-  <a href="/?q=${encodeURIComponent(keyword)}" class="cta-btn" id="cta-bm" style="display:none">${pkg.landing_page.cta_bm}</a>
-  <a href="/" class="back">← Back to full directory</a>
+  <a href="${dirUrl}?q=${encodeURIComponent(keyword)}" class="cta-btn" id="cta-en">${pkg.landing_page.cta_en}</a>
+  <a href="${dirUrl}?q=${encodeURIComponent(keyword)}" class="cta-btn" id="cta-bm" style="display:none">${pkg.landing_page.cta_bm}</a>
+  <a href="${dirUrl}" class="back">← Back to full directory</a>
 </div>
 <script>
 function setLang(l,btn){
