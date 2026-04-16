@@ -1,161 +1,152 @@
-﻿# 🎓 MyScholar Malaysia
+# MyScholar — Malaysia's Free Scholarship & Opportunities Finder
 
-> **No student should miss out on a scholarship because they didn't know it existed.**
+A free, searchable directory of scholarships, internships, and tuition centres for Malaysian students. Built and maintained by one person.
 
-A free, searchable directory of scholarships, financial aid, and study loans available to Malaysian students — from SPM leavers to postgraduates.
-
-🔗 **Live site:** [yourusername.github.io/myscholar](https://yourusername.github.io/myscholar)
+**Live site:** [myscholar.my](https://myscholar.my)
 
 ---
 
-## What is MyScholar?
+## Products
 
-MyScholar is a free website that helps Malaysian students — and their parents — find and understand every major scholarship and financial aid programme available to them.
+### MyScholar (`index.html`)
+Scholarship and financial aid finder. 200+ programmes covering JPA, MARA, GLCs, banks, foundations, foreign governments, and study loans. Filterable by field, level, citizenship, and deadline.
 
-Navigating scholarships in Malaysia is confusing. Deadlines are scattered, requirements differ between programmes, and many students miss out simply because they never heard of a scholarship that they were eligible for. MyScholar puts everything in one place.
+### MyIntern (`internships.html`)
+Internship finder for Malaysian students. Curated listings with verified URLs, stipend info, and deadline tracking. Automated URL health checks run every 3 days.
 
----
-
-## What's covered
-
-- **20+ scholarship programmes** (growing)
-- Government scholarships — JPA, MARA
-- GLC & Yayasan — Khazanah, PETRONAS, Sime Darby, Telekom Malaysia
-- Banking sector — Bank Negara Malaysia, Maybank, CIMB, Bank Rakyat
-- Corporate — Maxis, Shell Malaysia, Gamuda
-- Study loans — PTPTN (with full breakdown of B40/M40/T20 tiers)
+### MyTuition (`tuition.html` — coming soon)
+Map-first discovery for SPM tuition centres in KL. Built on Leaflet.js + OpenStreetMap. Data sourced via KELLY (Google Places automation) and parent Facebook group curation.
 
 ---
 
-## Features
+## Stack
 
-- 🔍 **Search** by scholarship name, provider, field of study, or grade requirement
-- 🏷️ **Filter** by category — Government, GLC, Banking, Corporate, Loan
-- 🎓 **Filter by qualification** — SPM, STPM, A-Level, O-Level, UEC, IGCSE
-- ✈️ **Filter by destination** — Local or Overseas
-- 💰 **Filter by type** — Full Scholarship, B40/Income-based, Bumiputera
-- 📋 **Detailed modal** for every scholarship — amount, deadlines, grade requirements, bond conditions, eligibility, and tips
-- 📱 Fully **mobile responsive**
-- ⚡ **No login, no signup, no tracking** — just information
-
----
-
-## Who is this for?
-
-- Students who have just received their **SPM results** and are exploring options
-- Students finishing **STPM, A-Levels, O-Levels, UEC or IGCSE**
-- Students from **Sekolah Kebangsaan** who want to know what support is available
-- **Parents** helping their children plan for further education
-- **Teachers and counsellors** who want a quick reference for students
+| Layer | Details |
+|---|---|
+| Frontend | Single-file HTML SPAs — no framework, no build step |
+| Database | Supabase (`ywvfvjvxwhcfrkgqm`) |
+| Hosting | GitHub Pages (`ANRACollective/MYSCHOLAR`) |
+| Domain | myscholar.my (Exabytes registrar, Cloudflare DNS) |
+| Email | Resend (transactional) + Cloudflare Email Routing |
+| Analytics | GA4 (`G-ZETBRDDMTV`) |
+| URL checks | pg_net cron every Monday 8am UTC |
 
 ---
 
-## Scholarship data included
-
-| Provider | Programme | Entry Level |
-|---|---|---|
-| JPA | Program Penajaan Nasional (PPN) | Post-SPM |
-| JPA | Program Khas Lepasan SPM (Dalam Negara) | Post-SPM |
-| JPA | Program Khas JKPJ (Japan/Korea/France/Germany) | Post-SPM |
-| JPA | Dermasiswa B40 / PIDN | Post-SPM / Pre-U |
-| MARA | Young Talent Development Programme (YTP) | Post-SPM |
-| MARA | Tertiary Education Sponsorship (TESP) | Post-SPM / Diploma |
-| Yayasan Khazanah | Khazanah Global Scholarship | Post-SPM / Undergrad / Postgrad |
-| PETRONAS | Education Sponsorship Programme (PESP) | Post-SPM |
-| Bank Negara Malaysia | Kijang Scholarship (Pre-University) | Post-SPM |
-| Bank Negara Malaysia | Kijang Undergraduate Scholarship | Pre-U / Post-STPM |
-| Maybank Foundation | Group Scholarship (Local) | Undergraduate Year 1 |
-| Maybank Foundation | Group Scholarship (Overseas) | Foundation / Pre-U |
-| Maxis | Scholarship Programme | Post-SPM / Pre-U |
-| Yayasan Sime Darby | Excellence Scholarship | Undergraduate Year 1 |
-| Yayasan Telekom Malaysia | Future Leaders Scholarship | Post-SPM / Pre-U |
-| CIMB Group | ASEAN Scholarship | Pre-U / Undergraduate |
-| Gamuda | Scholarship Award | Post-STPM / Pre-U |
-| Shell Malaysia | Scholarship | Post-SPM / Pre-U |
-| Yayasan Bank Rakyat | BRIGHT Programme | Post-SPM / Pre-U |
-| PTPTN | National Study Loan | All levels |
-
----
-
-## How to use
-
-The site fetches live data from Supabase and renders everything client-side — no build step required.
-
-1. Open the site
-2. Use the **search bar** to look up any scholarship, field, or provider
-3. Use the **filter tags** to narrow down by category, qualification, or destination
-4. Click any card to see the **full details** including deadlines, grade requirements, and tips
-5. Click **Official Site** to go directly to the scholarship's application portal
-
----
-
-## Repository structure
+## Repo structure
 
 ```
 MYSCHOLAR/
-├── index.html              # Scholarships SPA (main app)
-├── internships.html        # Internships SPA
-├── 404.html                # Error page
-├── sitemap.xml             # Main sitemap
-├── SEO/                    # Auto-generated SEO landing pages (deployed)
-│   ├── biasiswa-*.html     # 66 scholarship-specific pages
-│   ├── internship-*.html   # Internship SEO pages
-│   └── sitemap-seo.xml
-├── _agents/                # Agent instruction files (Amirah, Matt, Jack)
-├── _assets/                # Branding, OG images, profile photos
-├── _database/              # Supabase schema SQL + data exports
-├── _dev/                   # Dev/admin tools (insert forms, skill file)
-├── _docs/                  # Concept docs and feature notes
-└── _seo-tools/             # SEO generators, keyword data, UI mockups
-    └── _mockups/           # Internship UI design explorations
+├── index.html              # MyScholar SPA (scholarships)
+├── internships.html        # MyIntern SPA
+├── 404.html
+├── robots.txt
+├── sitemap.xml             # Homepage + SEO pages
+├── sitemap-seo.xml
+├── CNAME                   # myscholar.my
+│
+├── _agents/                # Agent briefs and prompts
+│   ├── sofia-agent.md      # SOFIA — Chief Product & Growth Officer
+│   ├── amirah-agent.md     # Amirah — scholarship researcher
+│   ├── matt-agent-v2.md    # Matt — internship researcher + URL checker
+│   ├── jack-agent.html     # JACK — SEO page generator
+│   ├── diana-agent.md      # Diana — scholarship intelligence
+│   └── kelly-agent-brief.md # KELLY — tuition centre data (Google Places)
+│
+├── _assets/                # Images, OG images, profile photos
+├── FAVICON/                # Favicon set
+│
+├── SEO/                    # ~129 SEO landing pages (JACK-generated + manual)
+├── scholarships/           # Individual scholarship detail pages
+│
+├── _seo-tools/             # SEO generation scripts
+│   ├── jack-run.js         # JACK runner (set JACK_OUT env var)
+│   ├── generate-seo.js     # Wave 1 — 29 pages
+│   ├── wave2.js            # Wave 2 — 43 pages
+│   ├── wave3.js            # Wave 3 — 33 pages
+│   ├── wave4.js            # Wave 4
+│   └── seo-manifest.json   # Tracks generated pages
+│
+├── _dev/                   # Dev tools, previews, SOFIA directives
+├── _database/              # Legacy schema reference
+└── _archive/               # Old docs, PRDs, planning files (not active)
 ```
 
 ---
 
-## Roadmap
+## Workspace structure (outside repo)
 
-- [ ] Add Yayasan TNB, Yayasan UEM, Yayasan PNB (Tun Ismail), YTL Foundation
-- [ ] Add state-level scholarships — Yayasan Selangor, Penang Future Foundation, Yayasan Sarawak
-- [ ] Add university bursaries — UM, UPM, Taylor's, Sunway, HELP
-- [ ] Add private foundation scholarships — Jeffrey Cheah, Kuok Foundation, Top Glove Foundation
-- [ ] Add an Exam Pathways guide (SPM → STPM → what opens up)
-- [ ] Add a simple quiz: "Answer 3 questions → see your matched scholarships"
-- [ ] Add Bahasa Malaysia language toggle
-- [ ] Add application timeline calendar view
-
----
-
-## Data accuracy
-
-All scholarship information is researched from official scholarship portals and updated for the **2025/2026 academic year**. Scholarship requirements, amounts, and deadlines change annually — always verify at the official scholarship website before applying.
-
-If you spot outdated information or a scholarship that should be added, please open an **Issue** or submit a **Pull Request**.
+```
+SCHOLAR/  (workspace root — not in git)
+├── MYSCHOLAR/              # Git repo (above)
+├── tuition.html            # MyTuition SPA (staging — not yet deployed)
+├── _kelly/                 # KELLY agent scripts + output SQL
+│   ├── kelly_agent.py      # Run: python kelly_agent.py --key YOUR_KEY
+│   ├── kelly_output/       # Generated JSON + SQL from last run
+│   └── ...
+├── _workspace/             # Audit docs, design system, SEO keyword research
+├── _private/               # Subscriber data — sensitive, not in git
+└── _archive/               # Old previews, stale sprint docs, staging pages
+```
 
 ---
 
-## Contributing
+## Agent team
 
-Contributions are welcome. If you know of a scholarship that should be listed:
+**SOFIA** — Chief Product & Growth Officer. Monthly planning, growth strategy, outreach copy, product decisions.
 
-1. Fork this repository
-2. Update the scholarship data in `index.html`
-3. Submit a Pull Request with a brief description of the scholarship and a source link
+**Amirah** — Scholarship researcher. Finds, validates, and formats new scholarship entries for Supabase.
 
-Please include the official website URL as a source for any new entry.
+**Matt** — Internship researcher + URL health checker. Scheduled to run every 3 days; auto-deactivates broken internship URLs.
+
+**JACK** — SEO page generator. Produces keyword-targeted landing pages from templates. Run via `_seo-tools/jack-run.js`.
+
+**Diana** — Scholarship intelligence. Deeper analysis on specific scholarships or data gaps.
+
+**KELLY** — Tuition centre data agent. Uses Google Places API (28 areas × 8 query variants) to discover and seed `tuition_centres` table.
 
 ---
 
-## License
+## Critical rules
 
-MIT License — free to use, share, and modify. If you build on this, please keep it free for students.
+- `scholarships.id` is **not auto-increment** — always use explicit IDs. Next available: 303
+- `url_status` values: `'ok'`, `'suspected'`, `'broken'`. Never mark 403 as broken.
+- Internship visibility: only `internship_page`, `info_page`, `direct_apply`, `portal` url_types may be `is_visible = true`. `careers_page` is always hidden.
+- UI scholarship count is permanently **"200+"** — do not change this figure in copy.
+- Single-file constraint: all UI stays in the HTML files. No separate CSS/JS files, no Node server.
+- Design language: `index.html` = light/ice aesthetic. `internships.html` = dark glass. `tuition.html` = warm linen/terracotta.
+- Before editing `index.html`: verify `initData()` is present and byte count is consistent (file corruption risk — worst historical bug in this project).
+
+---
+
+## Monthly operations (Month 2+)
+
+Month 1 was the build. From Month 2, the cadence is lean:
+
+**Week 1 — Health.** Read Matt's URL checker report. Hide broken records.
+**Week 2 — Data.** Run Amirah (5–10 scholarships) + Matt (3–5 internships).
+**Week 3 — Growth.** Run JACK for a new SEO wave if gaps exist. One social post.
+**Week 4 — Review.** Check GA4. Identify one UX fix. Plan next month.
+
+Target: 1–2 batched Claude sessions per month. Everything else runs on automation (pg_net cron, Matt's scheduler).
+
+---
+
+## MyTuition launch checklist
+
+1. Get Google Places API key (console.cloud.google.com)
+2. Run KELLY: `cd _kelly && python kelly_agent.py --key YOUR_KEY`
+3. Review `_kelly/kelly_output/kelly_insert.sql` before pushing to Supabase
+4. Add `SUPABASE_ANON_KEY` to `tuition.html`
+5. Move `tuition.html` into MYSCHOLAR repo and deploy to GitHub Pages
+6. Cross-link from `index.html`
 
 ---
 
 ## Disclaimer
 
-This directory is for reference purposes only. MyScholar is not affiliated with any scholarship provider. Always refer to the official scholarship website for the most accurate and up-to-date information. Scholarship availability, eligibility criteria, and award amounts are subject to change without notice.
+This directory is for reference only. MyScholar is not affiliated with any scholarship provider. Always verify at the official scholarship website before applying.
 
 ---
 
-*Built with the belief that every Malaysian student deserves to know what support is available to them.*
-
+*Built by ANRA. Free for all Malaysian students.*
