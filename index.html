@@ -967,10 +967,9 @@ document.addEventListener('click', function(e) {
 <div class="results-bar">
   <div class="results-count"><span data-i18n="showing">Showing</span> <strong id="countDisplay">0</strong> <span data-i18n="programmes">programmes</span><span class="page-info" id="pageInfo"></span></div>
   <div class="sort-wrap">Sort:
-    <select id="sortSelect" onchange="render()">
-      <option value="default">Default</option>
+    <select id="sortSelect" onchange="saveSort();render()">
+      <option value="deadline" selected>Closing soon</option>
       <option value="newest">Newly added</option>
-      <option value="deadline">By deadline (soonest first)</option>
       <option value="name">A – Z</option>
       <option value="saved">Saved first</option>
     </select>
@@ -1675,6 +1674,7 @@ async function initData() {
 
     // New features
     updateOpenNowBanner();
+    restoreSort(); // Apply saved sort preference before first render
     render();
     checkDeepLink();
 
@@ -2297,6 +2297,23 @@ document.addEventListener('keydown',e=>{
 const PAGE_SIZE = 15; // 3 columns × 5 rows
 let currentPage = 1;
 let filteredItems = [];
+
+// ── SORT PERSISTENCE ─────────────────────────────────────────────────────
+// Save the user's chosen sort to localStorage so it survives page reloads.
+// On init, restore it — falling back to 'deadline' if nothing is saved.
+function saveSort(){
+  const sel = document.getElementById('sortSelect');
+  if(sel) localStorage.setItem('scholar_sort', sel.value);
+}
+function restoreSort(){
+  const saved = localStorage.getItem('scholar_sort');
+  const sel = document.getElementById('sortSelect');
+  if(sel && saved){
+    // Only apply if the saved value matches a real option (guards against stale values)
+    const valid = Array.from(sel.options).some(o => o.value === saved);
+    if(valid) sel.value = saved;
+  }
+}
 
 // ── RENDER ────────────────────────────────────────────────────────────────
 function render(){
@@ -3658,7 +3675,7 @@ const TRANSLATIONS = {
     chipUEC:'UEC / O-Level / IGCSE', chipSPM:'SPM Leavers', chipSTPM:'STPM / A-Level', chipGlobal:'🌐 Global Scholarships',
     moreFilters:'More filters', clearAll:'Clear all',
     showing:'Showing', programmes:'programmes',
-    sortDefault:'Default', sortNewest:'Newly added', sortDeadline:'By deadline (soonest first)', sortName:'A – Z', sortSaved:'Saved first',
+    sortNewest:'Newly added', sortDeadline:'Closing soon',sortName:'A – Z', sortSaved:'Saved first',
     aboutEyebrow:'About MyScholar', aboutH2:'Built for Malaysian students',
     aboutP:"No student should miss out on a scholarship because they didn't know it existed. This directory covers government, GLC, corporate, banking, state-level, international, and university scholarships — including global programmes open to Malaysians. For SPM, STPM, O-Level, UEC, IGCSE graduates through postgraduate. Always verify deadlines and requirements at the official website before applying.",
     aboutCta:"Know a scholarship we're missing? Tell us →",
@@ -3743,7 +3760,7 @@ const TRANSLATIONS = {
     chipUEC:'UEC / O-Level / IGCSE', chipSPM:'Lepasan SPM', chipSTPM:'STPM / A-Level', chipGlobal:'🌐 Biasiswa Global',
     moreFilters:'Lebih penapis', clearAll:'Kosongkan semua',
     showing:'Menunjukkan', programmes:'program',
-    sortDefault:'Lalai', sortNewest:'Baru ditambah', sortDeadline:'Mengikut tarikh tutup (terdekat dahulu)', sortName:'A – Z', sortSaved:'Disimpan dahulu',
+    sortNewest:'Baru ditambah', sortDeadline:'Tutup segera',sortName:'A – Z', sortSaved:'Disimpan dahulu',
     aboutEyebrow:'Tentang MyScholar', aboutH2:'Dibina untuk pelajar Malaysia',
     aboutP:"Tiada pelajar yang patut terlepas biasiswa hanya kerana mereka tidak tahu ia wujud. Direktori ini merangkumi biasiswa kerajaan, GLC, korporat, perbankan, peringkat negeri, antarabangsa, dan universiti — termasuk program global yang terbuka kepada rakyat Malaysia. Untuk lepasan SPM, STPM, O-Level, UEC, IGCSE hingga peringkat pascasiswazah. Sentiasa sahkan tarikh akhir dan syarat di laman web rasmi sebelum memohon.",
     aboutCta:"Tahu ada biasiswa yang kami terlepas pandang? Beritahu kami →",
