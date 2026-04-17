@@ -2050,17 +2050,9 @@ function buildCard(s,i){
 <div class="card-body">
 <div class="card-top">
 <div class="card-badges">
-<span class="badge bg-${c}">${s.cat}</span>
 ${s.cov==='Full'?'<span class="badge bg-full">Full</span>':''}
 <span class="badge ${s.dest==='Overseas'?'bg-ov':'bg-lo'}">${s.dest}</span>
 ${s.nb?'<span class="badge bg-nb">No Bond</span>':''}
-${s.b40?'<span class="badge bg-b40">B40</span>':''}
-${s.bumi?'<span class="badge bg-bumi">Bumi Only</span>':''}
-${s.chineseCommunity?'<span class="badge bg-chinese">Chinese</span>':''}
-${s.indianCommunity?'<span class="badge bg-indian">Indian</span>':''}
-${s.foreignerOk?'<span class="badge bg-intl-elig">Intl OK</span>':''}
-${globalBadge}
-${statusBadge}
 ${eligBadge}
 </div>
 <div class="card-name">${s.name}</div>
@@ -3537,16 +3529,32 @@ async function submitEmailSignup() {
   btn.disabled = true;
   btn.textContent = 'Saving…';
 
-  try {
-    // INSERT into Supabase `subscribers` table
-    // `source` tag lets us know this came from the modal (vs future signup points)
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/subscribers`, {
+  // BACKUP — fire first, before the main insert.
+  // Writes to subscriber_raw (no unique constraint, no triggers) so even if
+  // the main subscribers table fails, we have the email to recover.
+  // Errors are now logged to console so silent failures are visible in DevTools.
+  fetch(`${SUPABASE_URL}/rest/v1/subscriber_raw`, {
+    method: 'POST',
+    headers: {
+      'apikey':       SUPABASE_ANON_KEY,
+      'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+      'Content-Type': 'application/json',
+      'Prefer':       'return=minimal'
+    },
+    body: JSON.stringify({ email: email, source: 'modal' })
+  }).then(r => {
+    if(!r.ok) log('[signup-backup] subscriber_raw failed:', r.status);
+  }).catch(err => log('[signup-backup] subscriber_raw error:', err.message));
+
+  // Helper: one attempt to insert into the main subscribers table
+  async function attemptInsert() {
+    return fetch(`${SUPABASE_URL}/rest/v1/subscribers`, {
       method: 'POST',
       headers: {
         'apikey':        SUPABASE_ANON_KEY,
         'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
         'Content-Type':  'application/json',
-        'Prefer':        'return=minimal' // don't return the row, saves bandwidth
+        'Prefer':        'return=minimal'
       },
       body: JSON.stringify({
         email: email,
@@ -3555,20 +3563,32 @@ async function submitEmailSignup() {
         tuition_interest: !document.getElementById('esmTuitionCheck').classList.contains('unchecked')
       })
     });
+  }
+
+  try {
+    let res = await attemptInsert();
+
+    // If first attempt fails with a non-duplicate error, wait 2s and retry once.
+    // This handles transient network blips without the student ever seeing an error.
+    if(!res.ok && res.status !== 409) {
+      log('[signup] first attempt failed (' + res.status + '), retrying in 2s…');
+      await new Promise(r => setTimeout(r, 2000));
+      res = await attemptInsert();
+    }
 
     if(res.ok || res.status === 409) {
-      // 409 = Conflict (duplicate email) — treat as success, don't scare the user
+      // 409 = duplicate email — treat as success, don't scare the user
       showEmailSuccess(email);
     } else {
       throw new Error(`HTTP ${res.status}`);
     }
 
   } catch(err) {
-    // On any error, re-enable the button and show a toast
+    // Both attempts failed — re-enable button and ask them to try again
     btn.disabled = false;
     btn.textContent = 'Notify me →';
-    showToast('⚠️ Something went wrong — try again');
-    log('Email signup error:', err);
+    showToast('Connection issue — please try again');
+    log('[signup] error after retry:', err);
   }
 }
 
