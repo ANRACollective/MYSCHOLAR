@@ -117,7 +117,7 @@ Diana always inserts with full field awareness. Key constraints:
 
 | Field | Valid values |
 |---|---|
-| `category` | Government, GLC, Banking, Corporate, Loan, State, Media, International, University, Foundation, Postgraduate |
+| `category` | Government, GLC, Banking, Corporate, Loan, State, Media, Creative, International, University, Foundation, Postgraduate |
 | `coverage` | Full, Partial |
 | `destination` | Local, Overseas |
 | `entry_level` | PostSPM, PreU, Undergrad, Postgrad |
@@ -224,9 +224,8 @@ Diana tracks structural gaps in the database by category. As of April 2026:
 | State | ~15+ | Some states underrepresented |
 | Loan | ~10+ | Mostly covered |
 | Postgraduate | ~15+ | Growing |
-| Media | 1 (ID 301 — Astro) | **New category, first entry added Apr 2026** |
-
-Media was a zero-entry gap identified in the April 2026 session. Diana should prioritise other media-linked scholarship programmes (RTM, Bernama, NSTP, etc.) in future discovery runs.
+| Media | 1 (ID 301 — Astro) | New category, first entry added Apr 2026. Target: RTM, Bernama, NSTP, The Star. |
+| Creative | 0 | **New category added Apr 2026. Priority discovery area.** Targets: ASWARA, FINAS, JKKN, Malaysian Philharmonic, PAM, creative industry bodies. |
 
 ---
 
@@ -247,10 +246,10 @@ Media was a zero-entry gap identified in the April 2026 session. Diana should pr
 
 | Agent | Relationship |
 |---|---|
-| **Amirah** | If a broken scholarship triggers user-facing comms (email, DM reply), Amirah drafts it. Diana provides the fix brief. |
+| **Amirah** | Chief of Staff. If a data issue requires user-facing comms (email, DM reply), Amirah drafts it. Diana provides the fix brief. |
 | **Matt** | Matt is the internships equivalent of Diana. Same verification rigour, separate table. No overlap. |
-| **Sofia** | SEO and content agent. If a new scholarship category is added, Sofia may need to update site copy. Diana flags this. |
-| **Jack** | Frontend agent. Diana does not touch the frontend — if a data change requires UI updates, Jack handles it. |
+| **Sofia** | Chief Product & Growth Officer. If a new scholarship category is added, Sofia may need to update site copy. Diana flags this. |
+| **Jack** | Frontend & SEO agent. Diana does not touch the frontend — if a data change requires UI updates, Jack handles it. |
 
 ---
 
@@ -261,7 +260,7 @@ To invoke Diana in a session:
 > **"Diana — [task or context]"**
 
 Or provide a specific brief:
-- "Diana — run a discovery pass on banking scholarships"
+- "Diana — run a discovery pass on Creative scholarships"
 - "Diana — audit all records with url_status = suspected"
 - "Diana — check if [scholarship name] is already in the DB"
 
@@ -277,6 +276,7 @@ Before beginning any session, Diana should:
 | Version | Date | Changes |
 |---|---|---|
 | v1.0 | April 2026 | Initial specification. Built from April 2026 discovery session (IDs 301–309). Captures full methodology, verification protocol, schema rules, and source hierarchy. |
+| v1.1 | April 2026 | `Creative` category added to schema enum and category coverage table. Amirah role clarified as Chief of Staff. |
 
 ---
 
