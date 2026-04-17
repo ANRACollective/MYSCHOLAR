@@ -151,6 +151,11 @@ nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:
 .nav-r a{color:rgba(255,255,255,.5);font-size:12px;text-decoration:none;letter-spacing:.04em;transition:color .2s}
 .nav-r a:hover{color:#fff}
 @media(max-width:680px){.nav-brand{font-size:20px}.products-btn{font-size:10.5px;padding:3px 9px}}
+/* ── Language toggle — same pattern as MyScholar index.html ── */
+.lang-toggle{display:flex;align-items:center;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:20px;padding:3px;gap:2px;flex-shrink:0}
+.lt-opt{font-size:10px;font-weight:500;padding:3px 10px;border-radius:16px;cursor:pointer;color:rgba(255,255,255,.45);background:none;border:none;transition:all .15s;letter-spacing:.02em;font-family:var(--sans)}
+.lt-opt.active{background:rgba(255,255,255,.18);color:#fff}
+.lt-opt:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 /* ── Products button + dropdown (internships) ── */
 .products-btn{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);border-radius:20px;color:rgba(255,255,255,.6);font-family:var(--sans);font-size:11.5px;font-weight:600;padding:4px 12px;cursor:pointer;transition:all .18s;flex-shrink:0;letter-spacing:.02em}
 .products-btn:hover,.products-btn.active{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.26);color:#fff}
@@ -262,6 +267,22 @@ nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:
 .hint{font-size:11px;color:var(--t2);font-style:italic}
 @media(max-width:500px){.gbtn{width:100%;justify-content:center;padding:12px}.hint{display:none}.act-row{flex-direction:column}}
 .empty{text-align:center;padding:48px 16px;color:var(--t3);font-size:14px}
+
+/* ── ORIENTATION CARD ──────────────────── */
+.orient-wrap{max-width:720px;margin:12px auto 0;padding:0 20px}
+@media(min-width:768px){.orient-wrap{max-width:1100px}}
+.orient{background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:14px;padding:18px 20px;position:relative;animation:fadeIn .3s ease both}
+.orient-close{position:absolute;top:12px;right:14px;font-size:18px;color:var(--t3);cursor:pointer;background:none;border:none;font-family:var(--sans);line-height:1;padding:2px 4px;transition:color .15s}
+.orient-close:hover{color:var(--t1)}
+.orient-head{font-size:13.5px;font-weight:700;color:var(--t1);margin-bottom:12px;padding-right:24px;letter-spacing:-.1px}
+.orient-head em{color:var(--accent);font-style:normal}
+.orient-pts{display:flex;flex-direction:column;gap:8px}
+.orient-pt{display:flex;align-items:flex-start;gap:10px;font-size:12.5px;color:var(--t2);line-height:1.5}
+.orient-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.orient-dot.a{background:var(--accent)}.orient-dot.b{background:var(--green)}.orient-dot.c{background:#fbbf24}
+.orient-pt strong{color:var(--t1);font-weight:600}
+.orient-dismiss{display:inline-block;margin-top:14px;padding-top:12px;border-top:1px solid var(--border);font-size:12px;color:var(--accent);cursor:pointer;font-weight:500;transition:opacity .15s}
+.orient-dismiss:hover{opacity:.7}
 
 /* ── MODAL ─────────────────────────────── */
 .ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:1000;justify-content:center;align-items:flex-end}
@@ -384,6 +405,11 @@ nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:
       Products
       <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="margin-left:1px;transition:transform .18s" id="productsBtnChevron"><path d="M6 9l6 6 6-6"/></svg>
     </button>
+    <!-- Language toggle — mirrors MyScholar index.html, shares scholar_lang localStorage key -->
+    <div class="lang-toggle" role="group" aria-label="Language">
+      <button class="lt-opt active" id="lt-en" onclick="setLang('en')" aria-pressed="true">EN</button>
+      <button class="lt-opt" id="lt-bm" onclick="setLang('bm')" aria-pressed="false">BM</button>
+    </div>
   </div>
 </nav>
 
@@ -441,19 +467,19 @@ document.addEventListener('click', function(e) {
 
 <!-- ── DARK GLASS HERO — mirrors MyScholar hero structure, dark glass colours ── -->
 <div class="hero-intern">
-  <p class="hero-eyebrow">MALAYSIA · 2026 / 2027 INTAKE</p>
-  <h1 class="hero-h1">Find Your<br><em>Internship.</em></h1>
-  <p class="hero-sub">A free, curated directory of paid and unpaid internship programmes for Malaysian students — GLCs, banks, startups and more.</p>
+  <p class="hero-eyebrow" data-i18n="heroEyebrow">MALAYSIA · 2026 / 2027 INTAKE</p>
+  <h1 class="hero-h1" data-i18n="heroH1">Find Your<br><em>Internship.</em></h1>
+  <p class="hero-sub" data-i18n="heroSub">A free, curated directory of paid and unpaid internship programmes for Malaysian students — GLCs, banks, startups and more.</p>
   <div class="hero-stats">
-    <div class="hs-item"><span class="hs-num">100+</span><span class="hs-lbl">Programmes</span></div>
-    <div class="hs-item"><span class="hs-num">9</span><span class="hs-lbl">Industries</span></div>
-    <div class="hs-item"><span class="hs-num">100%</span><span class="hs-lbl">Free</span></div>
+    <div class="hs-item"><span class="hs-num">100+</span><span class="hs-lbl" data-i18n="heroStatProg">Programmes</span></div>
+    <div class="hs-item"><span class="hs-num">9</span><span class="hs-lbl" data-i18n="heroStatInd">Industries</span></div>
+    <div class="hs-item"><span class="hs-num">100%</span><span class="hs-lbl" data-i18n="heroStatFree">Free</span></div>
   </div>
   <!-- Career Match Quiz CTA -->
   <div class="quiz-cta-wrap">
     <button class="quiz-cta-card" id="quizOpen">
-      <span class="quiz-cta-main">Match Me</span>
-      <span class="quiz-cta-meta">6 quick questions</span>
+      <span class="quiz-cta-main" data-i18n="quizCta">Match Me</span>
+      <span class="quiz-cta-meta" data-i18n="quizCtaMeta">6 quick questions</span>
     </button>
   </div>
 </div>
@@ -464,22 +490,35 @@ document.addEventListener('click', function(e) {
 
 <div class="filters">
   <div class="f-section">
-    <div class="f-label">Industry</div>
-    <div class="f-row" id="chips"><div class="chip active" data-ind="all">All</div></div>
+    <div class="f-label" data-i18n="filterInd">Industry</div>
+    <div class="f-row" id="chips"><div class="chip active" data-ind="all" data-i18n="chipAll">All</div></div>
   </div>
   <div class="f-section">
-    <div class="f-label">Preferences</div>
+    <div class="f-label" data-i18n="filterPref">Preferences</div>
     <div class="f-row">
-      <div class="pref" id="paidT">Paid Only</div>
-      <div class="pref" id="openT">Open Now</div>
-      <div class="pref" id="diplomaT">Diploma OK</div>
+      <div class="pref" id="paidT" data-i18n="prefPaid">Paid Only</div>
+      <div class="pref" id="openT" data-i18n="prefOpen">Open Now</div>
+      <div class="pref" id="diplomaT" data-i18n="prefDiploma">Diploma OK</div>
     </div>
   </div>
   <div class="summary" id="sum"></div>
 </div>
 
+<div class="orient-wrap" id="orientWrap">
+  <div class="orient">
+    <button class="orient-close" id="orientClose">&times;</button>
+    <div class="orient-head" data-i18n="orientHead">This isn't a directory. It's a shortlist <em>for you.</em></div>
+    <div class="orient-pts">
+      <div class="orient-pt"><div class="orient-dot a"></div><span data-i18n="orientPt1"><strong>CGPA &amp; study level shown upfront</strong> — know if you qualify before clicking.</span></div>
+      <div class="orient-pt"><div class="orient-dot b"></div><span data-i18n="orientPt2"><strong>Stipend on the card</strong> — no surprises after you apply.</span></div>
+      <div class="orient-pt"><div class="orient-dot c"></div><span data-i18n="orientPt3"><strong>One honest tip per listing</strong> — the thing the company website doesn't tell you.</span></div>
+    </div>
+    <span class="orient-dismiss" id="orientDismiss" data-i18n="orientDismiss">Got it &mdash; show me the internships &rarr;</span>
+  </div>
+</div>
+
 <div class="feed" id="feed">
-  <div class="loading"><span class="dot"></span><span class="dot"></span><span class="dot"></span><br><br>Loading internships...</div>
+  <div class="loading"><span class="dot"></span><span class="dot"></span><span class="dot"></span><br><br><span data-i18n="loadingText">Loading internships...</span></div>
 </div>
 
 <div class="ov" id="ov">
@@ -581,8 +620,9 @@ function fmtDur(item){
   return a+'–'+b+' months';
 }
 function fmtIntake(item){
-  if(item.rolling) return '<span class="rolling">Rolling</span>';
-  return item.intake_text||'Check website';
+  // Rolling is the only thing worth showing on the card face — full intake detail lives in the modal
+  if(item.rolling) return '<span class="rolling">'+(T?T.rollingLabel:'Rolling')+'</span>';
+  return ''; // non-rolling intake text is too long for a card — student taps for details
 }
 function hasPay(item){
   if(!item.allowance_text) return false;
@@ -828,17 +868,21 @@ function render(){
     const stip=hasPay(item)?'<span class="mi paid"><span class="ic">&#x1F4B0;</span>'+item.allowance_text+'</span>':'';
     // qualifier badges: CGPA threshold, study level, bumi-only
     const quals=fmtQuals(item);
-    // tip preview: first 100 chars of tips, shown below meta on the card
+    // tip preview: first 80 chars — hint, not a paragraph
     const tipPrev=item.tips?'<span class="tip-prev">'+item.tips.slice(0,80)+(item.tips.length>80?'&hellip;':'')+'</span>':'';
+    // intake: only show rolling badge — full intake text lives in the modal
+    const intake=fmtIntake(item);
+    // meta row: no emoji icons, clean text only, conditional intake
+    const metaItems='<span class="mi">'+fmtDur(item)+'</span>'+(stip?stip:'')+(intake?'<span class="mi">'+intake+'</span>':'');
     el.innerHTML='<div class="row-top"><div class="logo-w">'+logoHTML(item)+'</div><div class="row-hd"><div class="co-line"><span class="co">'+item.company+'</span>'+pills+'</div><div class="prog">'+item.programme_name+'</div></div></div>'
-      +'<div class="meta"><span class="mi"><span class="ic">&#x23F1;</span>'+fmtDur(item)+'</span>'+stip+'<span class="mi"><span class="ic">&#x1F4C5;</span>'+fmtIntake(item)+'</span></div>'
+      +'<div class="meta">'+metaItems+'</div>'
       +quals
       +tipPrev
-      +'<div class="act-row"><a href="'+(item.url||'#')+'" target="_blank" rel="noopener" class="gbtn" onclick="event.stopPropagation();gtag(\'event\',\'intern_apply\',{co:\''+item.company.replace(/'/g,'')+'\'})">Apply <span class="arr">&rarr;</span></a><span class="hint">Tap for details</span></div>';
+      +'<div class="act-row"><a href="'+(item.url||'#')+'" target="_blank" rel="noopener" class="gbtn" onclick="event.stopPropagation();gtag(\'event\',\'intern_apply\',{co:\''+(item.company||'').replace(/'/g,'')+'\'})">'+(T?T.applyBtn:'Apply')+' <span class="arr">&rarr;</span></a><span class="hint">'+(T?T.tapDetails:'Tap for details')+'</span></div>';
     feed.appendChild(el);
   });
-  document.getElementById('sum').textContent=c+' internship'+(c!==1?'s':'')+' found';
-  if(!c)feed.innerHTML='<div class="empty">No internships match your filters.</div>';
+  document.getElementById('sum').textContent=c+' '+(c!==1?(T?T.foundPlural:'internships found'):(T?T.foundSingular:'internship found'));
+  if(!c)feed.innerHTML='<div class="empty">'+(T?T.emptyState:'No internships match your filters.')+'</div>';
 }
 
 /* ── Modal ──────────────────────────────── */
@@ -864,6 +908,96 @@ function closeModal(){document.getElementById('ov').classList.remove('open');doc
 document.getElementById('mx').onclick=closeModal;
 document.getElementById('ov').onclick=e=>{if(e.target===e.currentTarget)closeModal()};
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+
+/* ── Language toggle ───────────────────────────────────────────────────────
+   HOW IT WORKS:
+   1. Static HTML elements carry data-i18n="key" attributes
+   2. setLang(lang) loops through them and swaps innerHTML
+   3. Dynamic JS strings (card Apply, Rolling, summary) read from T object
+   4. Shares scholar_lang localStorage key with MyScholar index.html so the
+      preference persists when a student navigates between products
+   ─────────────────────────────────────────────────────────────────────── */
+const INTERN_LANG = {
+  en: {
+    heroEyebrow:'MALAYSIA · 2026 / 2027 INTAKE',
+    heroH1:'Find Your<br><em>Internship.</em>',
+    heroSub:'A free, curated directory of paid and unpaid internship programmes for Malaysian students — GLCs, banks, startups and more.',
+    heroStatProg:'Programmes', heroStatInd:'Industries', heroStatFree:'Free',
+    quizCta:'Match Me', quizCtaMeta:'6 quick questions',
+    searchPlaceholder:'Search company or programme...',
+    filterInd:'Industry', filterPref:'Preferences',
+    chipAll:'All',
+    prefPaid:'Paid Only', prefOpen:'Open Now', prefDiploma:'Diploma OK',
+    orientHead:"This isn't a directory. It's a shortlist <em>for you.</em>",
+    orientPt1:'<strong>CGPA &amp; study level shown upfront</strong> — know if you qualify before clicking.',
+    orientPt2:'<strong>Stipend on the card</strong> — no surprises after you apply.',
+    orientPt3:"<strong>One honest tip per listing</strong> — the thing the company website doesn't tell you.",
+    orientDismiss:'Got it &mdash; show me the internships &rarr;',
+    applyBtn:'Apply', tapDetails:'Tap for details', rollingLabel:'Rolling',
+    foundSingular:'internship found', foundPlural:'internships found',
+    emptyState:'No internships match your filters.',
+    loadingText:'Loading internships...',
+  },
+  bm: {
+    heroEyebrow:'MALAYSIA · PENGAMBILAN 2026 / 2027',
+    heroH1:'Cari<br><em>Internship</em> Kamu.',
+    heroSub:'Direktori percuma program internship berbayar dan tidak berbayar untuk pelajar Malaysia — GLC, bank, startup dan lebih lagi.',
+    heroStatProg:'Program', heroStatInd:'Industri', heroStatFree:'Percuma',
+    quizCta:'Padankan Saya', quizCtaMeta:'6 soalan ringkas',
+    searchPlaceholder:'Cari syarikat atau program...',
+    filterInd:'Industri', filterPref:'Keutamaan',
+    chipAll:'Semua',
+    prefPaid:'Berbayar Sahaja', prefOpen:'Terbuka Sekarang', prefDiploma:'Diploma OK',
+    orientHead:'Ini bukan direktori. Ia senarai pendek <em>untuk kamu.</em>',
+    orientPt1:'<strong>CGPA &amp; tahap pengajian ditunjukkan awal</strong> — tahu kelayakan anda sebelum klik.',
+    orientPt2:'<strong>Elaun pada kad</strong> — tiada kejutan selepas memohon.',
+    orientPt3:'<strong>Satu tip jujur setiap senarai</strong> — perkara yang laman syarikat tidak beritahu anda.',
+    orientDismiss:'Faham &mdash; tunjukkan internship &rarr;',
+    applyBtn:'Mohon', tapDetails:'Ketuk untuk butiran', rollingLabel:'Berterusan',
+    foundSingular:'internship dijumpai', foundPlural:'internship dijumpai',
+    emptyState:'Tiada internship yang sepadan dengan penapis anda.',
+    loadingText:'Memuatkan internship...',
+  }
+};
+
+// T holds the active language translations — used by render(), fmtIntake() etc.
+let currentLang = localStorage.getItem('scholar_lang') || 'en';
+let T = INTERN_LANG[currentLang];
+
+function setLang(lang) {
+  currentLang = lang;
+  T = INTERN_LANG[lang];
+  localStorage.setItem('scholar_lang', lang);
+  // Update toggle button state
+  const enBtn=document.getElementById('lt-en'), bmBtn=document.getElementById('lt-bm');
+  if(enBtn){enBtn.classList.toggle('active',lang==='en');enBtn.setAttribute('aria-pressed',String(lang==='en'));}
+  if(bmBtn){bmBtn.classList.toggle('active',lang==='bm');bmBtn.setAttribute('aria-pressed',String(lang==='bm'));}
+  // Swap all static data-i18n elements
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key=el.dataset.i18n;
+    if(T[key]!==undefined)el.innerHTML=T[key];
+  });
+  // Update search placeholder (attribute, not innerHTML)
+  const si=document.getElementById('search');
+  if(si)si.placeholder=T.searchPlaceholder;
+  // Re-render cards so Apply/Rolling labels update immediately
+  if(DATA&&DATA.length)render();
+  gtag('event','intern_lang',{lang});
+}
+
+// Apply saved preference on page load
+setLang(currentLang);
+
+/* ── Orientation card dismiss ──────────── */
+// Hides once per session — shows again on new tab/visit so first-timers always see it
+(function(){
+  const wrap=document.getElementById('orientWrap');
+  // Already dismissed this session? Hide immediately, no flicker
+  if(sessionStorage.getItem('orientDismissed')){wrap.style.display='none';return;}
+  function dismiss(){wrap.style.display='none';sessionStorage.setItem('orientDismissed','1');gtag('event','orient_dismissed');}
+  document.getElementById('orientClose').onclick=dismiss;
+  document.getElementById('orientDismiss').onclick=dismiss;
+})();
 
 /* ── Filter events ─────────────────────── */
 // Clicking any chip clears the quiz filter so manual filter takes over

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Path Banner Preview — MyIntern</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b1120;--bg2:#131b2e;--bg-card:#172033;
+  --glass:rgba(255,255,255,.06);--glass-b:rgba(255,255,255,.1);
+  --t1:#f1f5f9;--t2:#94a3b8;--t3:#64748b;
+  --accent:#38bdf8;--accent-g:rgba(56,189,248,.15);
+  --green:#34d399;--green-bg:rgba(52,211,153,.1);
+  --border:rgba(255,255,255,.08);
+  --sans:'DM Sans',system-ui,sans-serif;
+  --serif:'Playfair Display',Georgia,serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--bg);color:var(--t1);padding:40px 20px;-webkit-font-smoothing:antialiased}
+
+/* labels */
+.section-label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--t3);font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.section{margin-bottom:56px;max-width:720px;margin-left:auto;margin-right:auto}
+
+/* ── OPTION A: Signal Strip ─────────────────────────────── */
+/* Slim, 1-line dismissible bar. Barely there. */
+.strip{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:10px 16px;
+  background:rgba(56,189,248,.07);
+  border:1px solid rgba(56,189,248,.15);
+  border-radius:10px;
+  font-size:12.5px;color:var(--t2);
+  line-height:1.4;
+}
+.strip-text{flex:1}
+.strip-text strong{color:var(--t1);font-weight:600}
+.strip-close{font-size:16px;color:var(--t3);cursor:pointer;flex-shrink:0;line-height:1;background:none;border:none;color:var(--t3);font-family:var(--sans);padding:0 2px}
+.strip-close:hover{color:var(--t1)}
+
+/* ── OPTION B: Orientation Card ─────────────────────────── */
+/* A slightly taller card that earns its space by explaining the product. */
+.orient{
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-left:4px solid var(--accent);
+  border-radius:14px;
+  padding:18px 20px;
+  position:relative;
+}
+.orient-close{position:absolute;top:14px;right:16px;font-size:16px;color:var(--t3);cursor:pointer;background:none;border:none;font-family:var(--sans);padding:0}
+.orient-close:hover{color:var(--t1)}
+.orient-head{font-size:13px;font-weight:700;color:var(--t1);margin-bottom:12px;letter-spacing:-.1px}
+.orient-head em{color:var(--accent);font-style:normal}
+.orient-pts{display:flex;flex-direction:column;gap:8px}
+.orient-pt{display:flex;align-items:flex-start;gap:10px;font-size:12.5px;color:var(--t2);line-height:1.45}
+.orient-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.orient-dot.a{background:var(--accent)}
+.orient-dot.b{background:var(--green)}
+.orient-dot.c{background:#fbbf24}
+.orient-pt strong{color:var(--t1);font-weight:600}
+.orient-dismiss{margin-top:14px;padding-top:12px;border-top:1px solid var(--border);font-size:11px;color:var(--t3);cursor:pointer;display:inline-block}
+.orient-dismiss:hover{color:var(--t2)}
+
+/* mock card below banner to show context */
+.mock-card{margin-top:12px;background:var(--bg-card);border-radius:14px;padding:18px;border:1px solid var(--border);border-left:4px solid var(--accent);opacity:.5}
+.mock-top{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.mock-logo{width:44px;height:44px;border-radius:10px;background:var(--bg2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;color:var(--t3)}
+.mock-co{font-size:17px;font-weight:700;color:var(--t1)}
+.mock-prog{font-size:12.5px;color:var(--t2);margin-top:2px}
+.mock-meta{font-size:12.5px;color:var(--t2);display:flex;gap:16px;flex-wrap:wrap}
+.mock-badges{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.mock-badge{font-size:11px;font-weight:600;padding:3px 8px;border-radius:8px}
+.mock-badge.cgpa{background:rgba(56,189,248,.12);color:var(--accent);border:1px solid rgba(56,189,248,.2)}
+.mock-badge.lvl{background:rgba(52,211,153,.1);color:#34d399;border:1px solid rgba(52,211,153,.18)}
+.mock-tip{font-size:11.5px;color:var(--t3);margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+.paid{color:var(--green);font-weight:700}
+</style>
+</head>
+<body>
+
+<!-- ── OPTION A ─────────────────────────────────── -->
+<div class="section">
+  <div class="section-label">Option A — Signal strip (minimal)</div>
+
+  <div class="strip" id="stripA">
+    <span class="strip-text">
+      <strong>More than a list.</strong> Each card shows CGPA minimum, study level, stipend, and an honest tip — so you know if it's worth applying before you click.
+    </span>
+    <button class="strip-close" onclick="document.getElementById('stripA').style.display='none'">&times;</button>
+  </div>
+
+  <!-- mock card below to show scale -->
+  <div class="mock-card">
+    <div class="mock-top">
+      <div class="mock-logo">M</div>
+      <div><div class="mock-co">Maybank <span style="font-size:9px;font-weight:600;padding:2px 7px;border-radius:6px;background:rgba(96,165,250,.1);color:#60a5fa;text-transform:uppercase;letter-spacing:.4px">Finance</span></div><div class="mock-prog">Maybank Internship Programme</div></div>
+    </div>
+    <div class="mock-meta"><span>3–6 months</span><span class="paid">RM 1,500/month</span></div>
+    <div class="mock-badges"><span class="mock-badge cgpa">Min CGPA 3.0</span><span class="mock-badge lvl">Degree</span></div>
+    <div class="mock-tip">Competitive. Apply at least 3 months before your intended start date&hellip;</div>
+  </div>
+</div>
+
+<!-- ── OPTION B ─────────────────────────────────── -->
+<div class="section">
+  <div class="section-label">Option B — Orientation card (explains the product)</div>
+
+  <div class="orient" id="orientB">
+    <button class="orient-close" onclick="document.getElementById('orientB').style.display='none'">&times;</button>
+    <div class="orient-head">This isn't a directory. It's a shortlist <em>for you.</em></div>
+    <div class="orient-pts">
+      <div class="orient-pt">
+        <div class="orient-dot a"></div>
+        <span><strong>CGPA &amp; study level shown upfront</strong> — know if you qualify before clicking.</span>
+      </div>
+      <div class="orient-pt">
+        <div class="orient-dot b"></div>
+        <span><strong>Stipend on the card</strong> — no surprises after you apply.</span>
+      </div>
+      <div class="orient-pt">
+        <div class="orient-dot c"></div>
+        <span><strong>One honest tip per listing</strong> — the thing the company website doesn't say.</span>
+      </div>
+    </div>
+    <span class="orient-dismiss" onclick="document.getElementById('orientB').style.display='none'">Got it — show me the internships &rarr;</span>
+  </div>
+
+  <!-- mock card below to show scale -->
+  <div class="mock-card">
+    <div class="mock-top">
+      <div class="mock-logo">M</div>
+      <div><div class="mock-co">Maybank <span style="font-size:9px;font-weight:600;padding:2px 7px;border-radius:6px;background:rgba(96,165,250,.1);color:#60a5fa;text-transform:uppercase;letter-spacing:.4px">Finance</span></div><div class="mock-prog">Maybank Internship Programme</div></div>
+    </div>
+    <div class="mock-meta"><span>3–6 months</span><span class="paid">RM 1,500/month</span></div>
+    <div class="mock-badges"><span class="mock-badge cgpa">Min CGPA 3.0</span><span class="mock-badge lvl">Degree</span></div>
+    <div class="mock-tip">Competitive. Apply at least 3 months before your intended start date&hellip;</div>
+  </div>
+</div>
+
+</body>
+</html>
