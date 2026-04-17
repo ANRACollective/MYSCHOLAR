@@ -2136,7 +2136,7 @@ ${rollingNote}
 <div class="modal-section"><div class="modal-section-label">Notes & Tips</div><div class="modal-notes">${s.notes}</div></div>
 <div class="modal-actions">
   <div class="modal-actions-row">
-    <a id="modalVisitBtn" class="btn-primary" href="${s.url}" target="_blank" onclick="recordVisit(${id})">Visit Official Website ↗</a>
+    <a id="modalVisitBtn" class="btn-primary" href="${s.url}" target="_blank" onclick="recordVisit(${id},'${s.name.replace(/'/g,"\\'").replace(/"/g,'\\"')}')">Visit Official Website ↗</a>
     <button id="modalBookmarkBtn" class="modal-icon-btn${isSaved?' saved':''}" onclick="toggleBookmarkIcon(${id},this)" title="${isSaved?'Remove bookmark':'Save scholarship'}">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="${isSaved?'#b45309':'none'}" stroke="${isSaved?'#b45309':'currentColor'}" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
     </button>
@@ -2234,11 +2234,13 @@ async function checkModalUrl(id, url){
   }
 }
 
-// Called when student clicks Visit — logs as a visit (for future analytics)
-function recordVisit(id){
-  // Placeholder for GA event tracking
+// Called when student clicks Visit — logs as a visit
+function recordVisit(id, name){
   if(typeof gtag !== 'undefined'){
-    gtag('event','visit_official_website',{scholarship_id:id});
+    gtag('event','visit_official_website',{
+      scholarship_id: id,
+      scholarship_name: name || ''
+    });
   }
 }
 
