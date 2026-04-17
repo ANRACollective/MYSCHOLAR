@@ -203,7 +203,7 @@ nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:
 .chip:hover{border-color:var(--accent);color:var(--accent)}
 .chip.active{background:var(--accent);color:var(--bg);border-color:var(--accent);font-weight:600}
 /* Preference toggles — different visual from industry chips */
-.pref{padding:7px 14px;border-radius:18px;border:1.5px dashed var(--border);background:transparent;color:var(--t3);font-size:12px;font-weight:500;cursor:pointer;transition:all .2s;user-select:none}
+.pref{padding:7px 14px;border-radius:18px;border:1.5px dashed rgba(255,255,255,.18);background:transparent;color:var(--t2);font-size:12px;font-weight:500;cursor:pointer;transition:all .2s;user-select:none}
 .pref:hover{border-color:var(--green);color:var(--green)}
 .pref.on{background:var(--green);color:#064e3b;border-color:var(--green);border-style:solid;font-weight:600}
 .summary{font-size:12px;color:var(--t3);margin-top:6px}
@@ -244,7 +244,7 @@ nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:
 .p-edu{background:rgba(252,211,77,.1);color:var(--c-edu)}.p-ngo{background:rgba(103,232,249,.1);color:var(--c-ngo)}
 .prog{font-size:13px;color:var(--t2);margin-top:2px}
 .roles{font-size:12.5px;color:var(--t3);line-height:1.5;margin-top:10px;padding:8px 12px;background:var(--bg2);border-radius:8px;border:1px solid var(--border)}
-.meta{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:12px;font-size:12.5px;color:var(--t2)}
+.meta{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:12px;font-size:13px;color:var(--t1)}
 .mi{display:flex;align-items:center;gap:5px}
 .mi .ic{font-size:14px}
 .paid{color:var(--green);font-weight:700;font-size:13px}
@@ -253,11 +253,11 @@ nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:
 /* Qualifier badges (CGPA / study level / bumi) */
 .qrow{display:flex;flex-wrap:wrap;gap:5px;margin:8px 0 4px}
 .qbadge{font-size:11px;font-weight:600;padding:3px 8px;border-radius:8px;white-space:nowrap;letter-spacing:.01em}
-.qbadge.cgpa{background:rgba(56,189,248,.12);color:var(--accent);border:1px solid rgba(56,189,248,.2)}
-.qbadge.lvl{background:rgba(52,211,153,.1);color:#34d399;border:1px solid rgba(52,211,153,.18)}
-.qbadge.bumi{background:rgba(251,191,36,.1);color:#fbbf24;border:1px solid rgba(251,191,36,.2)}
-/* Tip preview on card */
-.tip-prev{font-size:11.5px;color:var(--t3);line-height:1.45;display:block;margin-top:8px;padding-top:8px;border-top:1px solid var(--border)}
+.qbadge.cgpa{background:rgba(56,189,248,.14);color:var(--accent);border:1px solid rgba(56,189,248,.35)}
+.qbadge.lvl{background:rgba(52,211,153,.12);color:#34d399;border:1px solid rgba(52,211,153,.35)}
+.qbadge.bumi{background:rgba(251,191,36,.12);color:#fbbf24;border:1px solid rgba(251,191,36,.35)}
+/* Tip preview — key differentiator, should read clearly */
+.tip-prev{font-size:12px;color:var(--t2);line-height:1.5;display:block;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
 /* Glass button */
 .act-row{margin-top:14px;display:flex;align-items:center;justify-content:space-between}
 .gbtn{display:inline-flex;align-items:center;gap:6px;padding:10px 24px;background:var(--glass);color:var(--t1);border:1.5px solid var(--glass-b);border-radius:10px;font-family:var(--sans);font-size:13px;font-weight:600;text-decoration:none;cursor:pointer;transition:all .25s;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
@@ -268,20 +268,19 @@ nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:
 @media(max-width:500px){.gbtn{width:100%;justify-content:center;padding:12px}.hint{display:none}.act-row{flex-direction:column}}
 .empty{text-align:center;padding:48px 16px;color:var(--t3);font-size:14px}
 
-/* ── ORIENTATION CARD ──────────────────── */
-.orient-wrap{max-width:720px;margin:12px auto 0;padding:0 20px}
-@media(min-width:768px){.orient-wrap{max-width:1100px}}
-.orient{background:var(--bg-card);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:14px;padding:18px 20px;position:relative;animation:fadeIn .3s ease both}
-.orient-close{position:absolute;top:12px;right:14px;font-size:18px;color:var(--t3);cursor:pointer;background:none;border:none;font-family:var(--sans);line-height:1;padding:2px 4px;transition:color .15s}
+/* ── ORIENTATION OVERLAY (glass modal on arrival) ──── */
+.orient-wrap{position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn .2s ease both}
+.orient{background:rgba(23,32,51,.97);border:1px solid rgba(56,189,248,.18);border-top:3px solid var(--accent);border-radius:18px;padding:30px 26px 24px;position:relative;max-width:440px;width:100%;box-shadow:0 32px 80px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.04)}
+.orient-close{position:absolute;top:14px;right:16px;font-size:20px;color:var(--t3);cursor:pointer;background:none;border:none;font-family:var(--sans);line-height:1;padding:2px 6px;transition:color .15s}
 .orient-close:hover{color:var(--t1)}
-.orient-head{font-size:13.5px;font-weight:700;color:var(--t1);margin-bottom:12px;padding-right:24px;letter-spacing:-.1px}
+.orient-head{font-size:17px;font-weight:700;color:var(--t1);margin-bottom:18px;padding-right:24px;line-height:1.35;letter-spacing:-.2px}
 .orient-head em{color:var(--accent);font-style:normal}
-.orient-pts{display:flex;flex-direction:column;gap:8px}
-.orient-pt{display:flex;align-items:flex-start;gap:10px;font-size:12.5px;color:var(--t2);line-height:1.5}
-.orient-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.orient-pts{display:flex;flex-direction:column;gap:12px}
+.orient-pt{display:flex;align-items:flex-start;gap:12px;font-size:13px;color:var(--t2);line-height:1.55}
+.orient-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:5px}
 .orient-dot.a{background:var(--accent)}.orient-dot.b{background:var(--green)}.orient-dot.c{background:#fbbf24}
 .orient-pt strong{color:var(--t1);font-weight:600}
-.orient-dismiss{display:inline-block;margin-top:14px;padding-top:12px;border-top:1px solid var(--border);font-size:12px;color:var(--accent);cursor:pointer;font-weight:500;transition:opacity .15s}
+.orient-dismiss{display:inline-block;margin-top:20px;padding-top:16px;border-top:1px solid var(--border);font-size:12.5px;color:var(--accent);cursor:pointer;font-weight:600;transition:opacity .15s;letter-spacing:.01em}
 .orient-dismiss:hover{opacity:.7}
 
 /* ── MODAL ─────────────────────────────── */
@@ -478,7 +477,7 @@ document.addEventListener('click', function(e) {
   <!-- Career Match Quiz CTA -->
   <div class="quiz-cta-wrap">
     <button class="quiz-cta-card" id="quizOpen">
-      <span class="quiz-cta-main" data-i18n="quizCta">Match Me</span>
+      <span class="quiz-cta-main" data-i18n="quizCta">Find My Fit</span>
       <span class="quiz-cta-meta" data-i18n="quizCtaMeta">6 quick questions</span>
     </button>
   </div>
@@ -864,8 +863,8 @@ function render(){
     el.className='row b-'+k;
     el.style.animation='fadeIn .25s ease '+Math.min(c,20)*.03+'s both';
     el.onclick=()=>openModal(idx);
-    const pills=(item.industry||[]).slice(0,2).map(i=>'<span class="pill p-'+(IM[i]||'con')+'">'+(IS[i]||i)+'</span>').join('');
-    const stip=hasPay(item)?'<span class="mi paid"><span class="ic">&#x1F4B0;</span>'+item.allowance_text+'</span>':'';
+    // Pills removed from card face — industry shown via colour-coded left border; full pills in modal
+    const stip=hasPay(item)?'<span class="mi paid">'+item.allowance_text+'</span>':'';
     // qualifier badges: CGPA threshold, study level, bumi-only
     const quals=fmtQuals(item);
     // tip preview: first 80 chars — hint, not a paragraph
@@ -874,7 +873,7 @@ function render(){
     const intake=fmtIntake(item);
     // meta row: no emoji icons, clean text only, conditional intake
     const metaItems='<span class="mi">'+fmtDur(item)+'</span>'+(stip?stip:'')+(intake?'<span class="mi">'+intake+'</span>':'');
-    el.innerHTML='<div class="row-top"><div class="logo-w">'+logoHTML(item)+'</div><div class="row-hd"><div class="co-line"><span class="co">'+item.company+'</span>'+pills+'</div><div class="prog">'+item.programme_name+'</div></div></div>'
+    el.innerHTML='<div class="row-top"><div class="logo-w">'+logoHTML(item)+'</div><div class="row-hd"><div class="co-line"><span class="co">'+item.company+'</span></div><div class="prog">'+item.programme_name+'</div></div></div>'
       +'<div class="meta">'+metaItems+'</div>'
       +quals
       +tipPrev
@@ -923,7 +922,7 @@ const INTERN_LANG = {
     heroH1:'Find Your<br><em>Internship.</em>',
     heroSub:'A free, curated directory of paid and unpaid internship programmes for Malaysian students — GLCs, banks, startups and more.',
     heroStatProg:'Programmes', heroStatInd:'Industries', heroStatFree:'Free',
-    quizCta:'Match Me', quizCtaMeta:'6 quick questions',
+    quizCta:'Find My Fit', quizCtaMeta:'6 quick questions',
     searchPlaceholder:'Search company or programme...',
     filterInd:'Industry', filterPref:'Preferences',
     chipAll:'All',
@@ -943,7 +942,7 @@ const INTERN_LANG = {
     heroH1:'Cari<br><em>Internship</em> Kamu.',
     heroSub:'Direktori percuma program internship berbayar dan tidak berbayar untuk pelajar Malaysia — GLC, bank, startup dan lebih lagi.',
     heroStatProg:'Program', heroStatInd:'Industri', heroStatFree:'Percuma',
-    quizCta:'Padankan Saya', quizCtaMeta:'6 soalan ringkas',
+    quizCta:'Cari Yang Sesuai', quizCtaMeta:'6 soalan ringkas',
     searchPlaceholder:'Cari syarikat atau program...',
     filterInd:'Industri', filterPref:'Keutamaan',
     chipAll:'Semua',
