@@ -258,6 +258,35 @@ nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:
 .qbadge.bumi{background:rgba(251,191,36,.12);color:#fbbf24;border:1px solid rgba(251,191,36,.35)}
 /* Tip preview — key differentiator, should read clearly */
 .tip-prev{font-size:12px;color:var(--t2);line-height:1.5;display:block;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+/* ── SAVED FEATURE ─────────────────────── */
+/* Nav saved button */
+.saved-nav-btn{font-size:12px;color:rgba(255,255,255,.5);background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:4px 11px;cursor:pointer;font-family:var(--sans);display:flex;align-items:center;gap:5px;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.saved-nav-btn:hover{color:#fff;background:rgba(255,255,255,.15)}
+.saved-nav-btn.has-saved{color:var(--accent);background:rgba(56,189,248,.12);border-color:rgba(56,189,248,.25)}
+/* Save icon on card */
+.save-btn{background:none;border:none;cursor:pointer;padding:6px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--t3);transition:all .2s;flex-shrink:0}
+.save-btn:hover{color:var(--accent);background:rgba(56,189,248,.08)}
+.save-btn.saved{color:var(--accent)}
+/* Saved panel overlay */
+.saved-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:1000;justify-content:center;align-items:flex-end}
+.saved-ov.open{display:flex}
+@media(min-width:600px){.saved-ov{align-items:center;padding:24px}}
+.saved-panel{background:var(--bg2);border:1px solid var(--border);border-radius:20px 20px 0 0;width:100%;max-width:540px;max-height:80vh;overflow-y:auto;position:relative;padding:20px 20px 32px}
+@media(min-width:600px){.saved-panel{border-radius:18px;max-height:70vh}}
+.saved-panel-bar{width:40px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 16px}
+.saved-panel-hd{font-size:16px;font-weight:700;color:var(--t1);margin-bottom:16px}
+.saved-panel-close{position:absolute;top:16px;right:18px;font-size:20px;color:var(--t3);cursor:pointer;background:none;border:none;font-family:var(--sans)}
+.saved-item{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border);gap:12px}
+.saved-item:last-child{border-bottom:none}
+.saved-item-info{flex:1;min-width:0}
+.saved-item-co{font-size:14px;font-weight:600;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.saved-item-prog{font-size:12px;color:var(--t3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.saved-item-r{display:flex;gap:8px;align-items:center;flex-shrink:0}
+.saved-view{font-size:12px;color:var(--accent);cursor:pointer;background:none;border:none;font-family:var(--sans);font-weight:600;padding:0}
+.saved-view:hover{opacity:.7}
+.saved-remove{font-size:12px;color:var(--t3);cursor:pointer;background:none;border:none;font-family:var(--sans);padding:0}
+.saved-remove:hover{color:var(--red)}
+.saved-empty{text-align:center;padding:36px 20px;color:var(--t3);font-size:13px;line-height:1.7}
 /* Glass button */
 .act-row{margin-top:14px;display:flex;align-items:center;justify-content:space-between}
 .gbtn{display:inline-flex;align-items:center;gap:6px;padding:10px 24px;background:var(--glass);color:var(--t1);border:1.5px solid var(--glass-b);border-radius:10px;font-family:var(--sans);font-size:13px;font-weight:600;text-decoration:none;cursor:pointer;transition:all .25s;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
@@ -404,6 +433,11 @@ nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:
       Products
       <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="margin-left:1px;transition:transform .18s" id="productsBtnChevron"><path d="M6 9l6 6 6-6"/></svg>
     </button>
+    <!-- Saved button — opens saved internships panel -->
+    <button class="saved-nav-btn" id="savedNavBtn" onclick="openSavedPanel()">
+      <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+      Saved (<span id="savedCount">0</span>)
+    </button>
     <!-- Language toggle — mirrors MyScholar index.html, shares scholar_lang localStorage key -->
     <div class="lang-toggle" role="group" aria-label="Language">
       <button class="lt-opt active" id="lt-en" onclick="setLang('en')" aria-pressed="true">EN</button>
@@ -536,6 +570,16 @@ document.addEventListener('click', function(e) {
   </div>
   <div class="ft-divider"></div>
   <a href="https://myscholar.my">myscholar.my</a> · MyIntern is part of the MyScholar ecosystem
+</div>
+
+<!-- ── SAVED INTERNSHIPS PANEL ────────────────────────────────────────────── -->
+<div class="saved-ov" id="savedOv" onclick="if(event.target===this)closeSavedPanel()">
+  <div class="saved-panel">
+    <div class="saved-panel-bar"></div>
+    <button class="saved-panel-close" onclick="closeSavedPanel()">&times;</button>
+    <div class="saved-panel-hd">Saved Internships</div>
+    <div id="savedList"></div>
+  </div>
 </div>
 
 <!-- ── CAREER MATCH QUIZ MODAL ────────────────────────────────────────────── -->
@@ -877,7 +921,9 @@ function render(){
       +'<div class="meta">'+metaItems+'</div>'
       +quals
       +tipPrev
-      +'<div class="act-row"><a href="'+(item.url||'#')+'" target="_blank" rel="noopener" class="gbtn" onclick="event.stopPropagation();gtag(\'event\',\'intern_apply\',{co:\''+(item.company||'').replace(/'/g,'')+'\'})">'+(T?T.applyBtn:'Apply')+' <span class="arr">&rarr;</span></a><span class="hint">'+(T?T.tapDetails:'Tap for details')+'</span></div>';
+      +'<div class="act-row"><a href="'+(item.url||'#')+'" target="_blank" rel="noopener" class="gbtn" onclick="event.stopPropagation();gtag(\'event\',\'intern_apply\',{co:\''+(item.company||'').replace(/'/g,'')+'\'})">'+(T?T.applyBtn:'Apply')+' <span class="arr">&rarr;</span></a>'
+      +'<button class="save-btn'+(savedInternships.has(item.id)?' saved':'')+'" onclick="event.stopPropagation();toggleSaved('+item.id+',this)" aria-label="Save internship"><svg width="16" height="16" fill="'+(savedInternships.has(item.id)?'currentColor':'none')+'" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>'
+      +'</div>';
     feed.appendChild(el);
   });
   document.getElementById('sum').textContent=c+' '+(c!==1?(T?T.foundPlural:'internships found'):(T?T.foundSingular:'internship found'));
@@ -907,6 +953,66 @@ function closeModal(){document.getElementById('ov').classList.remove('open');doc
 document.getElementById('mx').onclick=closeModal;
 document.getElementById('ov').onclick=e=>{if(e.target===e.currentTarget)closeModal()};
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+
+/* ── Saved internships ─────────────────────────────────────────────────────
+   Uses localStorage key 'myintern_saved' — separate from MyScholar bookmarks.
+   Save state is stored as an array of integer IDs.
+   ─────────────────────────────────────────────────────────────────────── */
+let savedInternships = new Set(JSON.parse(localStorage.getItem('myintern_saved')||'[]'));
+
+function persistSaved(){
+  localStorage.setItem('myintern_saved',JSON.stringify([...savedInternships]));
+  updateSavedCount();
+}
+
+function toggleSaved(id, btn){
+  const wasSaved = savedInternships.has(id);
+  if(wasSaved){savedInternships.delete(id);}else{savedInternships.add(id);}
+  persistSaved();
+  // Update the button that was clicked immediately — no full re-render needed
+  if(btn){
+    btn.classList.toggle('saved',!wasSaved);
+    btn.querySelector('svg').setAttribute('fill',!wasSaved?'currentColor':'none');
+  }
+  gtag('event','intern_saved',{id,action:wasSaved?'unsave':'save'});
+}
+
+function updateSavedCount(){
+  const n=savedInternships.size;
+  document.getElementById('savedCount').textContent=n;
+  document.getElementById('savedNavBtn').classList.toggle('has-saved',n>0);
+}
+
+function openSavedPanel(){
+  const list=document.getElementById('savedList');
+  const items=DATA.filter(d=>savedInternships.has(d.id));
+  if(!items.length){
+    list.innerHTML='<div class="saved-empty">No saved internships yet.<br>Tap the bookmark icon on any card to save it here.</div>';
+  } else {
+    list.innerHTML=items.map(d=>`
+      <div class="saved-item" id="si-${d.id}">
+        <div class="saved-item-info">
+          <div class="saved-item-co">${d.company}</div>
+          <div class="saved-item-prog">${d.programme_name}</div>
+        </div>
+        <div class="saved-item-r">
+          <button class="saved-view" onclick="closeSavedPanel();openModal(DATA.findIndex(x=>x.id===${d.id}))">View &rarr;</button>
+          <button class="saved-remove" onclick="savedInternships.delete(${d.id});persistSaved();document.getElementById('si-${d.id}').remove();if(!document.querySelectorAll('.saved-item').length)openSavedPanel()">Remove</button>
+        </div>
+      </div>`).join('');
+  }
+  document.getElementById('savedOv').classList.add('open');
+  document.body.style.overflow='hidden';
+  gtag('event','intern_saved_panel_open',{count:items.length});
+}
+
+function closeSavedPanel(){
+  document.getElementById('savedOv').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+// Initialise count on load
+updateSavedCount();
 
 /* ── Language toggle ───────────────────────────────────────────────────────
    HOW IT WORKS:
