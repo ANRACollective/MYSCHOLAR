@@ -71,6 +71,16 @@ try {
   console.log('  Wave 5: not found, skipping');
 }
 
+// Wave 6: from wave6.js (Islamic/STAM/tahfiz, Sabah/Sarawak, GLC gaps, MyTuition area expansion, scholarship comparisons, MyIntern gaps)
+// Created: 2026-04-17
+try {
+  const w6 = require('./wave6.js');
+  KEYWORDS.push(...w6);
+  console.log('  Wave 6: ' + w6.length + ' keywords');
+} catch(e) {
+  console.log('  Wave 6: not found, skipping');
+}
+
 console.log('  Total: ' + KEYWORDS.length + ' keywords');
 console.log('');
 
@@ -329,6 +339,17 @@ KEYWORDS.forEach(function(entry) {
   report += 'Long-tail BM: ' + entry.keywords.longtail_bm.join(' | ') + '\n\n';
 });
 fs.writeFileSync(path.join(OUT, 'keyword-report.md'), report, 'utf8');
+console.log('  + keyword-report.md');
+
+console.log('');
+console.log('===================');
+console.log('  DONE -- ' + count + ' pages generated');
+console.log('  Output: ./seo/');
+console.log('======================================================');
+console.log('');
+console.log('  CMD: copy seo/ to repo, then git push');
+console.log('');
+');
 console.log('  + keyword-report.md');
 
 console.log('');
