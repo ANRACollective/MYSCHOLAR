@@ -116,7 +116,9 @@
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-ZETBRDDMTV');</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://ywvfvjvxwhcfprfrkgqm.supabase.co">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
 <style>
 :root{
   --bg:#0b1120;--bg2:#131b2e;--bg-card:#172033;--bg-card-h:#1c2840;
@@ -133,6 +135,7 @@
   --c-fmc:#4ade80;--c-leg:#e879f9;--c-edu:#fcd34d;--c-ngo:#67e8f9;
 }
 *{box-sizing:border-box;margin:0;padding:0}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 html{scroll-behavior:smooth}
 body{font-family:var(--sans);background:var(--bg);color:var(--t1);min-height:100vh;-webkit-font-smoothing:antialiased}
 
@@ -182,10 +185,10 @@ nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:
 .hero-eyebrow{font-size:10px;letter-spacing:.18em;color:var(--accent);text-transform:uppercase;font-weight:600;margin-bottom:14px;position:relative}
 .hero-h1{font-family:var(--serif);font-size:clamp(36px,6vw,68px);color:#fff;line-height:1.06;margin-bottom:16px;font-weight:900;position:relative}
 .hero-h1 em{color:var(--accent);font-style:normal}
-.hero-sub{font-size:14px;color:rgba(255,255,255,.45);max-width:420px;margin:0 auto 36px;font-weight:300;line-height:1.75;position:relative}
+.hero-sub{font-size:14px;color:rgba(255,255,255,.6);max-width:420px;margin:0 auto 36px;font-weight:300;line-height:1.75;position:relative}
 .hero-stats{display:flex;justify-content:center;gap:44px;flex-wrap:wrap;position:relative}
 .hs-item .hs-num{font-family:var(--serif);font-size:34px;color:#fff;font-weight:700;line-height:1;display:block}
-.hs-item .hs-lbl{font-size:10px;color:rgba(255,255,255,.32);margin-top:4px;letter-spacing:.08em;text-transform:uppercase;display:block}
+.hs-item .hs-lbl{font-size:10px;color:rgba(255,255,255,.5);margin-top:4px;letter-spacing:.08em;text-transform:uppercase;display:block}
 @media(max-width:680px){.hero-intern{padding:40px 20px 36px}.hero-stats{gap:28px}.hs-item .hs-num{font-size:28px}}
 
 /* ── SEARCH ────────────────────────────── */
@@ -518,7 +521,8 @@ document.addEventListener('click', function(e) {
 </div>
 
 <div class="search-w">
-  <input class="search-i" id="search" type="text" placeholder="Search company or programme...">
+  <label for="search" class="sr-only">Search internships</label>
+  <input class="search-i" id="search" type="text" placeholder="Search company or programme..." aria-label="Search internships">
 </div>
 
 <div class="filters">
@@ -539,7 +543,7 @@ document.addEventListener('click', function(e) {
 
 <div class="orient-wrap" id="orientWrap">
   <div class="orient">
-    <button class="orient-close" id="orientClose">&times;</button>
+    <button class="orient-close" id="orientClose" aria-label="Close orientation">&times;</button>
     <div class="orient-head" data-i18n="orientHead">This isn't a directory. It's a shortlist <em>for you.</em></div>
     <div class="orient-pts">
       <div class="orient-pt"><div class="orient-dot a"></div><span data-i18n="orientPt1"><strong>CGPA &amp; study level shown upfront</strong> — know if you qualify before clicking.</span></div>
@@ -592,7 +596,7 @@ document.addEventListener('click', function(e) {
       <div class="qz-hdr">
         <div class="qz-eyebrow">Career Match</div>
         <div class="qz-title">What kind of intern are you?</div>
-        <div class="qz-sub">8 quick questions. No right or wrong answers.</div>
+        <div class="qz-sub">6 quick questions. No right or wrong answers.</div>
       </div>
       <div class="qz-prog-wrap">
         <div class="qz-prog-info">
@@ -638,6 +642,17 @@ const IS={'Finance & Banking':'Finance','Energy & Utilities':'Energy','Technolog
 
 let DATA=[];
 
+// ── HTML ESCAPE — prevents XSS from DB or user input ─────────────────────
+function escapeHtml(str) {
+  if (str == null) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 /* ── Logo: multi-source cascade ── */
 /* 1. Clearbit (high-quality full logo — works for most international domains)
    2. Google Favicon 128px (reliable fallback — works for virtually any domain)
@@ -646,12 +661,12 @@ function logoHTML(item,sz){
   const d=item.logo_domain, n=item.company, initial=n[0];
   const hue=n.charCodeAt(0)*7%360;
   const fbStyle='background:hsl('+hue+',50%,25%);color:hsl('+hue+',70%,70%)';
-  if(!d) return '<span class="fb" style="'+fbStyle+'">'+initial+'</span>';
-  const cb='https://logo.clearbit.com/'+d;
-  const gf='https://www.google.com/s2/favicons?domain='+d+'&sz=128';
-  // Hide the fallback initial once the image loads successfully
-  return '<span class="fb" style="'+fbStyle+'">'+initial+'</span>'
-    +'<img src="'+cb+'" alt="'+n+'" onload="this.previousElementSibling.style.display=\'none\'" onerror="this.onerror=function(){this.style.display=\'none\';this.previousElementSibling.style.display=\'flex\'}.bind(this);this.src=\''+gf+'\'" loading="lazy">';
+  const safeInitial=escapeHtml(initial), safeName=escapeHtml(n);
+  if(!d) return '<span class="fb" style="'+fbStyle+'">'+safeInitial+'</span>';
+  const cb='https://logo.clearbit.com/'+encodeURIComponent(d);
+  const gf='https://www.google.com/s2/favicons?domain='+encodeURIComponent(d)+'&sz=128';
+  return '<span class="fb" style="'+fbStyle+'">'+safeInitial+'</span>'
+    +'<img src="'+cb+'" alt="'+safeName+'" onload="this.previousElementSibling.style.display=\'none\'" onerror="this.onerror=function(){this.style.display=\'none\';this.previousElementSibling.style.display=\'flex\'}.bind(this);this.src=\''+gf+'\'" loading="lazy">';
 }
 
 /* ── Helpers ────────────────────────────── */
@@ -678,8 +693,7 @@ function fmtQuals(item){
   const parts=[];
   if(item.min_cgpa)parts.push('<span class="qbadge cgpa">Min CGPA '+parseFloat(item.min_cgpa).toFixed(1)+'</span>');
   if(item.study_level&&item.study_level!=='Any'){
-    // Plain language: Diploma stays "Diploma OK", Undergraduate becomes "Degree"
-    const lbl=item.study_level==='Diploma'?'Diploma OK':item.study_level==='Undergraduate'?'Degree':item.study_level;
+    const lbl=item.study_level==='Diploma'?'Diploma OK':item.study_level==='Undergraduate'?'Degree':escapeHtml(item.study_level);
     parts.push('<span class="qbadge lvl">'+lbl+'</span>');
   }
   if(item.bumi_only)parts.push('<span class="qbadge bumi">Bumi only</span>');
@@ -866,7 +880,7 @@ function qzClose(){
 document.getElementById('quizOpen').onclick=qzOpen;
 document.getElementById('qzClose').onclick=qzClose;
 document.getElementById('qzOv').onclick=e=>{if(e.target===e.currentTarget)qzClose()};
-document.addEventListener('keydown',e=>{if(e.key==='Escape')qzClose()});
+// Escape key handling consolidated below in the modal section
 document.getElementById('qzRetake').onclick=function(){
   document.getElementById('qzResult').style.display='none';
   document.getElementById('qzFlow').style.display='block';
@@ -908,20 +922,20 @@ function render(){
     el.style.animation='fadeIn .25s ease '+Math.min(c,20)*.03+'s both';
     el.onclick=()=>openModal(idx);
     // Pills removed from card face — industry shown via colour-coded left border; full pills in modal
-    const stip=hasPay(item)?'<span class="mi paid">'+item.allowance_text+'</span>':'';
+    const stip=hasPay(item)?'<span class="mi paid">'+escapeHtml(item.allowance_text)+'</span>':'';
     // qualifier badges: CGPA threshold, study level, bumi-only
     const quals=fmtQuals(item);
     // tip preview: first 80 chars — hint, not a paragraph
-    const tipPrev=item.tips?'<span class="tip-prev">'+item.tips.slice(0,80)+(item.tips.length>80?'&hellip;':'')+'</span>':'';
+    const tipPrev=item.tips?'<span class="tip-prev">'+escapeHtml(item.tips.slice(0,80))+(item.tips.length>80?'&hellip;':'')+'</span>':'';
     // intake: only show rolling badge — full intake text lives in the modal
     const intake=fmtIntake(item);
     // meta row: no emoji icons, clean text only, conditional intake
     const metaItems='<span class="mi">'+fmtDur(item)+'</span>'+(stip?stip:'')+(intake?'<span class="mi">'+intake+'</span>':'');
-    el.innerHTML='<div class="row-top"><div class="logo-w">'+logoHTML(item)+'</div><div class="row-hd"><div class="co-line"><span class="co">'+item.company+'</span></div><div class="prog">'+item.programme_name+'</div></div></div>'
+    el.innerHTML='<div class="row-top"><div class="logo-w">'+logoHTML(item)+'</div><div class="row-hd"><div class="co-line"><span class="co">'+escapeHtml(item.company)+'</span></div><div class="prog">'+escapeHtml(item.programme_name)+'</div></div></div>'
       +'<div class="meta">'+metaItems+'</div>'
       +quals
       +tipPrev
-      +'<div class="act-row"><a href="'+(item.url||'#')+'" target="_blank" rel="noopener" class="gbtn" onclick="event.stopPropagation();gtag(\'event\',\'intern_apply\',{co:\''+(item.company||'').replace(/'/g,'')+'\'})">'+(T?T.applyBtn:'Apply')+' <span class="arr">&rarr;</span></a>'
+      +'<div class="act-row"><a href="'+escapeHtml(item.url||'#')+'" target="_blank" rel="noopener" class="gbtn" onclick="event.stopPropagation();gtag(\'event\',\'intern_apply\',{co:\''+escapeHtml((item.company||'').replace(/'/g,''))+'\'})">'+(T?T.applyBtn:'Apply')+' <span class="arr">&rarr;</span></a>'
       +'<button class="save-btn'+(savedInternships.has(item.id)?' saved':'')+'" onclick="event.stopPropagation();toggleSaved('+item.id+',this)" aria-label="Save internship"><svg width="16" height="16" fill="'+(savedInternships.has(item.id)?'currentColor':'none')+'" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>'
       +'</div>';
     feed.appendChild(el);
@@ -933,18 +947,18 @@ function render(){
 /* ── Modal ──────────────────────────────── */
 function openModal(idx){
   const item=DATA[idx],ov=document.getElementById('ov');
-  const pills=(item.industry||[]).map(i=>'<span class="pill p-'+(IM[i]||'con')+'">'+i+'</span>').join('');
-  document.getElementById('mhdr').innerHTML='<div class="mlogo">'+logoHTML(item,120)+'</div><div class="minfo"><div class="mco">'+item.company+'</div><div class="mprog">'+item.programme_name+'</div><div class="mpills">'+pills+'</div></div>';
+  const pills=(item.industry||[]).map(i=>'<span class="pill p-'+(IM[i]||'con')+'">'+escapeHtml(i)+'</span>').join('');
+  document.getElementById('mhdr').innerHTML='<div class="mlogo">'+logoHTML(item,120)+'</div><div class="minfo"><div class="mco">'+escapeHtml(item.company)+'</div><div class="mprog">'+escapeHtml(item.programme_name)+'</div><div class="mpills">'+pills+'</div></div>';
   let h='';
-  if(item.description)h+='<p class="mdesc">'+item.description+'</p>';
-  h+='<div class="dgrid"><div class="dcard"><div class="dlbl">Allowance</div><div class="dval'+(hasPay(item)?' g':'')+'">'+( item.allowance_text||'Not stated')+'</div></div>'
+  if(item.description)h+='<p class="mdesc">'+escapeHtml(item.description)+'</p>';
+  h+='<div class="dgrid"><div class="dcard"><div class="dlbl">Allowance</div><div class="dval'+(hasPay(item)?' g':'')+'">'+escapeHtml(item.allowance_text||'Not stated')+'</div></div>'
     +'<div class="dcard"><div class="dlbl">Duration</div><div class="dval">'+fmtDur(item)+'</div></div>'
-    +'<div class="dcard"><div class="dlbl">Study Level</div><div class="dval">'+(item.study_level||'Any')+'</div></div>'
-    +'<div class="dcard"><div class="dlbl">Intake</div><div class="dval">'+(item.intake_text||'Check website')+'</div></div></div>';
-  if(item.roles_available)h+='<div class="msec"><div class="msec-t">Roles Available</div><p>'+item.roles_available+'</p></div>';
-  if(item.eligibility)h+='<div class="msec"><div class="msec-t">Eligibility</div><p>'+item.eligibility+'</p></div>';
-  if(item.tips)h+='<div class="mtip"><strong>Tip:</strong> '+item.tips+'</div>';
-  h+='<a href="'+(item.url||'#')+'" target="_blank" rel="noopener" class="mapply" onclick="gtag(\'event\',\'intern_apply_modal\',{co:\''+item.company.replace(/'/g,'')+'\'})">Apply to '+item.company+' &rarr;</a>';
+    +'<div class="dcard"><div class="dlbl">Study Level</div><div class="dval">'+escapeHtml(item.study_level||'Any')+'</div></div>'
+    +'<div class="dcard"><div class="dlbl">Intake</div><div class="dval">'+escapeHtml(item.intake_text||'Check website')+'</div></div></div>';
+  if(item.roles_available)h+='<div class="msec"><div class="msec-t">Roles Available</div><p>'+escapeHtml(item.roles_available)+'</p></div>';
+  if(item.eligibility)h+='<div class="msec"><div class="msec-t">Eligibility</div><p>'+escapeHtml(item.eligibility)+'</p></div>';
+  if(item.tips)h+='<div class="mtip"><strong>Tip:</strong> '+escapeHtml(item.tips)+'</div>';
+  h+='<a href="'+escapeHtml(item.url||'#')+'" target="_blank" rel="noopener" class="mapply" onclick="gtag(\'event\',\'intern_apply_modal\',{co:\''+escapeHtml(item.company.replace(/'/g,''))+'\'})">Apply to '+escapeHtml(item.company)+' &rarr;</a>';
   document.getElementById('mbody').innerHTML=h;
   ov.classList.add('open');document.body.style.overflow='hidden';
   gtag('event','intern_detail',{co:item.company});
@@ -952,13 +966,15 @@ function openModal(idx){
 function closeModal(){document.getElementById('ov').classList.remove('open');document.body.style.overflow=''}
 document.getElementById('mx').onclick=closeModal;
 document.getElementById('ov').onclick=e=>{if(e.target===e.currentTarget)closeModal()};
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();qzClose();closeSavedPanel();}});
 
 /* ── Saved internships ─────────────────────────────────────────────────────
    Uses localStorage key 'myintern_saved' — separate from MyScholar bookmarks.
    Save state is stored as an array of integer IDs.
    ─────────────────────────────────────────────────────────────────────── */
-let savedInternships = new Set(JSON.parse(localStorage.getItem('myintern_saved')||'[]'));
+let savedInternships;
+try { savedInternships = new Set(JSON.parse(localStorage.getItem('myintern_saved')||'[]')); }
+catch(e) { savedInternships = new Set(); }
 
 function persistSaved(){
   localStorage.setItem('myintern_saved',JSON.stringify([...savedInternships]));
@@ -992,8 +1008,8 @@ function openSavedPanel(){
     list.innerHTML=items.map(d=>`
       <div class="saved-item" id="si-${d.id}">
         <div class="saved-item-info">
-          <div class="saved-item-co">${d.company}</div>
-          <div class="saved-item-prog">${d.programme_name}</div>
+          <div class="saved-item-co">${escapeHtml(d.company)}</div>
+          <div class="saved-item-prog">${escapeHtml(d.programme_name)}</div>
         </div>
         <div class="saved-item-r">
           <button class="saved-view" onclick="closeSavedPanel();openModal(DATA.findIndex(x=>x.id===${d.id}))">View &rarr;</button>
@@ -1138,6 +1154,7 @@ function injectJobSchema(data){
     };
     var tag=document.createElement('script');
     tag.type='application/ld+json';
+    // JSON.stringify safely escapes values for JSON-LD — no XSS risk here
     tag.textContent=JSON.stringify(schema);
     document.head.appendChild(tag);
   });
