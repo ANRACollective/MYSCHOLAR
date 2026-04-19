@@ -38,6 +38,70 @@ function saveState(){
   try{localStorage.setItem('myintern_cv_state',JSON.stringify(cvState))}catch(e){}
 }
 
+// ── SUPABASE SYNC — persist CV data to database ────
+var SB_URL='https://ywvfvjvxwhcfprfrkgqm.supabase.co';
+var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl3dmZ2anZ4d2hjZnByZnJrZ3FtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNTQ5MzEsImV4cCI6MjA5MDYzMDkzMX0.5EzrJuW1fdPca2ZEKGPXXgbd_XYDqKzzu6e-iRQT9po';
+
+var _saveDebounce=null;
+var _profileId=null; // track the Supabase row ID for this student
+
+function saveToDB(){
+  // Only save if student has entered meaningful data
+  if(!cvState.name||!cvState.email)return;
+  clearTimeout(_saveDebounce);
+  _saveDebounce=setTimeout(function(){
+    var payload={
+      name:cvState.name,
+      email:cvState.email,
+      phone:cvState.phone||null,
+      city:cvState.city||null,
+      university:cvState.university||null,
+      course:cvState.course||null,
+      study_level:cvState.level||null,
+      projects:cvState.projects.length?cvState.projects:null,
+      project_descriptions:cvState.projectDescs||{},
+      activities:cvState.activities.length?cvState.activities:null,
+      activity_detail:cvState.activityDetail||null,
+      skills:cvState.skills.length?cvState.skills:null,
+      motivation:cvState.motivation||null,
+      motivation_text:cvState.motivationText||null,
+      cv_score:typeof calculateScore==='function'?calculateScore():null,
+      xp:typeof xpState!=='undefined'?xpState.xp:0,
+      streak:typeof xpState!=='undefined'?xpState.streak:0,
+      updated_at:new Date().toISOString()
+    };
+    // Load profile ID from localStorage
+    if(!_profileId)_profileId=localStorage.getItem('myintern_profile_id');
+    if(_profileId){
+      // UPDATE existing row
+      fetch(SB_URL+'/rest/v1/student_profiles?id=eq.'+_profileId,{
+        method:'PATCH',
+        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+        body:JSON.stringify(payload)
+      }).catch(function(){});
+    } else {
+      // INSERT new row
+      fetch(SB_URL+'/rest/v1/student_profiles',{
+        method:'POST',
+        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=representation'},
+        body:JSON.stringify(payload)
+      }).then(function(r){return r.json()}).then(function(data){
+        if(data&&data[0]&&data[0].id){
+          _profileId=data[0].id;
+          localStorage.setItem('myintern_profile_id',_profileId);
+        }
+      }).catch(function(){});
+    }
+  },2000); // debounce 2s to avoid spamming on every keystroke
+}
+
+// Hook saveToDB into saveState so it syncs automatically
+var _origSaveState=saveState;
+saveState=function(){
+  _origSaveState();
+  saveToDB();
+};
+
 // Load interview progress
 var interviewAnswered=[];
 function loadInterviewState(){
