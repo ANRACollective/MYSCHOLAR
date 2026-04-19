@@ -140,7 +140,7 @@ html{scroll-behavior:smooth}
 body{font-family:var(--sans);background:var(--bg);color:var(--t1);min-height:100vh;-webkit-font-smoothing:antialiased}
 
 /* ── SHARED STICKY NAV (mirrors MyScholar index.html) ──────────────────── */
-nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:52px;border-bottom:2px solid #e8551e;width:100%}
+nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:52px;border-bottom:2px solid #e8551e;width:100%;max-width:100%;overflow:hidden}
 .nav-l{display:flex;align-items:center;flex-shrink:0}
 .nav-brand{font-family:var(--serif);font-size:24px;letter-spacing:-.4px;text-decoration:none;color:#fff;font-weight:900;transition:opacity .2s}
 .nav-brand .coral{color:#e8551e}
@@ -150,10 +150,10 @@ nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:
 .nav-brand.inactive:hover{opacity:1}
 .nav-brand.active{opacity:1}
 .nav-sep{color:rgba(255,255,255,.2);font-size:18px;margin:0 8px;font-weight:300;user-select:none}
-.nav-r{display:flex;align-items:center;gap:16px}
+.nav-r{display:flex;align-items:center;gap:8px;overflow:hidden;min-width:0}
 .nav-r a{color:rgba(255,255,255,.5);font-size:12px;text-decoration:none;letter-spacing:.04em;transition:color .2s}
 .nav-r a:hover{color:#fff}
-@media(max-width:680px){.nav-brand{font-size:20px}.products-btn{font-size:10.5px;padding:3px 9px}}
+@media(max-width:680px){.nav-brand{font-size:20px}.products-btn{font-size:10.5px;padding:3px 9px}nav{padding:0 12px}.saved-label{display:none}.saved-nav-btn{padding:4px 8px;gap:3px}}
 /* ── Language toggle — same pattern as MyScholar index.html ── */
 .lang-toggle{display:flex;align-items:center;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:20px;padding:3px;gap:2px;flex-shrink:0}
 .lt-opt{font-size:10px;font-weight:500;padding:3px 10px;border-radius:16px;cursor:pointer;color:rgba(255,255,255,.45);background:none;border:none;transition:all .15s;letter-spacing:.02em;font-family:var(--sans)}
@@ -443,7 +443,7 @@ nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:
     <!-- Saved button — opens saved internships panel -->
     <button class="saved-nav-btn" id="savedNavBtn" onclick="openSavedPanel()">
       <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-      Saved (<span id="savedCount">0</span>)
+      <span class="saved-label">Saved </span>(<span id="savedCount">0</span>)
     </button>
     <!-- Language toggle — mirrors MyScholar index.html, shares scholar_lang localStorage key -->
     <div class="lang-toggle" role="group" aria-label="Language">
