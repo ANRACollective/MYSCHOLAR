@@ -300,6 +300,15 @@ nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:
 @media(max-width:500px){.gbtn{width:100%;justify-content:center;padding:12px}.hint{display:none}.act-row{flex-direction:column}}
 .empty{text-align:center;padding:48px 16px;color:var(--t3);font-size:14px}
 
+/* ── PAGINATION ─────────────────────────── */
+.pagination{display:flex;align-items:center;justify-content:center;gap:6px;padding:24px 20px 12px;flex-wrap:wrap;max-width:1100px;margin:0 auto}
+.pg-btn{min-width:36px;height:36px;padding:0 10px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.04);color:var(--t2);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center}
+.pg-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(56,189,248,.08)}
+.pg-btn.active{background:var(--accent);color:#0a1628;border-color:var(--accent);font-weight:700}
+.pg-btn:disabled{opacity:.3;cursor:default}
+.pg-info{font-size:12px;color:var(--t3);margin:0 6px}
+@media(max-width:500px){.pg-btn{min-width:32px;height:32px;font-size:12px;padding:0 8px}}
+
 
 /* ── MODAL ─────────────────────────────── */
 .ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:1000;justify-content:center;align-items:flex-end}
@@ -551,6 +560,7 @@ document.addEventListener('click', function(e) {
 <div class="feed" id="feed">
   <div class="loading"><span class="dot"></span><span class="dot"></span><span class="dot"></span><br><br><span data-i18n="loadingText">Loading internships...</span></div>
 </div>
+<div class="pagination" id="paginationBar"></div>
 
 <div class="ov" id="ov">
   <div class="modal" id="modal">
@@ -705,7 +715,7 @@ function buildChips(){
     const c=document.createElement('div');
     c.className='chip';c.dataset.ind=ind;
     c.textContent=IS[ind]||ind;
-    c.onclick=()=>{quizFilter=null;document.querySelectorAll('#chips .chip').forEach(x=>x.classList.remove('active'));c.classList.add('active');render();gtag('event','intern_filter',{filter:ind})};
+    c.onclick=()=>{quizFilter=null;document.querySelectorAll('#chips .chip').forEach(x=>x.classList.remove('active'));c.classList.add('active');resetPage();render();gtag('event','intern_filter',{filter:ind})};
     el.appendChild(c);
   });
 }
@@ -843,7 +853,7 @@ function qzShowResults(){
     document.querySelectorAll('#chips .chip').forEach(c=>c.classList.remove('active'));
     document.querySelector('#chips .chip[data-ind="all"]').classList.add('active');
     qzClose();
-    render();
+    resetPage();render();
     // Scroll to listings
     document.getElementById('feed').scrollIntoView({behavior:'smooth',block:'start'});
     // GA4 event
@@ -881,6 +891,13 @@ document.getElementById('qzRetake').onclick=function(){
   qzReset();qzRenderQuestion();
 };
 
+/* ── Pagination state ───────────────────── */
+const PAGE_SIZE = 12;   // cards per page — matches 2-col grid (6 rows each)
+let currentPage = 1;
+let filteredData = [];  // [{item, dataIdx}] — rebuilt on every render()
+
+function resetPage(){ currentPage = 1; }
+
 /* ── Render ─────────────────────────────── */
 function render(){
   const feed=document.getElementById('feed');
@@ -892,11 +909,12 @@ function render(){
   const dipl=document.getElementById('diplomaT').classList.contains('on');
   const today=new Date();today.setHours(0,0,0,0);
   const q=document.getElementById('search').value.toLowerCase().trim();
-  feed.innerHTML='';let c=0;
-  DATA.forEach((item,idx)=>{
+
+  // ── Step 1: collect all matched items with their original DATA index ──────
+  filteredData=[];
+  DATA.forEach((item,dataIdx)=>{
     // Industry chip filter (single) OR quiz multi-industry filter
     if(quizFilter){
-      // Quiz active: show if item matches any of the top 2 quiz industries
       if(!quizFilter.some(qi=>item.industry&&item.industry.includes(qi)))return;
     } else {
       if(ind!=='all'&&(!item.industry||!item.industry.includes(ind)))return;
@@ -910,32 +928,85 @@ function render(){
       if(!isOpen)return;
     }
     if(q){const h=(item.company+' '+item.programme_name+' '+(item.roles_available||'')).toLowerCase();if(!h.includes(q))return}
-    c++;
+    filteredData.push({item,dataIdx});
+  });
+
+  const n=filteredData.length;
+  const totalPages=Math.max(1,Math.ceil(n/PAGE_SIZE));
+
+  // Clamp currentPage in case filters reduced the total
+  if(currentPage>totalPages)currentPage=1;
+
+  // ── Step 2: slice to the current page ────────────────────────────────────
+  const start=(currentPage-1)*PAGE_SIZE;
+  const pageItems=filteredData.slice(start,start+PAGE_SIZE);
+
+  // ── Step 3: update count label ────────────────────────────────────────────
+  document.getElementById('sum').textContent=n+' '+(n!==1?(T?T.foundPlural:'internships found'):(T?T.foundSingular:'internship found'));
+
+  // ── Step 4: render cards for this page ───────────────────────────────────
+  feed.innerHTML='';
+  if(!n){
+    feed.innerHTML='<div class="empty">'+(T?T.emptyState:'No internships match your filters.')+'</div>';
+    document.getElementById('paginationBar').innerHTML='';
+    return;
+  }
+
+  pageItems.forEach(({item,dataIdx},i)=>{
     const k=pk(item),el=document.createElement('div');
     el.className='row b-'+k;
-    el.style.animation='fadeIn .25s ease '+Math.min(c,20)*.03+'s both';
-    el.onclick=()=>openModal(idx);
-    // Pills removed from card face — industry shown via colour-coded left border; full pills in modal
+    el.style.animation='fadeIn .25s ease '+Math.min(i,20)*.03+'s both';
+    // dataIdx is the position in DATA — openModal() needs this, not the page position
+    el.onclick=()=>openModal(dataIdx);
     const stip=hasPay(item)?'<span class="mi paid">'+escapeHtml(item.allowance_text)+'</span>':'';
-    // qualifier badges: CGPA threshold, study level, bumi-only
     const quals=fmtQuals(item);
-    // tip preview: first 80 chars — hint, not a paragraph
     const tipPrev=item.tips?'<span class="tip-prev">'+escapeHtml(item.tips.slice(0,80))+(item.tips.length>80?'&hellip;':'')+'</span>':'';
-    // intake: only show rolling badge — full intake text lives in the modal
     const intake=fmtIntake(item);
-    // meta row: no emoji icons, clean text only, conditional intake
     const metaItems='<span class="mi">'+fmtDur(item)+'</span>'+(stip?stip:'')+(intake?'<span class="mi">'+intake+'</span>':'');
     el.innerHTML='<div class="row-top"><div class="logo-w">'+logoHTML(item)+'</div><div class="row-hd"><div class="co-line"><span class="co">'+escapeHtml(item.company)+'</span></div><div class="prog">'+escapeHtml(item.programme_name)+'</div></div></div>'
       +'<div class="meta">'+metaItems+'</div>'
       +quals
       +tipPrev
-      +'<div class="act-row"><a href="'+escapeHtml(item.url||'#')+'" target="_blank" rel="noopener" class="gbtn" onclick="event.stopPropagation();gtag(\'event\',\'intern_apply\',{co:\''+escapeHtml((item.company||'').replace(/'/g,''))+'\'})">'+(T?T.applyBtn:'Apply')+' <span class="arr">&rarr;</span></a>'
+      +'<div class="act-row"><a href="'+escapeHtml(item.url||'#')+'" target="_blank" rel="noopener" class="gbtn" onclick="event.stopPropagation();gtag(\'event\',\'intern_apply_click\',{co:\''+escapeHtml((item.company||'').replace(/'/g,''))+'\',source:\'card\'})">'+(T?T.applyBtn:'Apply')+' <span class="arr">&rarr;</span></a>'
       +'<button class="save-btn'+(savedInternships.has(item.id)?' saved':'')+'" onclick="event.stopPropagation();toggleSaved('+item.id+',this)" aria-label="Save internship"><svg width="16" height="16" fill="'+(savedInternships.has(item.id)?'currentColor':'none')+'" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>'
       +'</div>';
     feed.appendChild(el);
   });
-  document.getElementById('sum').textContent=c+' '+(c!==1?(T?T.foundPlural:'internships found'):(T?T.foundSingular:'internship found'));
-  if(!c)feed.innerHTML='<div class="empty">'+(T?T.emptyState:'No internships match your filters.')+'</div>';
+
+  // ── Step 5: render pagination bar ─────────────────────────────────────────
+  renderPagination(totalPages);
+}
+
+function renderPagination(totalPages){
+  const bar=document.getElementById('paginationBar');
+  if(totalPages<=1){bar.innerHTML='';return;}
+
+  let html='';
+  html+=`<button class="pg-btn" onclick="goToPage(${currentPage-1})" ${currentPage===1?'disabled':''}>← Prev</button>`;
+
+  // Show pages around current — always include first, last, and ±2 window
+  const range=[];
+  for(let p=1;p<=totalPages;p++){
+    if(p===1||p===totalPages||(p>=currentPage-2&&p<=currentPage+2))range.push(p);
+  }
+  let prev=0;
+  for(const p of range){
+    if(p-prev>1)html+=`<span class="pg-info">…</span>`;
+    html+=`<button class="pg-btn${p===currentPage?' active':''}" onclick="goToPage(${p})">${p}</button>`;
+    prev=p;
+  }
+
+  html+=`<button class="pg-btn" onclick="goToPage(${currentPage+1})" ${currentPage===totalPages?'disabled':''}>Next →</button>`;
+  bar.innerHTML=html;
+}
+
+function goToPage(p){
+  const totalPages=Math.ceil(filteredData.length/PAGE_SIZE);
+  if(p<1||p>totalPages)return;
+  currentPage=p;
+  // Scroll smoothly to the top of the listings
+  document.getElementById('feed').scrollIntoView({behavior:'smooth',block:'start'});
+  render();
 }
 
 /* ── Modal ──────────────────────────────── */
@@ -952,7 +1023,7 @@ function openModal(idx){
   if(item.roles_available)h+='<div class="msec"><div class="msec-t">Roles Available</div><p>'+escapeHtml(item.roles_available)+'</p></div>';
   if(item.eligibility)h+='<div class="msec"><div class="msec-t">Eligibility</div><p>'+escapeHtml(item.eligibility)+'</p></div>';
   if(item.tips)h+='<div class="mtip"><strong>Tip:</strong> '+escapeHtml(item.tips)+'</div>';
-  h+='<a href="'+escapeHtml(item.url||'#')+'" target="_blank" rel="noopener" class="mapply" onclick="gtag(\'event\',\'intern_apply_modal\',{co:\''+escapeHtml(item.company.replace(/'/g,''))+'\'})">Apply to '+escapeHtml(item.company)+' &rarr;</a>';
+  h+='<a href="'+escapeHtml(item.url||'#')+'" target="_blank" rel="noopener" class="mapply" onclick="gtag(\'event\',\'intern_apply_click\',{co:\''+escapeHtml(item.company.replace(/'/g,''))+'\',source:\'modal\'})">Apply to '+escapeHtml(item.company)+' &rarr;</a>';
   document.getElementById('mbody').innerHTML=h;
   ov.classList.add('open');document.body.style.overflow='hidden';
   gtag('event','intern_detail',{co:item.company});
@@ -1098,15 +1169,15 @@ setLang(currentLang);
 
 
 /* ── Filter events ─────────────────────── */
-// Clicking any chip clears the quiz filter so manual filter takes over
+// Every filter change resets to page 1 so the user doesn't land mid-result-set
 document.querySelector('#chips .chip[data-ind="all"]').onclick=()=>{
   quizFilter=null;
   document.querySelectorAll('#chips .chip').forEach(c=>c.classList.remove('active'));
   document.querySelector('#chips .chip[data-ind="all"]').classList.add('active');
-  render();
+  resetPage();render();
 };
-['paidT','openT','diplomaT'].forEach(id=>{document.getElementById(id).onclick=function(){this.classList.toggle('on');render();gtag('event','intern_toggle',{t:id,s:this.classList.contains('on')?'on':'off'})}});
-let st;document.getElementById('search').oninput=function(){clearTimeout(st);st=setTimeout(()=>{render();if(this.value.trim())gtag('event','intern_search',{q:this.value.trim()})},200)};
+['paidT','openT','diplomaT'].forEach(id=>{document.getElementById(id).onclick=function(){this.classList.toggle('on');resetPage();render();gtag('event','intern_toggle',{t:id,s:this.classList.contains('on')?'on':'off'})}});
+let st;document.getElementById('search').oninput=function(){clearTimeout(st);st=setTimeout(()=>{resetPage();render();if(this.value.trim())gtag('event','intern_search',{q:this.value.trim()})},200)};
 
 /* ── JobPosting schema injection ───────────────────────────────────────────
    Injects JSON-LD JobPosting schema for top 10 visible listings after fetch.
@@ -1243,3 +1314,4 @@ initNudge();
 </div>
 </body>
 </html>
+
