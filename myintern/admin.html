@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyIntern — Admin Dashboard</title>
+<style>
+:root{--bg:#0a0f1e;--panel:#0d1426;--panel2:#111a30;--accent:#3b82f6;--green:#34d399;--t1:#f1f5f9;--t2:#94a3b8;--t3:#64748b;--border:rgba(255,255,255,.08);--sans:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);font-family:var(--sans);color:var(--t1);min-height:100vh;padding:20px}
+.container{max-width:1100px;margin:0 auto}
+h1{font-size:22px;font-weight:700;margin-bottom:6px}
+.sub{font-size:13px;color:var(--t3);margin-bottom:24px}
+
+/* Login */
+.login-wrap{max-width:360px;margin:120px auto;text-align:center}
+.login-wrap h2{font-size:20px;margin-bottom:16px}
+.login-input{width:100%;padding:14px;border-radius:10px;border:1.5px solid var(--border);background:var(--panel);color:var(--t1);font-family:var(--sans);font-size:15px;outline:none;text-align:center;letter-spacing:2px;margin-bottom:12px}
+.login-input:focus{border-color:var(--accent)}
+.login-btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--accent),#6366f1);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;font-family:var(--sans)}
+.login-err{font-size:12px;color:#f87171;margin-top:8px;display:none}
+
+/* Stats row */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:24px}
+.stat{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:18px;text-align:center}
+.stat-num{font-size:28px;font-weight:700;color:var(--t1);line-height:1}
+.stat-label{font-size:11px;color:var(--t3);margin-top:6px;text-transform:uppercase;letter-spacing:.06em}
+
+/* Charts */
+.charts{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+@media(max-width:700px){.charts{grid-template-columns:1fr}}
+.chart-card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:18px}
+.chart-title{font-size:12px;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-bottom:14px}
+.chart-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.chart-label{font-size:12px;color:var(--t2);width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0}
+.chart-bar-wrap{flex:1;height:8px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden}
+.chart-bar{height:100%;border-radius:4px;background:var(--accent);transition:width .6s ease}
+.chart-count{font-size:11px;color:var(--t3);width:30px;text-align:right;flex-shrink:0}
+
+/* Table */
+.table-wrap{background:var(--panel);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.table-head{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.table-title{font-size:14px;font-weight:600}
+.table-search{padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:var(--panel2);color:var(--t1);font-family:var(--sans);font-size:13px;outline:none;width:220px}
+.table-search:focus{border-color:var(--accent)}
+.table-search::placeholder{color:var(--t3)}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;padding:10px 18px;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--t3);font-weight:600;border-bottom:1px solid var(--border);background:var(--panel2)}
+td{padding:10px 18px;font-size:13px;color:var(--t2);border-bottom:1px solid var(--border)}
+tr:hover td{background:rgba(255,255,255,.02)}
+.score-badge{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px}
+.score-high{background:rgba(52,211,153,.1);color:var(--green)}
+.score-mid{background:rgba(251,191,36,.1);color:#fbbf24}
+.score-low{background:rgba(248,113,113,.1);color:#f87171}
+.empty-state{text-align:center;padding:40px;color:var(--t3);font-size:14px}
+.export-btn{padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--panel2);color:var(--t2);font-family:var(--sans);font-size:12px;cursor:pointer;font-weight:600;transition:all .2s}
+.export-btn:hover{border-color:var(--accent);color:var(--accent)}
+.refresh-note{text-align:center;font-size:11px;color:var(--t3);margin-top:16px}
+</style>
+</head>
+<body>
+
+<!-- Login screen -->
+<div id="loginScreen" class="login-wrap">
+  <h2>MyIntern Admin</h2>
+  <input type="password" class="login-input" id="passInput" placeholder="Enter password" onkeydown="if(event.key==='Enter')checkPass()">
+  <button class="login-btn" onclick="checkPass()">Access Dashboard</button>
+  <div class="login-err" id="loginErr">Wrong password</div>
+</div>
+
+<!-- Dashboard (hidden until login) -->
+<div id="dashboard" class="container" style="display:none">
+  <h1>MyIntern Dashboard</h1>
+  <p class="sub">Student CV data from myscholar.my/myintern</p>
+
+  <!-- Stats -->
+  <div class="stats" id="statsRow"></div>
+
+  <!-- Charts -->
+  <div class="charts">
+    <div class="chart-card">
+      <div class="chart-title">Top Universities</div>
+      <div id="chartUni"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Top Courses</div>
+      <div id="chartCourse"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Study Level</div>
+      <div id="chartLevel"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Score Distribution</div>
+      <div id="chartScore"></div>
+    </div>
+  </div>
+
+  <!-- Student table -->
+  <div class="table-wrap">
+    <div class="table-head">
+      <span class="table-title">All Students</span>
+      <span style="display:flex;gap:8px;align-items:center">
+        <input type="text" class="table-search" id="tableSearch" placeholder="Search name, uni, course..." oninput="renderTable()">
+        <button class="export-btn" onclick="exportCSV()">Export CSV</button>
+      </span>
+    </div>
+    <div style="overflow-x:auto">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>University</th>
+            <th>Course</th>
+            <th>Level</th>
+            <th>Score</th>
+            <th>Projects</th>
+            <th>Skills</th>
+            <th>XP</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </div>
+  <p class="refresh-note">Data refreshes on page load. Last updated: <span id="lastUpdate"></span></p>
+</div>
+
+<script>
+var SB_URL='https://ywvfvjvxwhcfprfrkgqm.supabase.co';
+var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl3dmZ2anZ4d2hjZnByZnJrZ3FtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNTQ5MzEsImV4cCI6MjA5MDYzMDkzMX0.5EzrJuW1fdPca2ZEKGPXXgbd_XYDqKzzu6e-iRQT9po';
+// Simple password — not bank-level security, just keeps casual visitors out
+var ADMIN_PASS='anra2026';
+var allData=[];
+
+function esc(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):''}
+
+function checkPass(){
+  var input=document.getElementById('passInput').value;
+  if(input===ADMIN_PASS){
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('dashboard').style.display='block';
+    loadData();
+  } else {
+    document.getElementById('loginErr').style.display='block';
+    document.getElementById('passInput').value='';
+  }
+}
+
+function loadData(){
+  fetch(SB_URL+'/rest/v1/student_profiles?select=*&order=created_at.desc',{
+    headers:{apikey:SB_KEY,Authorization:'Bearer '+SB_KEY}
+  })
+  .then(function(r){return r.json()})
+  .then(function(data){
+    allData=data;
+    document.getElementById('lastUpdate').textContent=new Date().toLocaleString();
+    renderStats();
+    renderCharts();
+    renderTable();
+  })
+  .catch(function(e){
+    document.getElementById('statsRow').innerHTML='<div class="stat"><div class="stat-num" style="color:#f87171">Error</div><div class="stat-label">Could not load data</div></div>';
+  });
+}
+
+function renderStats(){
+  var total=allData.length;
+  var withScore=allData.filter(function(d){return d.cv_score!=null});
+  var avgScore=withScore.length?Math.round(withScore.reduce(function(s,d){return s+d.cv_score},0)/withScore.length):0;
+  var withProjects=allData.filter(function(d){return d.projects&&d.projects.length>0}).length;
+  var totalXP=allData.reduce(function(s,d){return s+(d.xp||0)},0);
+  var today=new Date().toISOString().split('T')[0];
+  var todayCount=allData.filter(function(d){return d.created_at&&d.created_at.startsWith(today)}).length;
+
+  document.getElementById('statsRow').innerHTML=
+    '<div class="stat"><div class="stat-num">'+total+'</div><div class="stat-label">Total Students</div></div>'
+    +'<div class="stat"><div class="stat-num">'+todayCount+'</div><div class="stat-label">Today</div></div>'
+    +'<div class="stat"><div class="stat-num">'+avgScore+'</div><div class="stat-label">Avg CV Score</div></div>'
+    +'<div class="stat"><div class="stat-num">'+withProjects+'</div><div class="stat-label">With Projects</div></div>'
+    +'<div class="stat"><div class="stat-num">'+totalXP+'</div><div class="stat-label">Total XP Earned</div></div>';
+}
+
+function renderCharts(){
+  renderBarChart('chartUni','university',8);
+  renderBarChart('chartCourse','course',8);
+  renderBarChart('chartLevel','study_level',6);
+  // Score distribution
+  var buckets={'0-30':0,'31-50':0,'51-70':0,'71-85':0,'86-100':0};
+  allData.forEach(function(d){
+    var s=d.cv_score||0;
+    if(s<=30)buckets['0-30']++;
+    else if(s<=50)buckets['31-50']++;
+    else if(s<=70)buckets['51-70']++;
+    else if(s<=85)buckets['71-85']++;
+    else buckets['86-100']++;
+  });
+  var max=Math.max.apply(null,Object.values(buckets))||1;
+  var html='';
+  Object.keys(buckets).forEach(function(k){
+    var pct=Math.round((buckets[k]/max)*100);
+    var color=k==='86-100'?'var(--green)':k==='71-85'?'var(--accent)':k==='51-70'?'#fbbf24':'#f87171';
+    html+='<div class="chart-row"><span class="chart-label">'+k+'</span><div class="chart-bar-wrap"><div class="chart-bar" style="width:'+pct+'%;background:'+color+'"></div></div><span class="chart-count">'+buckets[k]+'</span></div>';
+  });
+  document.getElementById('chartScore').innerHTML=html||'<div style="color:var(--t3);font-size:12px">No data yet</div>';
+}
+
+function renderBarChart(elId,field,limit){
+  var counts={};
+  allData.forEach(function(d){
+    var val=d[field]||'Not set';
+    counts[val]=(counts[val]||0)+1;
+  });
+  var sorted=Object.entries(counts).sort(function(a,b){return b[1]-a[1]}).slice(0,limit);
+  var max=sorted.length?sorted[0][1]:1;
+  var html='';
+  sorted.forEach(function(entry){
+    var pct=Math.round((entry[1]/max)*100);
+    html+='<div class="chart-row"><span class="chart-label" title="'+esc(entry[0])+'">'+esc(entry[0])+'</span><div class="chart-bar-wrap"><div class="chart-bar" style="width:'+pct+'%"></div></div><span class="chart-count">'+entry[1]+'</span></div>';
+  });
+  document.getElementById(elId).innerHTML=html||'<div style="color:var(--t3);font-size:12px">No data yet</div>';
+}
+
+function renderTable(){
+  var q=(document.getElementById('tableSearch').value||'').toLowerCase();
+  var filtered=allData.filter(function(d){
+    if(!q)return true;
+    var blob=[d.name,d.email,d.university,d.course,d.study_level].join(' ').toLowerCase();
+    return blob.indexOf(q)>-1;
+  });
+  var lvlMap={'cert':'Cert','dip-early':'Dip Y1-2','dip-final':'Dip Final','deg-1':'Deg Y1','deg-2':'Deg Y2','deg-3':'Deg Y3','deg-final':'Deg Final','masters':'Masters','phd':'PhD','grad':'Grad'};
+  var html='';
+  if(!filtered.length){
+    html='<tr><td colspan="10" class="empty-state">'+(allData.length?'No matches for "'+esc(q)+'"':'No students yet — data appears when students use the CV builder')+'</td></tr>';
+  }
+  filtered.slice(0,100).forEach(function(d){
+    var score=d.cv_score||0;
+    var scoreCls=score>=70?'score-high':score>=40?'score-mid':'score-low';
+    var projCount=d.projects?d.projects.length:0;
+    var skillCount=d.skills?d.skills.length:0;
+    var date=d.created_at?new Date(d.created_at).toLocaleDateString('en-MY',{day:'numeric',month:'short'}):'—';
+    html+='<tr>'
+      +'<td><strong style="color:var(--t1)">'+esc(d.name||'—')+'</strong></td>'
+      +'<td>'+esc(d.email||'—')+'</td>'
+      +'<td>'+esc((d.university||'—').replace(/\(.*\)/,'').trim())+'</td>'
+      +'<td>'+esc((d.course||'—').replace('Bachelor of ','B. '))+'</td>'
+      +'<td>'+esc(lvlMap[d.study_level]||d.study_level||'—')+'</td>'
+      +'<td><span class="score-badge '+scoreCls+'">'+score+'</span></td>'
+      +'<td>'+projCount+'</td>'
+      +'<td>'+skillCount+'</td>'
+      +'<td>'+esc(d.xp||0)+'</td>'
+      +'<td>'+date+'</td>'
+      +'</tr>';
+  });
+  if(filtered.length>100)html+='<tr><td colspan="10" style="text-align:center;color:var(--t3);font-size:12px">Showing 100 of '+filtered.length+'</td></tr>';
+  document.getElementById('tableBody').innerHTML=html;
+}
+
+function exportCSV(){
+  if(!allData.length){alert('No data to export');return;}
+  var headers=['Name','Email','Phone','City','University','Course','Level','Projects','Skills','CV Score','XP','Streak','Created'];
+  var rows=allData.map(function(d){
+    return[
+      d.name||'',d.email||'',d.phone||'',d.city||'',d.university||'',d.course||'',d.study_level||'',
+      (d.projects||[]).join('; '),(d.skills||[]).join('; '),
+      d.cv_score||0,d.xp||0,d.streak||0,
+      d.created_at?new Date(d.created_at).toISOString().split('T')[0]:''
+    ].map(function(v){return'"'+String(v).replace(/"/g,'""')+'"'}).join(',');
+  });
+  var csv=headers.join(',')+'\n'+rows.join('\n');
+  var blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='myintern-students-'+new Date().toISOString().split('T')[0]+'.csv';
+  a.click();
+}
+</script>
+</body>
+</html>
