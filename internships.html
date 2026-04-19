@@ -1043,11 +1043,7 @@ const INTERN_LANG = {
     filterInd:'Industry', filterPref:'Preferences',
     chipAll:'All',
     prefPaid:'Paid Only', prefOpen:'Open Now', prefDiploma:'Diploma OK',
-    orientHead:"This isn't a directory. It's a shortlist <em>for you.</em>",
-    orientPt1:'<strong>CGPA &amp; study level shown upfront</strong> — know if you qualify before clicking.',
-    orientPt2:'<strong>Stipend on the card</strong> — no surprises after you apply.',
-    orientPt3:"<strong>One honest tip per listing</strong> — the thing the company website doesn't tell you.",
-    orientDismiss:'Got it &mdash; show me the internships &rarr;',
+
     applyBtn:'Apply', tapDetails:'Tap for details', rollingLabel:'Rolling',
     foundSingular:'internship found', foundPlural:'internships found',
     emptyState:'No internships match your filters.',
@@ -1063,11 +1059,7 @@ const INTERN_LANG = {
     filterInd:'Industri', filterPref:'Keutamaan',
     chipAll:'Semua',
     prefPaid:'Berbayar Sahaja', prefOpen:'Terbuka Sekarang', prefDiploma:'Diploma OK',
-    orientHead:'Ini bukan direktori. Ia senarai pendek <em>untuk kamu.</em>',
-    orientPt1:'<strong>CGPA &amp; tahap pengajian ditunjukkan awal</strong> — tahu kelayakan anda sebelum klik.',
-    orientPt2:'<strong>Elaun pada kad</strong> — tiada kejutan selepas memohon.',
-    orientPt3:'<strong>Satu tip jujur setiap senarai</strong> — perkara yang laman syarikat tidak beritahu anda.',
-    orientDismiss:'Faham &mdash; tunjukkan internship &rarr;',
+
     applyBtn:'Mohon', tapDetails:'Ketuk untuk butiran', rollingLabel:'Berterusan',
     foundSingular:'internship dijumpai', foundPlural:'internship dijumpai',
     emptyState:'Tiada internship yang sepadan dengan penapis anda.',
@@ -1103,16 +1095,7 @@ function setLang(lang) {
 // Apply saved preference on page load
 setLang(currentLang);
 
-/* ── Orientation card dismiss ──────────── */
-// Hides once per session — shows again on new tab/visit so first-timers always see it
-(function(){
-  const wrap=document.getElementById('orientWrap');
-  // Already dismissed this session? Hide immediately, no flicker
-  if(sessionStorage.getItem('orientDismissed')){wrap.style.display='none';return;}
-  function dismiss(){wrap.style.display='none';sessionStorage.setItem('orientDismissed','1');gtag('event','orient_dismissed');}
-  document.getElementById('orientClose').onclick=dismiss;
-  document.getElementById('orientDismiss').onclick=dismiss;
-})();
+
 
 /* ── Filter events ─────────────────────── */
 // Clicking any chip clears the quiz filter so manual filter takes over
