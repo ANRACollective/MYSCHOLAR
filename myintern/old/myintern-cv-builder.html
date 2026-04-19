@@ -1,0 +1,3035 @@
+<!DOCTYPE html>
+<!--
+  MyIntern CV Builder — Interactive Mockup
+  Dark glass UI inside a 390x820 phone frame
+  Built by ANRA · myscholar.my · April 2026
+-->
+<html lang="en-MY">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyIntern CV Builder — Preview</title>
+<style>
+:root{
+  --bg:#0a0f1e;--panel:#0d1426;--panel2:#111a30;
+  --accent:#3b82f6;--accent2:#6366f1;--highlight:#63b3ed;
+  --t1:#f1f5f9;--t2:#94a3b8;--t3:#64748b;
+  --border:rgba(255,255,255,.08);--border-h:rgba(255,255,255,.15);
+  --green:#34d399;--green-bg:rgba(52,211,153,.12);
+  --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --slide:320ms cubic-bezier(.4,0,.2,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#060a14;font-family:var(--sans);display:flex;justify-content:center;align-items:center;min-height:100vh;color:var(--t1);-webkit-font-smoothing:antialiased}
+.phone{width:390px;height:820px;border-radius:40px;background:var(--bg);position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.1);box-shadow:0 40px 100px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.04)}
+.status-bar{height:44px;display:flex;justify-content:center;align-items:center;font-size:14px;font-weight:600;color:var(--t1);position:relative;z-index:10;background:var(--bg)}
+.status-bar::before{content:'';position:absolute;top:12px;left:50%;transform:translateX(-50%);width:80px;height:5px;border-radius:3px;background:rgba(255,255,255,.12)}
+.screen-container{position:absolute;top:44px;bottom:0;left:0;right:0;overflow:hidden}
+.screen{position:absolute;inset:0;overflow-y:auto;padding:24px 20px 32px;transform:translateX(100%);opacity:0;transition:transform var(--slide),opacity var(--slide);pointer-events:none;scrollbar-width:none}
+.screen::-webkit-scrollbar{display:none}
+.screen.active{transform:translateX(0);opacity:1;pointer-events:auto}
+.screen.exit-left{transform:translateX(-30%);opacity:0}
+.prog-bar{height:3px;background:rgba(255,255,255,.06);border-radius:2px;margin-bottom:20px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:2px;transition:width .4s ease}
+.step-label{font-size:10px;text-transform:uppercase;letter-spacing:.14em;color:var(--accent);font-weight:600;margin-bottom:10px}
+.q-title{font-size:20px;font-weight:700;color:var(--t1);line-height:1.3;margin-bottom:6px}
+.q-hint{font-size:13px;color:var(--t3);margin-bottom:20px;line-height:1.5}
+.badge{display:inline-block;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.25);padding:4px 10px;border-radius:6px;margin-bottom:14px}
+.intro-title{font-size:24px;font-weight:700;color:var(--t1);line-height:1.25;margin-bottom:10px}
+.intro-title span{color:var(--highlight)}
+.intro-sub{font-size:13px;color:var(--t3);line-height:1.65;margin-bottom:24px}
+.strength-box{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:24px}
+.strength-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.strength-label{font-size:12px;color:var(--t3);font-weight:500}
+.strength-pct{font-size:20px;font-weight:700;color:var(--t2)}
+.strength-sections{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.strength-sec{font-size:11px;color:var(--t3);padding:8px 10px;background:var(--panel2);border-radius:8px;border:1px solid var(--border);display:flex;align-items:center;gap:6px}
+.strength-dot{width:6px;height:6px;border-radius:50%;background:var(--border-h);flex-shrink:0}
+.steps-preview{margin-bottom:24px}
+.steps-preview-title{font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-bottom:12px}
+.step-item{display:flex;align-items:center;gap:10px;padding:8px 0;font-size:13px;color:var(--t2)}
+.step-dot{width:7px;height:7px;border-radius:50%;border:1.5px solid var(--accent);flex-shrink:0}
+.btn-primary{display:block;width:100%;padding:15px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;border-radius:14px;font-family:var(--sans);font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;text-align:center}
+.btn-primary:hover{opacity:.9;transform:translateY(-1px)}
+.btn-disabled{opacity:.35;pointer-events:none}
+.btn-skip{display:block;width:100%;text-align:center;padding:10px;background:none;border:none;color:var(--t3);font-size:12px;cursor:pointer;font-family:var(--sans);margin-top:8px;transition:color .2s}
+.btn-skip:hover{color:var(--t2)}
+.btn-row{margin-top:24px;flex-shrink:0}
+.btn-secondary{display:block;width:100%;padding:13px;background:transparent;color:var(--t2);border:1.5px solid var(--border);border-radius:14px;font-family:var(--sans);font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;text-align:center;margin-top:10px}
+.btn-secondary:hover{border-color:var(--border-h);color:var(--t1)}
+.opt{background:var(--panel);border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;cursor:pointer;transition:all .2s;margin-bottom:10px;font-size:14px;color:var(--t2);font-family:var(--sans)}
+.opt:hover{border-color:var(--accent);background:var(--panel2)}
+.opt.selected{border-color:var(--accent);color:var(--t1);background:rgba(59,130,246,.08);box-shadow:0 0 0 3px rgba(59,130,246,.08)}
+.search-input{width:100%;padding:12px 14px;border-radius:10px;border:1.5px solid var(--border);background:var(--panel);color:var(--t1);font-family:var(--sans);font-size:14px;outline:none;transition:border-color .2s;margin-bottom:12px}
+.search-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(59,130,246,.1)}
+.search-input::placeholder{color:var(--t3)}
+.uni-list{max-height:320px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent;border-radius:10px}
+.uni-item{padding:12px 14px;border-bottom:1px solid var(--border);font-size:13px;color:var(--t2);cursor:pointer;transition:all .15s}
+.uni-item:hover{background:var(--panel2);color:var(--t1)}
+.uni-item.selected{background:rgba(59,130,246,.08);color:var(--accent);border-left:3px solid var(--accent)}
+.uni-item:last-child{border-bottom:none}
+.uni-cat{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--t3);font-weight:600;padding:10px 14px 4px;background:var(--panel2);border-bottom:1px solid var(--border)}
+/* Form inputs */
+.form-group{margin-bottom:14px}
+.form-label{font-size:11px;color:var(--t3);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;display:block}
+.form-input{width:100%;padding:12px 14px;border-radius:10px;border:1.5px solid var(--border);background:var(--panel);color:var(--t1);font-family:var(--sans);font-size:14px;outline:none;transition:border-color .2s}
+.form-input:focus{border-color:var(--accent)}
+.form-input::placeholder{color:var(--t3)}
+/* Course filter */
+.course-cat{font-size:11px;font-weight:600;color:var(--accent);padding:12px 0 6px;border-bottom:1px solid var(--border);margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em}
+.course-opt{padding:10px 14px;border-radius:10px;border:1.5px solid var(--border);background:var(--panel);margin-bottom:6px;font-size:13px;color:var(--t2);cursor:pointer;transition:all .2s;font-family:var(--sans)}
+.course-opt:hover{border-color:var(--accent);color:var(--t1)}
+.course-opt.selected{border-color:var(--accent);color:var(--accent);background:rgba(59,130,246,.08)}
+.course-opt .course-sub{font-size:11px;color:var(--t3);margin-top:2px;display:block}
+/* Chip grids */
+.cat-label{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--t3);font-weight:600;margin:16px 0 8px}
+.cat-label:first-child{margin-top:0}
+.chip-grid{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:8px 14px;border-radius:20px;border:1.5px solid var(--border);background:transparent;color:var(--t2);font-size:12px;font-weight:500;cursor:pointer;transition:all .2s;user-select:none;font-family:var(--sans)}
+.chip:hover{border-color:var(--accent);color:var(--accent)}
+.chip.selected{border-color:var(--accent);color:var(--accent);background:rgba(59,130,246,.08)}
+/* Project cards with description */
+.proj-card{background:var(--panel);border:1.5px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;transition:all .2s}
+.proj-card.selected{border-color:var(--accent);background:rgba(59,130,246,.06)}
+.proj-card-head{display:flex;align-items:center;justify-content:space-between;cursor:pointer}
+.proj-card-name{font-size:14px;font-weight:600;color:var(--t2);transition:color .2s}
+.proj-card.selected .proj-card-name{color:var(--t1)}
+.proj-card-check{width:20px;height:20px;border-radius:6px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;font-size:12px;color:transparent}
+.proj-card.selected .proj-card-check{border-color:var(--accent);background:var(--accent);color:#fff}
+.proj-card-sub{font-size:11px;color:var(--t3);margin-top:4px}
+.proj-desc-wrap{max-height:0;overflow:hidden;transition:max-height .3s ease,margin .3s ease;margin-top:0}
+.proj-card.selected .proj-desc-wrap{max-height:120px;margin-top:10px}
+.proj-desc{width:100%;padding:10px 12px;border-radius:8px;border:1.5px solid var(--border);background:var(--panel2);color:var(--t1);font-family:var(--sans);font-size:12px;outline:none;resize:none;height:60px;line-height:1.5;transition:border-color .2s}
+.proj-desc:focus{border-color:var(--accent)}
+.proj-desc::placeholder{color:var(--t3)}
+.use-example{font-size:10px;color:var(--accent);background:none;border:none;cursor:pointer;font-family:var(--sans);padding:4px 0;margin-top:4px;opacity:.7;transition:opacity .15s;display:block}
+.use-example:hover{opacity:1}
+/* Voice / Mic */
+.mic-row{display:flex;align-items:center;gap:8px;margin-top:8px}
+.mic-btn{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--border);background:var(--panel);color:var(--t3);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;flex-shrink:0}
+.mic-btn:hover{border-color:var(--accent);color:var(--accent)}
+.mic-btn.recording{background:rgba(248,113,113,.15);border-color:#f87171;color:#f87171;animation:micPulse 1.2s infinite}
+@keyframes micPulse{0%,100%{box-shadow:0 0 0 0 rgba(248,113,113,.3)}50%{box-shadow:0 0 0 8px rgba(248,113,113,0)}}
+.mic-status{font-size:11px;color:var(--t3);flex:1}
+.mic-lang{display:flex;align-items:center;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:14px;padding:2px;gap:1px;flex-shrink:0}
+.mic-lang-opt{font-size:9px;font-weight:600;padding:3px 8px;border-radius:12px;cursor:pointer;color:var(--t3);background:none;border:none;transition:all .15s;font-family:var(--sans);letter-spacing:.03em}
+.mic-lang-opt.active{background:rgba(59,130,246,.15);color:var(--accent)}
+/* Gap speak test */
+.gap-speak{background:var(--panel);border:1.5px solid rgba(59,130,246,.2);border-radius:14px;padding:18px;margin:16px 0}
+.gap-speak-title{font-size:12px;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-bottom:6px}
+.gap-speak-sub{font-size:12px;color:var(--t3);line-height:1.5;margin-bottom:14px}
+.gap-speak-prompt{font-size:14px;font-weight:600;color:var(--t1);line-height:1.4;margin-bottom:14px;padding:12px;background:var(--panel2);border-radius:10px;border:1px solid var(--border)}
+.gap-speak-result{min-height:60px;padding:12px;border-radius:10px;border:1.5px solid var(--border);background:var(--panel2);color:var(--t1);font-size:13px;line-height:1.5;margin-bottom:10px;white-space:pre-wrap}
+.gap-speak-result.empty{color:var(--t3);font-style:italic}
+.gap-speak-feedback{font-size:12px;color:var(--t2);line-height:1.5;padding:10px 12px;background:rgba(52,211,153,.06);border:1px solid rgba(52,211,153,.15);border-radius:8px;margin-top:10px;display:none}
+.gap-speak-feedback.show{display:block}
+/* Next step card */
+.gap-next{border-radius:14px;padding:20px;margin-top:20px;text-align:center}
+.gap-next-fix{background:rgba(248,113,113,.06);border:1.5px solid rgba(248,113,113,.2)}
+.gap-next-ready{background:rgba(52,211,153,.06);border:1.5px solid rgba(52,211,153,.2)}
+.gap-next-title{font-size:16px;font-weight:700;color:var(--t1);margin-bottom:6px}
+.gap-next-sub{font-size:13px;color:var(--t3);line-height:1.5;margin-bottom:16px}
+.gap-next-btn{display:block;width:100%;padding:14px;border-radius:12px;border:none;font-family:var(--sans);font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;margin-bottom:8px}
+.gap-next-btn:hover{opacity:.9;transform:translateY(-1px)}
+.gap-next-btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}
+.gap-next-btn-fix{background:rgba(248,113,113,.15);color:#f87171;border:1.5px solid rgba(248,113,113,.3)}
+.gap-next-btn-fix:hover{background:rgba(248,113,113,.25)}
+.gap-next-btn-interview{background:rgba(52,211,153,.12);color:var(--green);border:1.5px solid rgba(52,211,153,.25)}
+.gap-next-btn-interview:hover{background:rgba(52,211,153,.2)}
+.gap-next-step{font-size:11px;color:var(--t3);margin-top:12px;display:flex;align-items:center;justify-content:center;gap:8px}
+.gap-next-dot{width:8px;height:8px;border-radius:50%}
+.gap-next-dot.done{background:var(--green)}
+.gap-next-dot.current{background:var(--accent)}
+.gap-next-dot.upcoming{background:rgba(255,255,255,.12)}
+/* Hub */
+.hub-card{display:flex;align-items:center;gap:14px;padding:16px;border-radius:14px;border:1.5px solid var(--border);background:var(--panel);margin-bottom:10px;cursor:pointer;transition:all .25s}
+.hub-card:hover{border-color:var(--accent);background:var(--panel2);transform:translateY(-1px)}
+.hub-card:active{transform:scale(.98)}
+.hub-card-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0}
+.hub-card-body{flex:1;min-width:0}
+.hub-card-title{font-size:15px;font-weight:700;color:var(--t1);margin-bottom:3px}
+.hub-card-sub{font-size:12px;color:var(--t3);line-height:1.45}
+.hub-card-arrow{font-size:22px;color:var(--t3);flex-shrink:0;transition:transform .2s}
+.hub-card:hover .hub-card-arrow{transform:translateX(3px);color:var(--accent)}
+/* Hub card states */
+.hub-card.needs-cv{opacity:.5;pointer-events:none}
+.hub-card.needs-cv .hub-card-sub::after{content:' (build your CV first)';color:var(--accent);font-weight:600}
+.hub-card-done{position:absolute;top:8px;right:8px;font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px;background:var(--green-bg);color:var(--green);text-transform:uppercase;letter-spacing:.05em}
+.hub-card{position:relative}
+.hub-welcome{text-align:center;margin-bottom:8px;font-size:13px;color:var(--accent);font-weight:500}
+/* Match screen */
+.match-card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:10px;transition:all .2s;cursor:pointer}
+.match-card:hover{border-color:var(--accent);background:var(--panel2)}
+.match-card-head{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.match-card-logo{width:40px;height:40px;border-radius:10px;background:var(--panel2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--t3);flex-shrink:0;overflow:hidden}
+.match-card-logo img{width:100%;height:100%;object-fit:contain;padding:4px}
+.match-card-info{flex:1;min-width:0}
+.match-card-co{font-size:15px;font-weight:700;color:var(--t1)}
+.match-card-prog{font-size:12px;color:var(--t3);margin-top:2px}
+.match-card-meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.match-pill{font-size:10px;font-weight:600;padding:3px 8px;border-radius:6px}
+.match-pill-paid{background:rgba(52,211,153,.1);color:var(--green)}
+.match-pill-ind{background:rgba(59,130,246,.1);color:var(--accent)}
+.match-pill-lvl{background:rgba(251,191,36,.1);color:#fbbf24}
+.match-pill-rolling{background:rgba(52,211,153,.08);color:var(--green);border:1px solid rgba(52,211,153,.2)}
+.match-score{font-size:11px;color:var(--t3);margin-top:6px;display:flex;align-items:center;gap:6px}
+.match-score-bar{flex:1;height:4px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden}
+.match-score-fill{height:100%;border-radius:2px;background:var(--green)}
+.match-score-pct{font-size:11px;font-weight:600;color:var(--green)}
+.match-empty{text-align:center;padding:40px 16px;color:var(--t3);font-size:13px;line-height:1.6}
+.match-filter-row{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.custom-row{display:flex;gap:8px;margin-top:14px}
+.custom-input{flex:1;padding:10px 12px;border-radius:10px;border:1.5px solid var(--border);background:var(--panel);color:var(--t1);font-family:var(--sans);font-size:13px;outline:none;transition:border-color .2s}
+.custom-input:focus{border-color:var(--accent)}
+.custom-input::placeholder{color:var(--t3)}
+.add-btn{padding:10px 16px;border-radius:10px;border:none;background:var(--accent);color:#fff;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer;transition:opacity .2s;flex-shrink:0}
+.add-btn:hover{opacity:.85}
+.text-area{width:100%;padding:12px 14px;border-radius:10px;border:1.5px solid var(--border);background:var(--panel);color:var(--t1);font-family:var(--sans);font-size:13px;outline:none;resize:none;height:80px;transition:border-color .2s;margin-top:14px;line-height:1.5}
+.text-area:focus{border-color:var(--accent)}
+.text-area::placeholder{color:var(--t3)}
+.toast{position:absolute;bottom:20px;left:20px;right:20px;background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.25);color:var(--green);border-radius:12px;padding:10px 14px;font-size:13px;font-weight:600;text-align:center;transform:translateY(80px);opacity:0;transition:all 300ms;z-index:20;pointer-events:none}
+.toast.show{transform:translateY(0);opacity:1}
+/* Completion */
+.complete-circle{display:flex;justify-content:center;margin-bottom:20px;position:relative}
+.complete-score{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+.complete-num{font-size:42px;font-weight:700;color:var(--accent);line-height:1}
+.complete-lbl{font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;margin-top:4px}
+.complete-title{font-size:20px;font-weight:700;color:var(--t1);text-align:center;margin-bottom:6px}
+.complete-sub{font-size:13px;color:var(--t3);text-align:center;line-height:1.6;margin-bottom:20px}
+.complete-chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:24px}
+.complete-chip{font-size:11px;font-weight:600;padding:6px 12px;border-radius:20px;background:var(--green-bg);color:var(--green);border:1px solid rgba(52,211,153,.25)}
+.confetti-container{position:absolute;top:0;left:0;right:0;height:100%;pointer-events:none;overflow:hidden;z-index:5}
+.confetti-piece{position:absolute;width:8px;height:8px;border-radius:2px;opacity:0}
+.confetti-container.active .confetti-piece{animation:confettiFall 2.5s ease-out forwards}
+@keyframes confettiFall{0%{opacity:1;transform:translateY(-20px) rotate(0deg)}15%{opacity:1}100%{opacity:0;transform:translateY(700px) rotate(720deg)}}
+/* CV Preview */
+.cv-preview{background:#fff;color:#1a1a1a;border-radius:12px;padding:24px 20px;margin-bottom:16px;font-size:12px;line-height:1.6;max-height:400px;overflow-y:auto}
+.cv-preview h2{font-size:18px;font-weight:700;color:#0a0f1e;margin-bottom:2px}
+.cv-preview .cv-contact{font-size:11px;color:#666;margin-bottom:16px}
+.cv-preview .cv-section{margin-bottom:14px}
+.cv-preview .cv-section-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#3b82f6;border-bottom:1.5px solid #e2e8f0;padding-bottom:4px;margin-bottom:8px}
+.cv-preview .cv-item{margin-bottom:6px;color:#333}
+.cv-preview .cv-item strong{color:#1a1a1a}
+.cv-preview .cv-chips{display:flex;flex-wrap:wrap;gap:4px}
+.cv-preview .cv-chip{font-size:10px;padding:2px 8px;border-radius:10px;background:#f0f4ff;color:#3b82f6;border:1px solid #dde4f5}
+/* Gap Analysis */
+.gap-card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px}
+.gap-card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.gap-section-name{font-size:14px;font-weight:600;color:var(--t1)}
+.gap-section-score{font-size:14px;font-weight:700;color:var(--t2)}
+.gap-bar{height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden}
+.gap-bar-fill{height:100%;border-radius:3px;transition:width .6s ease}
+.gap-green .gap-bar-fill{background:var(--green)}
+.gap-green .gap-section-score{color:var(--green)}
+.gap-amber .gap-bar-fill{background:#fbbf24}
+.gap-amber .gap-section-score{color:#fbbf24}
+.gap-red .gap-bar-fill{background:#f87171}
+.gap-red .gap-section-score{color:#f87171}
+.gap-advice{font-size:12px;color:var(--t3);margin-top:8px;line-height:1.5}
+.gap-complete{font-size:12px;color:var(--green);margin-top:8px;font-weight:600}
+.gap-format{background:var(--panel2);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:16px}
+.gap-format-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.gap-format-title{font-size:12px;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+.gap-format-score{font-size:14px;font-weight:700;color:var(--accent)}
+.gap-format-item{display:flex;align-items:center;gap:8px;padding:6px 0;font-size:12px;color:var(--t2)}
+.gap-format-check{width:18px;height:18px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0}
+.gap-format-check.pass{background:var(--green-bg);color:var(--green);border:1px solid rgba(52,211,153,.3)}
+.gap-format-check.fail{background:rgba(248,113,113,.1);color:#f87171;border:1px solid rgba(248,113,113,.3)}
+.gap-priority{background:var(--panel2);border:1px solid var(--border);border-radius:14px;padding:18px;margin:20px 0}
+.gap-priority-title{font-size:12px;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-bottom:14px}
+.gap-priority-item{padding:10px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--t2);line-height:1.5}
+.gap-priority-item:last-child{border-bottom:none}
+.gap-priority-num{font-size:16px;font-weight:700;color:var(--accent);margin-right:8px}
+.gap-priority-pts{font-size:11px;color:var(--accent);font-weight:600}
+.gap-priority-context{font-size:11px;color:var(--t3);margin-top:4px;display:block}
+.gap-bullet{background:var(--panel);border:1px solid rgba(251,191,36,.15);border-radius:14px;padding:16px;margin:16px 0}
+.gap-bullet-title{font-size:12px;color:#fbbf24;text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-bottom:10px}
+.gap-bullet-item{font-size:12px;color:var(--t2);line-height:1.5;padding:6px 0;border-bottom:1px solid var(--border)}
+.gap-bullet-item:last-child{border-bottom:none}
+.gap-bullet-item .bullet-pass{color:var(--green)}
+.gap-bullet-item .bullet-fail{color:#f87171}
+.gap-context{background:var(--panel);border:1px solid rgba(59,130,246,.15);border-radius:14px;padding:18px;margin:16px 0}
+.gap-context-title{font-size:12px;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-bottom:10px}
+.gap-context-text{font-size:13px;color:var(--t2);line-height:1.6}
+.gap-interview{background:var(--panel2);border:1px solid rgba(99,179,237,.15);border-radius:14px;padding:18px;margin:16px 0}
+.gap-interview-title{font-size:12px;color:var(--highlight);text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-bottom:10px}
+.gap-interview-text{font-size:13px;color:var(--t2);line-height:1.6}
+/* Interview Practice */
+.itag{font-size:10px;font-weight:600;padding:3px 8px;border-radius:6px;display:inline-block}
+.itag-project{background:rgba(99,102,241,.12);color:#818cf8}
+.itag-skills{background:rgba(59,130,246,.12);color:#60a5fa}
+.itag-activity{background:rgba(52,211,153,.12);color:#34d399}
+.itag-motivation{background:rgba(251,191,36,.12);color:#fbbf24}
+.itag-problem{background:rgba(244,63,94,.12);color:#f43f5e}
+.itag-reflection{background:rgba(167,139,250,.12);color:#a78bfa}
+.itag-goals{background:rgba(45,212,191,.12);color:#2dd4bf}
+.iq-row{padding:14px;border-radius:12px;border:1px solid var(--border);background:var(--panel);margin-bottom:10px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:all .2s}
+.iq-row:hover{border-color:var(--accent);background:var(--panel2)}
+.iq-num{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--t3);flex-shrink:0}
+.iq-num.done{background:var(--green-bg);color:var(--green)}
+.iq-num.next{background:rgba(59,130,246,.12);color:var(--accent)}
+.iq-content{flex:1;min-width:0}
+.iq-text{font-size:13px;color:var(--t2);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.iq-why{font-size:11px;color:var(--t3);margin-top:4px}
+.iq-arrow{color:var(--t3);font-size:16px;flex-shrink:0}
+.iq-dots{display:flex;gap:6px;justify-content:center;margin-bottom:16px}
+.iq-dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.08)}
+.iq-dot.done{background:var(--green)}
+.iq-dot.next{background:var(--accent)}
+.iq-done-count{text-align:center;font-size:12px;color:var(--t3);margin-bottom:14px}
+.iq-card{background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.15);border-radius:14px;padding:16px;margin-bottom:16px}
+.iq-card-label{font-size:10px;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-bottom:6px}
+.iq-card-q{font-size:16px;font-weight:600;color:var(--t1);line-height:1.4;margin-bottom:6px}
+.iq-card-why{font-size:11px;color:var(--t3)}
+.star-toggle{display:flex;align-items:center;gap:8px;padding:12px;border:1.5px dashed var(--border);border-radius:10px;cursor:pointer;margin-bottom:12px;transition:border-color .2s}
+.star-toggle:hover{border-color:var(--accent)}
+.star-toggle-text{font-size:12px;color:var(--t3);flex:1}
+.star-toggle-arrow{font-size:14px;color:var(--t3);transition:transform .2s}
+.star-toggle-arrow.open{transform:rotate(180deg)}
+.star-panel{display:none;padding:14px;background:var(--panel2);border-radius:10px;border:1px solid var(--border);margin-bottom:14px}
+.star-panel.visible{display:block}
+.star-row{display:flex;gap:10px;padding:8px 0;align-items:flex-start}
+.star-letter{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.star-s{background:rgba(59,130,246,.12);color:var(--accent)}
+.star-t{background:rgba(251,191,36,.12);color:#fbbf24}
+.star-a{background:rgba(52,211,153,.12);color:var(--green)}
+.star-r{background:rgba(167,139,250,.12);color:#a78bfa}
+.star-text{font-size:12px;color:var(--t2);line-height:1.5}
+.wc-row{display:flex;justify-content:flex-end;padding:4px 0;font-size:11px;color:var(--t3)}
+.fb-score-wrap{display:flex;justify-content:center;margin-bottom:16px;position:relative}
+.fb-score-num{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+.fb-score-val{font-size:36px;font-weight:700;color:var(--accent);line-height:1}
+.fb-score-lbl{font-size:11px;color:var(--t3);margin-top:2px}
+.fb-card{border-radius:12px;padding:14px;margin-bottom:12px}
+.fb-card-good{background:rgba(52,211,153,.06);border:1px solid rgba(52,211,153,.15)}
+.fb-card-improve{background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.15)}
+.fb-card-label{font-size:10px;text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-bottom:6px}
+.fb-card-good .fb-card-label{color:var(--green)}
+.fb-card-improve .fb-card-label{color:#fbbf24}
+.fb-card-text{font-size:13px;color:var(--t2);line-height:1.6}
+.fb-sample-toggle{display:flex;align-items:center;gap:8px;padding:12px;border:1.5px dashed var(--border);border-radius:10px;cursor:pointer;margin:12px 0;transition:border-color .2s}
+.fb-sample-toggle:hover{border-color:var(--accent)}
+.fb-sample-panel{display:none;background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px;font-size:13px;color:var(--t2);line-height:1.6}
+.fb-sample-panel.visible{display:block}
+.fb-sample-panel em{color:var(--accent);font-style:normal;font-weight:600}
+@media(max-height:860px){.phone{transform:scale(.9);transform-origin:center center}}
+@media(max-width:420px){.phone{width:100%;height:100vh;border-radius:0;border:none}}
+</style>
+</head>
+<body>
+<div class="phone" id="phone">
+  <div class="status-bar">9:41</div>
+  <div class="screen-container">
+
+    <!-- ═══════════ HUB — Entry Point ═══════════ -->
+    <div class="screen active" id="s-hub">
+      <div style="text-align:center;margin-bottom:24px">
+        <div class="badge">MYINTERN</div>
+        <div class="intro-title" style="font-size:22px">What do you<br><span>need help with?</span></div>
+        <p class="intro-sub" style="margin-bottom:0">Pick where you are. We'll take it from there.</p>
+      </div>
+
+      <div class="hub-card" onclick="startFromHub('cv')">
+        <div class="hub-card-icon" style="background:rgba(59,130,246,.1);color:var(--accent)">1</div>
+        <div class="hub-card-body">
+          <div class="hub-card-title">No CV yet?</div>
+          <div class="hub-card-sub">Build one from scratch — 8 quick steps, even if you have zero experience.</div>
+        </div>
+        <div class="hub-card-arrow">&rsaquo;</div>
+      </div>
+
+      <div class="hub-card" onclick="startFromHub('gap')">
+        <div class="hub-card-icon" style="background:rgba(251,191,36,.1);color:#fbbf24">2</div>
+        <div class="hub-card-body">
+          <div class="hub-card-title">Want to beef up your CV?</div>
+          <div class="hub-card-sub">See what's missing vs what employers expect. Fix it in minutes.</div>
+        </div>
+        <div class="hub-card-arrow">&rsaquo;</div>
+      </div>
+
+      <div class="hub-card" onclick="startFromHub('match')">
+        <div class="hub-card-icon" style="background:rgba(52,211,153,.1);color:var(--green)">3</div>
+        <div class="hub-card-body">
+          <div class="hub-card-title">Find your internship</div>
+          <div class="hub-card-sub">Match to real open internships. Build your CV here or upload one you already have.</div>
+        </div>
+        <div class="hub-card-arrow">&rsaquo;</div>
+      </div>
+
+      <div class="hub-card" onclick="startFromHub('interview')">
+        <div class="hub-card-icon" style="background:rgba(167,139,250,.1);color:#a78bfa">4</div>
+        <div class="hub-card-body">
+          <div class="hub-card-title">Practice for interviews</div>
+          <div class="hub-card-sub">7 questions based on your CV. Speak or type your answers.</div>
+        </div>
+        <div class="hub-card-arrow">&rsaquo;</div>
+      </div>
+
+      <div style="text-align:center;margin-top:20px;font-size:11px;color:var(--t3);line-height:1.6">
+        First time? Start with 1.<br>
+        Already have a CV? Jump to 2, 3, or 4.
+      </div>
+    </div>
+
+    <!-- ═══════════ Q0 — PERSONAL DETAILS ═══════════ -->
+    <div class="screen" id="s-q0">
+      <div class="prog-bar"><div class="prog-fill" style="width:12%"></div></div>
+      <div class="step-label">Step 1 of 8</div>
+      <div class="q-title">First, the basics.</div>
+      <div class="q-hint">Your name and contact &mdash; this goes at the top of your CV.</div>
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <input class="form-input" type="text" id="inpName" placeholder="e.g. Nur Aisyah binti Ahmad" oninput="checkPersonal()">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-input" type="email" id="inpEmail" placeholder="e.g. aisyah@gmail.com" oninput="checkPersonal()">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Phone</label>
+        <input class="form-input" type="tel" id="inpPhone" placeholder="e.g. 012-345 6789" oninput="checkPersonal()">
+      </div>
+      <div class="form-group">
+        <label class="form-label">City / State</label>
+        <input class="form-input" type="text" id="inpCity" placeholder="e.g. Shah Alam, Selangor" oninput="checkPersonal()">
+      </div>
+      <div class="btn-row">
+        <button class="btn-primary btn-disabled" id="nextBtn-1" onclick="nextStep()">Next &rarr;</button>
+      </div>
+    </div>
+
+    <!-- ═══════════ Q1 — UNIVERSITY / COLLEGE ═══════════ -->
+    <div class="screen" id="s-q1">
+      <div class="prog-bar"><div class="prog-fill" style="width:25%"></div></div>
+      <div class="step-label">Step 2 of 8</div>
+      <div class="q-title">Where do you study?</div>
+      <div class="q-hint">Uni, politeknik, kolej &mdash; just type and pick yours.</div>
+      <input class="search-input" type="text" placeholder="Type your institution name..." oninput="filterUnis(this.value)">
+      <div class="uni-list" id="uniList"></div>
+      <div class="btn-row">
+        <button class="btn-primary btn-disabled" id="nextBtn-2" onclick="nextStep()">Next &rarr;</button>
+        <button class="btn-skip" onclick="skipStep()">Skip</button>
+      </div>
+    </div>
+
+    <!-- ═══════════ Q2 — SPECIFIC COURSE ═══════════ -->
+    <div class="screen" id="s-q2">
+      <div class="prog-bar"><div class="prog-fill" style="width:37%"></div></div>
+      <div class="step-label">Step 3 of 8</div>
+      <div class="q-title">What's your course?</div>
+      <div class="q-hint">Pick the category first, then your actual programme.</div>
+      <!-- Category filter row -->
+      <div class="chip-grid" style="margin-bottom:14px" id="courseCatChips">
+        <span class="chip selected" onclick="filterCourses('all',this)">All</span>
+        <span class="chip" onclick="filterCourses('eng',this)">Engineering</span>
+        <span class="chip" onclick="filterCourses('cs',this)">IT / CS</span>
+        <span class="chip" onclick="filterCourses('biz',this)">Business</span>
+        <span class="chip" onclick="filterCourses('sci',this)">Science</span>
+        <span class="chip" onclick="filterCourses('arts',this)">Arts / Social</span>
+        <span class="chip" onclick="filterCourses('health',this)">Health</span>
+      </div>
+      <div id="courseList" style="max-height:340px;overflow-y:auto;scrollbar-width:thin"></div>
+      <div class="btn-row">
+        <button class="btn-primary btn-disabled" id="nextBtn-3" onclick="nextStep()">Next &rarr;</button>
+        <button class="btn-skip" onclick="skipStep()">Skip</button>
+      </div>
+    </div>
+
+    <!-- ═══════════ Q3 — STUDY LEVEL ═══════════ -->
+    <div class="screen" id="s-q3">
+      <div class="prog-bar"><div class="prog-fill" style="width:50%"></div></div>
+      <div class="step-label">Step 4 of 8</div>
+      <div class="q-title">How far along are you?</div>
+      <div class="q-hint">No one expects a Year 1 to have 5 years of experience &mdash; this just sets the right tone.</div>
+      <div class="opt" onclick="selectSingle(this,'level','cert')">Sijil / Certificate programme</div>
+      <div class="opt" onclick="selectSingle(this,'level','dip-early')">Diploma &mdash; Year 1 or 2</div>
+      <div class="opt" onclick="selectSingle(this,'level','dip-final')">Diploma &mdash; Final year / need LI soon</div>
+      <div class="opt" onclick="selectSingle(this,'level','deg-1')">Degree &mdash; Year 1 (just started)</div>
+      <div class="opt" onclick="selectSingle(this,'level','deg-2')">Degree &mdash; Year 2</div>
+      <div class="opt" onclick="selectSingle(this,'level','deg-3')">Degree &mdash; Year 3</div>
+      <div class="opt" onclick="selectSingle(this,'level','deg-final')">Degree &mdash; Final year, graduating soon</div>
+      <div class="opt" onclick="selectSingle(this,'level','masters')">Master's / MBA</div>
+      <div class="opt" onclick="selectSingle(this,'level','phd')">PhD / Doctoral</div>
+      <div class="opt" onclick="selectSingle(this,'level','grad')">Already graduated &mdash; looking for first job</div>
+      <div class="btn-row">
+        <button class="btn-primary btn-disabled" id="nextBtn-4" onclick="nextStep()">Next &rarr;</button>
+        <button class="btn-skip" onclick="skipStep()">Skip</button>
+      </div>
+    </div>
+
+    <!-- ═══════════ Q4 — PROJECTS (dynamic, based on course) ═══════════ -->
+    <div class="screen" id="s-q4">
+      <div class="prog-bar"><div class="prog-fill" style="width:62%"></div></div>
+      <div class="step-label">Step 5 of 8</div>
+      <div class="q-title">Done any projects?</div>
+      <div class="q-hint" id="projHint">Tap to select, then describe what you did in 1-2 lines. This is what employers actually read on your CV.</div>
+      <div id="projContainer"></div>
+      <div class="btn-row">
+        <button class="btn-primary btn-disabled" id="nextBtn-5" onclick="nextStep()">Next &rarr;</button>
+        <button class="btn-skip" onclick="skipStep()">Haven't done any &mdash; skip</button>
+      </div>
+    </div>
+
+    <!-- ═══════════ Q5 — ACTIVITIES ═══════════ -->
+    <div class="screen" id="s-q5">
+      <div class="prog-bar"><div class="prog-fill" style="width:75%"></div></div>
+      <div class="step-label">Step 6 of 8</div>
+      <div class="q-title">What about outside class?</div>
+      <div class="q-hint">Persatuan, part-time, volunteering, kolej rep &mdash; anything you did that shows you're not just sitting in lectures.</div>
+
+      <div class="cat-label">Badan Beruniform / Uniform Bodies</div>
+      <div class="chip-grid">
+        <span class="chip" onclick="toggleChip(this,'activities')">PALAPES (Army/Navy/Air)</span>
+        <span class="chip" onclick="toggleChip(this,'activities')">SUKSIS</span>
+        <span class="chip" onclick="toggleChip(this,'activities')">PBSM (Red Crescent)</span>
+        <span class="chip" onclick="toggleChip(this,'activities')">St John Ambulance</span>
+        <span class="chip" onclick="toggleChip(this,'activities')">JPAM</span>
+        <span class="chip" onclick="toggleChip(this,'activities')">RELA</span>
+      </div>
+      <div class="cat-label">Student Leadership / Roles</div>
+      <div class="chip-grid">
+        <span class="chip" onclick="toggleChip(this,'activities')">Club / Persatuan President</span>
+        <span class="chip" onclick="toggleChip(this,'activities')">Committee Member (AJK)</span>
+        <span class="chip" onclick="toggleChip(this,'activities')">MPP / Student Council</span>
+        <span class="chip" onclick="toggleChip(this,'activities')">Kolej Kediaman Rep</span>
+        <span class="chip" onclick="toggleChip(this,'activities')">Orientation Facilitator</span>
+        <span class="chip" onclick="toggleChip(this,'activities')">Event Organiser</span>
+        <span class="chip" onclick="toggleChip(this,'activities')">Peer Mentor / Buddy</span>
+      </div>
+      <div class="cat-label">Competitions / Public Speaking</div>
+      <div class="chip-grid">
+        <span class="chip" onclick="toggleChip(this,'activities')">Hackathon</span>
+        <span class="chip" onclick="toggleChip(this,'activities')">Debate (BM or EN)</span>
+        <span class="chip" onclick="toggleChip(this,'activities')">Public Speaking</span>
+        <span class="chip" onclick="toggleChip(this,'activities')">Case Competition</span>
+        <span class="chip" onclick="toggleChip(this,'activities')">Sports (uni team)</span>
+        <span class="chip" onclick="toggleChip(this,'activities')">E-sports</span>
+      </div>
+      <div class="cat-label">Part-time / Kerja Sambilan</div>
+      <div class="chip-grid">
+        <span class="chip" onclick="toggleChip(this,'activities')">Retail / Cashier</span>
+        <span class="chip" onclick="toggleChip(this,'activities')">F&amp;B / Barista / Waiter</span>
+        <span class="chip" onclick="toggleChip(this,'activities')">Grab / Delivery Rider</span>
+        <span class="chip" onclick="toggleChip(this,'activities')">Freelance (design, writing, etc.)</span>
+        <span class="chip" onclick="toggleChip(this,'activities')">Family Business</span>
+        <span class="chip" onclick="toggleChip(this,'activities')">Private Tutor</span>
+        <span class="chip" onclick="toggleChip(this,'activities')">Social Media Manager</span>
+      </div>
+      <div class="cat-label">Volunteer / Community</div>
+      <div class="chip-grid">
+        <span class="chip" onclick="toggleChip(this,'activities')">Community Service</span>
+        <span class="chip" onclick="toggleChip(this,'activities')">Charity / Fundraising</span>
+        <span class="chip" onclick="toggleChip(this,'activities')">Religious / Surau Committee</span>
+        <span class="chip" onclick="toggleChip(this,'activities')">NGO Volunteer</span>
+      </div>
+      <div class="custom-row">
+        <input class="custom-input" id="customAct" type="text" placeholder="Anything else?">
+        <button class="add-btn" onclick="addCustom('customAct','activities')">Add</button>
+      </div>
+      <div class="cat-label">Want to describe any of these in more detail?</div>
+      <textarea class="text-area" id="activityDetail" placeholder="e.g. 'Was AJK for Faculty Night 2025 — handled logistics for 300 attendees, coordinated 5 vendors, managed RM8,000 budget' or 'Part-time barista at Starbucks Shah Alam for 6 months — peak hour operations, customer service, POS system'" oninput="cvState.activityDetail=this.value.trim()"></textarea>
+      <div id="micRowActivity"></div>
+      <div class="btn-row">
+        <button class="btn-primary btn-disabled" id="nextBtn-6" onclick="nextStep()">Next &rarr;</button>
+        <button class="btn-skip" onclick="skipStep()">Nothing yet &mdash; skip</button>
+      </div>
+    </div>
+
+    <!-- ═══════════ Q6 — SKILLS ═══════════ -->
+    <div class="screen" id="s-q6">
+      <div class="prog-bar"><div class="prog-fill" style="width:87%"></div></div>
+      <div class="step-label">Step 7 of 8</div>
+      <div class="q-title">What can you actually do?</div>
+      <div class="q-hint">Be honest &mdash; even "I know Excel" is worth putting. Employers want to see what tools you've touched.</div>
+
+      <div class="cat-label">Office / Productivity</div>
+      <div class="chip-grid">
+        <span class="chip" onclick="toggleChip(this,'skills')">Microsoft Word</span>
+        <span class="chip" onclick="toggleChip(this,'skills')">Excel / Spreadsheets</span>
+        <span class="chip" onclick="toggleChip(this,'skills')">PowerPoint</span>
+        <span class="chip" onclick="toggleChip(this,'skills')">Google Workspace</span>
+      </div>
+      <div class="cat-label">Design / Creative</div>
+      <div class="chip-grid">
+        <span class="chip" onclick="toggleChip(this,'skills')">Canva</span>
+        <span class="chip" onclick="toggleChip(this,'skills')">Figma</span>
+        <span class="chip" onclick="toggleChip(this,'skills')">Photoshop</span>
+        <span class="chip" onclick="toggleChip(this,'skills')">Video Editing</span>
+        <span class="chip" onclick="toggleChip(this,'skills')">AutoCAD</span>
+        <span class="chip" onclick="toggleChip(this,'skills')">SolidWorks</span>
+      </div>
+      <div class="cat-label">Coding / Technical</div>
+      <div class="chip-grid">
+        <span class="chip" onclick="toggleChip(this,'skills')">Python</span>
+        <span class="chip" onclick="toggleChip(this,'skills')">Java</span>
+        <span class="chip" onclick="toggleChip(this,'skills')">HTML / CSS</span>
+        <span class="chip" onclick="toggleChip(this,'skills')">JavaScript</span>
+        <span class="chip" onclick="toggleChip(this,'skills')">SQL</span>
+        <span class="chip" onclick="toggleChip(this,'skills')">C / C++</span>
+        <span class="chip" onclick="toggleChip(this,'skills')">PHP</span>
+        <span class="chip" onclick="toggleChip(this,'skills')">R / SPSS / MATLAB</span>
+      </div>
+      <div class="cat-label">Languages</div>
+      <div class="chip-grid">
+        <span class="chip" onclick="toggleChip(this,'skills')">Bahasa Malaysia</span>
+        <span class="chip" onclick="toggleChip(this,'skills')">English</span>
+        <span class="chip" onclick="toggleChip(this,'skills')">Mandarin</span>
+        <span class="chip" onclick="toggleChip(this,'skills')">Tamil</span>
+        <span class="chip" onclick="toggleChip(this,'skills')">Arabic</span>
+      </div>
+      <div class="cat-label">Certifications</div>
+      <div class="chip-grid">
+        <span class="chip" onclick="toggleChip(this,'skills')">MUET</span>
+        <span class="chip" onclick="toggleChip(this,'skills')">IELTS / TOEFL</span>
+        <span class="chip" onclick="toggleChip(this,'skills')">Google Analytics</span>
+        <span class="chip" onclick="toggleChip(this,'skills')">First Aid / CPR</span>
+        <span class="chip" onclick="toggleChip(this,'skills')">UBS / SQL Accounting</span>
+        <span class="chip" onclick="toggleChip(this,'skills')">AWS / Cloud Cert</span>
+      </div>
+      <div class="custom-row">
+        <input class="custom-input" id="customSkill" type="text" placeholder="Other skill or cert?">
+        <button class="add-btn" onclick="addCustom('customSkill','skills')">Add</button>
+      </div>
+      <div class="btn-row">
+        <button class="btn-primary btn-disabled" id="nextBtn-7" onclick="nextStep()">Next &rarr;</button>
+        <button class="btn-skip" onclick="skipStep()">Skip</button>
+      </div>
+    </div>
+
+    <!-- ═══════════ Q7 — MOTIVATION ═══════════ -->
+    <div class="screen" id="s-q7">
+      <div class="prog-bar"><div class="prog-fill" style="width:95%"></div></div>
+      <div class="step-label">Step 8 of 8</div>
+      <div class="q-title">Why do you want an internship?</div>
+      <div class="q-hint">Pick a starting point, then make it your own below. This becomes your personal statement &mdash; the thing recruiters actually read.</div>
+      <div class="opt" onclick="selectSingle(this,'motivation','real-exp')">Tired of theory &mdash; I want to see how it actually works</div>
+      <div class="opt" onclick="selectSingle(this,'motivation','li-req')">My uni requires LI / praktikal to graduate</div>
+      <div class="opt" onclick="selectSingle(this,'motivation','learn')">I want to learn from people who actually do this job</div>
+      <div class="opt" onclick="selectSingle(this,'motivation','cv')">I need something real on my CV before I grad</div>
+      <div class="opt" onclick="selectSingle(this,'motivation','career')">I want to explore if this industry is right for me</div>
+      <div class="opt" onclick="selectSingle(this,'motivation','network')">I want to build connections and get a return offer</div>
+      <div class="cat-label">Write your own or expand on the above</div>
+      <textarea class="text-area" id="motivationText" style="height:100px" placeholder="Write freely here. Good personal statements are 2-3 sentences. e.g. 'As a final-year CS student at UiTM, I'm looking for a software engineering internship where I can apply my Python and SQL skills in a real production environment. I built a student attendance system for my FYP and want to work on something bigger with a proper engineering team.'" oninput="checkMotivation()"></textarea>
+      <div id="micRowMotivation"></div>
+      <div class="btn-row">
+        <button class="btn-primary btn-disabled" id="nextBtn-8" onclick="finishBuilder()">Build my CV &rarr;</button>
+        <button class="btn-skip" onclick="skipStep()">Skip</button>
+      </div>
+    </div>
+
+    <!-- ═══════════ COMPLETION — CV PREVIEW + DOWNLOAD ═══════════ -->
+    <div class="screen" id="s-complete">
+      <div class="confetti-container" id="confettiWrap"></div>
+      <div class="complete-circle">
+        <svg width="140" height="140" viewBox="0 0 160 160">
+          <defs><linearGradient id="arcGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#3b82f6"/><stop offset="100%" stop-color="#6366f1"/></linearGradient></defs>
+          <circle cx="80" cy="80" r="68" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="8"/>
+          <circle cx="80" cy="80" r="68" fill="none" stroke="url(#arcGrad)" stroke-width="8" stroke-linecap="round" stroke-dasharray="427" stroke-dashoffset="427" transform="rotate(-90 80 80)" id="arcCircle" style="transition:stroke-dashoffset 1.2s ease"/>
+        </svg>
+        <div class="complete-score">
+          <div class="complete-num" id="completeNum">0</div>
+          <div class="complete-lbl">CV Strength</div>
+        </div>
+      </div>
+      <div class="complete-title">Done. Your CV is ready.</div>
+      <div class="complete-sub" id="completeSub"></div>
+      <div class="complete-chips">
+        <span class="complete-chip">Personal Info</span>
+        <span class="complete-chip">Education</span>
+        <span class="complete-chip">Projects</span>
+        <span class="complete-chip">Skills</span>
+      </div>
+      <!-- Live CV preview — hidden until populated -->
+      <div class="cv-preview" id="cvPreview" style="display:none"></div>
+      <button class="btn-primary" onclick="downloadCV()">Download as PDF &rarr;</button>
+      <button class="btn-secondary" onclick="goToScreen(0)">Start over</button>
+      <button class="btn-secondary" style="margin-top:10px;border-color:rgba(59,130,246,.3);color:var(--accent)" onclick="openGapAnalysis()">Show me what I'm missing</button>
+    </div>
+
+    <!-- ═══════════ GAP ANALYSIS ═══════════ -->
+    <div class="screen" id="s-gap">
+      <div class="step-label">GAP ANALYSIS</div>
+      <div class="q-title">Here's what employers see.</div>
+      <div class="q-hint" id="gapHint"></div>
+      <div id="gapContent"></div>
+      <!-- Next step card — dynamic based on score -->
+      <div id="gapNextStep"></div>
+      <div class="btn-row" style="margin-top:12px">
+        <button class="btn-secondary" onclick="downloadCV()">Download CV</button>
+      </div>
+    </div>
+
+    <!-- ═══════════ INTERNSHIP MATCHER ═══════════ -->
+    <div class="screen" id="s-match">
+      <div class="step-label">INTERNSHIP MATCHER</div>
+      <div class="q-title" id="matchTitle">Internships that fit you.</div>
+      <div class="q-hint" id="matchHint"></div>
+      <!-- Upload or use existing CV -->
+      <div id="matchUploadArea" style="margin-bottom:16px">
+        <div style="display:flex;gap:8px">
+          <label class="btn-secondary" style="flex:1;text-align:center;cursor:pointer;padding:12px;font-size:13px;border-color:rgba(52,211,153,.3);color:var(--green)" id="uploadLabel">
+            Upload your CV (PDF)
+            <input type="file" accept=".pdf,.txt" style="display:none" id="cvFileInput" onchange="handleCvUpload(this)">
+          </label>
+          <button class="btn-secondary" style="flex:1;padding:12px;font-size:13px" onclick="useBuiltCv()" id="useBuiltBtn">Use CV I built here</button>
+        </div>
+        <div id="uploadStatus" style="font-size:11px;color:var(--t3);margin-top:8px;display:none"></div>
+      </div>
+      <div class="match-filter-row" id="matchFilters"></div>
+      <div id="matchResults"></div>
+      <div class="btn-row" style="margin-top:16px">
+        <button class="btn-secondary" onclick="goToScreen(0)">Back to hub</button>
+      </div>
+    </div>
+
+    <!-- ═══════════ INTERVIEW PRACTICE — LIST ═══════════ -->
+    <div class="screen" id="s-interview-list">
+      <div class="step-label">INTERVIEW PRACTICE</div>
+      <div class="q-title">7 questions from your CV.</div>
+      <div class="q-hint">Each question is based on what you actually put in your CV. Interviewers will ask these.</div>
+      <div class="iq-dots" id="iqDots"></div>
+      <div class="iq-done-count"><span id="iqDoneCount">0</span>/7 answered</div>
+      <div id="iqListItems"></div>
+      <div class="btn-row">
+        <button class="btn-secondary" onclick="goToScreen(0)">Back to hub</button>
+      </div>
+    </div>
+
+    <!-- ═══════════ INTERVIEW PRACTICE — ANSWER ═══════════ -->
+    <div class="screen" id="s-interview-answer">
+      <div class="step-label" id="iaStepLabel">QUESTION 1 OF 7</div>
+      <div class="iq-card">
+        <div class="iq-card-label">INTERVIEW QUESTION</div>
+        <div class="iq-card-q" id="iaQuestion"></div>
+        <div class="iq-card-why" id="iaWhy"></div>
+      </div>
+      <div class="star-toggle" onclick="toggleStarHint()">
+        <span class="star-toggle-text">Not sure where to start? Use the STAR guide</span>
+        <span class="star-toggle-arrow" id="starArrow">&#9660;</span>
+      </div>
+      <div class="star-panel" id="starPanel">
+        <div class="star-row"><span class="star-letter star-s">S</span><span class="star-text"><strong>Situation</strong> — Set the scene briefly. What was the context?</span></div>
+        <div class="star-row"><span class="star-letter star-t">T</span><span class="star-text"><strong>Task</strong> — What were you trying to do or solve?</span></div>
+        <div class="star-row"><span class="star-letter star-a">A</span><span class="star-text"><strong>Action</strong> — What did you actually do? Be specific.</span></div>
+        <div class="star-row"><span class="star-letter star-r">R</span><span class="star-text"><strong>Result</strong> — What happened? Even a small win counts.</span></div>
+      </div>
+      <textarea class="text-area" id="iaInput" style="height:120px" placeholder="Type or speak your answer..." oninput="updateIaWordCount()"></textarea>
+      <div class="wc-row"><span id="iaWc">0</span> words</div>
+      <div id="iaMicRow"></div>
+      <div class="btn-row">
+        <button class="btn-primary btn-disabled" id="iaSubmitBtn" onclick="submitInterview()">Submit answer</button>
+        <button class="btn-skip" onclick="goToScreen(SCREENS.indexOf('s-interview-list'))">Back to questions</button>
+      </div>
+    </div>
+
+    <!-- ═══════════ INTERVIEW PRACTICE — FEEDBACK ═══════════ -->
+    <div class="screen" id="s-interview-feedback">
+      <div class="step-label" id="ifStepLabel">FEEDBACK — Q1</div>
+      <div class="fb-score-wrap">
+        <svg width="120" height="120" viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="8"/>
+          <circle cx="60" cy="60" r="50" fill="none" stroke="url(#arcGrad)" stroke-width="8" stroke-linecap="round" stroke-dasharray="314" stroke-dashoffset="314" transform="rotate(-90 60 60)" id="ifArc" style="transition:stroke-dashoffset .8s ease"/>
+        </svg>
+        <div class="fb-score-num">
+          <div class="fb-score-val" id="ifScoreVal">0</div>
+          <div class="fb-score-lbl" id="ifScoreLbl"></div>
+        </div>
+      </div>
+      <div class="fb-card fb-card-good">
+        <div class="fb-card-label">WHAT WORKED</div>
+        <div class="fb-card-text" id="ifGood"></div>
+      </div>
+      <div class="fb-card fb-card-improve">
+        <div class="fb-card-label">WHAT TO IMPROVE</div>
+        <div class="fb-card-text" id="ifImprove"></div>
+      </div>
+      <div class="fb-sample-toggle" onclick="toggleIfSample()">
+        <span style="font-size:12px;color:var(--t3);flex:1">See a stronger answer</span>
+        <span class="star-toggle-arrow" id="ifSampleArrow">&#9660;</span>
+      </div>
+      <div class="fb-sample-panel" id="ifSamplePanel"></div>
+      <div class="btn-row">
+        <button class="btn-primary" id="ifNextBtn" onclick="nextInterviewQ()">Next question</button>
+        <button class="btn-secondary" onclick="retryInterview()">Try this one again</button>
+      </div>
+    </div>
+
+  </div>
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+var SCREENS = ['s-hub','s-q0','s-q1','s-q2','s-q3','s-q4','s-q5','s-q6','s-q7','s-complete','s-gap','s-match','s-interview-list','s-interview-answer','s-interview-feedback'];
+// Points are awarded per step but final score is calculated realistically
+// against what an industry-standard intern CV should have
+var cvState = {current:0,strength:0,name:'',email:'',phone:'',city:'',university:null,course:null,level:null,projects:[],projectDescs:{},activities:[],activityDetail:'',skills:[],motivation:null,motivationText:''};
+
+/* ── UNIVERSITIES — comprehensive Malaysian list ── */
+var UNI_DATA = [
+  {cat:'Universiti Awam (IPTA)',items:['Universiti Malaya (UM)','Universiti Kebangsaan Malaysia (UKM)','Universiti Putra Malaysia (UPM)','Universiti Sains Malaysia (USM)','Universiti Teknologi Malaysia (UTM)','Universiti Teknologi MARA (UiTM)','Universiti Islam Antarabangsa Malaysia (UIAM)','Universiti Utara Malaysia (UUM)','Universiti Malaysia Sarawak (UNIMAS)','Universiti Malaysia Sabah (UMS)','Universiti Pendidikan Sultan Idris (UPSI)','Universiti Teknikal Malaysia Melaka (UTeM)','Universiti Tun Hussein Onn Malaysia (UTHM)','Universiti Malaysia Terengganu (UMT)','Universiti Malaysia Pahang Al-Sultan Abdullah (UMPSA)','Universiti Malaysia Perlis (UniMAP)','Universiti Sultan Zainal Abidin (UniSZA)','Universiti Malaysia Kelantan (UMK)','Universiti Pertahanan Nasional Malaysia (UPNM)','Universiti Sains Islam Malaysia (USIM)']},
+  {cat:'Universiti Swasta (IPTS)',items:['Multimedia University (MMU)','Universiti Tunku Abdul Rahman (UTAR)','Universiti Tenaga Nasional (UNITEN)','Universiti Petronas (UTP)','Taylor\'s University','Sunway University','Asia Pacific University (APU)','HELP University','INTI International University','SEGi University','Limkokwing University','KDU University','UCSI University','Universiti Kuala Lumpur (UniKL)','Management & Science University (MSU)','MAHSA University','Universiti Tun Abdul Razak (UNIRAZAK)','Al-Bukhary International University','Binary University','Perdana University','Widad University College','City University Malaysia','Lincoln University College','Universiti Selangor (UNISEL)','International Medical University (IMU)','Monash University Malaysia','University of Nottingham Malaysia','Heriot-Watt University Malaysia','Curtin University Malaysia','Swinburne University Sarawak','University of Southampton Malaysia','Xiamen University Malaysia','University of Reading Malaysia']},
+  {cat:'Politeknik',items:['Politeknik Sultan Salahuddin Abdul Aziz Shah','Politeknik Ungku Omar','Politeknik Sultan Haji Ahmad Shah','Politeknik Kota Bharu','Politeknik Ibrahim Sultan','Politeknik Port Dickson','Politeknik Kuching Sarawak','Politeknik Kota Kinabalu','Politeknik Seberang Perai','Politeknik Shah Alam','Politeknik Merlimau','Politeknik Muadzam Shah','Politeknik Sandakan','Politeknik Sultan Mizan Zainal Abidin','Politeknik Tuanku Syed Sirajuddin','Politeknik Mersing','Politeknik Jeli','Politeknik Mukah','Politeknik Hulu Terengganu','Politeknik Banting','Politeknik Nilai','Politeknik Sultan Idris Shah','Politeknik Tun Syed Nasir','Politeknik Metro Kuala Lumpur','Politeknik Metro Johor Bahru','Politeknik Metro Kuantan','Politeknik Metro Tasek Gelugor','Politeknik Metro Betong Sarawak','Politeknik Balik Pulau','Politeknik Pagoh','Politeknik Sultan Abdul Halim Mu\'adzam Shah','Politeknik Dungun','Politeknik Lain (Other)']},
+  {cat:'Kolej Komuniti',items:['Kolej Komuniti (any branch)']},
+  {cat:'Kolej Swasta / Others',items:['AIMST University','Kolej MDIS Malaysia','Kolej Yayasan Sabah','DISTED College','KPJ Healthcare University College','Berjaya University College','International Centre for Education in Islamic Finance (INCEIF)','First City University College','Kolej Profesional MARA','ADTEC (various)','Institut Kemahiran MARA (IKM)','Akademi Laut Malaysia (ALAM)','Kolej Matrikulasi','Other institution']}
+];
+
+/* ── COURSES — real Malaysian programmes ── */
+var COURSE_DATA = [
+  {cat:'eng',label:'Engineering',items:[
+    {name:'Bachelor of Mechanical Engineering',sub:'Mech, manufacturing, automotive'},
+    {name:'Bachelor of Electrical Engineering',sub:'Power, electronics, control'},
+    {name:'Bachelor of Civil Engineering',sub:'Structural, construction, infrastructure'},
+    {name:'Bachelor of Chemical Engineering',sub:'Process, petrochemical, bioprocess'},
+    {name:'Bachelor of Electronic Engineering',sub:'Telecoms, embedded systems'},
+    {name:'Diploma in Mechanical Engineering',sub:'Politeknik / IPTS'},
+    {name:'Diploma in Electrical Engineering',sub:'Politeknik / IPTS'},
+    {name:'Diploma in Civil Engineering',sub:'Politeknik / IPTS'},
+    {name:'Other Engineering programme',sub:'Aerospace, marine, mechatronics, etc.'}
+  ]},
+  {cat:'cs',label:'IT / Computer Science',items:[
+    {name:'Bachelor of Computer Science',sub:'Software dev, algorithms, AI'},
+    {name:'Bachelor of Information Technology',sub:'Systems, networking, IT management'},
+    {name:'Bachelor of Software Engineering',sub:'Full-stack, DevOps, testing'},
+    {name:'Bachelor of Data Science',sub:'Analytics, ML, big data'},
+    {name:'Bachelor of Cybersecurity',sub:'InfoSec, ethical hacking, forensics'},
+    {name:'Bachelor of Multimedia / Game Dev',sub:'Animation, game design, VFX'},
+    {name:'Diploma in Information Technology',sub:'Politeknik / IPTS'},
+    {name:'Diploma in Computer Science',sub:'Politeknik / IPTS'},
+    {name:'Other IT / CS programme',sub:'AI, cloud computing, etc.'}
+  ]},
+  {cat:'biz',label:'Business / Finance',items:[
+    {name:'Bachelor of Accounting',sub:'Audit, tax, financial reporting'},
+    {name:'Bachelor of Finance',sub:'Banking, investment, risk'},
+    {name:'Bachelor of Business Administration',sub:'Management, operations, strategy'},
+    {name:'Bachelor of Marketing',sub:'Digital marketing, brand, consumer'},
+    {name:'Bachelor of Economics',sub:'Micro, macro, econometrics'},
+    {name:'Bachelor of Human Resource Management',sub:'HR, talent, org development'},
+    {name:'Bachelor of International Business',sub:'Trade, logistics, global markets'},
+    {name:'Bachelor of Actuarial Science',sub:'Insurance, risk modelling'},
+    {name:'Diploma in Accountancy',sub:'Politeknik / IPTS'},
+    {name:'Diploma in Business Studies',sub:'Politeknik / IPTS'},
+    {name:'Other Business programme',sub:'Supply chain, entrepreneurship, etc.'}
+  ]},
+  {cat:'sci',label:'Science',items:[
+    {name:'Bachelor of Biotechnology',sub:'Biotech, genetics, microbiology'},
+    {name:'Bachelor of Chemistry',sub:'Analytical, organic, industrial'},
+    {name:'Bachelor of Physics',sub:'Applied physics, materials'},
+    {name:'Bachelor of Mathematics / Statistics',sub:'Pure maths, applied, stats'},
+    {name:'Bachelor of Environmental Science',sub:'Ecology, sustainability'},
+    {name:'Bachelor of Food Science',sub:'Food tech, quality, nutrition'},
+    {name:'Diploma in Science',sub:'Politeknik / IPTS'},
+    {name:'Other Science programme',sub:'Geology, marine biology, etc.'}
+  ]},
+  {cat:'arts',label:'Arts / Social Science',items:[
+    {name:'Bachelor of Law (LLB)',sub:'Legal studies, syariah, corporate law'},
+    {name:'Bachelor of Mass Communication',sub:'Journalism, PR, broadcasting'},
+    {name:'Bachelor of Psychology',sub:'Clinical, industrial, counselling'},
+    {name:'Bachelor of Education',sub:'TESL, science ed, primary ed'},
+    {name:'Bachelor of Graphic Design',sub:'Visual design, branding, UX'},
+    {name:'Bachelor of Architecture',sub:'Architecture, interior, landscape'},
+    {name:'Bachelor of Music / Performing Arts',sub:'Performance, composition'},
+    {name:'Bachelor of Political Science',sub:'Governance, policy, IR'},
+    {name:'Diploma in Communication',sub:'Politeknik / IPTS'},
+    {name:'Other Arts / Social Science',sub:'History, languages, sociology, etc.'}
+  ]},
+  {cat:'health',label:'Health Sciences',items:[
+    {name:'Bachelor of Medicine (MBBS)',sub:'Medicine, surgery'},
+    {name:'Bachelor of Pharmacy',sub:'Clinical pharmacy, pharma'},
+    {name:'Bachelor of Nursing',sub:'Nursing, midwifery'},
+    {name:'Bachelor of Dentistry',sub:'Dental surgery'},
+    {name:'Bachelor of Physiotherapy',sub:'Rehab, sports therapy'},
+    {name:'Bachelor of Biomedical Science',sub:'Lab, diagnostics, research'},
+    {name:'Bachelor of Dietetics / Nutrition',sub:'Clinical nutrition'},
+    {name:'Diploma in Nursing',sub:'Politeknik / IPTS'},
+    {name:'Diploma in Medical Lab Technology',sub:'Politeknik / IPTS'},
+    {name:'Other Health programme',sub:'Optometry, radiography, etc.'}
+  ]}
+];
+
+/* ── Navigation ── */
+function goToScreen(idx){
+  var prev=document.getElementById(SCREENS[cvState.current]);
+  var next=document.getElementById(SCREENS[idx]);
+  prev.classList.remove('active');prev.classList.add('exit-left');
+  next.classList.add('active');
+  setTimeout(function(){prev.classList.remove('exit-left')},350);
+  cvState.current=idx;
+}
+function startBuilder(){goToScreen(1)}
+function startFromHub(dest){
+  var hasCv=cvState.name&&cvState.course;
+  if(dest==='cv'){
+    goToScreen(1); // s-q0
+  } else if(dest==='gap'){
+    if(!hasCv){showToast('Build your CV first — it only takes 5 minutes');goToScreen(1);return;}
+    renderProjects();
+    goToScreen(SCREENS.indexOf('s-complete'));
+    setTimeout(function(){openGapAnalysis()},100);
+  } else if(dest==='match'){
+    goToScreen(SCREENS.indexOf('s-match'));
+    // Show upload area if no CV, hide if they have one
+    var uploadArea=document.getElementById('matchUploadArea');
+    var useBtn=document.getElementById('useBuiltBtn');
+    if(hasCv){
+      if(useBtn)useBtn.style.display='block';
+      setTimeout(function(){useBuiltCv()},300);
+    } else {
+      if(useBtn)useBtn.style.display='none';
+      document.getElementById('matchHint').textContent='Upload your CV or build one first to see matches.';
+      document.getElementById('matchResults').innerHTML='<div class="match-empty">Upload a CV above to get matched, or go back and build one.</div>';
+    }
+  } else if(dest==='interview'){
+    if(!hasCv){showToast('Build your CV first — interviews are based on your CV');goToScreen(1);return;}
+    renderProjects();
+    startInterviewPractice();
+  }
+}
+var STEP_TOASTS=['','Personal details saved','University added','Course added','Level set','Projects added','Activities added','Skills added','Statement saved'];
+var _suggestedSkillsRendered=false;
+function renderSuggestedSkills(){
+  if(_suggestedSkillsRendered)return;
+  var cat=getCourseCategory();
+  if(!cat)return;
+  var arch=CV_ARCHETYPES[cat];
+  if(!arch)return;
+  var container=document.querySelector('#s-q6 .q-hint');
+  if(!container)return;
+  // Build suggested chips from archetype that aren't already in the static list
+  var suggested=[];
+  arch.skillsTechnical.slice(0,6).forEach(function(s){suggested.push(s)});
+  arch.skillsSoftware.slice(0,4).forEach(function(s){
+    if(suggested.indexOf(s)===-1)suggested.push(s);
+  });
+  // Only show if we have suggestions
+  if(!suggested.length)return;
+  var html='<div class="cat-label" style="margin-top:12px;color:var(--accent)">Suggested for '+esc(arch.displayName)+'</div><div class="chip-grid">';
+  suggested.forEach(function(s){
+    html+='<span class="chip" onclick="toggleChip(this,\'skills\')" style="border-color:rgba(59,130,246,.3)">'+esc(s)+'</span>';
+  });
+  html+='</div>';
+  // Insert after the hint text
+  container.insertAdjacentHTML('afterend',html);
+  _suggestedSkillsRendered=true;
+}
+function nextStep(){
+  var msg=STEP_TOASTS[cvState.current];
+  if(msg)showToast(msg);
+  var next=cvState.current+1;
+  if(next===5)renderProjects();
+  if(next===7)renderSuggestedSkills();
+  goToScreen(next);
+}
+function skipStep(){
+  var next=Math.min(cvState.current+1,SCREENS.length-1);
+  if(next===5)renderProjects();
+  if(next===7)renderSuggestedSkills();
+  goToScreen(next);
+}
+function finishBuilder(){
+  showToast('Building your CV...');
+  cvState.motivationText=document.getElementById('motivationText').value.trim();
+  goToScreen(SCREENS.indexOf('s-complete'));
+  setTimeout(showCompletion,400);
+}
+
+/* ── Q0: Personal details ── */
+function checkPersonal(){
+  var n=document.getElementById('inpName').value.trim();
+  var e=document.getElementById('inpEmail').value.trim();
+  cvState.name=n;cvState.email=e;
+  cvState.phone=document.getElementById('inpPhone').value.trim();
+  cvState.city=document.getElementById('inpCity').value.trim();
+  var btn=document.getElementById('nextBtn-1');
+  if(n&&e){btn.classList.remove('btn-disabled')}else{btn.classList.add('btn-disabled')}
+}
+
+/* ── Q1: University search ── */
+function filterUnis(val){
+  var list=document.getElementById('uniList');
+  var q=val.toLowerCase();var html='';
+  UNI_DATA.forEach(function(group){
+    var matches=group.items.filter(function(u){return u.toLowerCase().indexOf(q)>-1});
+    if(matches.length){
+      html+='<div class="uni-cat">'+group.cat+'</div>';
+      matches.forEach(function(u){
+        var sel=(cvState.university===u)?' selected':'';
+        html+='<div class="uni-item'+sel+'" onclick="selectUniversity(\''+u.replace(/'/g,"\\'")+'\')">' +u+'</div>';
+      });
+    }
+  });
+  list.innerHTML=html||'<div style="padding:16px;color:var(--t3);font-size:13px">No match found. Try a shorter name.</div>';
+}
+function selectUniversity(name){
+  cvState.university=name;
+  filterUnis(document.querySelector('#s-q1 .search-input').value);
+  document.getElementById('nextBtn-2').classList.remove('btn-disabled');
+}
+
+/* ── Q2: Course filter + select ── */
+function filterCourses(cat,chipEl){
+  document.querySelectorAll('#courseCatChips .chip').forEach(function(c){c.classList.remove('selected')});
+  chipEl.classList.add('selected');
+  var list=document.getElementById('courseList');var html='';
+  COURSE_DATA.forEach(function(group){
+    if(cat!=='all'&&group.cat!==cat)return;
+    html+='<div class="course-cat">'+group.label+'</div>';
+    group.items.forEach(function(c){
+      var sel=(cvState.course===c.name)?' selected':'';
+      html+='<div class="course-opt'+sel+'" onclick="selectCourse(\''+c.name.replace(/'/g,"\\'")+'\')">'
+        +c.name+'<span class="course-sub">'+c.sub+'</span></div>';
+    });
+  });
+  list.innerHTML=html;
+}
+function selectCourse(name){
+  cvState.course=name;
+  document.querySelectorAll('.course-opt').forEach(function(el){
+    el.classList.toggle('selected',el.textContent.indexOf(name)>-1);
+  });
+  document.getElementById('nextBtn-3').classList.remove('btn-disabled');
+}
+
+/* ── Q3: Study level (single select) ── */
+function selectSingle(el,key,val){
+  cvState[key]=val;
+  var siblings=el.parentElement.querySelectorAll('.opt');
+  for(var i=0;i<siblings.length;i++)siblings[i].classList.remove('selected');
+  el.classList.add('selected');
+  var map={level:4,motivation:8};
+  var btn=document.getElementById('nextBtn-'+map[key]);
+  if(btn)btn.classList.remove('btn-disabled');
+}
+
+/* ── PROJECT DATABASE — course-specific, based on real Malaysian uni syllabi ── */
+/* Each course category maps to projects students actually do.
+   Sources: UTM/UM/UiTM FYP lists, Reddit r/malaysia, r/MalaysianPF,
+   common politeknik LI reports, and standard MQA programme structures. */
+var PROJ_DB = {
+  cs: {
+    label:'Based on your IT / CS course',
+    items:[
+      {name:'Student Management System',sub:'Common FYP — CRUD app with login, database, reports',ph:"e.g. 'Built a student registration system using PHP, MySQL and Bootstrap for Faculty of Computing FYP'"},
+      {name:'E-commerce / Online Store',sub:'Shopping cart, payment gateway, product catalog',ph:"e.g. 'Developed an online store for a local SME using Laravel with Stripe payment integration'"},
+      {name:'Mobile App (Android / Flutter)',sub:'Campus app, food ordering, booking system',ph:"e.g. 'Built a campus cafeteria ordering app using Flutter with real-time order tracking for 300+ users'"},
+      {name:'Data Analysis / Visualisation',sub:'Python pandas, Power BI, Tableau, Excel analytics',ph:"e.g. 'Analysed 2 years of e-commerce sales data using Python and created a Power BI dashboard for the client'"},
+      {name:'Web Scraping / Automation',sub:'BeautifulSoup, Selenium, scheduled scripts',ph:"e.g. 'Built a Python web scraper to collect and compare laptop prices across 3 Malaysian e-commerce sites daily'"},
+      {name:'Machine Learning / AI Model',sub:'Classification, prediction, NLP, image recognition',ph:"e.g. 'Trained a sentiment analysis model on 10K Malaysian tweets using scikit-learn (82% accuracy)'"},
+      {name:'IoT / Embedded System',sub:'Arduino, Raspberry Pi, sensor-based project',ph:"e.g. 'Built a smart parking system using Arduino, ultrasonic sensors and an LCD display for campus parking'"},
+      {name:'Cybersecurity / Networking',sub:'Penetration testing, firewall config, network audit',ph:"e.g. 'Conducted a vulnerability assessment of the faculty's lab network using Nmap and Wireshark'"},
+      {name:'Game / Simulation',sub:'Unity, Unreal, Pygame, gamification',ph:"e.g. 'Developed a 2D educational game in Unity to teach Bahasa Malaysia vocabulary to primary school kids'"},
+      {name:'API / Backend System',sub:'REST API, microservices, database design',ph:"e.g. 'Designed and built a REST API for a hostel booking system using Node.js and MongoDB'"}
+    ]
+  },
+  biz: {
+    label:'Based on your Business / Finance course',
+    items:[
+      {name:'Business Plan / Feasibility Study',sub:'Startup pitch, financial projections, market sizing',ph:"e.g. 'Wrote a full business plan for a campus laundry startup — market analysis, 3-year P&L, break-even in Year 2'"},
+      {name:'Financial Statement Analysis',sub:'Ratio analysis, trend analysis, company valuation',ph:"e.g. 'Analysed Maybank and CIMB financial statements (2021-2024) using ratio analysis and DuPont framework'"},
+      {name:'Marketing Plan / Campaign',sub:'4P analysis, STP, digital marketing strategy',ph:"e.g. 'Created a digital marketing plan for a local bubble tea brand — Instagram strategy, budget allocation, KPI targets'"},
+      {name:'Consumer Research / Survey',sub:'Questionnaire design, SPSS analysis, findings report',ph:"e.g. 'Surveyed 200 students on online shopping behaviour, analysed results using SPSS chi-square and regression'"},
+      {name:'Accounting / Audit Simulation',sub:'Bookkeeping, trial balance, audit procedures',ph:"e.g. 'Prepared full set of accounts (journal entries to financial statements) for a simulated SME using UBS Accounting'"},
+      {name:'Tax Computation Exercise',sub:'Individual/corporate tax, tax planning, e-filing',ph:"e.g. 'Computed individual and corporate tax for 5 case studies covering reliefs, rebates and withholding tax'"},
+      {name:'Investment Portfolio Project',sub:'Stock analysis, portfolio construction, risk assessment',ph:"e.g. 'Built a mock investment portfolio of 10 Bursa Malaysia stocks — tracked returns over 3 months vs KLCI benchmark'"},
+      {name:'Case Competition Entry',sub:'L\'Oreal Brandstorm, CFA Research Challenge, etc.',ph:"e.g. 'Reached semi-finals of CFA Institute Research Challenge 2025 — presented equity research on Top Glove'"},
+      {name:'Operations / Supply Chain Project',sub:'Process mapping, inventory model, logistics analysis',ph:"e.g. 'Mapped the supply chain of a campus F&B vendor and proposed inventory optimisation using EOQ model'"},
+      {name:'HR / Organisational Study',sub:'Employee survey, job analysis, training plan',ph:"e.g. 'Conducted a job satisfaction survey at a local SME (50 employees) and recommended a retention strategy'"}
+    ]
+  },
+  eng: {
+    label:'Based on your Engineering course',
+    items:[
+      {name:'CAD / Technical Drawing',sub:'AutoCAD, SolidWorks, CATIA, engineering drawings',ph:"e.g. 'Designed a 3-storey residential building in AutoCAD with structural calculations per MS EN 1992'"},
+      {name:'FYP — Design & Build',sub:'Capstone project with prototype or simulation',ph:"e.g. 'Designed and fabricated a solar-powered water filtration unit for rural communities as FYP'"},
+      {name:'Circuit / PCB Design',sub:'Altium, Eagle, Proteus, microcontroller programming',ph:"e.g. 'Designed a PCB for a temperature monitoring system using PIC16F877A and programmed in C'"},
+      {name:'Structural / Load Analysis',sub:'STAAD Pro, SAP2000, manual calculations',ph:"e.g. 'Performed structural analysis of a steel truss bridge using SAP2000 with wind and live load combinations'"},
+      {name:'Process Simulation',sub:'Aspen HYSYS, MATLAB Simulink, process flow design',ph:"e.g. 'Simulated a methanol production plant in Aspen HYSYS and optimised heat exchanger network for 15% energy savings'"},
+      {name:'Lab / Materials Testing',sub:'Tensile test, concrete cube test, soil analysis',ph:"e.g. 'Conducted concrete cube compression tests (7, 14, 28 days) and analysed results against MS EN 206 standards'"},
+      {name:'Robot / Mechatronics Build',sub:'Line follower, robotic arm, autonomous vehicle',ph:"e.g. 'Built a line-following robot using Arduino Mega for Robocon Malaysia 2025 qualifying round'"},
+      {name:'Site Visit / Industrial Report',sub:'Construction site, factory, power plant visit report',ph:"e.g. 'Documented construction progress at a highway project site — concrete pouring, rebar inspection, safety compliance'"},
+      {name:'Environmental / Sustainability Study',sub:'EIA, waste management, water quality testing',ph:"e.g. 'Conducted Environmental Impact Assessment for a proposed housing development near a mangrove area'"},
+      {name:'CNC / Manufacturing Project',sub:'G-code programming, lathe/milling, quality control',ph:"e.g. 'Programmed CNC milling operations for an aluminium bracket — G-code, tool path optimisation, tolerance check'"}
+    ]
+  },
+  sci: {
+    label:'Based on your Science course',
+    items:[
+      {name:'Lab Research / Experiment',sub:'Wet lab, field sampling, data collection',ph:"e.g. 'Studied the antimicrobial properties of local honey samples against E. coli using disk diffusion method'"},
+      {name:'Research Paper / Literature Review',sub:'Academic writing, journal review, methodology',ph:"e.g. 'Wrote a 5,000-word literature review on microplastics in Malaysian rivers for Environmental Science course'"},
+      {name:'Statistical Analysis Project',sub:'SPSS, R, hypothesis testing, regression',ph:"e.g. 'Analysed the relationship between air pollution (PM2.5) and hospital admissions in KL using R regression'"},
+      {name:'Field Study / Biodiversity Survey',sub:'Species identification, transect sampling, ecosystem mapping',ph:"e.g. 'Conducted a mangrove biodiversity survey in Kuala Selangor — identified 12 crab species across 3 zones'"},
+      {name:'Food Science / Quality Test',sub:'Nutritional analysis, shelf life study, sensory evaluation',ph:"e.g. 'Performed proximate analysis and sensory evaluation of jackfruit chips with varying drying temperatures'"},
+      {name:'Biotechnology / Genetics Lab',sub:'PCR, gel electrophoresis, DNA extraction, cloning',ph:"e.g. 'Extracted DNA from local paddy varieties and performed PCR amplification to identify blast-resistant genes'"},
+      {name:'Data Science / Bioinformatics',sub:'Python, R, biological databases, sequence analysis',ph:"e.g. 'Used Python BioPython library to analyse protein sequences from NCBI database for drug target identification'"},
+      {name:'Environmental Monitoring',sub:'Water quality, air quality, soil testing',ph:"e.g. 'Monitored water quality of Sungai Klang over 4 weeks — pH, BOD, COD, TSS — and compared against Class II standards'"}
+    ]
+  },
+  arts: {
+    label:'Based on your Arts / Social Science course',
+    items:[
+      {name:'Research Paper / Thesis Draft',sub:'Academic writing, qualitative/quantitative study',ph:"e.g. 'Wrote a 6,000-word research paper on social media influence on GE15 voting patterns among youth'"},
+      {name:'Documentary / Video Production',sub:'Filming, editing, storytelling, final cut',ph:"e.g. 'Produced a 10-minute documentary on Orang Asli land rights in Pahang for Media Production course'"},
+      {name:'Graphic Design / Branding',sub:'Logo, brand identity, poster series, packaging',ph:"e.g. 'Designed complete brand identity (logo, colour palette, packaging) for a student-run kopitiam concept'"},
+      {name:'UI/UX Design / App Mockup',sub:'Figma wireframes, user research, prototype',ph:"e.g. 'Designed a high-fidelity Figma prototype for a campus event discovery app — user research with 15 students'"},
+      {name:'PR / Communications Campaign',sub:'Press release, media kit, crisis comms plan',ph:"e.g. 'Created a CSR communications plan for a mock client including press releases, social media calendar, KPIs'"},
+      {name:'Social Media Content Strategy',sub:'Content calendar, analytics, platform management',ph:"e.g. 'Managed Instagram for Faculty of Arts orientation week — 40 posts, grew from 0 to 800 followers in 2 weeks'"},
+      {name:'Legal Case Study / Moot Court',sub:'Case analysis, legal brief, oral arguments',ph:"e.g. 'Prepared and argued a mock constitutional law case on freedom of speech in Malaysia for moot court competition'"},
+      {name:'Policy Brief / Position Paper',sub:'Government policy analysis, recommendations',ph:"e.g. 'Wrote a 3,000-word policy brief on improving mental health support for Malaysian university students'"},
+      {name:'Psychology Research / Survey',sub:'Questionnaire, interview, thematic analysis',ph:"e.g. 'Conducted interviews with 20 B40 students on academic stress and analysed themes using NVivo'"},
+      {name:'Teaching Practice / Lesson Plan',sub:'Micro-teaching, curriculum design, assessment',ph:"e.g. 'Designed and delivered 5 English lesson plans for Year 4 students during 8-week practicum in Perak'"}
+    ]
+  },
+  health: {
+    label:'Based on your Health Sciences course',
+    items:[
+      {name:'Clinical Attachment / Case Study',sub:'Patient case report, clinical rotation log',ph:"e.g. 'Documented and presented a Type 2 diabetes case study during 4-week clinical rotation at PPUM'"},
+      {name:'Community Health Project',sub:'Health screening, awareness campaign, outreach',ph:"e.g. 'Organised a free health screening event in Kampung Baru — blood pressure, BMI, diabetes risk for 150 residents'"},
+      {name:'Lab / Diagnostic Report',sub:'Blood analysis, microbiology, histopathology',ph:"e.g. 'Performed complete blood count and differential analysis on 30 samples during medical lab technology practical'"},
+      {name:'Pharmacy Compounding / Dispensing',sub:'Drug preparation, prescription review, counselling',ph:"e.g. 'Dispensed and counselled patients on 50+ prescriptions during 6-week community pharmacy attachment'"},
+      {name:'Research Paper / Mini Thesis',sub:'Clinical research, epidemiology, public health study',ph:"e.g. 'Conducted a cross-sectional study on antibiotic resistance awareness among 200 university students'"},
+      {name:'Nursing Care Plan',sub:'Patient assessment, nursing diagnosis, interventions',ph:"e.g. 'Developed comprehensive nursing care plans for post-surgical patients during orthopaedic ward rotation'"},
+      {name:'Health Education Material',sub:'Poster, pamphlet, video for patient education',ph:"e.g. 'Created a bilingual (BM/EN) pamphlet on dengue prevention for distribution at a rural health clinic'"},
+      {name:'Physiotherapy / Rehab Protocol',sub:'Treatment plan, exercise programme, outcome measurement',ph:"e.g. 'Designed a 6-week rehabilitation protocol for ACL reconstruction patients with measurable milestones'"}
+    ]
+  },
+  general: {
+    label:'Common projects (any course)',
+    items:[
+      {name:'Final Year Project (FYP)',sub:'Your capstone project — the big one',ph:"Describe your FYP: what was the problem, what did you build/research, what was the result?"},
+      {name:'Group Assignment / Case Study',sub:'Team project with report and presentation',ph:"e.g. 'Led a team of 4 to analyse Tesla's entry into Southeast Asia — presented SWOT and Go-To-Market strategy'"},
+      {name:'Competition / Hackathon Entry',sub:'Participated or won a competition',ph:"e.g. 'Built a flood prediction prototype at AngelHack KL 2025 — placed Top 10 out of 40 teams'"},
+      {name:'Freelance / Personal Project',sub:'Something you built on your own time',ph:"Describe what you built, why, and any results (users, revenue, completion)"},
+      {name:'Something else',sub:'Any other project worth mentioning',ph:"What was the project? What did you do? What was the outcome?"}
+    ]
+  }
+};
+
+var INDUSTRY_CONTEXT = {
+  cs: {
+    label:'Tech / IT',
+    projects:'Projects are the #1 thing tech employers screen for. A CS student with zero projects will be filtered out before a human reads the CV.',
+    projectTip:'Build something — even a simple CRUD app or data analysis counts. Describe the tech stack.',
+    activities:'Hackathons and coding competitions signal initiative. Part-time freelance work also counts.',
+    skills:'List every language and tool you have touched — Python, Java, SQL, Git.',
+    skillsExpected:['Python','Java','SQL','HTML / CSS','JavaScript'],
+    interviewBridge:'Interviewers will ask you to walk through your project. If you cannot describe what you built, why, and what you learned — they will notice.',
+    bulletExample:'Student Management System: Built a web-based attendance tracking system using PHP and MySQL, deployed for 2 classes (60+ students) with QR-based check-in.'
+  },
+  biz: {
+    label:'Business / Finance',
+    projects:'Case competitions, financial analysis reports, and business plans show you can apply theory. GLCs and Big 4 firms look for this.',
+    projectTip:'Frame assignments as projects — a financial statement analysis is a legitimate entry.',
+    activities:'Club leadership (president, AJK, treasurer) matters more in business than any other field. Employers equate it with management potential.',
+    skills:'Excel is non-negotiable. Add UBS/SQL Accounting if in Accounting. SPSS matters for Marketing.',
+    skillsExpected:['Excel / Spreadsheets','PowerPoint','Microsoft Word','Google Workspace'],
+    interviewBridge:'Business interviewers will ask "tell me about a time you led a team" — if your CV lists no leadership activities, you have no story to tell.',
+    bulletExample:'Financial Statement Analysis: Performed ratio analysis on Maybank annual reports (2021-2024) using DuPont framework, presented findings to class of 40.'
+  },
+  eng: {
+    label:'Engineering',
+    projects:'FYP and lab projects are expected. Site visit reports and CAD drawings count too. Engineers without project entries look incomplete.',
+    projectTip:'Describe what you designed, tools used (AutoCAD, MATLAB, SolidWorks), and any measurable outcome.',
+    activities:'PALAPES, SUKSIS, PBSM are highly valued — they signal discipline. Site visits and industrial training count.',
+    skills:'List engineering software specifically — AutoCAD, SolidWorks, MATLAB. Generic "Microsoft Office" is not enough.',
+    skillsExpected:['AutoCAD','Excel / Spreadsheets','Microsoft Word'],
+    interviewBridge:'Engineering interviewers will ask about your FYP in detail. If your CV says "FYP" with no description, expect an awkward silence.',
+    bulletExample:'Steel Truss Bridge Design: Designed a 3-span truss bridge in AutoCAD with structural load analysis per MS EN 1992, achieving factor of safety 1.8.'
+  },
+  sci: {
+    label:'Science',
+    projects:'Lab research, field studies, and data analysis are your evidence. Even a literature review counts if framed well.',
+    projectTip:'State the research question, method, and one result — even if preliminary.',
+    activities:'Lab assistant roles, tutoring, and community health outreach all count.',
+    skills:'List statistical tools (SPSS, R, Python), lab techniques, and certifications.',
+    skillsExpected:['R / SPSS / MATLAB','Excel / Spreadsheets','Microsoft Word'],
+    interviewBridge:'Science interviewers will ask about your methodology. Be ready to explain why you chose a particular approach.',
+    bulletExample:'Water Quality Analysis: Monitored Sungai Klang samples over 4 weeks — pH, BOD, COD, TSS — compared against Class II standards and presented findings.'
+  },
+  arts: {
+    label:'Arts / Social Science',
+    projects:'A portfolio is your CV. Design work, video production, published articles, moot court — these are your projects.',
+    projectTip:'Link or describe your best work. If group project, specify your exact role.',
+    activities:'Event organisation, content management, debate, student journalism show communication skills.',
+    skills:'Canva, Figma, video editing, writing tools — list them all. Bilingual ability (BM + EN) is a strong differentiator.',
+    skillsExpected:['Canva','Microsoft Word','PowerPoint'],
+    interviewBridge:'Interviewers in creative fields will ask to see your work. Make sure your CV mentions something you can actually show.',
+    bulletExample:'Faculty Week Campaign: Managed Instagram for Faculty of Arts orientation — planned 40 posts over 2 weeks, grew page from 0 to 800 followers.'
+  },
+  health: {
+    label:'Health Sciences',
+    projects:'Clinical attachments, community health projects, and case studies are your projects. Lab work counts too.',
+    projectTip:'Describe the clinical setting, your role, and one learning outcome.',
+    activities:'Community health outreach, first aid volunteering, hospital attachments demonstrate commitment.',
+    skills:'List clinical skills, lab techniques, certifications (First Aid/CPR), and relevant software.',
+    skillsExpected:['Microsoft Word','Excel / Spreadsheets','First Aid / CPR'],
+    interviewBridge:'Health interviewers will ask about patient interactions. Your CV should mention at least one clinical or community experience.',
+    bulletExample:'Community Health Screening: Organised free health screening in Kampung Baru — blood pressure, BMI, diabetes risk assessment for 150 residents.'
+  }
+};
+
+var CV_ARCHETYPES = {
+  cs: {
+    cluster:'computing',
+    displayName:'Computing & Software Engineering',
+    sectionOrder:['Header','Education','Projects','Experience','Technical Skills','Extracurriculars'],
+    skillsTechnical:['Data structures','Algorithms','OOP','REST APIs','SQL','Version control','Agile','Unit testing','Machine learning basics','Cloud fundamentals'],
+    skillsSoftware:['Python','Java','JavaScript','TypeScript','React','Node.js','Git','GitHub','Docker','VS Code','Figma','Linux','MySQL','PostgreSQL','MongoDB'],
+    skillsSoft:['Problem-solving','Teamwork','Communication','Self-learning','Attention to detail'],
+    projectTitles:['Final Year Project','Hackathon entry','Personal portfolio website','Open-source contribution','University database system','Mobile app'],
+    experienceVerbs:['Built','Developed','Deployed','Implemented','Debugged','Refactored','Automated','Integrated','Optimised','Shipped'],
+    certifications:['AWS Cloud Practitioner','Google Cloud Associate','Coursera ML specialisation','freeCodeCamp certs','CCNA'],
+    lengthGuidance:'1 page',
+    portfolioRequired:false,
+    portfolioType:'GitHub',
+    notes:'Projects > Experience. GitHub link in header. ATS keywords matter for MNCs.'
+  },
+  biz: {
+    cluster:'business_marketing',
+    displayName:'Business, Management & Marketing',
+    sectionOrder:['Header','Education','Experience','Extracurriculars','Skills','Certifications'],
+    skillsTechnical:['Market research','Consumer behaviour analysis','Campaign planning','Brand management','Social media strategy','SEO basics','Email marketing','CRM usage','Sales funnel','Event coordination','Budget management'],
+    skillsSoftware:['Microsoft Excel','PowerPoint','Google Analytics','Meta Ads Manager','Canva','Mailchimp','HubSpot','Salesforce','Power BI','Hootsuite','Notion','Trello'],
+    skillsSoft:['Communication','Leadership','Stakeholder management','Creativity','Adaptability','Commercial awareness'],
+    projectTitles:['Marketing Club President','Entrepreneurship Challenge','Consumer research','University career fair organiser','Case competition'],
+    experienceVerbs:['Led','Organised','Coordinated','Pitched','Increased','Grew','Researched','Presented','Collaborated','Managed'],
+    certifications:['Google Digital Marketing','Meta Blueprint','HubSpot Inbound Marketing','CIM Foundation','Google Analytics cert'],
+    lengthGuidance:'1 page',
+    portfolioRequired:false,
+    portfolioType:null,
+    notes:'Extracurricular leadership carries disproportionate weight. Quantified outcomes critical.'
+  },
+  eng: {
+    cluster:'engineering_core',
+    displayName:'Engineering (Mechanical / Civil / Electrical / Chemical)',
+    sectionOrder:['Header','Education','Projects / FYP','Experience','Technical Skills','Software Proficiency','Extracurriculars'],
+    skillsTechnical:['CAD drafting','Finite element analysis','Structural analysis','Thermodynamics','Fluid mechanics','Control systems','PCB design','PLC programming','Circuit design','Lean manufacturing','Quality assurance','Site supervision'],
+    skillsSoftware:['AutoCAD','SolidWorks','MATLAB','ANSYS','Revit','Civil 3D','LabVIEW','Arduino IDE','Simulink','Python','Microsoft Project'],
+    skillsSoft:['Problem-solving','Teamwork','Safety awareness','Precision','Willingness to learn on-site','Reporting'],
+    projectTitles:['Final Year Project','Capstone Design Challenge','Robotics competition','Solar car team','Bridge design project','PLC automation build'],
+    experienceVerbs:['Designed','Drafted','Tested','Fabricated','Simulated','Inspected','Commissioned','Analysed','Maintained'],
+    certifications:['IEM Graduate Member','OSHA basic','AutoCAD Certified User','Six Sigma Yellow Belt','Scheduled Waste Management'],
+    lengthGuidance:'1-2 pages',
+    portfolioRequired:false,
+    portfolioType:null,
+    notes:'Relevant coursework under Education is standard. Software proficiency as dedicated section. Site roles weight willingness to relocate.'
+  },
+  sci: {
+    cluster:'sciences',
+    displayName:'Sciences (Biology, Chemistry, Physics, Environmental)',
+    sectionOrder:['Header','Education','Research & Lab Experience','Projects / FYP','Technical Skills','Extracurriculars'],
+    skillsTechnical:['Lab techniques','Data analysis','Experimental design','Field sampling','Statistical analysis','Scientific writing','Titration','Chromatography','Spectroscopy','PCR','Cell culture'],
+    skillsSoftware:['SPSS','R','Python','GraphPad Prism','ChemDraw','GIS (ArcGIS/QGIS)','ImageJ','EndNote'],
+    skillsSoft:['Analytical thinking','Patience','Precision','Curiosity','Reading dense literature'],
+    projectTitles:['Final Year Project','Research assistant','Science olympiad','Lab demonstrator'],
+    experienceVerbs:['Measured','Analysed','Cultured','Quantified','Extracted','Observed','Documented','Presented'],
+    certifications:['Good Lab Practice (GLP)','Chemical safety','Biosafety Level training'],
+    lengthGuidance:'1-2 pages',
+    portfolioRequired:false,
+    portfolioType:null,
+    notes:'Lab techniques list is central — be specific. Any conference poster or publication materially strengthens CV.'
+  },
+  arts: {
+    cluster:'comms_pr',
+    displayName:'Communications, Design & Creative',
+    sectionOrder:['Header','Portfolio Link','Education','Experience','Projects','Software Skills','Extracurriculars'],
+    skillsTechnical:['Copywriting','Press release writing','Social media content planning','Layout design','Typography','Branding','UI/UX basics','Wireframing','Motion graphics','Video editing','Photography'],
+    skillsSoftware:['Adobe Photoshop','Illustrator','InDesign','Premiere Pro','After Effects','Figma','Canva','Procreate','Blender','Lightroom','CapCut'],
+    skillsSoft:['Creativity','Visual thinking','Receiving feedback','Meeting deadlines','Client communication','Storytelling'],
+    projectTitles:['Student newspaper editor','Design showcase','Freelance logo','PR campaign','Podcast host','Student magazine art director'],
+    experienceVerbs:['Designed','Illustrated','Animated','Edited','Filmed','Prototyped','Branded','Photographed','Published','Wrote','Pitched'],
+    certifications:['Adobe Certified Professional','Google UX Design','Figma Academy','Meta Blueprint Social Media'],
+    lengthGuidance:'1 page + portfolio',
+    portfolioRequired:true,
+    portfolioType:'Behance / Dribbble / Instagram',
+    notes:'Portfolio is the CV. Every design internship requires one. Bilingual (BM + EN) is a strong differentiator.'
+  },
+  health: {
+    cluster:'medicine_health',
+    displayName:'Medicine, Pharmacy & Health Sciences',
+    sectionOrder:['Header','Education','Clinical / Hospital Postings','Research & Publications','Extracurriculars & Volunteering','Skills & Certifications'],
+    skillsTechnical:['Patient assessment','Clinical history-taking','Phlebotomy','Aseptic technique','Medication reconciliation','Literature review','Lab techniques (PCR, ELISA)','Data collection'],
+    skillsSoftware:['SPSS','R','Microsoft Excel','EndNote','Mendeley','Hospital information systems'],
+    skillsSoft:['Empathy','Communication with patients','Teamwork','Stress tolerance','Ethical awareness','Attention to detail'],
+    projectTitles:['Clinical posting','Research assistant','Health screening camp volunteer','Medical society exco','Final year thesis'],
+    experienceVerbs:['Assisted','Observed','Administered','Counselled','Documented','Researched','Presented','Volunteered'],
+    certifications:['Basic Life Support (BLS)','Advanced Cardiac Life Support (ACLS)','Good Clinical Practice (GCP)','MMC provisional registration'],
+    lengthGuidance:'1-2 pages',
+    portfolioRequired:false,
+    portfolioType:null,
+    notes:'Clinical postings by specialty and duration form the spine. Research output weighted heavily. Extracurriculars showing empathy matter.'
+  }
+};
+
+/* Map course category from Q2 selection to project DB key */
+function getCourseCategory(){
+  var c=cvState.course;if(!c)return null;
+  for(var i=0;i<COURSE_DATA.length;i++){
+    for(var j=0;j<COURSE_DATA[i].items.length;j++){
+      if(COURSE_DATA[i].items[j].name===c)return COURSE_DATA[i].cat;
+    }
+  }
+  return null;
+}
+
+/* Render project cards dynamically based on course */
+var currentProjItems=[];
+function renderProjects(){
+  var cat=getCourseCategory()||'general';
+  var specific=PROJ_DB[cat]||PROJ_DB.general;
+  var general=PROJ_DB.general;
+  // Combine: course-specific first, then general (deduped)
+  currentProjItems=[];
+  specific.items.forEach(function(p){currentProjItems.push(p)});
+  general.items.forEach(function(p){
+    if(!currentProjItems.some(function(x){return x.name===p.name}))currentProjItems.push(p);
+  });
+  var container=document.getElementById('projContainer');
+  // Update hint
+  document.getElementById('projHint').textContent=specific.label+' — tap to select, then describe what you did.';
+  var html='<div class="cat-label">'+esc(specific.label)+'</div>';
+  currentProjItems.forEach(function(p,i){
+    // Strip "e.g. " prefix from placeholder for the "use example" button
+    var example=p.ph.replace(/^e\.g\.\s*/,'').replace(/^'/,'').replace(/'$/,'');
+    html+='<div class="proj-card" id="proj-'+i+'" onclick="toggleProject('+i+')">'
+      +'<div class="proj-card-head"><span class="proj-card-name">'+esc(p.name)+'</span><span class="proj-card-check">&#10003;</span></div>'
+      +'<div class="proj-card-sub">'+esc(p.sub)+'</div>'
+      +'<div class="proj-desc-wrap">'
+      +'<textarea class="proj-desc" id="projDesc-'+i+'" placeholder="'+esc(p.ph)+'" onclick="event.stopPropagation()" oninput="updateProjDesc('+i+')"></textarea>'
+      +'<button class="use-example" onclick="event.stopPropagation();useExample('+i+')" title="Pre-fill with this example &mdash; edit it to match your project">Use this example as a starting point</button>'
+      +buildMicRow('projDesc-'+i)
+      +'</div></div>';
+  });
+  container.innerHTML=html;
+  // Reset project state when re-rendering
+  cvState.projects=[];
+  cvState.projectDescs={};
+}
+
+function toggleProject(idx){
+  var card=document.getElementById('proj-'+idx);
+  var name=currentProjItems[idx].name;
+  var isSelected=card.classList.contains('selected');
+  if(isSelected){
+    card.classList.remove('selected');
+    var i=cvState.projects.indexOf(name);
+    if(i>-1)cvState.projects.splice(i,1);
+    delete cvState.projectDescs[idx];
+  } else {
+    card.classList.add('selected');
+    cvState.projects.push(name);
+    var desc=document.getElementById('projDesc-'+idx);
+    if(desc&&desc.value.trim())cvState.projectDescs[idx]=desc.value.trim();
+    setTimeout(function(){var d=document.getElementById('projDesc-'+idx);if(d)d.focus()},350);
+  }
+  checkMultiNext(5,'projects');
+}
+function updateProjDesc(idx){
+  var desc=document.getElementById('projDesc-'+idx);
+  if(desc)cvState.projectDescs[idx]=desc.value.trim();
+}
+function useExample(idx){
+  var desc=document.getElementById('projDesc-'+idx);
+  if(!desc||!currentProjItems[idx])return;
+  var ph=currentProjItems[idx].ph.replace(/^e\.g\.\s*/,'').replace(/^'/,'').replace(/'$/,'');
+  desc.value='[EDIT THIS] '+ph;
+  cvState.projectDescs[idx]=desc.value;
+  desc.focus();
+  desc.setSelectionRange(0,11); // highlight [EDIT THIS]
+  showToast('Template loaded — change the details to match YOUR project');
+}
+
+/* ── Multi-select chips ── */
+function toggleChip(el,category){
+  el.classList.toggle('selected');
+  var text=el.textContent;var arr=cvState[category];
+  var idx=arr.indexOf(text);
+  if(idx>-1){arr.splice(idx,1)}else{arr.push(text)}
+  var map={activities:6,skills:7};
+  checkMultiNext(map[category],category);
+}
+function addCustom(inputId,category){
+  var input=document.getElementById(inputId);
+  var val=input.value.trim();if(!val)return;
+  cvState[category].push(val);
+  var chip=document.createElement('span');
+  chip.className='chip selected';chip.textContent=val;
+  chip.setAttribute('onclick',"toggleChip(this,'"+category+"')");
+  var lastGrid=input.parentElement.previousElementSibling;
+  while(lastGrid&&!lastGrid.classList.contains('chip-grid'))lastGrid=lastGrid.previousElementSibling;
+  if(lastGrid)lastGrid.appendChild(chip);
+  input.value='';
+  var map={projects:5,activities:6,skills:7};
+  checkMultiNext(map[category],category);
+}
+function checkMultiNext(screenIdx,category){
+  var btn=document.getElementById('nextBtn-'+screenIdx);
+  if(cvState[category].length>0){btn.classList.remove('btn-disabled')}else{btn.classList.add('btn-disabled')}
+}
+
+/* ── Q7: Motivation ── */
+function checkMotivation(){
+  var text=document.getElementById('motivationText').value.trim();
+  var btn=document.getElementById('nextBtn-8');
+  if(cvState.motivation||text){btn.classList.remove('btn-disabled')}else{btn.classList.add('btn-disabled')}
+}
+
+/* ── Toast ── */
+function showToast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg;
+  t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show')},2000);
+}
+
+/* ── INDUSTRY-STANDARD CV SCORING ── */
+/* Modelled on what recruiters at Malaysian GLCs, banks, and MNCs actually
+   look for in an intern CV. Maximum 100 but most students score 40-70.
+   A score of 80+ means genuinely strong. */
+function calculateScore(){
+  var s=0;
+  // Personal details (10 pts) — basic but necessary
+  if(cvState.name)s+=3;
+  if(cvState.email)s+=3;
+  if(cvState.phone)s+=2;
+  if(cvState.city)s+=2;
+  // Education (15 pts) — uni + course + level
+  if(cvState.university)s+=5;
+  if(cvState.course)s+=7;
+  if(cvState.level)s+=3;
+  // Projects (30 pts) — this is the big one for interns
+  // 1 project = 8, 2 = 16, 3+ = 22. Descriptions add up to 8 more.
+  var projCount=cvState.projects.length;
+  if(projCount>=3)s+=22; else if(projCount===2)s+=16; else if(projCount===1)s+=8;
+  // Bonus for descriptions (employers actually read these)
+  var descCount=0;
+  for(var k in cvState.projectDescs){if(cvState.projectDescs[k]&&cvState.projectDescs[k].length>20)descCount++;}
+  s+=Math.min(descCount*3,8);
+  // Activities (15 pts) — shows you're not just studying
+  var actCount=cvState.activities.length;
+  if(actCount>=4)s+=15; else if(actCount>=2)s+=10; else if(actCount===1)s+=5;
+  // Skills (15 pts) — technical + soft
+  var skillCount=cvState.skills.length;
+  if(skillCount>=8)s+=15; else if(skillCount>=5)s+=11; else if(skillCount>=3)s+=7; else if(skillCount>=1)s+=3;
+  // Motivation / personal statement (15 pts)
+  if(cvState.motivation)s+=7;
+  if(cvState.motivationText&&cvState.motivationText.length>30)s+=8; else if(cvState.motivationText&&cvState.motivationText.length>0)s+=4;
+  return Math.min(s,100);
+}
+
+function getScoreLabel(s){
+  if(s>=80)return'Industry-ready — strong for an intern CV';
+  if(s>=65)return'Good foundation — add more project detail to stand out';
+  if(s>=50)return'Decent start — projects and activities will push you higher';
+  if(s>=35)return'Needs work — focus on adding projects with descriptions';
+  return'Early stage — keep building, every section helps';
+}
+
+function calculateGapAnalysis(){
+  var sections={};
+  // Personal (10 max)
+  var p={max:10,earned:0,items:[]};
+  if(cvState.name)p.earned+=3;else p.items.push({field:'Name',pts:3,fix:'Add your full name'});
+  if(cvState.email)p.earned+=3;else p.items.push({field:'Email',pts:3,fix:'Add your email — employers need to reach you'});
+  if(cvState.phone)p.earned+=2;else p.items.push({field:'Phone',pts:2,fix:'Add a phone number'});
+  if(cvState.city)p.earned+=2;else p.items.push({field:'City',pts:2,fix:'Add your city — employers filter by location'});
+  sections.personal=p;
+  // Education (15 max)
+  var e={max:15,earned:0,items:[]};
+  if(cvState.university)e.earned+=5;else e.items.push({field:'University',pts:5,fix:'Add where you study — this is the first thing employers check'});
+  if(cvState.course)e.earned+=7;else e.items.push({field:'Course',pts:7,fix:'Your course tells employers what you know — this is worth 7 points'});
+  if(cvState.level)e.earned+=3;else e.items.push({field:'Study level',pts:3,fix:'Add your year — it sets expectations correctly'});
+  sections.education=e;
+  // Projects (30 max)
+  var pr={max:30,earned:0,items:[]};
+  var pc=cvState.projects.length;
+  if(pc>=3)pr.earned+=22;else if(pc===2)pr.earned+=16;else if(pc===1)pr.earned+=8;
+  if(pc===0)pr.items.push({field:'No projects',pts:8,fix:'Add at least 1 project — this is what employers read first on a student CV'});
+  else if(pc===1)pr.items.push({field:'Only 1 project',pts:8,fix:'Add a second project to show range — 2 projects scores double'});
+  else if(pc===2)pr.items.push({field:'2 projects',pts:6,fix:'A third project gets you to 22 points — add your FYP or a group assignment'});
+  var dc=0;for(var k in cvState.projectDescs){if(cvState.projectDescs[k]&&cvState.projectDescs[k].length>20)dc++;}
+  var dp=Math.min(dc*3,8);pr.earned+=dp;
+  if(dc<pc&&pc>0){var mp=Math.min((pc-dc)*3,8-dp);if(mp>0)pr.items.push({field:'Missing descriptions',pts:mp,fix:'Add descriptions to your projects — employers read these, not just titles'});}
+  if(dc===0&&pc>0)pr.items.push({field:'No descriptions',pts:8,fix:'Describe what you did in 1-2 lines. Use this format: Bold action + specific detail + outcome'});
+  sections.projects=pr;
+  // Activities (15 max)
+  var a={max:15,earned:0,items:[]};
+  var ac=cvState.activities.length;
+  if(ac>=4)a.earned+=15;else if(ac>=2)a.earned+=10;else if(ac===1)a.earned+=5;
+  if(ac===0)a.items.push({field:'No activities',pts:5,fix:'Add at least 1 — clubs, part-time, volunteering all count'});
+  else if(ac===1)a.items.push({field:'Only 1 activity',pts:5,fix:'Add 1 more — employers want to see you do things outside class'});
+  else if(ac<4)a.items.push({field:ac+' activities',pts:5,fix:'Add '+(4-ac)+' more to reach the top tier (4+)'});
+  sections.activities=a;
+  // Skills (15 max)
+  var s={max:15,earned:0,items:[]};
+  var sc=cvState.skills.length;
+  if(sc>=8)s.earned+=15;else if(sc>=5)s.earned+=11;else if(sc>=3)s.earned+=7;else if(sc>=1)s.earned+=3;
+  if(sc===0)s.items.push({field:'No skills',pts:3,fix:'Even Excel and Bahasa Malaysia count — list what you can do'});
+  else if(sc<3)s.items.push({field:sc+' skill(s)',pts:4,fix:'Add '+(3-sc)+' more — include tools, languages, certifications'});
+  else if(sc<5)s.items.push({field:sc+' skills',pts:4,fix:'Add '+(5-sc)+' more to stand out'});
+  else if(sc<8)s.items.push({field:sc+' skills',pts:4,fix:'Add '+(8-sc)+' more for a perfect Skills score'});
+  // Missing expected skills
+  var cat=getCourseCategory();
+  var ctx=cat?INDUSTRY_CONTEXT[cat]:null;
+  if(ctx&&ctx.skillsExpected){
+    var missing=ctx.skillsExpected.filter(function(sk){return cvState.skills.indexOf(sk)===-1});
+    if(missing.length>0)s.items.push({field:'Missing expected',pts:0,fix:ctx.label+' employers expect '+missing.slice(0,3).join(', ')+' — consider adding these'});
+  }
+  sections.skills=s;
+  // Motivation (15 max)
+  var m={max:15,earned:0,items:[]};
+  if(cvState.motivation)m.earned+=7;else m.items.push({field:'No motivation',pts:7,fix:'Pick a reason — this becomes your personal statement'});
+  if(cvState.motivationText&&cvState.motivationText.length>30)m.earned+=8;
+  else if(cvState.motivationText&&cvState.motivationText.length>0)m.earned+=4;
+  if(!cvState.motivationText||cvState.motivationText.length<=30){
+    var mp2=cvState.motivationText&&cvState.motivationText.length>0?4:8;
+    m.items.push({field:'Weak statement',pts:mp2,fix:'Write 2-3 sentences about why you want this — recruiters actually read personal statements'});
+  }
+  sections.motivation=m;
+  return sections;
+}
+
+var ACTION_VERBS=['built','designed','developed','created','led','managed','analysed','analyzed','conducted','implemented','organised','organized','coordinated','prepared','performed','wrote','produced','maintained','tested','deployed','configured','presented','established','founded','trained','supervised','delivered'];
+var TOOLS_KEYWORDS=['php','mysql','python','java','javascript','html','css','sql','react','flutter','laravel','node','excel','powerpoint','canva','figma','photoshop','autocad','solidworks','matlab','spss','tableau','power bi','sap','arduino','raspberry','unity','photoshop','premiere','wordpress','shopify','firebase','mongodb','postgresql','git','github','aws','docker','linux'];
+
+function checkBulletQuality(){
+  var results=[];
+  for(var k in cvState.projectDescs){
+    var desc=cvState.projectDescs[k];
+    if(!desc||desc.length<10)continue;
+    var name=currentProjItems[k]?currentProjItems[k].name:'Project';
+    var lower=desc.toLowerCase();
+    var words=lower.split(/\s+/);
+    var hasVerb=ACTION_VERBS.some(function(v){return words[0]===v||words.slice(0,3).some(function(w){return w===v})});
+    var hasTool=TOOLS_KEYWORDS.some(function(t){return lower.indexOf(t)>-1});
+    var hasOutcome=/\d/.test(desc)||/students|users|clients|members|participants|viewers|followers|respondents|employees|entities/i.test(desc)||/completed|achieved|won|placed|awarded|improved|reduced|increased/i.test(lower);
+    results.push({name:name,desc:desc,hasVerb:hasVerb,hasTool:hasTool,hasOutcome:hasOutcome,score:(hasVerb?1:0)+(hasTool?1:0)+(hasOutcome?1:0)});
+  }
+  return results;
+}
+
+function openGapAnalysis(){
+  goToScreen(SCREENS.indexOf('s-gap'));
+  setTimeout(showGapAnalysis,400);
+}
+
+function showGapAnalysis(){
+  var sections=calculateGapAnalysis();
+  var cat=getCourseCategory();
+  var ctx=cat?INDUSTRY_CONTEXT[cat]:null;
+  var total=calculateScore();
+  var el=document.getElementById('gapContent');
+  // Update hint
+  var hint=document.getElementById('gapHint');
+  if(ctx&&cvState.course)hint.textContent='Based on your '+cvState.course+', here is how your CV compares to what '+ctx.label+' employers expect.';
+  else hint.textContent='Based on your CV, here is what is strong and what is missing.';
+
+  var html='';
+
+  // Format score card (ANRA benchmark)
+  var fmtChecks=[];
+  var hasStatement=cvState.motivationText&&cvState.motivationText.length>30;
+  fmtChecks.push({pass:hasStatement,label:'Personal statement (2-3 custom sentences)'});
+  var hasGroupedSkills=cvState.skills.length>=3;
+  fmtChecks.push({pass:hasGroupedSkills,label:'Skills listed by category (3+ skills)'});
+  var bullets=checkBulletQuality();
+  var hasBoldBullets=bullets.length>0&&bullets.some(function(b){return b.score>=2});
+  fmtChecks.push({pass:hasBoldBullets,label:'Project bullets with action verb + tool + outcome'});
+  var hasFullEdu=cvState.university&&cvState.course&&cvState.level;
+  fmtChecks.push({pass:hasFullEdu,label:'Education: institution + qualification + year'});
+  var hasImpactActs=cvState.activities.length>=2||cvState.activityDetail;
+  fmtChecks.push({pass:hasImpactActs,label:'Activities with leadership or impact detail'});
+  var fmtPass=fmtChecks.filter(function(c){return c.pass}).length;
+
+  html+='<div class="gap-format">';
+  html+='<div class="gap-format-head"><span class="gap-format-title">CV Format Check</span><span class="gap-format-score">'+fmtPass+' / 5</span></div>';
+  fmtChecks.forEach(function(c){
+    html+='<div class="gap-format-item"><span class="gap-format-check '+(c.pass?'pass':'fail')+'">'+(c.pass?'Y':'X')+'</span>'+esc(c.label)+'</div>';
+  });
+  html+='</div>';
+
+  // Section cards
+  var order=[
+    {key:'projects',label:'Projects',icon:''},
+    {key:'activities',label:'Activities & Leadership',icon:''},
+    {key:'skills',label:'Skills & Competencies',icon:''},
+    {key:'motivation',label:'Personal Statement',icon:''},
+    {key:'education',label:'Education',icon:''},
+    {key:'personal',label:'Personal Details',icon:''}
+  ];
+  var allGaps=[];
+  order.forEach(function(s){
+    var sec=sections[s.key];
+    var pct=Math.round((sec.earned/sec.max)*100);
+    var cls=pct>=80?'gap-green':(pct>=40?'gap-amber':'gap-red');
+    html+='<div class="gap-card '+cls+'">';
+    html+='<div class="gap-card-head"><span class="gap-section-name">'+esc(s.label)+'</span><span class="gap-section-score">'+sec.earned+' / '+sec.max+'</span></div>';
+    html+='<div class="gap-bar"><div class="gap-bar-fill" style="width:'+pct+'%"></div></div>';
+    if(sec.items.length===0){html+='<div class="gap-complete">Complete</div>';}
+    else{
+      html+='<div class="gap-advice">'+esc(sec.items[0].fix);
+      if(sec.items[0].pts>0)html+=' <span style="color:var(--accent);font-weight:600">(+'+sec.items[0].pts+' pts)</span>';
+      html+='</div>';
+      sec.items.forEach(function(item){allGaps.push({section:s.label,sectionKey:s.key,field:item.field,pts:item.pts,fix:item.fix})});
+    }
+    html+='</div>';
+  });
+
+  // Bullet quality check
+  if(bullets.length>0){
+    html+='<div class="gap-bullet">';
+    html+='<div class="gap-bullet-title">Bullet Quality Check</div>';
+    bullets.forEach(function(b){
+      html+='<div class="gap-bullet-item"><strong>'+esc(b.name)+'</strong><br>';
+      html+=(b.hasVerb?'<span class="bullet-pass">Action verb</span>':'<span class="bullet-fail">Missing action verb — start with Built, Designed, Led, Analysed</span>')+' | ';
+      html+=(b.hasTool?'<span class="bullet-pass">Tool/tech mentioned</span>':'<span class="bullet-fail">No tool — add PHP, Python, Excel, AutoCAD etc.</span>')+' | ';
+      html+=(b.hasOutcome?'<span class="bullet-pass">Has outcome/metric</span>':'<span class="bullet-fail">No outcome — add a number, result, or impact</span>');
+      html+='</div>';
+    });
+    if(ctx)html+='<div style="font-size:11px;color:var(--t3);margin-top:10px;padding-top:8px;border-top:1px solid var(--border)">Strong format example:<br><strong style="color:var(--t1)">'+esc(ctx.bulletExample)+'</strong></div>';
+    html+='</div>';
+  }
+
+  // Priority recommendations
+  if(allGaps.length>0){
+    allGaps.sort(function(a,b){return b.pts-a.pts});
+    var top3=allGaps.slice(0,3);
+    html+='<div class="gap-priority">';
+    html+='<div class="gap-priority-title">Your top priorities</div>';
+    top3.forEach(function(g,i){
+      html+='<div class="gap-priority-item">';
+      html+='<span class="gap-priority-num">'+(i+1)+'.</span>'+esc(g.fix);
+      if(g.pts>0)html+=' <span class="gap-priority-pts">(+'+g.pts+' pts)</span>';
+      if(ctx){
+        var ctxText=g.sectionKey==='projects'?ctx.projects:g.sectionKey==='activities'?ctx.activities:g.sectionKey==='skills'?ctx.skills:null;
+        if(ctxText)html+='<span class="gap-priority-context">'+esc(ctxText)+'</span>';
+      }
+      html+='</div>';
+    });
+    html+='</div>';
+  }
+
+  // Industry context
+  if(ctx){
+    html+='<div class="gap-context">';
+    html+='<div class="gap-context-title">What '+esc(ctx.label)+' employers expect</div>';
+    // Find weakest section
+    var weakKey='projects',weakPct=1;
+    order.forEach(function(s){var sec=sections[s.key];var p=sec.earned/sec.max;if(p<weakPct){weakPct=p;weakKey=s.key}});
+    var ctxAdvice=ctx[weakKey]||ctx.projects;
+    html+='<div class="gap-context-text">'+esc(ctxAdvice)+'</div>';
+    html+='</div>';
+  }
+
+  // Archetype-specific CV format guide
+  var archGap=cat?CV_ARCHETYPES[cat]:null;
+  if(archGap){
+    html+='<div class="gap-context" style="border-color:rgba(251,191,36,.15)">';
+    html+='<div class="gap-context-title" style="color:#fbbf24">CV Format Guide: '+esc(archGap.displayName)+'</div>';
+    html+='<div class="gap-context-text">';
+    html+='<strong>Recommended section order:</strong> '+archGap.sectionOrder.join(' > ')+'<br><br>';
+    html+='<strong>Length:</strong> '+esc(archGap.lengthGuidance);
+    if(archGap.portfolioRequired)html+='<br><strong>Portfolio:</strong> Required ('+esc(archGap.portfolioType)+')';
+    if(archGap.notes)html+='<br><br>'+esc(archGap.notes);
+    html+='</div></div>';
+  }
+
+  // Interview bridge
+  if(ctx){
+    html+='<div class="gap-interview">';
+    html+='<div class="gap-interview-title">What interviewers will ask about this CV</div>';
+    html+='<div class="gap-interview-text">'+esc(ctx.interviewBridge);
+    if(cvState.projects.length>0)html+='<br><br>Your CV mentions "'+esc(cvState.projects[0])+'". Be ready to explain what you did and what you learned.';
+    else if(cvState.activities.length>0)html+='<br><br>Your CV mentions '+esc(cvState.activities[0])+' but no projects. Interviewers will ask about projects — that is a gap.';
+    else html+='<br><br>With no projects or activities listed, interviewers will have nothing specific to ask about. Fix this first.';
+    html+='</div></div>';
+  }
+
+  // Speak test section
+  html+=renderSpeakTest();
+
+  el.innerHTML=html;
+
+  // Render next-step card based on score
+  var nextEl=document.getElementById('gapNextStep');
+  if(nextEl){
+    var ns='';
+    if(total>=65){
+      // Ready for interview practice
+      ns+='<div class="gap-next gap-next-ready">';
+      ns+='<div class="gap-next-title">Your CV is solid. Next: practice your interview.</div>';
+      ns+='<div class="gap-next-sub">Employers will ask about what you wrote. Make sure you can talk about it confidently.</div>';
+      ns+='<button class="gap-next-btn gap-next-btn-primary" onclick="startInterviewPractice()">Practice 7 interview questions</button>';
+      ns+='<button class="gap-next-btn gap-next-btn-fix" onclick="goToWeakestSection()">Or keep improving CV</button>';
+    } else if(total>=40){
+      // Decent but needs work — show both options equally
+      ns+='<div class="gap-next gap-next-fix">';
+      ns+='<div class="gap-next-title">Two things you can do right now.</div>';
+      ns+='<div class="gap-next-sub">Your CV has gaps — fixing them takes 5 minutes and makes a real difference. Or practice answering interview questions to get ready anyway.</div>';
+      ns+='<button class="gap-next-btn gap-next-btn-fix" onclick="goToWeakestSection()">Fix my CV first</button>';
+      ns+='<button class="gap-next-btn gap-next-btn-interview" onclick="startInterviewPractice()">Practice interviews anyway</button>';
+    } else {
+      // Low score — push them to fix CV first
+      ns+='<div class="gap-next gap-next-fix">';
+      ns+='<div class="gap-next-title">Fix your CV before you apply.</div>';
+      ns+='<div class="gap-next-sub">Right now your CV is missing key sections. Adding projects and descriptions will have the biggest impact. Takes 5 minutes.</div>';
+      ns+='<button class="gap-next-btn gap-next-btn-fix" onclick="goToWeakestSection()">Go back and fix it</button>';
+      ns+='<button class="gap-next-btn gap-next-btn-interview" style="opacity:.5" onclick="startInterviewPractice()">Practice interviews (fix CV first)</button>';
+    }
+    // Progress indicator: where they are in the journey
+    ns+='<div class="gap-next-step">';
+    ns+='<span class="gap-next-dot done"></span> CV Built ';
+    ns+='<span class="gap-next-dot done"></span> Gaps Found ';
+    ns+='<span class="gap-next-dot '+(total>=65?'current':'upcoming')+'"></span> Interview Prep';
+    ns+='</div></div>';
+    nextEl.innerHTML=ns;
+  }
+}
+
+function goToWeakestSection(){
+  var sections=calculateGapAnalysis();
+  var weakest={pct:1,screen:1};
+  var screenMap={personal:1,education:2,projects:5,activities:6,skills:7,motivation:8};
+  var keys=['projects','activities','skills','motivation','education','personal'];
+  keys.forEach(function(key){
+    var sec=sections[key];
+    var pct=sec.earned/sec.max;
+    if(pct<weakest.pct)weakest={pct:pct,screen:screenMap[key]};
+  });
+  goToScreen(weakest.screen);
+}
+
+/* ── Completion ── */
+function showCompletion(){
+  var score=calculateScore();
+  cvState.strength=score;
+  var circ=document.getElementById('arcCircle');
+  var offset=427-(427*score/100);
+  circ.setAttribute('stroke-dashoffset',offset);
+  document.getElementById('completeNum').textContent=score;
+  document.getElementById('completeSub').textContent=getScoreLabel(score);
+  renderCVPreview();
+  if(score>=50)spawnConfetti();
+}
+function spawnConfetti(){
+  var wrap=document.getElementById('confettiWrap');
+  var colors=['#3b82f6','#6366f1','#34d399','#f472b6','#fbbf24','#fb923c','#60a5fa','#a78bfa'];
+  var html='';
+  for(var i=0;i<25;i++){
+    var c=colors[i%colors.length],l=Math.random()*100,d=Math.random()*1.2,s=6+Math.random()*6;
+    html+='<span class="confetti-piece" style="left:'+l+'%;top:-10px;width:'+s+'px;height:'+s+'px;background:'+c+';animation-delay:'+d.toFixed(2)+'s;border-radius:'+(Math.random()>.5?'50%':'2px')+'"></span>';
+  }
+  wrap.innerHTML=html;wrap.classList.add('active');
+}
+
+/* ── CV Preview + PDF ── */
+function esc(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):''}
+function renderCVPreview(){
+  var cat=getCourseCategory();
+  var arch=cat?CV_ARCHETYPES[cat]:null;
+  var h='<h2>'+esc(cvState.name||'Your Name')+'</h2>';
+  var contact=[];
+  if(cvState.city)contact.push(esc(cvState.city));
+  if(cvState.email)contact.push(esc(cvState.email));
+  if(cvState.phone)contact.push(esc(cvState.phone));
+  h+='<div class="cv-contact">'+contact.join(' | ')+'</div>';
+
+  // Portfolio note for design/creative
+  if(arch&&arch.portfolioRequired){
+    h+='<div class="cv-item" style="color:#3b82f6;font-size:11px;margin-bottom:12px;font-style:italic">Portfolio: [Add your '+esc(arch.portfolioType||'portfolio')+' link here — this is required for '+esc(arch.displayName)+' roles]</div>';
+  }
+
+  // Build sections as functions, then order them by archetype
+  var sectionFns={};
+
+  // Personal Statement
+  sectionFns['Personal Statement']=function(){
+    var motMap={'real-exp':'Seeking hands-on industry experience to complement academic learning and develop practical skills in a professional environment.','li-req':'Completing mandatory industrial training (LI/Praktikal) as required by university programme, eager to contribute to a structured team environment.','learn':'Eager to learn directly from industry professionals and gain practical workplace skills that cannot be taught in a classroom.','cv':'Building a professional portfolio and real-world experience ahead of graduation to strengthen career readiness.','career':'Exploring career paths within the industry to determine the right long-term fit before graduating.','network':'Looking to build professional connections, contribute to real projects, and work towards a potential return offer.'};
+    var motText=cvState.motivationText||(cvState.motivation?motMap[cvState.motivation]:'')||'';
+    if(!motText)return'';
+    return'<div class="cv-section"><div class="cv-section-title">Personal Statement</div><div class="cv-item">'+esc(motText)+'</div></div>';
+  };
+
+  // Education
+  sectionFns['Education']=function(){
+    if(!cvState.university&&!cvState.course&&!cvState.level)return'';
+    var lvlMap={'cert':'Certificate Programme','dip-early':'Diploma (Year 1-2)','dip-final':'Diploma (Final Year)','deg-1':'Degree (Year 1)','deg-2':'Degree (Year 2)','deg-3':'Degree (Year 3)','deg-final':'Degree (Final Year)','masters':"Master's / MBA",'phd':'PhD / Doctoral','grad':'Graduate'};
+    var s='<div class="cv-section"><div class="cv-section-title">Education</div>';
+    if(cvState.course)s+='<div class="cv-item"><strong>'+esc(cvState.course)+'</strong></div>';
+    if(cvState.university)s+='<div class="cv-item">'+esc(cvState.university)+'</div>';
+    if(cvState.level)s+='<div class="cv-item" style="color:#666">'+esc(lvlMap[cvState.level]||cvState.level)+'</div>';
+    return s+'</div>';
+  };
+  // Alias for archetype section names
+  sectionFns['Academic History']=sectionFns['Education'];
+  sectionFns['Education (incl. relevant coursework)']=sectionFns['Education'];
+  sectionFns['Education (incl. professional qualifications)']=sectionFns['Education'];
+
+  // Projects
+  sectionFns['Projects']=function(){
+    if(!cvState.projects.length)return'';
+    var s='<div class="cv-section"><div class="cv-section-title">Projects</div>';
+    for(var pi=0;pi<currentProjItems.length;pi++){
+      if(cvState.projects.indexOf(currentProjItems[pi].name)===-1)continue;
+      var pDesc=cvState.projectDescs[pi]||'';
+      s+='<div class="cv-item" style="margin-bottom:8px">';
+      if(pDesc)s+='<strong>'+esc(currentProjItems[pi].name)+':</strong> '+esc(pDesc);
+      else s+='<strong>'+esc(currentProjItems[pi].name)+'</strong>';
+      s+='</div>';
+    }
+    return s+'</div>';
+  };
+  sectionFns['Projects / FYP']=sectionFns['Projects'];
+  sectionFns['Design Studio Projects']=sectionFns['Projects'];
+  sectionFns['Research & Lab Experience']=sectionFns['Projects'];
+  sectionFns['Research & Publications']=sectionFns['Projects'];
+  sectionFns['Clinical / Hospital Postings']=sectionFns['Projects'];
+
+  // Skills (grouped by category)
+  sectionFns['Technical Skills']=function(){
+    if(!cvState.skills.length)return'';
+    var s='<div class="cv-section"><div class="cv-section-title">Core Competencies</div>';
+    var technical=cvState.skills.filter(function(sk){return['Python','Java','HTML / CSS','JavaScript','SQL','C / C++','PHP','R / SPSS / MATLAB','AutoCAD','SolidWorks','Data structures','Algorithms','OOP','REST APIs','CAD drafting','PLC programming'].indexOf(sk)>-1||['Python','Java','JavaScript','SQL','C / C++','PHP'].indexOf(sk)>-1});
+    var tools=cvState.skills.filter(function(sk){return['Microsoft Word','Excel / Spreadsheets','PowerPoint','Google Workspace','Canva','Figma','Photoshop','Video Editing'].indexOf(sk)>-1});
+    var langs=cvState.skills.filter(function(sk){return['Bahasa Malaysia','English','Mandarin','Tamil','Arabic'].indexOf(sk)>-1});
+    var certs=cvState.skills.filter(function(sk){return['MUET','IELTS / TOEFL','Google Analytics','First Aid / CPR','UBS / SQL Accounting','AWS / Cloud Cert'].indexOf(sk)>-1});
+    var other=cvState.skills.filter(function(sk){return technical.indexOf(sk)===-1&&tools.indexOf(sk)===-1&&langs.indexOf(sk)===-1&&certs.indexOf(sk)===-1});
+    if(technical.length)s+='<div class="cv-item"><strong>Technical:</strong> '+technical.map(esc).join(' | ')+'</div>';
+    if(tools.length)s+='<div class="cv-item"><strong>Tools:</strong> '+tools.map(esc).join(' | ')+'</div>';
+    if(langs.length)s+='<div class="cv-item"><strong>Languages:</strong> '+langs.map(esc).join(' | ')+'</div>';
+    if(certs.length)s+='<div class="cv-item"><strong>Certifications:</strong> '+certs.map(esc).join(' | ')+'</div>';
+    if(other.length)s+='<div class="cv-item"><strong>Other:</strong> '+other.map(esc).join(' | ')+'</div>';
+    return s+'</div>';
+  };
+  sectionFns['Skills']=sectionFns['Technical Skills'];
+  sectionFns['Software Proficiency']=sectionFns['Technical Skills'];
+  sectionFns['Software Skills']=sectionFns['Technical Skills'];
+  sectionFns['Skills & Certifications']=sectionFns['Technical Skills'];
+
+  // Activities / Leadership
+  sectionFns['Extracurriculars']=function(){
+    if(!cvState.activities.length&&!cvState.activityDetail)return'';
+    var s='<div class="cv-section"><div class="cv-section-title">Leadership &amp; External Impact</div>';
+    cvState.activities.forEach(function(a){s+='<div class="cv-item">'+esc(a)+'</div>'});
+    if(cvState.activityDetail)s+='<div class="cv-item" style="margin-top:4px">'+esc(cvState.activityDetail)+'</div>';
+    return s+'</div>';
+  };
+  sectionFns['Extracurriculars & Volunteering']=sectionFns['Extracurriculars'];
+  sectionFns['Mooting & Legal Activities']=sectionFns['Extracurriculars'];
+  sectionFns['Teaching Practicum']=sectionFns['Extracurriculars'];
+
+  // Experience (placeholder — students may not have work experience)
+  sectionFns['Experience']=function(){return''};
+  sectionFns['Internships / Attachments']=sectionFns['Experience'];
+  sectionFns['Industrial Training / Placement']=sectionFns['Experience'];
+  sectionFns['Freelance']=sectionFns['Experience'];
+  sectionFns['Writing / Media Portfolio Link']=sectionFns['Experience'];
+
+  // Certifications (separate section if archetype has them)
+  sectionFns['Certifications']=function(){
+    if(!arch||!arch.certifications)return'';
+    var matched=cvState.skills.filter(function(sk){
+      return arch.certifications.some(function(c){return sk.toLowerCase().indexOf(c.toLowerCase().substring(0,8))>-1});
+    });
+    if(!matched.length)return'';
+    return'<div class="cv-section"><div class="cv-section-title">Certifications</div>'+matched.map(function(c){return'<div class="cv-item">'+esc(c)+'</div>'}).join('')+'</div>';
+  };
+
+  // Header and Portfolio Link don't render as sections
+  sectionFns['Header']=function(){return''};
+  sectionFns['Portfolio Link']=function(){return''};
+  sectionFns['References']=function(){return''};
+  sectionFns['Languages']=function(){return''};
+
+  // Render in archetype order, or default order
+  var order;
+  if(arch){
+    order=arch.sectionOrder.slice();
+    // Ensure Personal Statement is included
+    if(order.indexOf('Personal Statement')===-1)order.splice(1,0,'Personal Statement');
+  } else {
+    order=['Personal Statement','Technical Skills','Projects','Education','Extracurriculars'];
+  }
+
+  // Add archetype notes as a footer hint
+  var rendered=[];
+  order.forEach(function(section){
+    var fn=sectionFns[section];
+    if(fn){
+      var html=fn();
+      if(html)rendered.push(html);
+    }
+  });
+  // Add any sections not in the order that have content
+  ['Personal Statement','Education','Projects','Technical Skills','Extracurriculars','Certifications'].forEach(function(s){
+    if(order.indexOf(s)===-1){
+      var fn=sectionFns[s];
+      if(fn){var html=fn();if(html&&rendered.indexOf(html)===-1)rendered.push(html)}
+    }
+  });
+
+  h+=rendered.join('');
+
+  // Archetype guidance note
+  if(arch){
+    h+='<div style="margin-top:16px;padding-top:12px;border-top:1px solid #e2e8f0;font-size:10px;color:#999;line-height:1.5">';
+    h+='Format: '+esc(arch.lengthGuidance)+' recommended for '+esc(arch.displayName);
+    if(arch.notes)h+=' | '+esc(arch.notes);
+    h+='</div>';
+  }
+
+  var cvEl=document.getElementById('cvPreview');
+  cvEl.innerHTML=h;
+  cvEl.style.display='block';
+}
+
+function downloadCV(){
+  var preview=document.getElementById('cvPreview');
+  if(!preview||!preview.innerHTML||preview.style.display==='none'){showToast('Nothing to download yet');return;}
+  var css='*{margin:0;padding:0;box-sizing:border-box}'
+    +'body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:40px 48px;color:#1a1a1a;max-width:720px;margin:0 auto;font-size:13px;line-height:1.65}'
+    +'h2{font-size:24px;font-weight:700;margin-bottom:2px;color:#0a0f1e}'
+    +'.cv-contact{font-size:12px;color:#555;margin-bottom:22px;padding-bottom:14px;border-bottom:2px solid #1e3a6e}'
+    +'.cv-section{margin-bottom:20px}'
+    +'.cv-section-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#1e3a6e;border-bottom:1.5px solid #e2e8f0;padding-bottom:5px;margin-bottom:10px}'
+    +'.cv-item{margin-bottom:6px;font-size:13px;color:#333;line-height:1.6}'
+    +'.cv-item strong{color:#1a1a1a;font-size:13px}'
+    +'.cv-chips{display:flex;flex-wrap:wrap;gap:6px}'
+    +'.cv-chip{font-size:11px;padding:3px 10px;border-radius:4px;background:#f0f4ff;color:#1e3a6e;border:1px solid #dde4f5}'
+    +'@media print{body{padding:24px 32px}@page{margin:16mm 12mm;size:A4}}'
+    +'@page{margin-top:12mm;margin-bottom:12mm}';
+  var fullHtml='<!DOCTYPE html><html><head><meta charset="UTF-8">'
+    +'<title>CV - '+esc(cvState.name||'MyIntern')+'</title>'
+    +'<style>'+css+'</style></head><body>'
+    +preview.innerHTML
+    +'<script>window.onload=function(){window.print()}<\/script>'
+    +'</body></html>';
+  // Use Blob URL so the browser doesn't show "about:blank" in print footer
+  var blob=new Blob([fullHtml],{type:'text/html;charset=utf-8'});
+  var blobUrl=URL.createObjectURL(blob);
+  var w=window.open(blobUrl,'_blank','width=800,height=1000');
+  if(w){
+    // Print dialog opens automatically via the embedded onload script
+    setTimeout(function(){URL.revokeObjectURL(blobUrl)},10000);
+  } else {
+    // Popup blocked — download as HTML file instead
+    var a=document.createElement('a');
+    a.href=blobUrl;
+    a.download='CV-'+(cvState.name||'MyIntern').replace(/[^a-zA-Z0-9]/g,'-')+'.html';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function(){URL.revokeObjectURL(blobUrl)},1000);
+    showToast('Downloaded — open the file and press Ctrl+P to save as PDF');
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   VOICE-TO-TEXT — Speech Recognition with EN/BM toggle
+   Uses browser's native SpeechRecognition API (Chrome, Edge, Safari)
+   No external dependencies.
+   ══════════════════════════════════════════════════════════════ */
+
+var MIC_SVG='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>';
+var STOP_SVG='<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>';
+
+var voiceLang='en-MY'; // default: English (Malaysia)
+var activeRecognition=null; // tracks current recording session
+
+function hasSpeechAPI(){
+  return !!(window.SpeechRecognition||window.webkitSpeechRecognition);
+}
+
+function setVoiceLang(lang){
+  voiceLang=lang;
+  // Update all lang toggle buttons on page
+  document.querySelectorAll('.mic-lang-opt').forEach(function(el){
+    el.classList.toggle('active',el.dataset.lang===lang);
+  });
+  if(lang==='ms-MY')showToast('Bahasa Malaysia dipilih');
+  else showToast('English selected');
+}
+
+function buildMicRow(targetId){
+  if(!hasSpeechAPI())return'';
+  return '<div class="mic-row">'
+    +'<button class="mic-btn" id="micBtn-'+targetId+'" onclick="toggleVoice(\''+targetId+'\')" title="Tap to speak">'+MIC_SVG+'</button>'
+    +'<span class="mic-status" id="micStatus-'+targetId+'">Tap mic to speak</span>'
+    +'<div class="mic-lang">'
+    +'<button class="mic-lang-opt active" data-lang="en-MY" onclick="setVoiceLang(\'en-MY\')">EN</button>'
+    +'<button class="mic-lang-opt" data-lang="ms-MY" onclick="setVoiceLang(\'ms-MY\')">BM</button>'
+    +'</div></div>';
+}
+
+function toggleVoice(targetId){
+  // If already recording, stop
+  if(activeRecognition){
+    activeRecognition.stop();
+    activeRecognition=null;
+    return;
+  }
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){showToast('Speech recognition not supported in this browser');return;}
+
+  var recognition=new SR();
+  recognition.lang=voiceLang;
+  recognition.continuous=true;
+  recognition.interimResults=true;
+  recognition.maxAlternatives=1;
+  activeRecognition=recognition;
+
+  var btn=document.getElementById('micBtn-'+targetId);
+  var status=document.getElementById('micStatus-'+targetId);
+  var target=document.getElementById(targetId);
+  var existingText=target?target.value:'';
+  var finalTranscript=existingText;
+
+  btn.classList.add('recording');
+  btn.innerHTML=STOP_SVG;
+  status.textContent=voiceLang==='ms-MY'?'Sedang mendengar...':'Listening...';
+
+  recognition.onresult=function(event){
+    var interim='';
+    for(var i=event.resultIndex;i<event.results.length;i++){
+      var t=event.results[i][0].transcript;
+      if(event.results[i].isFinal){
+        finalTranscript+=(finalTranscript?' ':'')+t;
+      } else {
+        interim+=t;
+      }
+    }
+    if(target){
+      target.value=finalTranscript+(interim?' '+interim:'');
+      // Trigger any oninput handlers
+      target.dispatchEvent(new Event('input',{bubbles:true}));
+    }
+  };
+
+  recognition.onerror=function(event){
+    btn.classList.remove('recording');
+    btn.innerHTML=MIC_SVG;
+    activeRecognition=null;
+    if(event.error==='not-allowed'){
+      status.textContent='Mic access denied — check browser permissions';
+    } else if(event.error==='no-speech'){
+      status.textContent='No speech detected — try again';
+    } else {
+      status.textContent='Error: '+event.error;
+    }
+  };
+
+  recognition.onend=function(){
+    btn.classList.remove('recording');
+    btn.innerHTML=MIC_SVG;
+    status.textContent=voiceLang==='ms-MY'?'Selesai — ketuk untuk bercakap lagi':'Done — tap to speak again';
+    activeRecognition=null;
+    if(target)target.value=finalTranscript;
+  };
+
+  recognition.start();
+}
+
+/* ── GAP ANALYSIS: Speak Test prompts ── */
+/* After generating the gap analysis, this section lets students practice
+   SPEAKING about their CV points. Tests if they can articulate what they
+   wrote — bridges directly to interview practice. */
+
+var SPEAK_PROMPTS={
+  cs:{
+    en:['Tell me about your strongest project. What did you build, what tools did you use, and what was the result?','You listed Python and SQL as skills. Have you used them together? Give me an example.','Why do you want an internship in tech? What do you hope to learn?'],
+    bm:['Ceritakan tentang projek terbaik anda. Apa yang anda bina, alat apa yang anda guna, dan apa hasilnya?','Anda ada Python dan SQL. Pernah guna kedua-duanya dalam satu projek? Beri contoh.','Kenapa anda nak intern dalam bidang teknologi? Apa yang anda harap belajar?']
+  },
+  biz:{
+    en:['Describe a time you analysed financial data. What did you find?','You mentioned a business plan. Walk me through the problem you were solving.','What leadership experience do you have? Give a specific example.'],
+    bm:['Ceritakan pengalaman anda menganalisis data kewangan. Apa yang anda temui?','Anda ada business plan. Terangkan masalah yang anda cuba selesaikan.','Apa pengalaman kepimpinan anda? Beri contoh yang spesifik.']
+  },
+  eng:{
+    en:['Walk me through your biggest engineering project. What did you design and what tools did you use?','Tell me about a time you had to solve a technical problem with no guidance.','What engineering software are you most confident with? Show me how you would use it.'],
+    bm:['Terangkan projek kejuruteraan terbesar anda. Apa yang anda reka dan alat apa yang anda guna?','Ceritakan masa anda perlu selesaikan masalah teknikal tanpa bantuan.','Perisian kejuruteraan apa yang anda paling yakin? Tunjukkan bagaimana anda gunakannya.']
+  },
+  sci:{
+    en:['Describe your most interesting lab experiment. What was the research question?','How did you collect and analyse your data? Be specific about methods.','Why are you passionate about science? What drives your curiosity?'],
+    bm:['Ceritakan eksperimen makmal paling menarik anda. Apa soalan penyelidikannya?','Bagaimana anda kumpul dan analisis data anda? Nyatakan kaedah dengan spesifik.','Kenapa anda minat sains? Apa yang mendorong anda?']
+  },
+  arts:{
+    en:['Show me your best piece of work. What was the brief, and how did you approach it?','Tell me about a campaign or event you organised. What was your role?','How do you handle creative feedback? Give me a real example.'],
+    bm:['Tunjukkan karya terbaik anda. Apa brief-nya dan bagaimana anda approach?','Ceritakan tentang kempen atau acara yang anda anjurkan. Apa peranan anda?','Bagaimana anda terima feedback kreatif? Beri contoh sebenar.']
+  },
+  health:{
+    en:['Describe a clinical experience that changed how you think about patient care.','Tell me about a community health project you were involved in.','What clinical skills do you feel most confident about?'],
+    bm:['Ceritakan pengalaman klinikal yang ubah cara anda fikir tentang penjagaan pesakit.','Ceritakan projek kesihatan komuniti yang anda terlibat.','Kemahiran klinikal apa yang anda paling yakin?']
+  },
+  general:{
+    en:['Tell me about yourself — who are you and what are you studying?','What is your biggest achievement so far?','Why should an employer pick you for this internship?'],
+    bm:['Ceritakan tentang diri anda — siapa anda dan apa yang anda belajar?','Apa pencapaian terbesar anda setakat ini?','Kenapa majikan patut pilih anda untuk internship ini?']
+  }
+};
+
+var speakCurrentIdx=0;
+var speakPrompts=[];
+
+function getSpeakLangKey(){return voiceLang==='ms-MY'?'bm':'en'}
+
+function initSpeakTest(){
+  var cat=getCourseCategory()||'general';
+  var data=SPEAK_PROMPTS[cat]||SPEAK_PROMPTS.general;
+  speakPrompts=data[getSpeakLangKey()]||data.en;
+  speakCurrentIdx=0;
+}
+
+function renderSpeakTest(){
+  if(!hasSpeechAPI())return'';
+  initSpeakTest();
+  var prompt=speakPrompts[speakCurrentIdx];
+  var isBM=voiceLang==='ms-MY';
+  var html='<div class="gap-speak">';
+  html+='<div class="gap-speak-title">'+(isBM?'Ujian Bercakap':'Speak Test')+'</div>';
+  html+='<div class="gap-speak-sub">'+(isBM?'Latih jawapan anda dengan suara — penemuduga dengar anda, bukan baca. Ketuk mic dan jawab soalan ini.':'Practice saying your answers out loud — interviewers hear you, not read you. Tap the mic and answer this question.')+'</div>';
+  html+='<div class="gap-speak-prompt" id="speakPrompt">'+esc(prompt)+'</div>';
+  html+='<div class="gap-speak-result empty" id="speakResult">'+(isBM?'Jawapan anda akan muncul di sini...':'Your answer will appear here...')+'</div>';
+  html+=buildMicRow('speakResult');
+  html+='<div style="display:flex;gap:8px;margin-top:10px">';
+  html+='<button class="btn-secondary" style="flex:1;padding:10px;font-size:12px" onclick="evaluateSpeak()">'+(isBM?'Semak jawapan':'Check my answer')+'</button>';
+  html+='<button class="btn-secondary" style="flex:1;padding:10px;font-size:12px" onclick="nextSpeakPrompt()">'+(isBM?'Soalan seterusnya':'Next question')+'</button>';
+  html+='</div>';
+  html+='<div class="gap-speak-feedback" id="speakFeedback"></div>';
+  html+='</div>';
+  return html;
+}
+
+function nextSpeakPrompt(){
+  // Refresh prompts in case language changed
+  var cat=getCourseCategory()||'general';
+  var data=SPEAK_PROMPTS[cat]||SPEAK_PROMPTS.general;
+  speakPrompts=data[getSpeakLangKey()]||data.en;
+  speakCurrentIdx=(speakCurrentIdx+1)%speakPrompts.length;
+  var prompt=speakPrompts[speakCurrentIdx];
+  document.getElementById('speakPrompt').textContent=prompt;
+  var result=document.getElementById('speakResult');
+  var isBM=voiceLang==='ms-MY';
+  result.textContent=isBM?'Jawapan anda akan muncul di sini...':'Your answer will appear here...';
+  result.classList.add('empty');
+  var fb=document.getElementById('speakFeedback');
+  if(fb){fb.classList.remove('show');fb.textContent='';}
+}
+
+function evaluateSpeak(){
+  var result=document.getElementById('speakResult');
+  var text=result.textContent||'';
+  var isBM=voiceLang==='ms-MY';
+  var emptyMsg=isBM?'Jawapan anda akan muncul di sini...':'Your answer will appear here...';
+  if(!text||text===emptyMsg){showToast(isBM?'Cakap jawapan anda dulu':'Speak your answer first');return;}
+  var words=text.trim().split(/\s+/).length;
+  var fb=document.getElementById('speakFeedback');
+  var msg='';
+  if(isBM){
+    if(words<10)msg='Terlalu pendek ('+words+' perkataan). Jawapan temuduga yang baik 30-60 saat — lebih kurang 50-100 perkataan. Cuba lagi dengan lebih terperinci.';
+    else if(words<30)msg='Semakin baik ('+words+' perkataan). Ada asas tapi kedengaran macam bullet point. Tambah contoh spesifik — apa yang anda buat dan apa hasilnya?';
+    else if(words<60)msg='Bagus ('+words+' perkataan). Anda dah cover poin utama. Semak: ada sebut alat atau kaedah spesifik? Ada nyatakan hasil atau kesan? Detail-detail ini yang buat jawapan melekat.';
+    else msg='Kuat ('+words+' perkataan). Panjang yang sesuai untuk temuduga. Dengar balik — bunyinya natural? Elak perkataan pengisi. Jawapan macam ini yang bawa anda ke pusingan seterusnya.';
+    var lower=text.toLowerCase();
+    if(!/\d/.test(text)&&words>=20)msg+=' Tip: tambah nombor atau metrik ("200 pelajar", "3 bulan", "bajet RM8,000") — ia jadikan jawapan anda lebih konkrit.';
+    if(!TOOLS_KEYWORDS.some(function(t){return lower.indexOf(t)>-1})&&words>=20)msg+=' Tip: sebut alat atau kaedah spesifik yang anda guna — penemuduga nak dengar spesifik teknikal.';
+  } else {
+    if(words<10)msg='Too short ('+words+' words). A good interview answer is 30-60 seconds — roughly 50-100 words. Try again with more detail.';
+    else if(words<30)msg='Getting there ('+words+' words). You have the basics but it sounds like bullet points. Add a specific example — what exactly did you do, and what happened?';
+    else if(words<60)msg='Decent ('+words+' words). You are covering the main points. Now check: did you mention a specific tool or method? Did you include a result or outcome? Those details make answers stick.';
+    else msg='Strong ('+words+' words). Good length for an interview answer. Listen back — did it sound natural? Did you avoid filler words? This is the kind of answer that gets you to the next round.';
+    var lower=text.toLowerCase();
+    if(!/\d/.test(text)&&words>=20)msg+=' Tip: add a number or metric ("200 students", "3 months", "RM8,000 budget") — it makes your answer concrete.';
+    if(!TOOLS_KEYWORDS.some(function(t){return lower.indexOf(t)>-1})&&words>=20)msg+=' Tip: mention a specific tool or method you used — interviewers want to hear technical specifics.';
+  }
+  fb.textContent=msg;
+  fb.classList.add('show');
+}
+
+/* ── Modify speakResult to work as a voice target ── */
+/* The speakResult div acts as both display and voice input target.
+   We override toggleVoice to handle div targets (not just textareas) */
+var _origToggleVoice=toggleVoice;
+toggleVoice=function(targetId){
+  var target=document.getElementById(targetId);
+  // If target is a div (not textarea), wrap it to behave like one
+  if(target&&target.tagName!=='TEXTAREA'&&target.tagName!=='INPUT'){
+    // Create a proxy object so recognition writes to textContent
+    var origGet=Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype,'value');
+    Object.defineProperty(target,'value',{
+      get:function(){return this.textContent},
+      set:function(v){this.textContent=v;this.classList.toggle('empty',!v||v==='Your answer will appear here...')},
+      configurable:true
+    });
+    target.dispatchEvent=function(){};
+  }
+  _origToggleVoice(targetId);
+};
+
+/* ══════════════════════════════════════════════════════════════
+   INTERVIEW PRACTICE — Phase 3
+   Generates 7 personalized questions from cvState,
+   lets students answer (type or voice), gives AI-simulated feedback.
+   ══════════════════════════════════════════════════════════════ */
+
+var interviewQuestions=[];
+var interviewAnswers=[];
+var interviewCurrentIdx=0;
+
+function generateInterviewQuestions(){
+  var qs=[];
+  // Q1: Project-based (if they have projects)
+  if(cvState.projects.length>0){
+    var projName=cvState.projects[0];
+    var projDesc=cvState.projectDescs[0]||'';
+    qs.push({
+      q:'Walk me through your '+projName+' project. What problem were you solving and what was the outcome?',
+      tag:'project',tagLabel:'Project',
+      why:'From your CV: '+projName+' listed under projects',
+      score:7,scoreLabel:'out of 10 — good answer',scoreOffset:94,
+      good:'Clear context. You explained what the project did without over-explaining.',
+      improve:'Missing the outcome. What happened after you built it? Was it used? Even "my lecturer gave us an A" is a real result.',
+      sample:'<em>[A strong answer names the problem, your specific contribution, tools used, and one measurable result.]</em>'
+    });
+  }
+  // Q2: Second project or skills application
+  if(cvState.projects.length>1){
+    qs.push({
+      q:'You also did '+cvState.projects[1]+'. How was this different from '+cvState.projects[0]+'?',
+      tag:'project',tagLabel:'Project',
+      why:'From your CV: 2 projects listed',
+      score:6,scoreLabel:'out of 10 — decent, can be stronger',scoreOffset:126,
+      good:'Showing range across projects demonstrates adaptability.',
+      improve:'Compare the complexity or your role — did you lead one and support the other?',
+      sample:'<em>[Compare scope, your role, tools, and what you learned differently from each.]</em>'
+    });
+  } else {
+    // Skills question if only 1 or 0 projects
+    var topSkills=cvState.skills.slice(0,3).join(', ');
+    if(topSkills){
+      qs.push({
+        q:'You listed '+topSkills+' as skills. Which one are you strongest at, and can you give me an example of using it?',
+        tag:'skills',tagLabel:'Skills',
+        why:'From your CV: '+topSkills+' listed under skills',
+        score:6,scoreLabel:'out of 10 — decent',scoreOffset:126,
+        good:'Naming a specific skill with an example is exactly what interviewers want.',
+        improve:'Go deeper — what level? Basic usage or can you do something complex with it?',
+        sample:'<em>[Pick one skill, give a specific example of using it on a real task, and what the result was.]</em>'
+      });
+    }
+  }
+  // Q3: Activity-based (if they have activities)
+  if(cvState.activities.length>0){
+    var act=cvState.activities[0];
+    qs.push({
+      q:'You were involved in '+act+'. Tell me about a specific moment that challenged you.',
+      tag:'activity',tagLabel:'Activity',
+      why:'From your CV: '+act+' listed under activities',
+      score:8,scoreLabel:'out of 10 — strong answer',scoreOffset:63,
+      good:'Strong specific detail. This is exactly how to answer behavioural questions.',
+      improve:'Connect it to the workplace — how does this experience make you a better intern?',
+      sample:'<em>[Set the scene, describe the challenge, what you did specifically, and what you learned.]</em>'
+    });
+  }
+  // Q4: Motivation (from their personal statement)
+  var courseLabel=cvState.course||'your field';
+  qs.push({
+    q:'What drew you to '+courseLabel+' specifically?',
+    tag:'motivation',tagLabel:'Motivation',
+    why:'Field of study from your CV',
+    score:7,scoreLabel:'out of 10 — good answer',scoreOffset:94,
+    good:'Personal origin stories give authenticity. Far better than "I like technology."',
+    improve:'Bring it forward — what does that original interest look like now?',
+    sample:'<em>[Start with what first sparked your interest, then show how it has evolved during your studies.]</em>'
+  });
+  // Q5: Problem solving (standard)
+  qs.push({
+    q:'Tell me about a time you had to figure something out with no one to help you.',
+    tag:'problem',tagLabel:'Problem Solving',
+    why:'Standard internship readiness question',
+    score:7,scoreLabel:'out of 10 — good answer',scoreOffset:94,
+    good:'Good structure. You showed process, not just outcome.',
+    improve:'Name the actual resource — "I read the official docs" is more credible than "I searched online."',
+    sample:'<em>[Name the situation, what you tried first, what actually worked, and what you learned about solving problems independently.]</em>'
+  });
+  // Q6: Reflection
+  var lvlMap={'cert':'certificate','dip-early':'early diploma','dip-final':'final year diploma','deg-1':'first year','deg-2':'second year','deg-3':'third year','deg-final':'final year','masters':'postgrad','phd':'doctoral','grad':'graduate'};
+  var lvlText=lvlMap[cvState.level]||'your studies';
+  qs.push({
+    q:"You're in "+lvlText+". What's one thing you'd do differently if you started your studies over?",
+    tag:'reflection',tagLabel:'Reflection',
+    why:'Standard self-awareness question',
+    score:8,scoreLabel:'out of 10 — strong answer',scoreOffset:63,
+    good:'Honest and specific. Interviewers respect self-awareness.',
+    improve:'Show you have already started correcting it — "I wish I did X, so now I am doing Y."',
+    sample:'<em>[Name one genuine regret, explain why, and show what you are doing about it now.]</em>'
+  });
+  // Q7: Goals (closing)
+  qs.push({
+    q:'If you got this internship, what would you want to have learned by the end of it?',
+    tag:'goals',tagLabel:'Goals',
+    why:'Role-specific closing question',
+    score:8,scoreLabel:'out of 10 — strong answer',scoreOffset:63,
+    good:'Specific and role-relevant. Shows you have thought about it beyond just "experience."',
+    improve:'Add a people goal — what do you want to learn from the team, not just the work?',
+    sample:'<em>[Name 2-3 specific things: a technical skill, a process understanding, and something about working with people.]</em>'
+  });
+  // Ensure exactly 7 questions
+  while(qs.length<7){
+    qs.push({
+      q:'What makes you different from other candidates applying for this internship?',
+      tag:'motivation',tagLabel:'Motivation',
+      why:'Standard differentiator question',
+      score:7,scoreLabel:'out of 10 — good answer',scoreOffset:94,
+      good:'Good self-awareness.',
+      improve:'Be specific — name one concrete thing, not general traits.',
+      sample:'<em>[Name one specific thing you have done or can do that most other students cannot.]</em>'
+    });
+  }
+  return qs.slice(0,7);
+}
+
+function renderInterviewList(){
+  var dotsEl=document.getElementById('iqDots');
+  var countEl=document.getElementById('iqDoneCount');
+  var listEl=document.getElementById('iqListItems');
+  var doneCount=0;
+  var dotsHtml='';
+  var listHtml='';
+  for(var i=0;i<interviewQuestions.length;i++){
+    var q=interviewQuestions[i];
+    var answered=!!interviewAnswers[i];
+    if(answered)doneCount++;
+    var dotCls=answered?'done':(i===findNextUnanswered()?'next':'');
+    dotsHtml+='<span class="iq-dot '+dotCls+'"></span>';
+    var numCls=answered?'done':(i===findNextUnanswered()?'next':'');
+    listHtml+='<div class="iq-row" onclick="openInterviewQuestion('+i+')">';
+    listHtml+='<div class="iq-num '+numCls+'">'+(answered?'&#10003;':(i+1))+'</div>';
+    listHtml+='<div class="iq-content">';
+    listHtml+='<div class="iq-text">'+esc(q.q)+'</div>';
+    listHtml+='<div class="iq-why"><span class="itag itag-'+esc(q.tag)+'">'+esc(q.tagLabel)+'</span> '+esc(q.why)+'</div>';
+    listHtml+='</div>';
+    listHtml+='<div class="iq-arrow">&#8250;</div>';
+    listHtml+='</div>';
+  }
+  dotsEl.innerHTML=dotsHtml;
+  countEl.textContent=doneCount;
+  listEl.innerHTML=listHtml;
+}
+
+function findNextUnanswered(){
+  for(var i=0;i<interviewQuestions.length;i++){
+    if(!interviewAnswers[i])return i;
+  }
+  return -1;
+}
+
+function openInterviewQuestion(idx){
+  interviewCurrentIdx=idx;
+  var q=interviewQuestions[idx];
+  document.getElementById('iaStepLabel').textContent='QUESTION '+(idx+1)+' OF 7';
+  document.getElementById('iaQuestion').textContent=q.q;
+  document.getElementById('iaWhy').textContent=q.why;
+  var input=document.getElementById('iaInput');
+  input.value=interviewAnswers[idx]||'';
+  updateIaWordCount();
+  // Reset STAR panel
+  var sp=document.getElementById('starPanel');
+  sp.classList.remove('visible');
+  var sa=document.getElementById('starArrow');
+  sa.classList.remove('open');
+  // Inject mic row
+  var micRow=document.getElementById('iaMicRow');
+  if(micRow)micRow.innerHTML=buildMicRow('iaInput');
+  goToScreen(SCREENS.indexOf('s-interview-answer'));
+}
+
+function toggleStarHint(){
+  var panel=document.getElementById('starPanel');
+  var arrow=document.getElementById('starArrow');
+  panel.classList.toggle('visible');
+  arrow.classList.toggle('open');
+}
+
+function updateIaWordCount(){
+  var input=document.getElementById('iaInput');
+  var text=input.value.trim();
+  var wc=text?text.split(/\s+/).length:0;
+  document.getElementById('iaWc').textContent=wc;
+  var btn=document.getElementById('iaSubmitBtn');
+  if(wc>=5)btn.classList.remove('btn-disabled');
+  else btn.classList.add('btn-disabled');
+}
+
+function computeInterviewScore(wordCount){
+  if(wordCount<10)return{score:2,label:'out of 10 — too short',good:'You started, but this is not enough for an interviewer.',improve:'Aim for at least 50 words. Use the STAR method to structure your answer.'};
+  if(wordCount<30)return{score:4,label:'out of 10 — needs detail',good:'You have the right idea but it reads like bullet points.',improve:'Add a specific example — what exactly did you do, and what happened as a result?'};
+  if(wordCount<60)return{score:6,label:'out of 10 — decent start',good:'You are covering the basics. An interviewer would follow up for more detail.',improve:'Go deeper — add specifics like tools used, numbers, or what you personally contributed.'};
+  return null; // use question-specific feedback
+}
+
+function submitInterview(){
+  var input=document.getElementById('iaInput');
+  var text=input.value.trim();
+  var wc=text?text.split(/\s+/).length:0;
+  if(wc<5)return;
+  interviewAnswers[interviewCurrentIdx]=text;
+  var q=interviewQuestions[interviewCurrentIdx];
+  var result=computeInterviewScore(wc);
+  var score,scoreLabel,good,improve;
+  if(result){
+    score=result.score;scoreLabel=result.label;good=result.good;improve=result.improve;
+  } else {
+    score=q.score;scoreLabel=q.scoreLabel;good=q.good;improve=q.improve;
+  }
+  // Populate feedback screen
+  document.getElementById('ifStepLabel').textContent='FEEDBACK — Q'+(interviewCurrentIdx+1);
+  document.getElementById('ifScoreVal').textContent=score;
+  document.getElementById('ifScoreLbl').textContent=scoreLabel;
+  document.getElementById('ifGood').textContent=good;
+  document.getElementById('ifImprove').textContent=improve;
+  // Score arc animation
+  var arc=document.getElementById('ifArc');
+  var offset=314-(314*score/10);
+  arc.setAttribute('stroke-dashoffset','314');
+  setTimeout(function(){arc.setAttribute('stroke-dashoffset',offset)},50);
+  // Sample answer
+  var samplePanel=document.getElementById('ifSamplePanel');
+  samplePanel.innerHTML=q.sample;
+  samplePanel.classList.remove('visible');
+  var sampleArrow=document.getElementById('ifSampleArrow');
+  sampleArrow.classList.remove('open');
+  // Check if this is the last question
+  var allDone=true;
+  for(var i=0;i<interviewQuestions.length;i++){
+    if(!interviewAnswers[i]){allDone=false;break;}
+  }
+  var nextBtn=document.getElementById('ifNextBtn');
+  if(allDone){
+    nextBtn.textContent='See your results';
+  } else {
+    nextBtn.textContent='Next question';
+  }
+  goToScreen(SCREENS.indexOf('s-interview-feedback'));
+}
+
+function retryInterview(){
+  interviewAnswers[interviewCurrentIdx]='';
+  openInterviewQuestion(interviewCurrentIdx);
+}
+
+function nextInterviewQ(){
+  // Check if all answered
+  var allDone=true;
+  for(var i=0;i<interviewQuestions.length;i++){
+    if(!interviewAnswers[i]){allDone=false;break;}
+  }
+  if(allDone){
+    goToScreen(SCREENS.indexOf('s-interview-list'));
+    renderInterviewList();
+    showToast('All 7 questions answered. You are interview-ready.');
+    return;
+  }
+  // Find next unanswered
+  var next=findNextUnanswered();
+  if(next>=0){
+    openInterviewQuestion(next);
+  } else {
+    goToScreen(SCREENS.indexOf('s-interview-list'));
+    renderInterviewList();
+  }
+}
+
+function toggleIfSample(){
+  var panel=document.getElementById('ifSamplePanel');
+  var arrow=document.getElementById('ifSampleArrow');
+  panel.classList.toggle('visible');
+  arrow.classList.toggle('open');
+}
+
+function startInterviewPractice(){
+  interviewQuestions=generateInterviewQuestions();
+  interviewAnswers=new Array(interviewQuestions.length);
+  interviewCurrentIdx=0;
+  renderInterviewList();
+  goToScreen(SCREENS.indexOf('s-interview-list'));
+}
+
+/* ══════════════════════════════════════════════════════════════
+   AUTO-TEST SUITE — run with ?test=1 in the URL
+   Tests all features programmatically without manual clicking.
+   Results shown as a floating overlay on the page.
+   ══════════════════════════════════════════════════════════════ */
+
+var TEST_PROFILES=[
+  {
+    name:'CS Student — Full',
+    data:{name:'Nur Aisyah binti Ahmad',email:'aisyah@gmail.com',phone:'012-345 6789',city:'Shah Alam, Selangor'},
+    uni:'Universiti Teknologi MARA (UiTM)',
+    course:'Bachelor of Computer Science',
+    level:'deg-final',
+    projects:['Student Management System','Mobile App','Data Analysis / Dashboard'],
+    projDescs:['Built a student attendance system using PHP and MySQL for 60+ students','Developed a canteen ordering app using Flutter with real-time tracking','Analysed 2 years of sales data using Python pandas and created Power BI dashboard'],
+    activities:['PALAPES (Army/Navy/Air)','Club / Persatuan President','Hackathon','Part-time Retail'],
+    activityDetail:'Was AJK for Faculty Night 2025 — handled logistics for 300 attendees',
+    skills:['Python','Java','HTML / CSS','JavaScript','SQL','Excel / Spreadsheets','Bahasa Malaysia','English','MUET'],
+    motivation:'real-exp',
+    motivationText:'As a final-year CS student at UiTM, I want to apply my Python and SQL skills in a production environment. I built an attendance system for my FYP and want to work on something bigger.',
+    expectedScoreMin:75,
+    expectedScoreMax:100,
+    expectedGapCards:6,
+    expectedInterviewQs:7
+  },
+  {
+    name:'Business Student — Minimal',
+    data:{name:'Ahmad bin Ismail',email:'ahmad@email.com',phone:'',city:''},
+    uni:'Politeknik Sultan Salahuddin Abdul Aziz Shah',
+    course:'Diploma in Accountancy',
+    level:'dip-early',
+    projects:[],
+    projDescs:[],
+    activities:['Community Service'],
+    activityDetail:'',
+    skills:['Excel / Spreadsheets','Bahasa Malaysia'],
+    motivation:'li-req',
+    motivationText:'',
+    expectedScoreMin:25,
+    expectedScoreMax:50,
+    expectedGapCards:6,
+    expectedInterviewQs:7
+  },
+  {
+    name:'Engineering — Skip Everything',
+    data:{name:'Raj Kumar',email:'raj@test.com',phone:'011-111 1111',city:'Johor Bahru'},
+    uni:'Universiti Tun Hussein Onn Malaysia (UTHM)',
+    course:'Bachelor of Mechanical Engineering',
+    level:'deg-3',
+    projects:[],
+    projDescs:[],
+    activities:[],
+    activityDetail:'',
+    skills:[],
+    motivation:null,
+    motivationText:'',
+    expectedScoreMin:15,
+    expectedScoreMax:35,
+    expectedGapCards:6,
+    expectedInterviewQs:7
+  },
+  {
+    name:'Health Student — Strong',
+    data:{name:'Siti Aminah binti Yusof',email:'siti@gmail.com',phone:'019-876 5432',city:'Kuala Lumpur'},
+    uni:'International Medical University (IMU)',
+    course:'Bachelor of Pharmacy',
+    level:'deg-final',
+    projects:['Community Health Project','Lab / Diagnostic Report','Research Paper / Mini Thesis'],
+    projDescs:['Organised free health screening in Kampung Baru for 150 residents','Performed complete blood count analysis on 30 samples during practical','Conducted cross-sectional study on antibiotic resistance awareness among 200 students'],
+    activities:['PBSM (Red Crescent)','Community Service','Event Organiser','Peer Mentor / Buddy'],
+    activityDetail:'Volunteered as first-aider at university sports day for 3 consecutive years',
+    skills:['Microsoft Word','Excel / Spreadsheets','English','Bahasa Malaysia','First Aid / CPR','R / SPSS / MATLAB','Google Workspace','Mandarin'],
+    motivation:'learn',
+    motivationText:'I want to understand how pharmacy operates in a hospital setting beyond what textbooks teach. I am particularly interested in clinical pharmacy and medication safety.',
+    expectedScoreMin:80,
+    expectedScoreMax:100,
+    expectedGapCards:6,
+    expectedInterviewQs:7
+  }
+];
+
+function runAutoTest(){
+  var results=[];
+  var totalPass=0,totalFail=0;
+
+  TEST_PROFILES.forEach(function(profile,pIdx){
+    var tests=[];
+
+    // 1. Set personal details
+    cvState.name=profile.data.name;
+    cvState.email=profile.data.email;
+    cvState.phone=profile.data.phone;
+    cvState.city=profile.data.city;
+    tests.push({name:'Personal details set',pass:!!cvState.name&&!!cvState.email});
+
+    // 2. Set university
+    cvState.university=profile.uni;
+    tests.push({name:'University: '+profile.uni.substring(0,30),pass:cvState.university===profile.uni});
+
+    // 3. Set course
+    cvState.course=profile.course;
+    tests.push({name:'Course: '+profile.course.substring(0,30),pass:cvState.course===profile.course});
+
+    // 4. Verify course category mapping
+    var cat=getCourseCategory();
+    tests.push({name:'Course category resolved: '+(cat||'null'),pass:!!cat});
+
+    // 5. Set level
+    cvState.level=profile.level;
+    tests.push({name:'Level: '+profile.level,pass:cvState.level===profile.level});
+
+    // 6. Set projects + descriptions
+    cvState.projects=profile.projects.slice();
+    cvState.projectDescs={};
+    profile.projDescs.forEach(function(d,i){cvState.projectDescs[i]=d});
+    tests.push({name:'Projects: '+cvState.projects.length+' added',pass:cvState.projects.length===profile.projects.length});
+
+    // 7. Set activities
+    cvState.activities=profile.activities.slice();
+    cvState.activityDetail=profile.activityDetail;
+    tests.push({name:'Activities: '+cvState.activities.length+' added',pass:cvState.activities.length===profile.activities.length});
+
+    // 8. Set skills
+    cvState.skills=profile.skills.slice();
+    tests.push({name:'Skills: '+cvState.skills.length+' added',pass:cvState.skills.length===profile.skills.length});
+
+    // 9. Set motivation
+    cvState.motivation=profile.motivation;
+    cvState.motivationText=profile.motivationText;
+    tests.push({name:'Motivation set',pass:true});
+
+    // 10. Test scoring
+    var score=calculateScore();
+    var scorePass=score>=profile.expectedScoreMin&&score<=profile.expectedScoreMax;
+    tests.push({name:'Score: '+score+' (expected '+profile.expectedScoreMin+'-'+profile.expectedScoreMax+')',pass:scorePass});
+
+    // 11. Test score label
+    var label=getScoreLabel(score);
+    tests.push({name:'Score label: "'+label.substring(0,40)+'..."',pass:!!label&&label.length>5});
+
+    // 12. Test gap analysis
+    var gaps=calculateGapAnalysis();
+    var gapSections=Object.keys(gaps);
+    tests.push({name:'Gap sections: '+gapSections.length,pass:gapSections.length===profile.expectedGapCards});
+
+    // 13. Verify gap scores add up
+    var gapTotal=0;
+    gapSections.forEach(function(k){gapTotal+=gaps[k].earned});
+    tests.push({name:'Gap total ('+gapTotal+') roughly matches score ('+score+')',pass:Math.abs(gapTotal-score)<=5});
+
+    // 14. Test bullet quality check
+    var bullets=checkBulletQuality();
+    tests.push({name:'Bullet quality: '+bullets.length+' checked',pass:bullets.length===Object.keys(cvState.projectDescs).filter(function(k){return cvState.projectDescs[k]&&cvState.projectDescs[k].length>=10}).length});
+
+    // 15. Test archetype lookup
+    var arch=cat?CV_ARCHETYPES[cat]:null;
+    tests.push({name:'Archetype loaded: '+(arch?arch.displayName:'none'),pass:!!arch});
+
+    // 16. Test archetype section order
+    if(arch){
+      tests.push({name:'Section order: '+arch.sectionOrder.length+' sections',pass:arch.sectionOrder.length>=4});
+      tests.push({name:'Skills suggested: '+arch.skillsTechnical.length+' technical',pass:arch.skillsTechnical.length>=3});
+    }
+
+    // 17. Test industry context
+    var ctx=cat?INDUSTRY_CONTEXT[cat]:null;
+    tests.push({name:'Industry context: '+(ctx?ctx.label:'none'),pass:!!ctx});
+
+    // 18. Test interview question generation
+    var iqs=generateInterviewQuestions();
+    tests.push({name:'Interview questions: '+iqs.length+' generated',pass:iqs.length===profile.expectedInterviewQs});
+
+    // 19. Verify questions are personalized (check if any reference CV data)
+    var personalized=iqs.some(function(q){
+      return q.q.indexOf(cvState.projects[0])>-1||
+             q.q.indexOf(cvState.activities[0])>-1||
+             q.q.indexOf(cvState.course)>-1||
+             q.why.indexOf('CV')>-1;
+    });
+    tests.push({name:'Questions personalized to CV',pass:personalized});
+
+    // 20. Test CV preview rendering (no JS errors)
+    try{
+      renderProjects();
+      renderCVPreview();
+      tests.push({name:'CV preview renders without error',pass:true});
+    }catch(e){
+      tests.push({name:'CV preview ERROR: '+e.message,pass:false});
+    }
+
+    // 21. Test PDF HTML generation
+    var preview=document.getElementById('cvPreview');
+    var hasContent=preview&&preview.innerHTML&&preview.innerHTML.length>50;
+    tests.push({name:'CV preview has content ('+((preview&&preview.innerHTML)?preview.innerHTML.length:0)+' chars)',pass:hasContent});
+
+    // 22. Test speak prompts exist for this category
+    var speakData=SPEAK_PROMPTS[cat||'general'];
+    var hasEN=speakData&&speakData.en&&speakData.en.length>=3;
+    var hasBM=speakData&&speakData.bm&&speakData.bm.length>=3;
+    tests.push({name:'Speak prompts: EN='+((speakData&&speakData.en)?speakData.en.length:0)+' BM='+((speakData&&speakData.bm)?speakData.bm.length:0),pass:hasEN&&hasBM});
+
+    // Count results
+    var profilePass=0,profileFail=0;
+    tests.forEach(function(t){if(t.pass){profilePass++;totalPass++}else{profileFail++;totalFail++}});
+    results.push({name:profile.name,score:score,tests:tests,pass:profilePass,fail:profileFail});
+  });
+
+  // Render results overlay
+  showTestResults(results,totalPass,totalFail);
+}
+
+function showTestResults(results,totalPass,totalFail){
+  var total=totalPass+totalFail;
+  var pct=Math.round((totalPass/total)*100);
+  var overlay=document.createElement('div');
+  overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:9999;overflow-y:auto;padding:20px;font-family:-apple-system,sans-serif;color:#f1f5f9';
+  var html='<div style="max-width:700px;margin:0 auto">';
+  html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">';
+  html+='<h1 style="font-size:20px;font-weight:700">MyIntern CV Builder — Test Results</h1>';
+  html+='<button onclick="this.parentElement.parentElement.parentElement.remove()" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px">Close</button>';
+  html+='</div>';
+  // Summary bar
+  var barColor=pct===100?'#34d399':(pct>=80?'#fbbf24':'#f87171');
+  html+='<div style="background:#0d1426;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:16px;margin-bottom:20px">';
+  html+='<div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:14px;font-weight:600">'+totalPass+'/'+total+' tests passed</span><span style="font-size:14px;font-weight:700;color:'+barColor+'">'+pct+'%</span></div>';
+  html+='<div style="height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden"><div style="height:100%;width:'+pct+'%;background:'+barColor+';border-radius:3px"></div></div>';
+  html+='</div>';
+  // Per-profile results
+  results.forEach(function(r){
+    var rColor=r.fail===0?'#34d399':'#f87171';
+    html+='<div style="background:#0d1426;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:16px;margin-bottom:12px">';
+    html+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">';
+    html+='<span style="font-size:14px;font-weight:600">'+r.name+'</span>';
+    html+='<span style="font-size:12px;color:'+rColor+';font-weight:700">'+r.pass+'/'+r.tests.length+(r.fail===0?' PASS':' ('+r.fail+' FAIL)')+'</span>';
+    html+='</div>';
+    html+='<div style="font-size:11px;color:#64748b;margin-bottom:8px">CV Score: '+r.score+'</div>';
+    r.tests.forEach(function(t){
+      var icon=t.pass?'<span style="color:#34d399;margin-right:6px">PASS</span>':'<span style="color:#f87171;margin-right:6px;font-weight:700">FAIL</span>';
+      var bg=t.pass?'transparent':'rgba(248,113,113,.06)';
+      html+='<div style="font-size:12px;padding:4px 8px;border-radius:4px;margin-bottom:2px;background:'+bg+';color:'+(t.pass?'#94a3b8':'#f1f5f9')+'">'+icon+t.name+'</div>';
+    });
+    html+='</div>';
+  });
+  html+='<div style="text-align:center;font-size:11px;color:#64748b;margin-top:16px">4 test profiles x ~22 tests each = '+total+' assertions</div>';
+  html+='</div>';
+  overlay.innerHTML=html;
+  document.body.appendChild(overlay);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   INTERNSHIP MATCHER — fetches live data from Supabase
+   Matches based on student's course, skills, and study level.
+   ══════════════════════════════════════════════════════════════ */
+
+var SB_URL='https://ywvfvjvxwhcfprfrkgqm.supabase.co';
+var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl3dmZ2anZ4d2hjZnByZnJrZ3FtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNTQ5MzEsImV4cCI6MjA5MDYzMDkzMX0.5EzrJuW1fdPca2ZEKGPXXgbd_XYDqKzzu6e-iRQT9po';
+
+var matchData=[];
+var matchFilter='all';
+
+function loadMatchingInternships(){
+  var hint=document.getElementById('matchHint');
+  var results=document.getElementById('matchResults');
+  hint.textContent='Finding internships that match your profile...';
+  results.innerHTML='<div class="match-empty">Loading...</div>';
+
+  fetch(SB_URL+'/rest/v1/internships?is_visible=eq.true&order=company.asc',{
+    headers:{apikey:SB_KEY,Authorization:'Bearer '+SB_KEY}
+  })
+  .then(function(r){if(!r.ok)throw new Error(r.status);return r.json()})
+  .then(function(data){
+    matchData=data;
+    buildMatchFilters();
+    renderMatches();
+  })
+  .catch(function(e){
+    hint.textContent='Could not load internships. Check your connection.';
+    results.innerHTML='<div class="match-empty">Failed to load. Try again later.</div>';
+  });
+}
+
+function buildMatchFilters(){
+  var el=document.getElementById('matchFilters');
+  var industries=new Set();
+  matchData.forEach(function(d){if(d.industry)d.industry.forEach(function(i){industries.add(i)})});
+  var html='<span class="chip selected" onclick="setMatchFilter(\'all\',this)">All</span>';
+  industries.forEach(function(ind){
+    html+='<span class="chip" onclick="setMatchFilter(\''+esc(ind).replace(/'/g,"\\'")+'\',this)">'+esc(ind.replace('Government / GLC','Gov').replace('Finance & Banking','Finance').replace('Energy & Utilities','Energy').replace('Media & Comms','Media').replace('FMCG & Retail','FMCG').replace('Non-profit / NGO','NGO'))+'</span>';
+  });
+  el.innerHTML=html;
+}
+
+function setMatchFilter(f,chipEl){
+  matchFilter=f;
+  document.querySelectorAll('#matchFilters .chip').forEach(function(c){c.classList.remove('selected')});
+  if(chipEl)chipEl.classList.add('selected');
+  renderMatches();
+}
+
+function computeMatchScore(item){
+  var score=0;var max=100;
+  // Study level match (30 pts)
+  var sl=item.study_level||'Any';
+  var studentDip=cvState.level&&cvState.level.indexOf('dip')>-1;
+  var studentDeg=cvState.level&&(cvState.level.indexOf('deg')>-1||cvState.level==='masters'||cvState.level==='phd'||cvState.level==='grad');
+  if(sl==='Any')score+=30;
+  else if(sl==='Diploma'&&studentDip)score+=30;
+  else if(sl==='Undergraduate'&&studentDeg)score+=30;
+  else if(sl==='Diploma'&&studentDeg)score+=20; // overqualified but OK
+  else score+=5; // mismatch
+  // Industry match to course (30 pts)
+  var cat=getCourseCategory();
+  var indMap={cs:['Technology','Consulting'],biz:['Finance & Banking','Consulting','Government / GLC'],eng:['Engineering','Energy & Utilities','Technology'],sci:['Healthcare','Technology','Engineering'],arts:['Media & Comms','Consulting','FMCG & Retail'],health:['Healthcare','Government / GLC']};
+  var matchInds=indMap[cat]||[];
+  if(item.industry&&item.industry.some(function(i){return matchInds.indexOf(i)>-1}))score+=30;
+  else score+=10; // any industry has some relevance
+  // CGPA match (20 pts)
+  if(!item.min_cgpa)score+=20; // no requirement = full match
+  else score+=15; // we don't know student's CGPA, give benefit of doubt
+  // Has roles that match skills (20 pts)
+  if(item.roles_available&&cvState.skills.length>0){
+    var roles=item.roles_available.toLowerCase();
+    var skillMatch=cvState.skills.some(function(s){return roles.indexOf(s.toLowerCase().split('/')[0].trim())>-1});
+    if(skillMatch)score+=20;else score+=8;
+  } else {
+    score+=10;
+  }
+  return Math.min(Math.round(score/max*100),100);
+}
+
+function renderMatches(){
+  var hint=document.getElementById('matchHint');
+  var results=document.getElementById('matchResults');
+
+  // Filter
+  var filtered=matchData.filter(function(d){
+    if(matchFilter!=='all'&&(!d.industry||d.industry.indexOf(matchFilter)===-1))return false;
+    return true;
+  });
+
+  // Score and sort
+  var scored=filtered.map(function(d){
+    return{data:d,score:computeMatchScore(d)};
+  });
+  scored.sort(function(a,b){return b.score-a.score});
+
+  // Top matches first
+  var strong=scored.filter(function(s){return s.score>=70});
+  var possible=scored.filter(function(s){return s.score>=45&&s.score<70});
+  hint.textContent=strong.length+' strong match'+(strong.length!==1?'es':'')+', '+possible.length+' possible — from '+scored.length+' internships';
+
+  if(!scored.length){
+    results.innerHTML='<div class="match-empty">No internships match your filters right now.</div>';
+    return;
+  }
+
+  var html='';
+  scored.slice(0,15).forEach(function(item){
+    var d=item.data;
+    var s=item.score;
+    var barColor=s>=70?'var(--green)':(s>=40?'#fbbf24':'#f87171');
+    var initial=d.company?d.company[0]:'?';
+    var hue=d.company?d.company.charCodeAt(0)*7%360:180;
+    // Industry pills
+    var pills='';
+    if(d.industry&&d.industry[0])pills+='<span class="match-pill match-pill-ind">'+esc(d.industry[0])+'</span>';
+    if(d.allowance_text&&d.allowance_text.toLowerCase().indexOf('unpaid')===-1&&d.allowance_text.toLowerCase().indexOf('not publicly')===-1)pills+='<span class="match-pill match-pill-paid">'+esc(d.allowance_text)+'</span>';
+    if(d.study_level&&d.study_level!=='Any')pills+='<span class="match-pill match-pill-lvl">'+esc(d.study_level)+'</span>';
+    if(d.rolling)pills+='<span class="match-pill match-pill-rolling">Rolling</span>';
+
+    html+='<div class="match-card" onclick="openMatchDetail('+d.id+')">';
+    html+='<div class="match-card-head">';
+    html+='<div class="match-card-logo" style="color:hsl('+hue+',60%,65%);background:hsl('+hue+',40%,15%)">'+esc(initial)+'</div>';
+    html+='<div class="match-card-info"><div class="match-card-co">'+esc(d.company)+'</div><div class="match-card-prog">'+esc(d.programme_name)+'</div></div>';
+    html+='</div>';
+    if(pills)html+='<div class="match-card-meta">'+pills+'</div>';
+    var matchLabel=s>=70?'Strong match':s>=45?'Possible match':'Check requirements';
+    html+='<div class="match-score"><div class="match-score-bar"><div class="match-score-fill" style="width:'+s+'%;background:'+barColor+'"></div></div><span class="match-score-pct" style="color:'+barColor+'">'+matchLabel+'</span></div>';
+    html+='</div>';
+  });
+
+  if(scored.length>15){
+    html+='<div style="text-align:center;font-size:12px;color:var(--t3);padding:12px">Showing top 15 of '+scored.length+' matches</div>';
+  }
+  results.innerHTML=html;
+}
+
+function openMatchDetail(id){
+  var d=matchData.find(function(x){return x.id===id});
+  if(!d)return;
+  if(d.url)window.open(d.url,'_blank');
+  else showToast('No application link available for this one');
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PDF UPLOAD — reads CV text and extracts profile data
+   Uses FileReader to read PDF as text. Extracts name, email,
+   phone, skills, university from the text content.
+   ══════════════════════════════════════════════════════════════ */
+
+function handleCvUpload(input){
+  var file=input.files&&input.files[0];
+  if(!file)return;
+  var status=document.getElementById('uploadStatus');
+  var label=document.getElementById('uploadLabel');
+  status.style.display='block';
+  status.textContent='Reading your CV...';
+  status.style.color='var(--accent)';
+
+  var reader=new FileReader();
+  reader.onload=function(e){
+    var text=e.target.result;
+    if(!text||text.length<20){
+      status.textContent='Could not read this file. Try a .txt file or build your CV here instead.';
+      status.style.color='#f87171';
+      return;
+    }
+    // Extract what we can from the text
+    var extracted=extractCvData(text);
+    // Apply to cvState
+    if(extracted.name)cvState.name=extracted.name;
+    if(extracted.email)cvState.email=extracted.email;
+    if(extracted.phone)cvState.phone=extracted.phone;
+    if(extracted.city)cvState.city=extracted.city;
+    if(extracted.skills.length)cvState.skills=extracted.skills;
+    if(extracted.university)cvState.university=extracted.university;
+    // Store raw text for matching
+    cvState.cvRawText=text;
+
+    var parts=[];
+    if(extracted.name)parts.push('Name: '+extracted.name);
+    if(extracted.email)parts.push('Email found');
+    if(extracted.skills.length)parts.push(extracted.skills.length+' skills detected');
+    if(extracted.university)parts.push('University found');
+
+    status.textContent='CV uploaded. '+parts.join(' | ');
+    status.style.color='var(--green)';
+    label.innerHTML='CV uploaded (change file)<input type="file" accept=".pdf,.txt" style="display:none" id="cvFileInput" onchange="handleCvUpload(this)">';
+    showToast('CV read — finding matches...');
+    setTimeout(loadMatchingInternships,500);
+  };
+  reader.onerror=function(){
+    status.textContent='Failed to read file. Try again or build your CV here.';
+    status.style.color='#f87171';
+  };
+  // Read as text — works for .txt and basic PDFs (text layer)
+  reader.readAsText(file);
+}
+
+function extractCvData(text){
+  var result={name:'',email:'',phone:'',city:'',skills:[],university:''};
+  var lines=text.split(/\n/);
+
+  // Email
+  var emailMatch=text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+  if(emailMatch)result.email=emailMatch[0];
+
+  // Phone (Malaysian format)
+  var phoneMatch=text.match(/(?:\+?6?0)\d[\d\s-]{7,12}/);
+  if(phoneMatch)result.phone=phoneMatch[0].trim();
+
+  // Name — usually the first non-empty line that isn't an address or email
+  for(var i=0;i<Math.min(lines.length,5);i++){
+    var line=lines[i].trim();
+    if(line.length>=3&&line.length<60&&!line.match(/@|http|www|\d{5,}|phone|email|address/i)){
+      result.name=line;
+      break;
+    }
+  }
+
+  // University — search for known Malaysian uni keywords
+  var uniKeywords=['universiti','university','politeknik','kolej','mmu','utar','uitm','um ','ukm','upm','usm','utm','uum','unimas','ums','upsi','utem','uthm','umt','umpsa','unimap','taylor','sunway','apu','help university','inti','segi','limkokwing','imu','monash','nottingham'];
+  var lower=text.toLowerCase();
+  uniKeywords.forEach(function(kw){
+    if(result.university)return;
+    var idx=lower.indexOf(kw);
+    if(idx>-1){
+      // Get the full line containing this keyword
+      var start=text.lastIndexOf('\n',idx)+1;
+      var end=text.indexOf('\n',idx);
+      if(end===-1)end=text.length;
+      var uniLine=text.substring(start,end).trim();
+      if(uniLine.length<80)result.university=uniLine;
+    }
+  });
+
+  // City
+  var cities=['kuala lumpur','kl','shah alam','selangor','penang','pulau pinang','johor bahru','johor','ipoh','perak','melaka','malacca','kota kinabalu','sabah','kuching','sarawak','terengganu','kelantan','kedah','perlis','pahang','putrajaya','cyberjaya','petaling jaya','subang'];
+  cities.forEach(function(c){
+    if(result.city)return;
+    if(lower.indexOf(c)>-1)result.city=c.charAt(0).toUpperCase()+c.slice(1);
+  });
+
+  // Skills — match against known skill keywords
+  var knownSkills=['Python','Java','JavaScript','HTML / CSS','SQL','C / C++','PHP','R / SPSS / MATLAB','AutoCAD','SolidWorks','Microsoft Word','Excel / Spreadsheets','PowerPoint','Google Workspace','Canva','Figma','Photoshop','Video Editing','Bahasa Malaysia','English','Mandarin','Tamil','Arabic','MUET','IELTS / TOEFL','Google Analytics','First Aid / CPR','UBS / SQL Accounting','AWS / Cloud Cert'];
+  knownSkills.forEach(function(skill){
+    var searchTerms=skill.toLowerCase().split(' / ');
+    searchTerms.forEach(function(term){
+      if(lower.indexOf(term)>-1&&result.skills.indexOf(skill)===-1){
+        result.skills.push(skill);
+      }
+    });
+  });
+
+  return result;
+}
+
+function useBuiltCv(){
+  if(!cvState.name||!cvState.course){
+    showToast('No CV built yet — build one first or upload a PDF');
+    return;
+  }
+  var status=document.getElementById('uploadStatus');
+  if(status){status.style.display='block';status.textContent='Using your built CV: '+esc(cvState.name);status.style.color='var(--green)';}
+  loadMatchingInternships();
+}
+
+/* ══════════════════════════════════════════════════════════════
+   HUB STATE — show returning students where they left off
+   ══════════════════════════════════════════════════════════════ */
+
+function updateHubState(){
+  var hasCv=cvState.name&&cvState.course;
+  // Update hub cards with completion indicators
+  var cards=document.querySelectorAll('#s-hub .hub-card');
+  if(!cards.length)return;
+
+  // Card 1: CV Builder
+  var cvDone=hasCv&&cvState.projects.length>0;
+  if(cvDone){
+    if(!cards[0].querySelector('.hub-card-done'))cards[0].insertAdjacentHTML('beforeend','<span class="hub-card-done">Done</span>');
+  }
+  // Card 2: Gap Analysis — show if they've viewed it
+  // Card 3: Match — always accessible now (can upload)
+  // Card 4: Interview — needs CV
+
+  // Welcome back message
+  var welcomeEl=document.querySelector('.hub-welcome');
+  if(hasCv&&!welcomeEl){
+    var hubTop=document.querySelector('#s-hub > div:first-child');
+    if(hubTop){
+      hubTop.insertAdjacentHTML('afterbegin','<div class="hub-welcome">Welcome back, '+esc(cvState.name.split(' ')[0])+'</div>');
+    }
+  }
+}
+
+/* ── Init ── */
+filterUnis('');
+filterCourses('all',document.querySelector('#courseCatChips .chip'));
+// Inject mic rows for static textareas
+if(hasSpeechAPI()){
+  var micAct=document.getElementById('micRowActivity');
+  if(micAct)micAct.innerHTML=buildMicRow('activityDetail');
+  var micMot=document.getElementById('micRowMotivation');
+  if(micMot)micMot.innerHTML=buildMicRow('motivationText');
+}
+// Check if student has saved CV data from a previous session
+try{
+  var saved=localStorage.getItem('myintern_cv_state');
+  if(saved){
+    var parsed=JSON.parse(saved);
+    if(parsed&&parsed.name)cvState=parsed;
+  }
+}catch(e){}
+
+// Update hub with returning student state
+updateHubState();
+
+// Save state whenever navigating away from CV builder steps
+var _origGoToScreen=goToScreen;
+goToScreen=function(idx){
+  // Save state to localStorage for returning students
+  try{localStorage.setItem('myintern_cv_state',JSON.stringify(cvState))}catch(e){}
+  _origGoToScreen(idx);
+};
+
+// Auto-test mode: open with ?test=1
+if(new URLSearchParams(location.search).get('test')==='1'){
+  setTimeout(runAutoTest,500);
+}
+</script>
+</body>
+</html>

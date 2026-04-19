@@ -300,20 +300,6 @@ nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:
 @media(max-width:500px){.gbtn{width:100%;justify-content:center;padding:12px}.hint{display:none}.act-row{flex-direction:column}}
 .empty{text-align:center;padding:48px 16px;color:var(--t3);font-size:14px}
 
-/* ── ORIENTATION OVERLAY (glass modal on arrival) ──── */
-.orient-wrap{position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;animation:fadeIn .2s ease both}
-.orient{background:rgba(23,32,51,.97);border:1px solid rgba(56,189,248,.18);border-top:3px solid var(--accent);border-radius:18px;padding:30px 26px 24px;position:relative;max-width:440px;width:100%;box-shadow:0 32px 80px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.04)}
-.orient-close{position:absolute;top:14px;right:16px;font-size:20px;color:var(--t3);cursor:pointer;background:none;border:none;font-family:var(--sans);line-height:1;padding:2px 6px;transition:color .15s}
-.orient-close:hover{color:var(--t1)}
-.orient-head{font-size:17px;font-weight:700;color:var(--t1);margin-bottom:18px;padding-right:24px;line-height:1.35;letter-spacing:-.2px}
-.orient-head em{color:var(--accent);font-style:normal}
-.orient-pts{display:flex;flex-direction:column;gap:12px}
-.orient-pt{display:flex;align-items:flex-start;gap:12px;font-size:13px;color:var(--t2);line-height:1.55}
-.orient-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:5px}
-.orient-dot.a{background:var(--accent)}.orient-dot.b{background:var(--green)}.orient-dot.c{background:#fbbf24}
-.orient-pt strong{color:var(--t1);font-weight:600}
-.orient-dismiss{display:inline-block;margin-top:20px;padding-top:16px;border-top:1px solid var(--border);font-size:12.5px;color:var(--accent);cursor:pointer;font-weight:600;transition:opacity .15s;letter-spacing:.01em}
-.orient-dismiss:hover{opacity:.7}
 
 /* ── MODAL ─────────────────────────────── */
 .ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:1000;justify-content:center;align-items:flex-end}
@@ -561,18 +547,6 @@ document.addEventListener('click', function(e) {
   <div class="summary" id="sum"></div>
 </div>
 
-<div class="orient-wrap" id="orientWrap">
-  <div class="orient">
-    <button class="orient-close" id="orientClose" aria-label="Close orientation">&times;</button>
-    <div class="orient-head" data-i18n="orientHead">This isn't a directory. It's a shortlist <em>for you.</em></div>
-    <div class="orient-pts">
-      <div class="orient-pt"><div class="orient-dot a"></div><span data-i18n="orientPt1"><strong>CGPA &amp; study level shown upfront</strong> — know if you qualify before clicking.</span></div>
-      <div class="orient-pt"><div class="orient-dot b"></div><span data-i18n="orientPt2"><strong>Stipend on the card</strong> — no surprises after you apply.</span></div>
-      <div class="orient-pt"><div class="orient-dot c"></div><span data-i18n="orientPt3"><strong>One honest tip per listing</strong> — the thing the company website doesn't tell you.</span></div>
-    </div>
-    <span class="orient-dismiss" id="orientDismiss" data-i18n="orientDismiss">Got it &mdash; show me the internships &rarr;</span>
-  </div>
-</div>
 
 <div class="feed" id="feed">
   <div class="loading"><span class="dot"></span><span class="dot"></span><span class="dot"></span><br><br><span data-i18n="loadingText">Loading internships...</span></div>

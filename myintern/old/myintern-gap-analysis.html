@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyIntern — Gap Analysis</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background:#0a0f1e;
+  font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  display:flex; justify-content:center; padding:24px 16px 40px;
+  color:#fff; min-height:100vh;
+}
+.phone {
+  width:390px; height:820px;
+  background:#0d1426; border-radius:40px; overflow:hidden;
+  position:relative;
+  border:1.5px solid rgba(255,255,255,0.08);
+  box-shadow:0 40px 80px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+.status-bar {
+  height:44px; padding:12px 24px 0;
+  display:flex; justify-content:space-between; align-items:center;
+  font-size:12px; color:rgba(255,255,255,0.4);
+}
+
+/* screens */
+.screen {
+  position:absolute; inset:44px 0 0 0;
+  display:flex; flex-direction:column;
+  transform:translateX(100%);
+  transition:transform 0.32s cubic-bezier(0.4,0,0.2,1);
+  background:#0d1426;
+}
+.screen.active { transform:translateX(0); }
+.screen.gone { transform:translateX(-100%); }
+
+/* scrollable body */
+.sbody {
+  flex:1; overflow-y:auto; padding:20px; scrollbar-width:none;
+}
+.sbody::-webkit-scrollbar { display:none; }
+
+/* footer */
+.sfoot { padding:12px 20px 20px; flex-shrink:0; }
+
+/* nav bar */
+.topnav {
+  display:flex; align-items:center; gap:10px;
+  padding:16px 20px 0; flex-shrink:0;
+}
+.back-btn {
+  width:32px; height:32px; background:rgba(255,255,255,0.06);
+  border-radius:10px; border:1px solid rgba(255,255,255,0.08);
+  display:flex; align-items:center; justify-content:center;
+  font-size:14px; color:rgba(255,255,255,0.6); cursor:pointer;
+}
+.nav-title { font-size:13px; color:rgba(255,255,255,0.35); }
+
+/* shared */
+.section-lbl {
+  font-size:10px; font-weight:600; letter-spacing:0.8px;
+  text-transform:uppercase; color:rgba(255,255,255,0.25);
+  margin-bottom:10px; display:block;
+}
+.btn-main {
+  width:100%; padding:14px;
+  background:linear-gradient(135deg,#3b82f6,#6366f1);
+  border-radius:13px; font-size:15px; font-weight:600; color:#fff;
+  border:none; cursor:pointer;
+  box-shadow:0 6px 20px rgba(99,102,241,0.4);
+  transition:all 0.2s;
+}
+.btn-main:hover { transform:translateY(-1px); }
+.btn-ghost {
+  width:100%; padding:13px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:13px; font-size:14px; font-weight:500; color:rgba(255,255,255,0.6);
+  cursor:pointer; transition:all 0.2s; margin-top:8px;
+}
+.btn-ghost:hover { background:rgba(255,255,255,0.08); }
+
+/* ── SCREEN 1: GAP OVERVIEW ── */
+.job-card {
+  background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07);
+  border-radius:14px; padding:14px; margin-bottom:20px;
+  display:flex; align-items:center; gap:12px;
+}
+.job-logo {
+  width:42px; height:42px; background:rgba(255,255,255,0.06);
+  border-radius:11px; border:1px solid rgba(255,255,255,0.09);
+  display:flex; align-items:center; justify-content:center;
+  font-size:14px; font-weight:700; color:rgba(255,255,255,0.5);
+  flex-shrink:0; letter-spacing:-0.5px;
+}
+.job-info { flex:1; }
+.job-title { font-size:14px; font-weight:600; color:rgba(255,255,255,0.85); margin-bottom:3px; }
+.job-company { font-size:12px; color:rgba(255,255,255,0.35); }
+
+/* readiness dial */
+.dial-wrap {
+  display:flex; align-items:center; gap:16px;
+  background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07);
+  border-radius:16px; padding:18px; margin-bottom:20px;
+}
+.dial { position:relative; width:80px; height:80px; flex-shrink:0; }
+.dial svg { transform:rotate(-90deg); }
+.dial-num {
+  position:absolute; inset:0; display:flex; align-items:center;
+  justify-content:center; font-size:22px; font-weight:800; color:#63b3ed;
+}
+.dial-text { flex:1; }
+.dial-title { font-size:16px; font-weight:700; color:#fff; margin-bottom:5px; letter-spacing:-0.3px; }
+.dial-sub { font-size:12px; color:rgba(255,255,255,0.4); line-height:1.5; }
+
+/* gap categories */
+.gap-card {
+  background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07);
+  border-radius:14px; padding:14px; margin-bottom:10px;
+  cursor:pointer; transition:all 0.15s;
+}
+.gap-card:hover { background:rgba(255,255,255,0.05); }
+.gap-card-top { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
+.gap-icon {
+  width:36px; height:36px; border-radius:10px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:13px; font-weight:700; flex-shrink:0;
+}
+.gap-icon.green { background:rgba(104,211,145,0.12); color:#68d391; }
+.gap-icon.amber { background:rgba(251,191,36,0.12); color:#f6ad55; }
+.gap-icon.red { background:rgba(252,129,129,0.12); color:#fc8181; }
+.gap-label { font-size:14px; font-weight:600; color:rgba(255,255,255,0.85); flex:1; }
+.gap-score { font-size:18px; font-weight:800; }
+.gap-score.green { color:#68d391; }
+.gap-score.amber { color:#f6ad55; }
+.gap-score.red { color:#fc8181; }
+.gap-bar-track { height:4px; background:rgba(255,255,255,0.06); border-radius:10px; overflow:hidden; }
+.gap-bar-fill { height:100%; border-radius:10px; }
+.gap-bar-fill.green { background:#68d391; }
+.gap-bar-fill.amber { background:#f6ad55; }
+.gap-bar-fill.red { background:#fc8181; }
+.gap-tag {
+  display:inline-block; margin-top:8px;
+  padding:4px 10px; border-radius:20px;
+  font-size:11px; font-weight:500;
+}
+.gap-tag.fixable { background:rgba(59,130,246,0.12); color:#93c5fd; border:1px solid rgba(59,130,246,0.2); }
+.gap-tag.strong { background:rgba(104,211,145,0.1); color:#9ae6b4; border:1px solid rgba(104,211,145,0.2); }
+.gap-tag.critical { background:rgba(252,129,129,0.1); color:#fc8181; border:1px solid rgba(252,129,129,0.2); }
+
+/* ── SCREEN 2: DETAIL VIEW ── */
+.detail-header {
+  padding:0 20px 16px; flex-shrink:0;
+}
+.detail-title { font-size:20px; font-weight:700; letter-spacing:-0.3px; margin-bottom:4px; }
+.detail-sub { font-size:13px; color:rgba(255,255,255,0.4); }
+
+.req-item {
+  background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07);
+  border-radius:13px; padding:14px; margin-bottom:9px;
+}
+.req-top { display:flex; align-items:flex-start; gap:10px; margin-bottom:8px; }
+.req-status {
+  width:20px; height:20px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:10px; font-weight:700; flex-shrink:0; margin-top:1px;
+}
+.req-status.met { background:rgba(104,211,145,0.15); color:#68d391; border:1px solid rgba(104,211,145,0.3); }
+.req-status.partial { background:rgba(251,191,36,0.15); color:#f6ad55; border:1px solid rgba(251,191,36,0.3); }
+.req-status.missing { background:rgba(252,129,129,0.1); color:#fc8181; border:1px solid rgba(252,129,129,0.2); }
+.req-label { font-size:14px; font-weight:500; color:rgba(255,255,255,0.8); line-height:1.4; }
+.fix-box {
+  background:rgba(59,130,246,0.06); border:1px solid rgba(59,130,246,0.15);
+  border-radius:9px; padding:10px 12px; margin-top:4px;
+}
+.fix-lbl { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.6px; color:#63b3ed; margin-bottom:4px; }
+.fix-text { font-size:13px; color:rgba(255,255,255,0.55); line-height:1.5; }
+
+/* ── SCREEN 3: FIX CONFIRMATION ── */
+.fix-confirm-wrap { text-align:center; padding:20px 0; }
+.fix-confirm-ring { width:90px; height:90px; position:relative; margin:0 auto 16px; }
+.fix-confirm-ring svg { transform:rotate(-90deg); }
+.fix-confirm-num { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:800; }
+.before-after {
+  display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:20px 0;
+}
+.ba-box {
+  background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07);
+  border-radius:12px; padding:14px; text-align:center;
+}
+.ba-lbl { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.6px; color:rgba(255,255,255,0.25); margin-bottom:6px; }
+.ba-score { font-size:28px; font-weight:800; }
+.ba-score.before { color:rgba(255,255,255,0.3); }
+.ba-score.after { color:#68d391; }
+.improvement-list { text-align:left; }
+.imp-item {
+  display:flex; align-items:flex-start; gap:10px;
+  padding:11px 0; border-bottom:1px solid rgba(255,255,255,0.05);
+  font-size:13px; color:rgba(255,255,255,0.55); line-height:1.5;
+}
+.imp-item:last-child { border-bottom:none; }
+.imp-dot { width:6px; height:6px; border-radius:50%; background:#68d391; margin-top:5px; flex-shrink:0; }
+
+@keyframes pulse-ring {
+  0%,100% { opacity:0.5; }
+  50% { opacity:1; }
+}
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="status-bar"><span>9:41</span><span>&#9679;&#9679;&#9679;</span></div>
+
+  <!-- ── SCREEN 1: GAP OVERVIEW ── -->
+  <div class="screen active" id="s1">
+    <div class="topnav">
+      <div class="back-btn">&#8592;</div>
+      <span class="nav-title">Gap Analysis</span>
+    </div>
+    <div class="sbody">
+
+      <!-- Job being analysed -->
+      <div style="margin-bottom:16px;">
+        <span class="section-lbl">Analysing your CV for</span>
+        <div class="job-card">
+          <div class="job-logo">Mv</div>
+          <div class="job-info">
+            <div class="job-title">Software Engineering Intern</div>
+            <div class="job-company">Maverick Digital &middot; Kuala Lumpur</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Overall readiness dial -->
+      <div class="dial-wrap">
+        <div class="dial">
+          <svg width="80" height="80" viewBox="0 0 80 80">
+            <circle cx="40" cy="40" r="32" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="5"/>
+            <circle cx="40" cy="40" r="32" fill="none" stroke="#3b82f6" stroke-width="5"
+              stroke-dasharray="201" stroke-dashoffset="101"
+              stroke-linecap="round"/>
+          </svg>
+          <div class="dial-num">50</div>
+        </div>
+        <div class="dial-text">
+          <div class="dial-title">You're 50% ready</div>
+          <div class="dial-sub">3 gaps to fix before you apply. Two of them are quick wins.</div>
+        </div>
+      </div>
+
+      <!-- Gap breakdown -->
+      <span class="section-lbl">Breakdown by category</span>
+
+      <div class="gap-card" onclick="showDetail('skills')">
+        <div class="gap-card-top">
+          <div class="gap-icon red">SK</div>
+          <div class="gap-label">Technical Skills</div>
+          <div class="gap-score red">30</div>
+        </div>
+        <div class="gap-bar-track"><div class="gap-bar-fill red" style="width:30%"></div></div>
+        <span class="gap-tag critical">Critical gap</span>
+      </div>
+
+      <div class="gap-card" onclick="showDetail('experience')">
+        <div class="gap-card-top">
+          <div class="gap-icon amber">EX</div>
+          <div class="gap-label">Relevant Experience</div>
+          <div class="gap-score amber">55</div>
+        </div>
+        <div class="gap-bar-track"><div class="gap-bar-fill amber" style="width:55%"></div></div>
+        <span class="gap-tag fixable">Fixable — add your projects</span>
+      </div>
+
+      <div class="gap-card" onclick="showDetail('cv')">
+        <div class="gap-card-top">
+          <div class="gap-icon amber">CV</div>
+          <div class="gap-label">CV Presentation</div>
+          <div class="gap-score amber">60</div>
+        </div>
+        <div class="gap-bar-track"><div class="gap-bar-fill amber" style="width:60%"></div></div>
+        <span class="gap-tag fixable">Fixable — stronger bullet points</span>
+      </div>
+
+      <div class="gap-card" onclick="showDetail('fit')">
+        <div class="gap-card-top">
+          <div class="gap-icon green">FT</div>
+          <div class="gap-label">Role Fit</div>
+          <div class="gap-score green">80</div>
+        </div>
+        <div class="gap-bar-track"><div class="gap-bar-fill green" style="width:80%"></div></div>
+        <span class="gap-tag strong">Strong — your field matches</span>
+      </div>
+
+    </div>
+    <div class="sfoot">
+      <button class="btn-main" onclick="showFix()">Fix my gaps &#8594;</button>
+      <button class="btn-ghost" onclick="showDetail('skills')">See full breakdown</button>
+    </div>
+  </div>
+
+  <!-- ── SCREEN 2: DETAIL — SKILLS ── -->
+  <div class="screen" id="s-skills">
+    <div class="topnav">
+      <div class="back-btn" onclick="backTo('s1')">&#8592;</div>
+      <span class="nav-title">Technical Skills</span>
+    </div>
+    <div class="detail-header">
+      <div class="detail-title">Skills gap</div>
+      <div class="detail-sub">What this role needs vs what you listed</div>
+    </div>
+    <div class="sbody">
+
+      <span class="section-lbl">Job requirements</span>
+
+      <div class="req-item">
+        <div class="req-top">
+          <div class="req-status met">&#10003;</div>
+          <div class="req-label">Basic knowledge of JavaScript or Python</div>
+        </div>
+        <div style="padding-left:30px;font-size:12px;color:#68d391;">Python listed in your CV — good.</div>
+      </div>
+
+      <div class="req-item">
+        <div class="req-top">
+          <div class="req-status missing">&#10005;</div>
+          <div class="req-label">Comfortable with version control (Git)</div>
+        </div>
+        <div class="fix-box">
+          <div class="fix-lbl">How to fix this</div>
+          <div class="fix-text">Git is not mentioned in your CV. Even basic experience counts — add it if you've used it for any assignment. If not, note it as "currently learning".</div>
+        </div>
+      </div>
+
+      <div class="req-item">
+        <div class="req-top">
+          <div class="req-status partial">~</div>
+          <div class="req-label">Studying Computer Science, IT, or related field</div>
+        </div>
+        <div style="padding-left:30px;font-size:12px;color:#f6ad55;">Field matches — but your CV doesn't clearly state your programme name.</div>
+        <div class="fix-box" style="margin-top:8px;">
+          <div class="fix-lbl">How to fix this</div>
+          <div class="fix-text">Add your full programme name under education, e.g. "Bachelor of Computer Science (Hons), UTM".</div>
+        </div>
+      </div>
+
+      <div class="req-item">
+        <div class="req-top">
+          <div class="req-status missing">&#10005;</div>
+          <div class="req-label">Available for minimum 3 months</div>
+        </div>
+        <div class="fix-box">
+          <div class="fix-lbl">How to fix this</div>
+          <div class="fix-text">Add your availability dates to your CV objective — "Available for internship from July to October 2025 (4 months)".</div>
+        </div>
+      </div>
+
+    </div>
+    <div class="sfoot">
+      <button class="btn-main" onclick="showFix()">Fix these gaps &#8594;</button>
+    </div>
+  </div>
+
+  <!-- ── SCREEN 2b: DETAIL — EXPERIENCE ── -->
+  <div class="screen" id="s-experience">
+    <div class="topnav">
+      <div class="back-btn" onclick="backTo('s1')">&#8592;</div>
+      <span class="nav-title">Relevant Experience</span>
+    </div>
+    <div class="detail-header">
+      <div class="detail-title">Experience gap</div>
+      <div class="detail-sub">Your projects vs what the role expects</div>
+    </div>
+    <div class="sbody">
+      <span class="section-lbl">What they're looking for</span>
+
+      <div class="req-item">
+        <div class="req-top">
+          <div class="req-status met">&#10003;</div>
+          <div class="req-label">Any exposure to building software, even for class</div>
+        </div>
+        <div style="padding-left:30px;font-size:12px;color:#68d391;">Your attendance system project is relevant — it's a real software build.</div>
+      </div>
+
+      <div class="req-item">
+        <div class="req-top">
+          <div class="req-status partial">~</div>
+          <div class="req-label">Experience working in a team or collaborative setting</div>
+        </div>
+        <div class="fix-box">
+          <div class="fix-lbl">How to fix this</div>
+          <div class="fix-text">Your project was a group assignment — say so explicitly. "Built in a team of 4 using Agile sprints" reads much stronger than just naming the project.</div>
+        </div>
+      </div>
+
+      <div class="req-item">
+        <div class="req-top">
+          <div class="req-status missing">&#10005;</div>
+          <div class="req-label">Understanding of software development lifecycle</div>
+        </div>
+        <div class="fix-box">
+          <div class="fix-lbl">How to fix this</div>
+          <div class="fix-text">This sounds technical but it just means: do you know how software gets built? Mention any course covering SDLC, system design, or software engineering fundamentals.</div>
+        </div>
+      </div>
+
+    </div>
+    <div class="sfoot">
+      <button class="btn-main" onclick="showFix()">Fix these gaps &#8594;</button>
+    </div>
+  </div>
+
+  <!-- ── SCREEN 2c: DETAIL — CV ── -->
+  <div class="screen" id="s-cv">
+    <div class="topnav">
+      <div class="back-btn" onclick="backTo('s1')">&#8592;</div>
+      <span class="nav-title">CV Presentation</span>
+    </div>
+    <div class="detail-header">
+      <div class="detail-title">CV is readable — needs impact</div>
+      <div class="detail-sub">3 things to rewrite before applying</div>
+    </div>
+    <div class="sbody">
+      <span class="section-lbl">Specific fixes</span>
+
+      <div class="req-item">
+        <div class="req-top">
+          <div class="req-status partial">~</div>
+          <div class="req-label">Project descriptions are too vague</div>
+        </div>
+        <div class="fix-box">
+          <div class="fix-lbl">Before</div>
+          <div class="fix-text" style="color:rgba(255,255,255,0.35);margin-bottom:8px;">"Developed an attendance system for final year project."</div>
+          <div class="fix-lbl">After</div>
+          <div class="fix-text">"Built a web-based student attendance system using PHP and MySQL, reducing manual recording time by 80% across 3 classes."</div>
+        </div>
+      </div>
+
+      <div class="req-item">
+        <div class="req-top">
+          <div class="req-status missing">&#10005;</div>
+          <div class="req-label">No objective or profile statement</div>
+        </div>
+        <div class="fix-box">
+          <div class="fix-lbl">How to fix this</div>
+          <div class="fix-text">Add 2 sentences at the top of your CV — what you're studying, what you're looking for, and what you bring. Recruiters read this first.</div>
+        </div>
+      </div>
+
+      <div class="req-item">
+        <div class="req-top">
+          <div class="req-status partial">~</div>
+          <div class="req-label">Skills listed without context</div>
+        </div>
+        <div class="fix-box">
+          <div class="fix-lbl">How to fix this</div>
+          <div class="fix-text">Instead of "Python", write "Python (used for data processing assignment, Semester 4)". Context makes basic skills sound real.</div>
+        </div>
+      </div>
+
+    </div>
+    <div class="sfoot">
+      <button class="btn-main" onclick="showFix()">Rewrite with AI &#8594;</button>
+    </div>
+  </div>
+
+  <!-- ── SCREEN 2d: DETAIL — FIT ── -->
+  <div class="screen" id="s-fit">
+    <div class="topnav">
+      <div class="back-btn" onclick="backTo('s1')">&#8592;</div>
+      <span class="nav-title">Role Fit</span>
+    </div>
+    <div class="detail-header">
+      <div class="detail-title">Strong match — keep going</div>
+      <div class="detail-sub">Your background aligns well with this role</div>
+    </div>
+    <div class="sbody">
+      <span class="section-lbl">What's working in your favour</span>
+
+      <div class="req-item">
+        <div class="req-top">
+          <div class="req-status met">&#10003;</div>
+          <div class="req-label">Field of study matches the role</div>
+        </div>
+        <div style="padding-left:30px;font-size:12px;color:#68d391;">Computer Science / IT is exactly what they're hiring for.</div>
+      </div>
+
+      <div class="req-item">
+        <div class="req-top">
+          <div class="req-status met">&#10003;</div>
+          <div class="req-label">Location — KL-based role, you're local</div>
+        </div>
+        <div style="padding-left:30px;font-size:12px;color:#68d391;">No relocation needed. Recruiters factor this in.</div>
+      </div>
+
+      <div class="req-item">
+        <div class="req-top">
+          <div class="req-status met">&#10003;</div>
+          <div class="req-label">Availability window matches their timeline</div>
+        </div>
+        <div style="padding-left:30px;font-size:12px;color:#68d391;">You're available for 4 months — they want minimum 3.</div>
+      </div>
+
+    </div>
+    <div class="sfoot">
+      <button class="btn-main" onclick="showFix()">Fix the remaining gaps &#8594;</button>
+    </div>
+  </div>
+
+  <!-- ── SCREEN 3: FIX SUMMARY ── -->
+  <div class="screen" id="s-fix">
+    <div class="topnav">
+      <div class="back-btn" onclick="backTo('s1')">&#8592;</div>
+      <span class="nav-title">Your fix plan</span>
+    </div>
+    <div class="sbody">
+
+      <div class="fix-confirm-wrap">
+        <div class="fix-confirm-ring">
+          <svg width="90" height="90" viewBox="0 0 90 90">
+            <circle cx="45" cy="45" r="37" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="5"/>
+            <!-- before: 50% -->
+            <circle cx="45" cy="45" r="37" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="5"
+              stroke-dasharray="233" stroke-dashoffset="117" stroke-linecap="round"/>
+            <!-- after: 78% -->
+            <circle cx="45" cy="45" r="37" fill="none" stroke="#68d391" stroke-width="5"
+              stroke-dasharray="233" stroke-dashoffset="51" stroke-linecap="round"/>
+          </svg>
+          <div class="fix-confirm-num" style="color:#68d391;">78</div>
+        </div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.35);margin-bottom:4px;">Projected readiness after fixes</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.2);">You're currently at 50</div>
+      </div>
+
+      <div class="before-after">
+        <div class="ba-box">
+          <div class="ba-lbl">Before</div>
+          <div class="ba-score before">50</div>
+        </div>
+        <div class="ba-box">
+          <div class="ba-lbl">After fixes</div>
+          <div class="ba-score after">78</div>
+        </div>
+      </div>
+
+      <span class="section-lbl">3 things to fix — in order</span>
+
+      <div class="improvement-list">
+        <div class="imp-item">
+          <div class="imp-dot" style="background:#f6ad55;"></div>
+          Add Git to your skills — even "currently learning" counts
+        </div>
+        <div class="imp-item">
+          <div class="imp-dot" style="background:#f6ad55;"></div>
+          Rewrite your project bullet points with impact and numbers
+        </div>
+        <div class="imp-item">
+          <div class="imp-dot" style="background:#fc8181;"></div>
+          Add a 2-sentence profile statement to the top of your CV
+        </div>
+      </div>
+
+    </div>
+    <div class="sfoot">
+      <button class="btn-main" onclick="showInterviewPrompt()">Done — practice my interview &#8594;</button>
+      <button class="btn-ghost" onclick="backTo('s1')">Go back and review gaps</button>
+    </div>
+  </div>
+
+  <!-- ── SCREEN 4: INTERVIEW BRIDGE ── -->
+  <div class="screen" id="s-interview">
+    <div class="topnav">
+      <div class="back-btn" onclick="backTo('s-fix')">&#8592;</div>
+      <span class="nav-title">Next step</span>
+    </div>
+    <div class="sbody" style="display:flex;flex-direction:column;justify-content:center;min-height:500px;">
+      <div style="margin-bottom:24px;">
+        <div style="font-size:11px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-bottom:12px;">Step 3 of 4</div>
+        <div style="font-size:24px;font-weight:700;letter-spacing:-0.5px;margin-bottom:10px;line-height:1.25;">Now let's get you<br>interview-ready</div>
+        <div style="font-size:14px;color:rgba(255,255,255,0.45);line-height:1.65;">
+          We'll generate interview questions based on your CV and this specific role — then you practice answering them.
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:28px;">
+        <div style="display:flex;align-items:center;gap:12px;padding:13px 15px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:13px;">
+          <div style="width:36px;height:36px;background:rgba(59,130,246,0.12);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#63b3ed;flex-shrink:0;">Q</div>
+          <div>
+            <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,0.8);margin-bottom:2px;">7 personalised questions</div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.35);">Based on your CV + this role</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:13px 15px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:13px;">
+          <div style="width:36px;height:36px;background:rgba(99,102,241,0.12);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#a5b4fc;flex-shrink:0;">AI</div>
+          <div>
+            <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,0.8);margin-bottom:2px;">Answer feedback on every reply</div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.35);">Clarity, structure, and confidence score</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:13px 15px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:13px;">
+          <div style="width:36px;height:36px;background:rgba(104,211,145,0.12);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#68d391;flex-shrink:0;">+</div>
+          <div>
+            <div style="font-size:13px;font-weight:600;color:rgba(255,255,255,0.8);margin-bottom:2px;">Follow-up questions to push you further</div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.35);">Simulates a real interview</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="sfoot">
+      <button class="btn-main" onclick="alert('Next: Interview Practice screen')">Start interview practice &#8594;</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+var history = [];
+
+function showDetail(type) {
+  goTo('s1', 's-' + type);
+}
+
+function showFix() {
+  var from = history.length > 0 ? history[history.length-1] : 's1';
+  goTo(from, 's-fix');
+}
+
+function showInterviewPrompt() {
+  goTo('s-fix', 's-interview');
+}
+
+function backTo(id) {
+  var cur = history.length > 0 ? history[history.length-1] : null;
+  if (cur) {
+    var el = document.getElementById(cur);
+    if (el) { el.classList.remove('active'); el.classList.add('gone'); setTimeout(function(e){ e.classList.remove('gone'); }, 350, el); }
+    history.pop();
+  }
+  var target = document.getElementById(id);
+  if (target) target.classList.add('active');
+}
+
+function goTo(fromId, toId) {
+  var from = document.getElementById(fromId);
+  var to = document.getElementById(toId);
+  if (!from || !to) return;
+  from.classList.remove('active');
+  from.classList.add('gone');
+  setTimeout(function(f){ f.classList.remove('gone'); }, 350, from);
+  to.classList.add('active');
+  history.push(fromId);
+}
+</script>
+</body>
+</html>
