@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en-MY">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyIntern — Gap Analysis</title>
+<link rel="stylesheet" href="shared/myintern-common.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZETBRDDMTV"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-ZETBRDDMTV');</script>
+</head>
+<body>
+<div class="phone has-bottom-nav">
+  <div class="status-bar">9:41</div>
+  <div class="screen-container">
+    <div class="screen active">
+      <div class="step-label">GAP ANALYSIS</div>
+      <div class="q-title">Here's what employers see.</div>
+      <div class="q-hint" id="gapHint"></div>
+      <div id="gapContent"></div>
+      <div id="gapNextStep"></div>
+      <div class="btn-row" style="margin-top:12px">
+        <button class="btn-secondary" onclick="goToPage('index.html')">Back to hub</button>
+      </div>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+  <div class="bottom-nav" id="bottomNav"></div>
+  <div class="xp-popup" id="xpPopup"></div>
+</div>
+
+<script src="shared/myintern-data.js"></script>
+<script src="shared/myintern-shared.js"></script>
+<script>
+/* ── Reconstruct currentProjItems from saved cvState ── */
+var currentProjItems=[];
+
+function rebuildProjItems(){
+  var cat=getCourseCategory()||'general';
+  var specific=PROJ_DB[cat]||PROJ_DB.general;
+  var general=PROJ_DB.general;
+  currentProjItems=[];
+  specific.items.forEach(function(p){currentProjItems.push(p)});
+  general.items.forEach(function(p){
+    if(!currentProjItems.some(function(x){return x.name===p.name}))currentProjItems.push(p);
+  });
+}
+
+/* ── Scoring ── */
+function calculateScore(){
+  var s=0;
+  // Personal details (10 pts) — basic but necessary
+  if(cvState.name)s+=3;
+  if(cvState.email)s+=3;
+  if(cvState.phone)s+=2;
+  if(cvState.city)s+=2;
+  // Education (15 pts) — uni + course + level
+  if(cvState.university)s+=5;
+  if(cvState.course)s+=7;
+  if(cvState.level)s+=3;
+  // Projects (30 pts) — this is the big one for interns
+  // 1 project = 8, 2 = 16, 3+ = 22. Descriptions add up to 8 more.
+  var projCount=cvState.projects.length;
+  if(projCount>=3)s+=22; else if(projCount===2)s+=16; else if(projCount===1)s+=8;
+  // Bonus for descriptions (employers actually read these)
+  var descCount=0;
+  for(var k in cvState.projectDescs){if(cvState.projectDescs[k]&&cvState.projectDescs[k].length>20)descCount++;}
+  s+=Math.min(descCount*3,8);
+  // Activities (15 pts) — shows you're not just studying
+  var actCount=cvState.activities.length;
+  if(actCount>=4)s+=15; else if(actCount>=2)s+=10; else if(actCount===1)s+=5;
+  // Skills (15 pts) — technical + soft
+  var skillCount=cvState.skills.length;
+  if(skillCount>=8)s+=15; else if(skillCount>=5)s+=11; else if(skillCount>=3)s+=7; else if(skillCount>=1)s+=3;
+  // Motivation / personal statement (15 pts)
+  if(cvState.motivation)s+=7;
+  if(cvState.motivationText&&cvState.motivationText.length>30)s+=8; else if(cvState.motivationText&&cvState.motivationText.length>0)s+=4;
+  return Math.min(s,100);
+}
+
+function getScoreLabel(s){
+  if(s>=80)return'Industry-ready — strong for an intern CV';
+  if(s>=65)return'Good foundation — add more project detail to stand out';
+  if(s>=50)return'Decent start — projects and activities will push you higher';
+  if(s>=35)return'Needs work — focus on adding projects with descriptions';
+  return'Early stage — keep building, every section helps';
+}
+
+/* ── Gap Analysis ── */
+function calculateGapAnalysis(){
+  var sections={};
+  // Personal (10 max)
+  var p={max:10,earned:0,items:[]};
+  if(cvState.name)p.earned+=3;else p.items.push({field:'Name',pts:3,fix:'Add your full name'});
+  if(cvState.email)p.earned+=3;else p.items.push({field:'Email',pts:3,fix:'Add your email — employers need to reach you'});
+  if(cvState.phone)p.earned+=2;else p.items.push({field:'Phone',pts:2,fix:'Add a phone number'});
+  if(cvState.city)p.earned+=2;else p.items.push({field:'City',pts:2,fix:'Add your city — employers filter by location'});
+  sections.personal=p;
+  // Education (15 max)
+  var e={max:15,earned:0,items:[]};
+  if(cvState.university)e.earned+=5;else e.items.push({field:'University',pts:5,fix:'Add where you study — this is the first thing employers check'});
+  if(cvState.course)e.earned+=7;else e.items.push({field:'Course',pts:7,fix:'Your course tells employers what you know — this is worth 7 points'});
+  if(cvState.level)e.earned+=3;else e.items.push({field:'Study level',pts:3,fix:'Add your year — it sets expectations correctly'});
+  sections.education=e;
+  // Projects (30 max)
+  var pr={max:30,earned:0,items:[]};
+  var pc=cvState.projects.length;
+  if(pc>=3)pr.earned+=22;else if(pc===2)pr.earned+=16;else if(pc===1)pr.earned+=8;
+  if(pc===0)pr.items.push({field:'No projects',pts:8,fix:'Add at least 1 project — this is what employers read first on a student CV'});
+  else if(pc===1)pr.items.push({field:'Only 1 project',pts:8,fix:'Add a second project to show range — 2 projects scores double'});
+  else if(pc===2)pr.items.push({field:'2 projects',pts:6,fix:'A third project gets you to 22 points — add your FYP or a group assignment'});
+  var dc=0;for(var k in cvState.projectDescs){if(cvState.projectDescs[k]&&cvState.projectDescs[k].length>20)dc++;}
+  var dp=Math.min(dc*3,8);pr.earned+=dp;
+  if(dc<pc&&pc>0){var mp=Math.min((pc-dc)*3,8-dp);if(mp>0)pr.items.push({field:'Missing descriptions',pts:mp,fix:'Add descriptions to your projects — employers read these, not just titles'});}
+  if(dc===0&&pc>0)pr.items.push({field:'No descriptions',pts:8,fix:'Describe what you did in 1-2 lines. Use this format: Bold action + specific detail + outcome'});
+  sections.projects=pr;
+  // Activities (15 max)
+  var a={max:15,earned:0,items:[]};
+  var ac=cvState.activities.length;
+  if(ac>=4)a.earned+=15;else if(ac>=2)a.earned+=10;else if(ac===1)a.earned+=5;
+  if(ac===0)a.items.push({field:'No activities',pts:5,fix:'Add at least 1 — clubs, part-time, volunteering all count'});
+  else if(ac===1)a.items.push({field:'Only 1 activity',pts:5,fix:'Add 1 more — employers want to see you do things outside class'});
+  else if(ac<4)a.items.push({field:ac+' activities',pts:5,fix:'Add '+(4-ac)+' more to reach the top tier (4+)'});
+  sections.activities=a;
+  // Skills (15 max)
+  var s={max:15,earned:0,items:[]};
+  var sc=cvState.skills.length;
+  if(sc>=8)s.earned+=15;else if(sc>=5)s.earned+=11;else if(sc>=3)s.earned+=7;else if(sc>=1)s.earned+=3;
+  if(sc===0)s.items.push({field:'No skills',pts:3,fix:'Even Excel and Bahasa Malaysia count — list what you can do'});
+  else if(sc<3)s.items.push({field:sc+' skill(s)',pts:4,fix:'Add '+(3-sc)+' more — include tools, languages, certifications'});
+  else if(sc<5)s.items.push({field:sc+' skills',pts:4,fix:'Add '+(5-sc)+' more to stand out'});
+  else if(sc<8)s.items.push({field:sc+' skills',pts:4,fix:'Add '+(8-sc)+' more for a perfect Skills score'});
+  // Missing expected skills
+  var cat=getCourseCategory();
+  var ctx=cat?INDUSTRY_CONTEXT[cat]:null;
+  if(ctx&&ctx.skillsExpected){
+    var missing=ctx.skillsExpected.filter(function(sk){return cvState.skills.indexOf(sk)===-1});
+    if(missing.length>0)s.items.push({field:'Missing expected',pts:0,fix:ctx.label+' employers expect '+missing.slice(0,3).join(', ')+' — consider adding these'});
+  }
+  sections.skills=s;
+  // Motivation (15 max)
+  var m={max:15,earned:0,items:[]};
+  if(cvState.motivation)m.earned+=7;else m.items.push({field:'No motivation',pts:7,fix:'Pick a reason — this becomes your personal statement'});
+  if(cvState.motivationText&&cvState.motivationText.length>30)m.earned+=8;
+  else if(cvState.motivationText&&cvState.motivationText.length>0)m.earned+=4;
+  if(!cvState.motivationText||cvState.motivationText.length<=30){
+    var mp2=cvState.motivationText&&cvState.motivationText.length>0?4:8;
+    m.items.push({field:'Weak statement',pts:mp2,fix:'Write 2-3 sentences about why you want this — recruiters actually read personal statements'});
+  }
+  sections.motivation=m;
+  return sections;
+}
+
+/* ── Bullet Quality Check ── */
+function checkBulletQuality(){
+  var results=[];
+  for(var k in cvState.projectDescs){
+    var desc=cvState.projectDescs[k];
+    if(!desc||desc.length<10)continue;
+    var name=currentProjItems[k]?currentProjItems[k].name:'Project';
+    var lower=desc.toLowerCase();
+    var words=lower.split(/\s+/);
+    var hasVerb=ACTION_VERBS.some(function(v){return words[0]===v||words.slice(0,3).some(function(w){return w===v})});
+    var hasTool=TOOLS_KEYWORDS.some(function(t){return lower.indexOf(t)>-1});
+    var hasOutcome=/\d/.test(desc)||/students|users|clients|members|participants|viewers|followers|respondents|employees|entities/i.test(desc)||/completed|achieved|won|placed|awarded|improved|reduced|increased/i.test(lower);
+    results.push({name:name,desc:desc,hasVerb:hasVerb,hasTool:hasTool,hasOutcome:hasOutcome,score:(hasVerb?1:0)+(hasTool?1:0)+(hasOutcome?1:0)});
+  }
+  return results;
+}
+
+/* ── Speak Test ── */
+var speakCurrentIdx=0;
+var speakPrompts=[];
+
+function getSpeakLangKey(){return voiceLang==='ms-MY'?'bm':'en'}
+
+function initSpeakTest(){
+  var cat=getCourseCategory()||'general';
+  var data=SPEAK_PROMPTS[cat]||SPEAK_PROMPTS.general;
+  speakPrompts=data[getSpeakLangKey()]||data.en;
+  speakCurrentIdx=0;
+}
+
+function renderSpeakTest(){
+  if(!hasSpeechAPI())return'';
+  initSpeakTest();
+  var prompt=speakPrompts[speakCurrentIdx];
+  var isBM=voiceLang==='ms-MY';
+  var html='<div class="gap-speak">';
+  html+='<div class="gap-speak-title">'+(isBM?'Ujian Bercakap':'Speak Test')+'</div>';
+  html+='<div class="gap-speak-sub">'+(isBM?'Latih jawapan anda dengan suara — penemuduga dengar anda, bukan baca. Ketuk mic dan jawab soalan ini.':'Practice saying your answers out loud — interviewers hear you, not read you. Tap the mic and answer this question.')+'</div>';
+  html+='<div class="gap-speak-prompt" id="speakPrompt">'+esc(prompt)+'</div>';
+  html+='<div class="gap-speak-result empty" id="speakResult">'+(isBM?'Jawapan anda akan muncul di sini...':'Your answer will appear here...')+'</div>';
+  html+=buildMicRow('speakResult');
+  html+='<div style="display:flex;gap:8px;margin-top:10px">';
+  html+='<button class="btn-secondary" style="flex:1;padding:10px;font-size:12px" onclick="evaluateSpeak()">'+(isBM?'Semak jawapan':'Check my answer')+'</button>';
+  html+='<button class="btn-secondary" style="flex:1;padding:10px;font-size:12px" onclick="nextSpeakPrompt()">'+(isBM?'Soalan seterusnya':'Next question')+'</button>';
+  html+='</div>';
+  html+='<div class="gap-speak-feedback" id="speakFeedback"></div>';
+  html+='</div>';
+  return html;
+}
+
+function nextSpeakPrompt(){
+  // Refresh prompts in case language changed
+  var cat=getCourseCategory()||'general';
+  var data=SPEAK_PROMPTS[cat]||SPEAK_PROMPTS.general;
+  speakPrompts=data[getSpeakLangKey()]||data.en;
+  speakCurrentIdx=(speakCurrentIdx+1)%speakPrompts.length;
+  var prompt=speakPrompts[speakCurrentIdx];
+  document.getElementById('speakPrompt').textContent=prompt;
+  var result=document.getElementById('speakResult');
+  var isBM=voiceLang==='ms-MY';
+  result.textContent=isBM?'Jawapan anda akan muncul di sini...':'Your answer will appear here...';
+  result.classList.add('empty');
+  var fb=document.getElementById('speakFeedback');
+  if(fb){fb.classList.remove('show');fb.textContent='';}
+}
+
+function evaluateSpeak(){
+  var result=document.getElementById('speakResult');
+  var text=result.textContent||'';
+  var isBM=voiceLang==='ms-MY';
+  var emptyMsg=isBM?'Jawapan anda akan muncul di sini...':'Your answer will appear here...';
+  if(!text||text===emptyMsg){showToast(isBM?'Cakap jawapan anda dulu':'Speak your answer first');return;}
+  var words=text.trim().split(/\s+/).length;
+  var fb=document.getElementById('speakFeedback');
+  var msg='';
+  if(isBM){
+    if(words<10)msg='Terlalu pendek ('+words+' perkataan). Jawapan temuduga yang baik 30-60 saat — lebih kurang 50-100 perkataan. Cuba lagi dengan lebih terperinci.';
+    else if(words<30)msg='Semakin baik ('+words+' perkataan). Ada asas tapi kedengaran macam bullet point. Tambah contoh spesifik — apa yang anda buat dan apa hasilnya?';
+    else if(words<60)msg='Bagus ('+words+' perkataan). Anda dah cover poin utama. Semak: ada sebut alat atau kaedah spesifik? Ada nyatakan hasil atau kesan? Detail-detail ini yang buat jawapan melekat.';
+    else msg='Kuat ('+words+' perkataan). Panjang yang sesuai untuk temuduga. Dengar balik — bunyinya natural? Elak perkataan pengisi. Jawapan macam ini yang bawa anda ke pusingan seterusnya.';
+    var lower=text.toLowerCase();
+    if(!/\d/.test(text)&&words>=20)msg+=' Tip: tambah nombor atau metrik ("200 pelajar", "3 bulan", "bajet RM8,000") — ia jadikan jawapan anda lebih konkrit.';
+    if(!TOOLS_KEYWORDS.some(function(t){return lower.indexOf(t)>-1})&&words>=20)msg+=' Tip: sebut alat atau kaedah spesifik yang anda guna — penemuduga nak dengar spesifik teknikal.';
+  } else {
+    if(words<10)msg='Too short ('+words+' words). A good interview answer is 30-60 seconds — roughly 50-100 words. Try again with more detail.';
+    else if(words<30)msg='Getting there ('+words+' words). You have the basics but it sounds like bullet points. Add a specific example — what exactly did you do, and what happened?';
+    else if(words<60)msg='Decent ('+words+' words). You are covering the main points. Now check: did you mention a specific tool or method? Did you include a result or outcome? Those details make answers stick.';
+    else msg='Strong ('+words+' words). Good length for an interview answer. Listen back — did it sound natural? Did you avoid filler words? This is the kind of answer that gets you to the next round.';
+    var lower=text.toLowerCase();
+    if(!/\d/.test(text)&&words>=20)msg+=' Tip: add a number or metric ("200 students", "3 months", "RM8,000 budget") — it makes your answer concrete.';
+    if(!TOOLS_KEYWORDS.some(function(t){return lower.indexOf(t)>-1})&&words>=20)msg+=' Tip: mention a specific tool or method you used — interviewers want to hear technical specifics.';
+  }
+  fb.textContent=msg;
+  fb.classList.add('show');
+}
+
+/* ── Show Gap Analysis (main render) ── */
+function showGapAnalysis(){
+  var sections=calculateGapAnalysis();
+  var cat=getCourseCategory();
+  var ctx=cat?INDUSTRY_CONTEXT[cat]:null;
+  var total=calculateScore();
+  var el=document.getElementById('gapContent');
+  // Update hint
+  var hint=document.getElementById('gapHint');
+  if(ctx&&cvState.course)hint.textContent='Based on your '+cvState.course+', here is how your CV compares to what '+ctx.label+' employers expect.';
+  else hint.textContent='Based on your CV, here is what is strong and what is missing.';
+
+  var html='';
+
+  // Format score card (ANRA benchmark)
+  var fmtChecks=[];
+  var hasStatement=cvState.motivationText&&cvState.motivationText.length>30;
+  fmtChecks.push({pass:hasStatement,label:'Personal statement (2-3 custom sentences)'});
+  var hasGroupedSkills=cvState.skills.length>=3;
+  fmtChecks.push({pass:hasGroupedSkills,label:'Skills listed by category (3+ skills)'});
+  var bullets=checkBulletQuality();
+  var hasBoldBullets=bullets.length>0&&bullets.some(function(b){return b.score>=2});
+  fmtChecks.push({pass:hasBoldBullets,label:'Project bullets with action verb + tool + outcome'});
+  var hasFullEdu=cvState.university&&cvState.course&&cvState.level;
+  fmtChecks.push({pass:hasFullEdu,label:'Education: institution + qualification + year'});
+  var hasImpactActs=cvState.activities.length>=2||cvState.activityDetail;
+  fmtChecks.push({pass:hasImpactActs,label:'Activities with leadership or impact detail'});
+  var fmtPass=fmtChecks.filter(function(c){return c.pass}).length;
+
+  html+='<div class="gap-format">';
+  html+='<div class="gap-format-head"><span class="gap-format-title">CV Format Check</span><span class="gap-format-score">'+fmtPass+' / 5</span></div>';
+  fmtChecks.forEach(function(c){
+    html+='<div class="gap-format-item"><span class="gap-format-check '+(c.pass?'pass':'fail')+'">'+(c.pass?'Y':'X')+'</span>'+esc(c.label)+'</div>';
+  });
+  html+='</div>';
+
+  // Section cards
+  var order=[
+    {key:'projects',label:'Projects',icon:''},
+    {key:'activities',label:'Activities & Leadership',icon:''},
+    {key:'skills',label:'Skills & Competencies',icon:''},
+    {key:'motivation',label:'Personal Statement',icon:''},
+    {key:'education',label:'Education',icon:''},
+    {key:'personal',label:'Personal Details',icon:''}
+  ];
+  var allGaps=[];
+  order.forEach(function(s){
+    var sec=sections[s.key];
+    var pct=Math.round((sec.earned/sec.max)*100);
+    var cls=pct>=80?'gap-green':(pct>=40?'gap-amber':'gap-red');
+    html+='<div class="gap-card '+cls+'">';
+    html+='<div class="gap-card-head"><span class="gap-section-name">'+esc(s.label)+'</span><span class="gap-section-score">'+sec.earned+' / '+sec.max+'</span></div>';
+    html+='<div class="gap-bar"><div class="gap-bar-fill" style="width:'+pct+'%"></div></div>';
+    if(sec.items.length===0){html+='<div class="gap-complete">Complete</div>';}
+    else{
+      html+='<div class="gap-advice">'+esc(sec.items[0].fix);
+      if(sec.items[0].pts>0)html+=' <span style="color:var(--accent);font-weight:600">(+'+sec.items[0].pts+' pts)</span>';
+      html+='</div>';
+      sec.items.forEach(function(item){allGaps.push({section:s.label,sectionKey:s.key,field:item.field,pts:item.pts,fix:item.fix})});
+    }
+    html+='</div>';
+  });
+
+  // Bullet quality check
+  if(bullets.length>0){
+    html+='<div class="gap-bullet">';
+    html+='<div class="gap-bullet-title">Bullet Quality Check</div>';
+    bullets.forEach(function(b){
+      html+='<div class="gap-bullet-item"><strong>'+esc(b.name)+'</strong><br>';
+      html+=(b.hasVerb?'<span class="bullet-pass">Action verb</span>':'<span class="bullet-fail">Missing action verb — start with Built, Designed, Led, Analysed</span>')+' | ';
+      html+=(b.hasTool?'<span class="bullet-pass">Tool/tech mentioned</span>':'<span class="bullet-fail">No tool — add PHP, Python, Excel, AutoCAD etc.</span>')+' | ';
+      html+=(b.hasOutcome?'<span class="bullet-pass">Has outcome/metric</span>':'<span class="bullet-fail">No outcome — add a number, result, or impact</span>');
+      html+='</div>';
+    });
+    if(ctx)html+='<div style="font-size:11px;color:var(--t3);margin-top:10px;padding-top:8px;border-top:1px solid var(--border)">Strong format example:<br><strong style="color:var(--t1)">'+esc(ctx.bulletExample)+'</strong></div>';
+    html+='</div>';
+  }
+
+  // Priority recommendations
+  if(allGaps.length>0){
+    allGaps.sort(function(a,b){return b.pts-a.pts});
+    var top3=allGaps.slice(0,3);
+    html+='<div class="gap-priority">';
+    html+='<div class="gap-priority-title">Your top priorities</div>';
+    top3.forEach(function(g,i){
+      html+='<div class="gap-priority-item">';
+      html+='<span class="gap-priority-num">'+(i+1)+'.</span>'+esc(g.fix);
+      if(g.pts>0)html+=' <span class="gap-priority-pts">(+'+g.pts+' pts)</span>';
+      if(ctx){
+        var ctxText=g.sectionKey==='projects'?ctx.projects:g.sectionKey==='activities'?ctx.activities:g.sectionKey==='skills'?ctx.skills:null;
+        if(ctxText)html+='<span class="gap-priority-context">'+esc(ctxText)+'</span>';
+      }
+      html+='</div>';
+    });
+    html+='</div>';
+  }
+
+  // Industry context
+  if(ctx){
+    html+='<div class="gap-context">';
+    html+='<div class="gap-context-title">What '+esc(ctx.label)+' employers expect</div>';
+    // Find weakest section
+    var weakKey='projects',weakPct=1;
+    order.forEach(function(s){var sec=sections[s.key];var p=sec.earned/sec.max;if(p<weakPct){weakPct=p;weakKey=s.key}});
+    var ctxAdvice=ctx[weakKey]||ctx.projects;
+    html+='<div class="gap-context-text">'+esc(ctxAdvice)+'</div>';
+    html+='</div>';
+  }
+
+  // Archetype-specific CV format guide
+  var archGap=cat?CV_ARCHETYPES[cat]:null;
+  if(archGap){
+    html+='<div class="gap-context" style="border-color:rgba(251,191,36,.15)">';
+    html+='<div class="gap-context-title" style="color:#fbbf24">CV Format Guide: '+esc(archGap.displayName)+'</div>';
+    html+='<div class="gap-context-text">';
+    html+='<strong>Recommended section order:</strong> '+archGap.sectionOrder.join(' > ')+'<br><br>';
+    html+='<strong>Length:</strong> '+esc(archGap.lengthGuidance);
+    if(archGap.portfolioRequired)html+='<br><strong>Portfolio:</strong> Required ('+esc(archGap.portfolioType)+')';
+    if(archGap.notes)html+='<br><br>'+esc(archGap.notes);
+    html+='</div></div>';
+  }
+
+  // Interview bridge
+  if(ctx){
+    html+='<div class="gap-interview">';
+    html+='<div class="gap-interview-title">What interviewers will ask about this CV</div>';
+    html+='<div class="gap-interview-text">'+esc(ctx.interviewBridge);
+    if(cvState.projects.length>0)html+='<br><br>Your CV mentions "'+esc(cvState.projects[0])+'". Be ready to explain what you did and what you learned.';
+    else if(cvState.activities.length>0)html+='<br><br>Your CV mentions '+esc(cvState.activities[0])+' but no projects. Interviewers will ask about projects — that is a gap.';
+    else html+='<br><br>With no projects or activities listed, interviewers will have nothing specific to ask about. Fix this first.';
+    html+='</div></div>';
+  }
+
+  // Speak test section
+  html+=renderSpeakTest();
+
+  el.innerHTML=html;
+
+  // Render next-step card based on score
+  var nextEl=document.getElementById('gapNextStep');
+  if(nextEl){
+    var ns='';
+    if(total>=65){
+      // Ready for interview practice
+      ns+='<div class="gap-next gap-next-ready">';
+      ns+='<div class="gap-next-title">Your CV is solid. Next: practice your interview.</div>';
+      ns+='<div class="gap-next-sub">Employers will ask about what you wrote. Make sure you can talk about it confidently.</div>';
+      ns+='<button class="gap-next-btn gap-next-btn-primary" onclick="goToPage(\'interview.html\')">Practice 7 interview questions</button>';
+      ns+='<button class="gap-next-btn gap-next-btn-fix" onclick="goToPage(\'cv-builder.html\')">Or keep improving CV</button>';
+    } else if(total>=40){
+      // Decent but needs work — show both options equally
+      ns+='<div class="gap-next gap-next-fix">';
+      ns+='<div class="gap-next-title">Two things you can do right now.</div>';
+      ns+='<div class="gap-next-sub">Your CV has gaps — fixing them takes 5 minutes and makes a real difference. Or practice answering interview questions to get ready anyway.</div>';
+      ns+='<button class="gap-next-btn gap-next-btn-fix" onclick="goToPage(\'cv-builder.html\')">Fix my CV first</button>';
+      ns+='<button class="gap-next-btn gap-next-btn-interview" onclick="goToPage(\'interview.html\')">Practice interviews anyway</button>';
+    } else {
+      // Low score — push them to fix CV first
+      ns+='<div class="gap-next gap-next-fix">';
+      ns+='<div class="gap-next-title">Fix your CV before you apply.</div>';
+      ns+='<div class="gap-next-sub">Right now your CV is missing key sections. Adding projects and descriptions will have the biggest impact. Takes 5 minutes.</div>';
+      ns+='<button class="gap-next-btn gap-next-btn-fix" onclick="goToPage(\'cv-builder.html\')">Go back and fix it</button>';
+      ns+='<button class="gap-next-btn gap-next-btn-interview" style="opacity:.5" onclick="goToPage(\'interview.html\')">Practice interviews (fix CV first)</button>';
+    }
+    // Progress indicator: where they are in the journey
+    ns+='<div class="gap-next-step">';
+    ns+='<span class="gap-next-dot done"></span> CV Built ';
+    ns+='<span class="gap-next-dot done"></span> Gaps Found ';
+    ns+='<span class="gap-next-dot '+(total>=65?'current':'upcoming')+'"></span> Interview Prep';
+    ns+='</div></div>';
+    nextEl.innerHTML=ns;
+  }
+}
+
+/* ── CV Preview + Download ── */
+function renderCVPreview(){
+  var cat=getCourseCategory();
+  var arch=cat?CV_ARCHETYPES[cat]:null;
+  var h='<h2>'+esc(cvState.name||'Your Name')+'</h2>';
+  var contact=[];
+  if(cvState.city)contact.push(esc(cvState.city));
+  if(cvState.email)contact.push(esc(cvState.email));
+  if(cvState.phone)contact.push(esc(cvState.phone));
+  h+='<div class="cv-contact">'+contact.join(' | ')+'</div>';
+
+  // Portfolio note for design/creative
+  if(arch&&arch.portfolioRequired){
+    h+='<div class="cv-item" style="color:#3b82f6;font-size:11px;margin-bottom:12px;font-style:italic">Portfolio: [Add your '+esc(arch.portfolioType||'portfolio')+' link here — this is required for '+esc(arch.displayName)+' roles]</div>';
+  }
+
+  // Build sections as functions, then order them by archetype
+  var sectionFns={};
+
+  // Personal Statement
+  sectionFns['Personal Statement']=function(){
+    var motMap={'real-exp':'Seeking hands-on industry experience to complement academic learning and develop practical skills in a professional environment.','li-req':'Completing mandatory industrial training (LI/Praktikal) as required by university programme, eager to contribute to a structured team environment.','learn':'Eager to learn directly from industry professionals and gain practical workplace skills that cannot be taught in a classroom.','cv':'Building a professional portfolio and real-world experience ahead of graduation to strengthen career readiness.','career':'Exploring career paths within the industry to determine the right long-term fit before graduating.','network':'Looking to build professional connections, contribute to real projects, and work towards a potential return offer.'};
+    var motText=cvState.motivationText||(cvState.motivation?motMap[cvState.motivation]:'')||'';
+    if(!motText)return'';
+    return'<div class="cv-section"><div class="cv-section-title">Personal Statement</div><div class="cv-item">'+esc(motText)+'</div></div>';
+  };
+
+  // Education
+  sectionFns['Education']=function(){
+    if(!cvState.university&&!cvState.course&&!cvState.level)return'';
+    var lvlMap={'cert':'Certificate Programme','dip-early':'Diploma (Year 1-2)','dip-final':'Diploma (Final Year)','deg-1':'Degree (Year 1)','deg-2':'Degree (Year 2)','deg-3':'Degree (Year 3)','deg-final':'Degree (Final Year)','masters':"Master's / MBA",'phd':'PhD / Doctoral','grad':'Graduate'};
+    var s='<div class="cv-section"><div class="cv-section-title">Education</div>';
+    if(cvState.course)s+='<div class="cv-item"><strong>'+esc(cvState.course)+'</strong></div>';
+    if(cvState.university)s+='<div class="cv-item">'+esc(cvState.university)+'</div>';
+    if(cvState.level)s+='<div class="cv-item" style="color:#666">'+esc(lvlMap[cvState.level]||cvState.level)+'</div>';
+    return s+'</div>';
+  };
+  sectionFns['Academic History']=sectionFns['Education'];
+  sectionFns['Education (incl. relevant coursework)']=sectionFns['Education'];
+  sectionFns['Education (incl. professional qualifications)']=sectionFns['Education'];
+
+  // Projects
+  sectionFns['Projects']=function(){
+    if(!cvState.projects.length)return'';
+    var s='<div class="cv-section"><div class="cv-section-title">Projects</div>';
+    for(var pi=0;pi<currentProjItems.length;pi++){
+      if(cvState.projects.indexOf(currentProjItems[pi].name)===-1)continue;
+      var pDesc=cvState.projectDescs[pi]||'';
+      s+='<div class="cv-item" style="margin-bottom:8px">';
+      if(pDesc)s+='<strong>'+esc(currentProjItems[pi].name)+':</strong> '+esc(pDesc);
+      else s+='<strong>'+esc(currentProjItems[pi].name)+'</strong>';
+      s+='</div>';
+    }
+    return s+'</div>';
+  };
+  sectionFns['Projects / FYP']=sectionFns['Projects'];
+  sectionFns['Design Studio Projects']=sectionFns['Projects'];
+  sectionFns['Research & Lab Experience']=sectionFns['Projects'];
+  sectionFns['Research & Publications']=sectionFns['Projects'];
+  sectionFns['Clinical / Hospital Postings']=sectionFns['Projects'];
+
+  // Skills (grouped by category)
+  sectionFns['Technical Skills']=function(){
+    if(!cvState.skills.length)return'';
+    var s='<div class="cv-section"><div class="cv-section-title">Core Competencies</div>';
+    var technical=cvState.skills.filter(function(sk){return['Python','Java','HTML / CSS','JavaScript','SQL','C / C++','PHP','R / SPSS / MATLAB','AutoCAD','SolidWorks','Data structures','Algorithms','OOP','REST APIs','CAD drafting','PLC programming'].indexOf(sk)>-1||['Python','Java','JavaScript','SQL','C / C++','PHP'].indexOf(sk)>-1});
+    var tools=cvState.skills.filter(function(sk){return['Microsoft Word','Excel / Spreadsheets','PowerPoint','Google Workspace','Canva','Figma','Photoshop','Video Editing'].indexOf(sk)>-1});
+    var langs=cvState.skills.filter(function(sk){return['Bahasa Malaysia','English','Mandarin','Tamil','Arabic'].indexOf(sk)>-1});
+    var certs=cvState.skills.filter(function(sk){return['MUET','IELTS / TOEFL','Google Analytics','First Aid / CPR','UBS / SQL Accounting','AWS / Cloud Cert'].indexOf(sk)>-1});
+    var other=cvState.skills.filter(function(sk){return technical.indexOf(sk)===-1&&tools.indexOf(sk)===-1&&langs.indexOf(sk)===-1&&certs.indexOf(sk)===-1});
+    if(technical.length)s+='<div class="cv-item"><strong>Technical:</strong> '+technical.map(esc).join(' | ')+'</div>';
+    if(tools.length)s+='<div class="cv-item"><strong>Tools:</strong> '+tools.map(esc).join(' | ')+'</div>';
+    if(langs.length)s+='<div class="cv-item"><strong>Languages:</strong> '+langs.map(esc).join(' | ')+'</div>';
+    if(certs.length)s+='<div class="cv-item"><strong>Certifications:</strong> '+certs.map(esc).join(' | ')+'</div>';
+    if(other.length)s+='<div class="cv-item"><strong>Other:</strong> '+other.map(esc).join(' | ')+'</div>';
+    return s+'</div>';
+  };
+  sectionFns['Skills']=sectionFns['Technical Skills'];
+  sectionFns['Software Proficiency']=sectionFns['Technical Skills'];
+  sectionFns['Software Skills']=sectionFns['Technical Skills'];
+  sectionFns['Skills & Certifications']=sectionFns['Technical Skills'];
+
+  // Activities / Leadership
+  sectionFns['Extracurriculars']=function(){
+    if(!cvState.activities.length&&!cvState.activityDetail)return'';
+    var s='<div class="cv-section"><div class="cv-section-title">Leadership &amp; External Impact</div>';
+    cvState.activities.forEach(function(a){s+='<div class="cv-item">'+esc(a)+'</div>'});
+    if(cvState.activityDetail)s+='<div class="cv-item" style="margin-top:4px">'+esc(cvState.activityDetail)+'</div>';
+    return s+'</div>';
+  };
+  sectionFns['Extracurriculars & Volunteering']=sectionFns['Extracurriculars'];
+  sectionFns['Mooting & Legal Activities']=sectionFns['Extracurriculars'];
+  sectionFns['Teaching Practicum']=sectionFns['Extracurriculars'];
+
+  // Experience (placeholder — students may not have work experience)
+  sectionFns['Experience']=function(){return''};
+  sectionFns['Internships / Attachments']=sectionFns['Experience'];
+  sectionFns['Industrial Training / Placement']=sectionFns['Experience'];
+  sectionFns['Freelance']=sectionFns['Experience'];
+  sectionFns['Writing / Media Portfolio Link']=sectionFns['Experience'];
+
+  // Certifications (separate section if archetype has them)
+  sectionFns['Certifications']=function(){
+    if(!arch||!arch.certifications)return'';
+    var matched=cvState.skills.filter(function(sk){
+      return arch.certifications.some(function(c){return sk.toLowerCase().indexOf(c.toLowerCase().substring(0,8))>-1});
+    });
+    if(!matched.length)return'';
+    return'<div class="cv-section"><div class="cv-section-title">Certifications</div>'+matched.map(function(c){return'<div class="cv-item">'+esc(c)+'</div>'}).join('')+'</div>';
+  };
+
+  // Header and Portfolio Link don't render as sections
+  sectionFns['Header']=function(){return''};
+  sectionFns['Portfolio Link']=function(){return''};
+  sectionFns['References']=function(){return''};
+  sectionFns['Languages']=function(){return''};
+
+  // Render in archetype order, or default order
+  var order;
+  if(arch){
+    order=arch.sectionOrder.slice();
+    // Ensure Personal Statement is included
+    if(order.indexOf('Personal Statement')===-1)order.splice(1,0,'Personal Statement');
+  } else {
+    order=['Personal Statement','Technical Skills','Projects','Education','Extracurriculars'];
+  }
+
+  // Add archetype notes as a footer hint
+  var rendered=[];
+  order.forEach(function(section){
+    var fn=sectionFns[section];
+    if(fn){
+      var html=fn();
+      if(html)rendered.push(html);
+    }
+  });
+  // Add any sections not in the order that have content
+  ['Personal Statement','Education','Projects','Technical Skills','Extracurriculars','Certifications'].forEach(function(s){
+    if(order.indexOf(s)===-1){
+      var fn=sectionFns[s];
+      if(fn){var html=fn();if(html&&rendered.indexOf(html)===-1)rendered.push(html)}
+    }
+  });
+
+  h+=rendered.join('');
+
+  // Archetype guidance note
+  if(arch){
+    h+='<div style="margin-top:16px;padding-top:12px;border-top:1px solid #e2e8f0;font-size:10px;color:#999;line-height:1.5">';
+    h+='Format: '+esc(arch.lengthGuidance)+' recommended for '+esc(arch.displayName);
+    if(arch.notes)h+=' | '+esc(arch.notes);
+    h+='</div>';
+  }
+
+  var cvEl=document.getElementById('cvPreview');
+  if(cvEl){cvEl.innerHTML=h;cvEl.style.display='block';}
+}
+
+function downloadCV(){
+  // Ensure CV preview is rendered first
+  renderCVPreview();
+  var preview=document.getElementById('cvPreview');
+  if(!preview||!preview.innerHTML||preview.style.display==='none'){showToast('Nothing to download yet');return;}
+  var css='*{margin:0;padding:0;box-sizing:border-box}'
+    +'body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:40px 48px;color:#1a1a1a;max-width:720px;margin:0 auto;font-size:13px;line-height:1.65}'
+    +'h2{font-size:24px;font-weight:700;margin-bottom:2px;color:#0a0f1e}'
+    +'.cv-contact{font-size:12px;color:#555;margin-bottom:22px;padding-bottom:14px;border-bottom:2px solid #1e3a6e}'
+    +'.cv-section{margin-bottom:20px}'
+    +'.cv-section-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#1e3a6e;border-bottom:1.5px solid #e2e8f0;padding-bottom:5px;margin-bottom:10px}'
+    +'.cv-item{margin-bottom:6px;font-size:13px;color:#333;line-height:1.6}'
+    +'.cv-item strong{color:#1a1a1a;font-size:13px}'
+    +'.cv-chips{display:flex;flex-wrap:wrap;gap:6px}'
+    +'.cv-chip{font-size:11px;padding:3px 10px;border-radius:4px;background:#f0f4ff;color:#1e3a6e;border:1px solid #dde4f5}'
+    +'@media print{body{padding:24px 32px}@page{margin:16mm 12mm;size:A4}}'
+    +'@page{margin-top:12mm;margin-bottom:12mm}';
+  var fullHtml='<!DOCTYPE html><html><head><meta charset="UTF-8">'
+    +'<title>CV - '+esc(cvState.name||'MyIntern')+'</title>'
+    +'<style>'+css+'</style></head><body>'
+    +preview.innerHTML
+    +'<script>window.onload=function(){window.print()}<\/script>'
+    +'</body></html>';
+  // Use Blob URL so the browser doesn't show "about:blank" in print footer
+  var blob=new Blob([fullHtml],{type:'text/html;charset=utf-8'});
+  var blobUrl=URL.createObjectURL(blob);
+  var w=window.open(blobUrl,'_blank','width=800,height=1000');
+  if(w){
+    // Print dialog opens automatically via the embedded onload script
+    setTimeout(function(){URL.revokeObjectURL(blobUrl)},10000);
+  } else {
+    // Popup blocked — download as HTML file instead
+    var a=document.createElement('a');
+    a.href=blobUrl;
+    a.download='CV-'+(cvState.name||'MyIntern').replace(/[^a-zA-Z0-9]/g,'-')+'.html';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function(){URL.revokeObjectURL(blobUrl)},1000);
+    showToast('Downloaded — open the file and press Ctrl+P to save as PDF');
+  }
+}
+
+/* ── Page Init ── */
+(function(){
+  // cvState is already loaded by myintern-shared.js (loadState runs on import)
+  var hasCv = cvState.name && cvState.course;
+  if(!hasCv){
+    // No CV data — show message
+    document.getElementById('gapHint').textContent='';
+    document.getElementById('gapContent').innerHTML=
+      '<div style="text-align:center;padding:40px 16px;color:var(--t3);font-size:13px;line-height:1.6">'
+      +'<div style="font-size:40px;margin-bottom:16px">&#128221;</div>'
+      +'<strong style="color:var(--t1);font-size:15px">Build your CV first</strong><br><br>'
+      +'The gap analysis needs your CV data to show what is strong and what is missing.<br><br>'
+      +'<button class="btn-primary" onclick="goToPage(\'cv-builder.html\')" style="max-width:240px;margin:0 auto">Build your CV now</button>'
+      +'</div>';
+    document.getElementById('gapNextStep').innerHTML='';
+    return;
+  }
+  // Reconstruct project items from course category
+  rebuildProjItems();
+  // Render the gap analysis
+  showGapAnalysis();
+  addXP(15,'Gaps analyzed');
+})();
+</script>
+<!-- Hidden CV preview container for download function -->
+<div id="cvPreview" class="cv-preview" style="display:none;position:absolute;left:-9999px"></div>
+<script>
+renderBottomNav('gap-analysis.html');
+updateProgressRing();
+</script>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en-MY">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyIntern — Internship Tools for Malaysian Students</title>
+<link rel="stylesheet" href="shared/myintern-common.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZETBRDDMTV"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-ZETBRDDMTV');</script>
+</head>
+<body>
+<div class="phone has-bottom-nav">
+  <div class="status-bar">9:41</div>
+  <div class="screen-container">
+    <div class="screen active" id="s-hub">
+
+      <!-- Progress ring + XP (Duolingo-style) -->
+      <div class="progress-ring-wrap" id="progressRing"></div>
+
+      <div style="text-align:center;margin-bottom:20px">
+        <div class="badge">MYINTERN</div>
+        <div class="intro-title" style="font-size:22px">What do you<br><span>need help with?</span></div>
+      </div>
+
+      <div class="hub-card pop-card tap-effect" onclick="goToPage('cv-builder.html')">
+        <div class="hub-card-icon" style="background:rgba(59,130,246,.1);color:var(--accent)">1</div>
+        <div class="hub-card-body">
+          <div class="hub-card-title">No CV yet?</div>
+          <div class="hub-card-sub">Build one from scratch — 8 quick steps, even if you have zero experience.</div>
+        </div>
+        <div class="hub-card-arrow">&rsaquo;</div>
+      </div>
+
+      <div class="hub-card pop-card tap-effect" onclick="hubNav('gap')">
+        <div class="hub-card-icon" style="background:rgba(251,191,36,.1);color:#fbbf24">2</div>
+        <div class="hub-card-body">
+          <div class="hub-card-title">Want to beef up your CV?</div>
+          <div class="hub-card-sub">See what employers actually want. Fix the gaps in minutes.</div>
+        </div>
+        <div class="hub-card-arrow">&rsaquo;</div>
+      </div>
+
+      <div class="hub-card pop-card tap-effect" onclick="goToPage('match.html')">
+        <div class="hub-card-icon" style="background:rgba(52,211,153,.1);color:var(--green)">3</div>
+        <div class="hub-card-body">
+          <div class="hub-card-title">Find your internship</div>
+          <div class="hub-card-sub">Match to real open internships. Upload a CV or build one here.</div>
+        </div>
+        <div class="hub-card-arrow">&rsaquo;</div>
+      </div>
+
+      <div class="hub-card pop-card tap-effect" onclick="hubNav('interview')">
+        <div class="hub-card-icon" style="background:rgba(167,139,250,.1);color:#a78bfa">4</div>
+        <div class="hub-card-body">
+          <div class="hub-card-title">Practice for interviews</div>
+          <div class="hub-card-sub">7 questions based on your CV. Speak or type your answers.</div>
+        </div>
+        <div class="hub-card-arrow">&rsaquo;</div>
+      </div>
+
+      <div style="text-align:center;margin-top:16px;font-size:11px;color:var(--t3);line-height:1.6">
+        First time? Start with 1.<br>
+        Already have a CV? Jump to 2, 3, or 4.
+      </div>
+      <a href="/internships" style="display:block;text-align:center;margin-top:14px;font-size:12px;color:var(--accent);text-decoration:none;padding:10px;border:1px solid rgba(59,130,246,.15);border-radius:10px;transition:all .2s" onmouseover="this.style.background='rgba(59,130,246,.06)'" onmouseout="this.style.background='transparent'" onclick="gtag('event','hub_browse_internships')">Browse all internships &rarr;</a>
+    </div>
+  </div>
+
+  <!-- Bottom nav (Duolingo-style) -->
+  <div class="bottom-nav" id="bottomNav"></div>
+
+  <div class="toast" id="toast"></div>
+  <div class="xp-popup" id="xpPopup"></div>
+</div>
+
+<script src="shared/myintern-data.js"></script>
+<script src="shared/myintern-shared.js"></script>
+<script>
+/* Hub navigation — guard modules that require a CV */
+function hubNav(mod){
+  var hasCv=cvState.name&&cvState.course;
+  if(!hasCv){
+    showToast('Build your CV first — it only takes a few minutes');
+    setTimeout(function(){goToPage('cv-builder.html')},1200);
+    return;
+  }
+  var pages={gap:'gap-analysis.html',interview:'interview.html'};
+  goToPage(pages[mod]);
+}
+
+/* Show returning-student state */
+function updateHubState(){
+  var hasCv=cvState.name&&cvState.course;
+  var cards=document.querySelectorAll('#s-hub .hub-card');
+  if(!cards.length)return;
+
+  // "Done" badge on CV card
+  var cvDone=hasCv&&cvState.projects&&cvState.projects.length>0;
+  if(cvDone&&!cards[0].querySelector('.hub-card-done')){
+    cards[0].insertAdjacentHTML('beforeend','<span class="hub-card-done">Done</span>');
+    // Change card 1 text for returning users
+    cards[0].querySelector('.hub-card-title').textContent='Edit your CV';
+    cards[0].querySelector('.hub-card-sub').textContent='Update projects, skills, or personal statement.';
+  }
+
+  // Glow pulse on the next recommended action
+  if(!hasCv){
+    cards[0].classList.add('glow-pulse');
+  } else if(!cvDone){
+    cards[0].classList.add('glow-pulse');
+  } else {
+    // CV done — pulse the gap analysis card
+    cards[1].classList.add('glow-pulse');
+  }
+
+  // Welcome back message
+  if(hasCv&&!document.querySelector('.hub-welcome')){
+    var top=document.querySelector('#s-hub > div:nth-child(2)');
+    if(top)top.insertAdjacentHTML('afterbegin',
+      '<div class="hub-welcome fade-in">Welcome back, '+esc(cvState.name.split(' ')[0])+'</div>');
+  }
+}
+
+// Init
+updateHubState();
+updateProgressRing();
+renderBottomNav('index.html');
+
+// Add staggered fade-in to hub cards
+var hubCards=document.querySelectorAll('.hub-card');
+hubCards.forEach(function(card,i){
+  card.style.opacity='0';
+  card.style.animation='slideUp .4s cubic-bezier(.2,.8,.4,1.4) '+(i*0.08)+'s forwards';
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<!--
+  MyIntern Internship Matcher
+  Matches student profile to live Supabase internship data
+  Built by ANRA · myscholar.my · April 2026
+-->
+<html lang="en-MY">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyIntern — Internship Matcher</title>
+<link rel="stylesheet" href="shared/myintern-common.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZETBRDDMTV"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-ZETBRDDMTV');</script>
+</head>
+<body>
+<div class="phone has-bottom-nav">
+  <div class="status-bar">9:41</div>
+  <div class="screen-container">
+    <div class="screen active" id="s-match">
+      <div class="step-label">INTERNSHIP MATCHER</div>
+      <div class="q-title" id="matchTitle">Internships that fit you.</div>
+      <div class="q-hint" id="matchHint"></div>
+      <!-- Upload or use existing CV -->
+      <div id="matchUploadArea" style="margin-bottom:16px">
+        <div style="display:flex;gap:8px">
+          <label class="btn-secondary" style="flex:1;text-align:center;cursor:pointer;padding:12px;font-size:13px;border-color:rgba(52,211,153,.3);color:var(--green)" id="uploadLabel">
+            Upload your CV (PDF)
+            <input type="file" accept=".pdf,.txt" style="display:none" id="cvFileInput" onchange="handleCvUpload(this)">
+          </label>
+          <button class="btn-secondary" style="flex:1;padding:12px;font-size:13px" onclick="useBuiltCv()" id="useBuiltBtn">Use CV I built here</button>
+        </div>
+        <div id="uploadStatus" style="font-size:11px;color:var(--t3);margin-top:8px;display:none"></div>
+      </div>
+      <div class="match-filter-row" id="matchFilters"></div>
+      <div id="matchResults"></div>
+      <div class="btn-row" style="margin-top:16px">
+        <button class="btn-secondary" onclick="goToPage('index.html')">Back to hub</button>
+      </div>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+  <div class="bottom-nav" id="bottomNav"></div>
+  <div class="xp-popup" id="xpPopup"></div>
+</div>
+
+<script src="shared/myintern-data.js"></script>
+<script src="shared/myintern-shared.js"></script>
+<script>
+/* ══════════════════════════════════════════════════════════════
+   Supabase config
+   ══════════════════════════════════════════════════════════════ */
+var SB_URL='https://ywvfvjvxwhcfprfrkgqm.supabase.co';
+var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl3dmZ2anZ4d2hjZnByZnJrZ3FtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNTQ5MzEsImV4cCI6MjA5MDYzMDkzMX0.5EzrJuW1fdPca2ZEKGPXXgbd_XYDqKzzu6e-iRQT9po';
+
+/* ══════════════════════════════════════════════════════════════
+   INTERNSHIP MATCHER — fetches live data from Supabase
+   Matches based on student's course, skills, and study level.
+   ══════════════════════════════════════════════════════════════ */
+
+var matchData=[];
+var matchFilter='all';
+
+function loadMatchingInternships(){
+  var hint=document.getElementById('matchHint');
+  var results=document.getElementById('matchResults');
+  hint.textContent='Finding internships that match your profile...';
+  results.innerHTML='<div class="match-empty">Loading...</div>';
+
+  fetch(SB_URL+'/rest/v1/internships?is_visible=eq.true&order=company.asc',{
+    headers:{apikey:SB_KEY,Authorization:'Bearer '+SB_KEY}
+  })
+  .then(function(r){if(!r.ok)throw new Error(r.status);return r.json()})
+  .then(function(data){
+    matchData=data;
+    buildMatchFilters();
+    renderMatches();
+    addXP(15,'Matches found');
+  })
+  .catch(function(e){
+    hint.textContent='Could not load internships. Check your connection.';
+    results.innerHTML='<div class="match-empty">Failed to load. Try again later.</div>';
+  });
+}
+
+function buildMatchFilters(){
+  var el=document.getElementById('matchFilters');
+  var industries=new Set();
+  matchData.forEach(function(d){if(d.industry)d.industry.forEach(function(i){industries.add(i)})});
+  var html='<span class="chip selected" onclick="setMatchFilter(\'all\',this)">All</span>';
+  industries.forEach(function(ind){
+    html+='<span class="chip" onclick="setMatchFilter(\''+esc(ind).replace(/'/g,"\\'")+'\',this)">'+esc(ind.replace('Government / GLC','Gov').replace('Finance & Banking','Finance').replace('Energy & Utilities','Energy').replace('Media & Comms','Media').replace('FMCG & Retail','FMCG').replace('Non-profit / NGO','NGO'))+'</span>';
+  });
+  el.innerHTML=html;
+}
+
+function setMatchFilter(f,chipEl){
+  matchFilter=f;
+  document.querySelectorAll('#matchFilters .chip').forEach(function(c){c.classList.remove('selected')});
+  if(chipEl)chipEl.classList.add('selected');
+  renderMatches();
+}
+
+function computeMatchScore(item){
+  var score=0;var max=100;
+  // Study level match (30 pts)
+  var sl=item.study_level||'Any';
+  var studentDip=cvState.level&&cvState.level.indexOf('dip')>-1;
+  var studentDeg=cvState.level&&(cvState.level.indexOf('deg')>-1||cvState.level==='masters'||cvState.level==='phd'||cvState.level==='grad');
+  if(sl==='Any')score+=30;
+  else if(sl==='Diploma'&&studentDip)score+=30;
+  else if(sl==='Undergraduate'&&studentDeg)score+=30;
+  else if(sl==='Diploma'&&studentDeg)score+=20; // overqualified but OK
+  else score+=5; // mismatch
+  // Industry match to course (30 pts)
+  var cat=getCourseCategory();
+  var indMap={cs:['Technology','Consulting'],biz:['Finance & Banking','Consulting','Government / GLC'],eng:['Engineering','Energy & Utilities','Technology'],sci:['Healthcare','Technology','Engineering'],arts:['Media & Comms','Consulting','FMCG & Retail'],health:['Healthcare','Government / GLC']};
+  var matchInds=indMap[cat]||[];
+  if(item.industry&&item.industry.some(function(i){return matchInds.indexOf(i)>-1}))score+=30;
+  else score+=10; // any industry has some relevance
+  // CGPA match (20 pts)
+  if(!item.min_cgpa)score+=20; // no requirement = full match
+  else score+=15; // we don't know student's CGPA, give benefit of doubt
+  // Has roles that match skills (20 pts)
+  if(item.roles_available&&cvState.skills.length>0){
+    var roles=item.roles_available.toLowerCase();
+    var skillMatch=cvState.skills.some(function(s){return roles.indexOf(s.toLowerCase().split('/')[0].trim())>-1});
+    if(skillMatch)score+=20;else score+=8;
+  } else {
+    score+=10;
+  }
+  return Math.min(Math.round(score/max*100),100);
+}
+
+function renderMatches(){
+  var hint=document.getElementById('matchHint');
+  var results=document.getElementById('matchResults');
+
+  // Filter
+  var filtered=matchData.filter(function(d){
+    if(matchFilter!=='all'&&(!d.industry||d.industry.indexOf(matchFilter)===-1))return false;
+    return true;
+  });
+
+  // Score and sort
+  var scored=filtered.map(function(d){
+    return{data:d,score:computeMatchScore(d)};
+  });
+  scored.sort(function(a,b){return b.score-a.score});
+
+  // Top matches first
+  var strong=scored.filter(function(s){return s.score>=70});
+  var possible=scored.filter(function(s){return s.score>=45&&s.score<70});
+  hint.textContent=strong.length+' strong match'+(strong.length!==1?'es':'')+', '+possible.length+' possible — from '+scored.length+' internships';
+
+  if(!scored.length){
+    results.innerHTML='<div class="match-empty">No internships match your filters right now.</div>';
+    return;
+  }
+
+  var html='';
+  scored.slice(0,15).forEach(function(item){
+    var d=item.data;
+    var s=item.score;
+    var barColor=s>=70?'var(--green)':(s>=40?'#fbbf24':'#f87171');
+    var initial=d.company?d.company[0]:'?';
+    var hue=d.company?d.company.charCodeAt(0)*7%360:180;
+    // Industry pills
+    var pills='';
+    if(d.industry&&d.industry[0])pills+='<span class="match-pill match-pill-ind">'+esc(d.industry[0])+'</span>';
+    if(d.allowance_text&&d.allowance_text.toLowerCase().indexOf('unpaid')===-1&&d.allowance_text.toLowerCase().indexOf('not publicly')===-1)pills+='<span class="match-pill match-pill-paid">'+esc(d.allowance_text)+'</span>';
+    if(d.study_level&&d.study_level!=='Any')pills+='<span class="match-pill match-pill-lvl">'+esc(d.study_level)+'</span>';
+    if(d.rolling)pills+='<span class="match-pill match-pill-rolling">Rolling</span>';
+
+    html+='<div class="match-card" onclick="openMatchDetail('+d.id+')">';
+    html+='<div class="match-card-head">';
+    html+='<div class="match-card-logo" style="color:hsl('+hue+',60%,65%);background:hsl('+hue+',40%,15%)">'+esc(initial)+'</div>';
+    html+='<div class="match-card-info"><div class="match-card-co">'+esc(d.company)+'</div><div class="match-card-prog">'+esc(d.programme_name)+'</div></div>';
+    html+='</div>';
+    if(pills)html+='<div class="match-card-meta">'+pills+'</div>';
+    var matchLabel=s>=70?'Strong match':s>=45?'Possible match':'Check requirements';
+    html+='<div class="match-score"><div class="match-score-bar"><div class="match-score-fill" style="width:'+s+'%;background:'+barColor+'"></div></div><span class="match-score-pct" style="color:'+barColor+'">'+matchLabel+'</span></div>';
+    html+='</div>';
+  });
+
+  if(scored.length>15){
+    html+='<div style="text-align:center;font-size:12px;color:var(--t3);padding:12px">Showing top 15 of '+scored.length+' matches</div>';
+  }
+  results.innerHTML=html;
+}
+
+function openMatchDetail(id){
+  var d=matchData.find(function(x){return x.id===id});
+  if(!d)return;
+  if(d.url)window.open(d.url,'_blank');
+  else showToast('No application link available for this one');
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PDF UPLOAD — reads CV text and extracts profile data
+   Uses FileReader to read PDF as text. Extracts name, email,
+   phone, skills, university from the text content.
+   ══════════════════════════════════════════════════════════════ */
+
+function handleCvUpload(input){
+  var file=input.files&&input.files[0];
+  if(!file)return;
+  var status=document.getElementById('uploadStatus');
+  var label=document.getElementById('uploadLabel');
+  status.style.display='block';
+  status.textContent='Reading your CV...';
+  status.style.color='var(--accent)';
+
+  var reader=new FileReader();
+  reader.onload=function(e){
+    var text=e.target.result;
+    if(!text||text.length<20){
+      status.textContent='Could not read this file. Try a .txt file or build your CV here instead.';
+      status.style.color='#f87171';
+      return;
+    }
+    // Extract what we can from the text
+    var extracted=extractCvData(text);
+    // Apply to cvState
+    if(extracted.name)cvState.name=extracted.name;
+    if(extracted.email)cvState.email=extracted.email;
+    if(extracted.phone)cvState.phone=extracted.phone;
+    if(extracted.city)cvState.city=extracted.city;
+    if(extracted.skills.length)cvState.skills=extracted.skills;
+    if(extracted.university)cvState.university=extracted.university;
+    // Store raw text for matching
+    cvState.cvRawText=text;
+
+    var parts=[];
+    if(extracted.name)parts.push('Name: '+extracted.name);
+    if(extracted.email)parts.push('Email found');
+    if(extracted.skills.length)parts.push(extracted.skills.length+' skills detected');
+    if(extracted.university)parts.push('University found');
+
+    status.textContent='CV uploaded. '+parts.join(' | ');
+    status.style.color='var(--green)';
+    label.innerHTML='CV uploaded (change file)<input type="file" accept=".pdf,.txt" style="display:none" id="cvFileInput" onchange="handleCvUpload(this)">';
+    showToast('CV read — finding matches...');
+    saveState();
+    setTimeout(loadMatchingInternships,500);
+  };
+  reader.onerror=function(){
+    status.textContent='Failed to read file. Try again or build your CV here.';
+    status.style.color='#f87171';
+  };
+  // Read as text — works for .txt and basic PDFs (text layer)
+  reader.readAsText(file);
+}
+
+function extractCvData(text){
+  var result={name:'',email:'',phone:'',city:'',skills:[],university:''};
+  var lines=text.split(/\n/);
+
+  // Email
+  var emailMatch=text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+  if(emailMatch)result.email=emailMatch[0];
+
+  // Phone (Malaysian format)
+  var phoneMatch=text.match(/(?:\+?6?0)\d[\d\s-]{7,12}/);
+  if(phoneMatch)result.phone=phoneMatch[0].trim();
+
+  // Name — usually the first non-empty line that isn't an address or email
+  for(var i=0;i<Math.min(lines.length,5);i++){
+    var line=lines[i].trim();
+    if(line.length>=3&&line.length<60&&!line.match(/@|http|www|\d{5,}|phone|email|address/i)){
+      result.name=line;
+      break;
+    }
+  }
+
+  // University — search for known Malaysian uni keywords
+  var uniKeywords=['universiti','university','politeknik','kolej','mmu','utar','uitm','um ','ukm','upm','usm','utm','uum','unimas','ums','upsi','utem','uthm','umt','umpsa','unimap','taylor','sunway','apu','help university','inti','segi','limkokwing','imu','monash','nottingham'];
+  var lower=text.toLowerCase();
+  uniKeywords.forEach(function(kw){
+    if(result.university)return;
+    var idx=lower.indexOf(kw);
+    if(idx>-1){
+      // Get the full line containing this keyword
+      var start=text.lastIndexOf('\n',idx)+1;
+      var end=text.indexOf('\n',idx);
+      if(end===-1)end=text.length;
+      var uniLine=text.substring(start,end).trim();
+      if(uniLine.length<80)result.university=uniLine;
+    }
+  });
+
+  // City
+  var cities=['kuala lumpur','kl','shah alam','selangor','penang','pulau pinang','johor bahru','johor','ipoh','perak','melaka','malacca','kota kinabalu','sabah','kuching','sarawak','terengganu','kelantan','kedah','perlis','pahang','putrajaya','cyberjaya','petaling jaya','subang'];
+  cities.forEach(function(c){
+    if(result.city)return;
+    if(lower.indexOf(c)>-1)result.city=c.charAt(0).toUpperCase()+c.slice(1);
+  });
+
+  // Skills — match against known skill keywords
+  var knownSkills=['Python','Java','JavaScript','HTML / CSS','SQL','C / C++','PHP','R / SPSS / MATLAB','AutoCAD','SolidWorks','Microsoft Word','Excel / Spreadsheets','PowerPoint','Google Workspace','Canva','Figma','Photoshop','Video Editing','Bahasa Malaysia','English','Mandarin','Tamil','Arabic','MUET','IELTS / TOEFL','Google Analytics','First Aid / CPR','UBS / SQL Accounting','AWS / Cloud Cert'];
+  knownSkills.forEach(function(skill){
+    var searchTerms=skill.toLowerCase().split(' / ');
+    searchTerms.forEach(function(term){
+      if(lower.indexOf(term)>-1&&result.skills.indexOf(skill)===-1){
+        result.skills.push(skill);
+      }
+    });
+  });
+
+  return result;
+}
+
+function useBuiltCv(){
+  if(!cvState.name||!cvState.course){
+    showToast('No CV built yet — build one first or upload a PDF');
+    return;
+  }
+  var status=document.getElementById('uploadStatus');
+  if(status){status.style.display='block';status.textContent='Using your built CV: '+esc(cvState.name);status.style.color='var(--green)';}
+  loadMatchingInternships();
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PAGE INIT — check cvState and set up the screen
+   ══════════════════════════════════════════════════════════════ */
+(function(){
+  var hasCv=cvState.name&&cvState.course;
+  var useBtn=document.getElementById('useBuiltBtn');
+  if(hasCv){
+    if(useBtn)useBtn.style.display='block';
+    setTimeout(function(){useBuiltCv()},300);
+  } else {
+    if(useBtn)useBtn.style.display='none';
+    document.getElementById('matchHint').textContent='Upload your CV or build one first to see matches.';
+    document.getElementById('matchResults').innerHTML='<div class="match-empty">Upload a CV above to get matched, or go back and build one.</div>';
+  }
+})();
+renderBottomNav('match.html');
+updateProgressRing();
+</script>
+</body>
+</html>

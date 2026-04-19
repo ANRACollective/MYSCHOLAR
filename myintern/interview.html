@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en-MY">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyIntern — Interview Practice</title>
+<link rel="stylesheet" href="shared/myintern-common.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZETBRDDMTV"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-ZETBRDDMTV');</script>
+</head>
+<body>
+<div class="phone has-bottom-nav">
+  <div class="status-bar">9:41</div>
+  <div class="screen-container">
+
+    <!-- ═══════════ INTERVIEW PRACTICE — LIST ═══════════ -->
+    <div class="screen" id="s-interview-list">
+      <div class="step-label">INTERVIEW PRACTICE</div>
+      <div class="q-title">7 questions from your CV.</div>
+      <div class="q-hint">Each question is based on what you actually put in your CV. Interviewers will ask these.</div>
+      <div class="iq-dots" id="iqDots"></div>
+      <div class="iq-done-count"><span id="iqDoneCount">0</span>/7 answered</div>
+      <div id="iqListItems"></div>
+      <div id="interviewComplete" style="display:none">
+        <div style="text-align:center;padding:20px 0 10px">
+          <div style="font-size:32px;margin-bottom:8px">&#127881;</div>
+          <div class="q-title" style="margin-bottom:6px">All 7 answered!</div>
+          <div class="q-hint">You are interview-ready. Keep practising to sharpen your delivery.</div>
+        </div>
+        <div class="btn-row">
+          <button class="btn-primary" onclick="goToPage('index.html')">Back to hub</button>
+          <button class="btn-secondary" onclick="resetInterview()">Practice again</button>
+        </div>
+      </div>
+      <div class="btn-row" id="interviewBackRow">
+        <button class="btn-secondary" onclick="goToPage('index.html')">Back to hub</button>
+      </div>
+    </div>
+
+    <!-- ═══════════ INTERVIEW PRACTICE — ANSWER ═══════════ -->
+    <div class="screen" id="s-interview-answer">
+      <div class="step-label" id="iaStepLabel">QUESTION 1 OF 7</div>
+      <div class="iq-card">
+        <div class="iq-card-label">INTERVIEW QUESTION</div>
+        <div class="iq-card-q" id="iaQuestion"></div>
+        <div class="iq-card-why" id="iaWhy"></div>
+      </div>
+      <div class="star-toggle" onclick="toggleStarHint()">
+        <span class="star-toggle-text">Not sure where to start? Use the STAR guide</span>
+        <span class="star-toggle-arrow" id="starArrow">&#9660;</span>
+      </div>
+      <div class="star-panel" id="starPanel">
+        <div class="star-row"><span class="star-letter star-s">S</span><span class="star-text"><strong>Situation</strong> — Set the scene briefly. What was the context?</span></div>
+        <div class="star-row"><span class="star-letter star-t">T</span><span class="star-text"><strong>Task</strong> — What were you trying to do or solve?</span></div>
+        <div class="star-row"><span class="star-letter star-a">A</span><span class="star-text"><strong>Action</strong> — What did you actually do? Be specific.</span></div>
+        <div class="star-row"><span class="star-letter star-r">R</span><span class="star-text"><strong>Result</strong> — What happened? Even a small win counts.</span></div>
+      </div>
+      <textarea class="text-area" id="iaInput" style="height:120px" placeholder="Type or speak your answer..." oninput="updateIaWordCount()"></textarea>
+      <div class="wc-row"><span id="iaWc">0</span> words</div>
+      <div id="iaMicRow"></div>
+      <div class="btn-row">
+        <button class="btn-primary btn-disabled" id="iaSubmitBtn" onclick="submitInterview()">Submit answer</button>
+        <button class="btn-skip" onclick="goToScreen(SCREENS.indexOf('s-interview-list'))">Back to questions</button>
+      </div>
+    </div>
+
+    <!-- ═══════════ INTERVIEW PRACTICE — FEEDBACK ═══════════ -->
+    <div class="screen" id="s-interview-feedback">
+      <div class="step-label" id="ifStepLabel">FEEDBACK — Q1</div>
+      <div class="fb-score-wrap">
+        <svg width="120" height="120" viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="8"/>
+          <circle cx="60" cy="60" r="50" fill="none" stroke="url(#arcGrad)" stroke-width="8" stroke-linecap="round" stroke-dasharray="314" stroke-dashoffset="314" transform="rotate(-90 60 60)" id="ifArc" style="transition:stroke-dashoffset .8s ease"/>
+          <defs><linearGradient id="arcGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#3b82f6"/><stop offset="100%" stop-color="#6366f1"/></linearGradient></defs>
+        </svg>
+        <div class="fb-score-num">
+          <div class="fb-score-val" id="ifScoreVal">0</div>
+          <div class="fb-score-lbl" id="ifScoreLbl"></div>
+        </div>
+      </div>
+      <div class="fb-card fb-card-good">
+        <div class="fb-card-label">WHAT WORKED</div>
+        <div class="fb-card-text" id="ifGood"></div>
+      </div>
+      <div class="fb-card fb-card-improve">
+        <div class="fb-card-label">WHAT TO IMPROVE</div>
+        <div class="fb-card-text" id="ifImprove"></div>
+      </div>
+      <div class="fb-sample-toggle" onclick="toggleIfSample()">
+        <span style="font-size:12px;color:var(--t3);flex:1">See a stronger answer</span>
+        <span class="star-toggle-arrow" id="ifSampleArrow">&#9660;</span>
+      </div>
+      <div class="fb-sample-panel" id="ifSamplePanel"></div>
+      <div class="btn-row">
+        <button class="btn-primary" id="ifNextBtn" onclick="nextInterviewQ()">Next question</button>
+        <button class="btn-secondary" onclick="retryInterview()">Try this one again</button>
+      </div>
+    </div>
+
+  </div>
+  <div class="toast" id="toast"></div>
+  <div class="bottom-nav" id="bottomNav"></div>
+  <div class="xp-popup" id="xpPopup"></div>
+</div>
+
+<script src="shared/myintern-data.js"></script>
+<script src="shared/myintern-shared.js"></script>
+<script>
+/* ── LOCAL SCREEN MANAGEMENT ── */
+var SCREENS = ['s-interview-list','s-interview-answer','s-interview-feedback'];
+var currentScreen = 0;
+
+function goToScreen(idx){
+  var screens = document.querySelectorAll('.screen');
+  for(var i=0;i<screens.length;i++){
+    if(screens[i].classList.contains('active')){
+      screens[i].classList.remove('active');
+      screens[i].classList.add('exit-left');
+      (function(el){setTimeout(function(){el.classList.remove('exit-left')},350)})(screens[i]);
+    }
+  }
+  var target = document.getElementById(SCREENS[idx]);
+  if(target){
+    setTimeout(function(){target.classList.add('active')},30);
+  }
+  currentScreen = idx;
+}
+
+/* ── INTERVIEW STATE ── */
+var interviewQuestions = [];
+var interviewAnswers = [];
+var interviewCurrentIdx = 0;
+
+/* ── GENERATE QUESTIONS FROM CV STATE ── */
+function generateInterviewQuestions(){
+  var qs=[];
+  // Q1: Project-based (if they have projects)
+  if(cvState.projects.length>0){
+    var projName=cvState.projects[0];
+    var projDesc=cvState.projectDescs[0]||'';
+    qs.push({
+      q:'Walk me through your '+projName+' project. What problem were you solving and what was the outcome?',
+      tag:'project',tagLabel:'Project',
+      why:'From your CV: '+projName+' listed under projects',
+      score:7,scoreLabel:'out of 10 — good answer',scoreOffset:94,
+      good:'Clear context. You explained what the project did without over-explaining.',
+      improve:'Missing the outcome. What happened after you built it? Was it used? Even "my lecturer gave us an A" is a real result.',
+      sample:'<em>[A strong answer names the problem, your specific contribution, tools used, and one measurable result.]</em>'
+    });
+  }
+  // Q2: Second project or skills application
+  if(cvState.projects.length>1){
+    qs.push({
+      q:'You also did '+cvState.projects[1]+'. How was this different from '+cvState.projects[0]+'?',
+      tag:'project',tagLabel:'Project',
+      why:'From your CV: 2 projects listed',
+      score:6,scoreLabel:'out of 10 — decent, can be stronger',scoreOffset:126,
+      good:'Showing range across projects demonstrates adaptability.',
+      improve:'Compare the complexity or your role — did you lead one and support the other?',
+      sample:'<em>[Compare scope, your role, tools, and what you learned differently from each.]</em>'
+    });
+  } else {
+    // Skills question if only 1 or 0 projects
+    var topSkills=cvState.skills.slice(0,3).join(', ');
+    if(topSkills){
+      qs.push({
+        q:'You listed '+topSkills+' as skills. Which one are you strongest at, and can you give me an example of using it?',
+        tag:'skills',tagLabel:'Skills',
+        why:'From your CV: '+topSkills+' listed under skills',
+        score:6,scoreLabel:'out of 10 — decent',scoreOffset:126,
+        good:'Naming a specific skill with an example is exactly what interviewers want.',
+        improve:'Go deeper — what level? Basic usage or can you do something complex with it?',
+        sample:'<em>[Pick one skill, give a specific example of using it on a real task, and what the result was.]</em>'
+      });
+    }
+  }
+  // Q3: Activity-based (if they have activities)
+  if(cvState.activities.length>0){
+    var act=cvState.activities[0];
+    qs.push({
+      q:'You were involved in '+act+'. Tell me about a specific moment that challenged you.',
+      tag:'activity',tagLabel:'Activity',
+      why:'From your CV: '+act+' listed under activities',
+      score:8,scoreLabel:'out of 10 — strong answer',scoreOffset:63,
+      good:'Strong specific detail. This is exactly how to answer behavioural questions.',
+      improve:'Connect it to the workplace — how does this experience make you a better intern?',
+      sample:'<em>[Set the scene, describe the challenge, what you did specifically, and what you learned.]</em>'
+    });
+  }
+  // Q4: Motivation (from their personal statement)
+  var courseLabel=cvState.course||'your field';
+  qs.push({
+    q:'What drew you to '+courseLabel+' specifically?',
+    tag:'motivation',tagLabel:'Motivation',
+    why:'Field of study from your CV',
+    score:7,scoreLabel:'out of 10 — good answer',scoreOffset:94,
+    good:'Personal origin stories give authenticity. Far better than "I like technology."',
+    improve:'Bring it forward — what does that original interest look like now?',
+    sample:'<em>[Start with what first sparked your interest, then show how it has evolved during your studies.]</em>'
+  });
+  // Q5: Problem solving (standard)
+  qs.push({
+    q:'Tell me about a time you had to figure something out with no one to help you.',
+    tag:'problem',tagLabel:'Problem Solving',
+    why:'Standard internship readiness question',
+    score:7,scoreLabel:'out of 10 — good answer',scoreOffset:94,
+    good:'Good structure. You showed process, not just outcome.',
+    improve:'Name the actual resource — "I read the official docs" is more credible than "I searched online."',
+    sample:'<em>[Name the situation, what you tried first, what actually worked, and what you learned about solving problems independently.]</em>'
+  });
+  // Q6: Reflection
+  var lvlMap={'cert':'certificate','dip-early':'early diploma','dip-final':'final year diploma','deg-1':'first year','deg-2':'second year','deg-3':'third year','deg-final':'final year','masters':'postgrad','phd':'doctoral','grad':'graduate'};
+  var lvlText=lvlMap[cvState.level]||'your studies';
+  qs.push({
+    q:"You're in "+lvlText+". What's one thing you'd do differently if you started your studies over?",
+    tag:'reflection',tagLabel:'Reflection',
+    why:'Standard self-awareness question',
+    score:8,scoreLabel:'out of 10 — strong answer',scoreOffset:63,
+    good:'Honest and specific. Interviewers respect self-awareness.',
+    improve:'Show you have already started correcting it — "I wish I did X, so now I am doing Y."',
+    sample:'<em>[Name one genuine regret, explain why, and show what you are doing about it now.]</em>'
+  });
+  // Q7: Goals (closing)
+  qs.push({
+    q:'If you got this internship, what would you want to have learned by the end of it?',
+    tag:'goals',tagLabel:'Goals',
+    why:'Role-specific closing question',
+    score:8,scoreLabel:'out of 10 — strong answer',scoreOffset:63,
+    good:'Specific and role-relevant. Shows you have thought about it beyond just "experience."',
+    improve:'Add a people goal — what do you want to learn from the team, not just the work?',
+    sample:'<em>[Name 2-3 specific things: a technical skill, a process understanding, and something about working with people.]</em>'
+  });
+  // Ensure exactly 7 questions
+  while(qs.length<7){
+    qs.push({
+      q:'What makes you different from other candidates applying for this internship?',
+      tag:'motivation',tagLabel:'Motivation',
+      why:'Standard differentiator question',
+      score:7,scoreLabel:'out of 10 — good answer',scoreOffset:94,
+      good:'Good self-awareness.',
+      improve:'Be specific — name one concrete thing, not general traits.',
+      sample:'<em>[Name one specific thing you have done or can do that most other students cannot.]</em>'
+    });
+  }
+  return qs.slice(0,7);
+}
+
+/* ── RENDER QUESTION LIST ── */
+function renderInterviewList(){
+  var dotsEl=document.getElementById('iqDots');
+  var countEl=document.getElementById('iqDoneCount');
+  var listEl=document.getElementById('iqListItems');
+  var doneCount=0;
+  var dotsHtml='';
+  var listHtml='';
+  for(var i=0;i<interviewQuestions.length;i++){
+    var q=interviewQuestions[i];
+    var answered=!!interviewAnswered[i];
+    if(answered)doneCount++;
+    var dotCls=answered?'done':(i===findNextUnanswered()?'next':'');
+    dotsHtml+='<span class="iq-dot '+dotCls+'"></span>';
+    var numCls=answered?'done':(i===findNextUnanswered()?'next':'');
+    listHtml+='<div class="iq-row" onclick="openInterviewQuestion('+i+')">';
+    listHtml+='<div class="iq-num '+numCls+'">'+(answered?'&#10003;':(i+1))+'</div>';
+    listHtml+='<div class="iq-content">';
+    listHtml+='<div class="iq-text">'+esc(q.q)+'</div>';
+    listHtml+='<div class="iq-why"><span class="itag itag-'+esc(q.tag)+'">'+esc(q.tagLabel)+'</span> '+esc(q.why)+'</div>';
+    listHtml+='</div>';
+    listHtml+='<div class="iq-arrow">&#8250;</div>';
+    listHtml+='</div>';
+  }
+  dotsEl.innerHTML=dotsHtml;
+  countEl.textContent=doneCount;
+  listEl.innerHTML=listHtml;
+
+  // Show/hide completion block
+  var completeEl=document.getElementById('interviewComplete');
+  var backRow=document.getElementById('interviewBackRow');
+  if(doneCount===7){
+    completeEl.style.display='block';
+    backRow.style.display='none';
+  } else {
+    completeEl.style.display='none';
+    backRow.style.display='block';
+  }
+}
+
+function findNextUnanswered(){
+  for(var i=0;i<interviewQuestions.length;i++){
+    if(!interviewAnswered[i])return i;
+  }
+  return -1;
+}
+
+function openInterviewQuestion(idx){
+  interviewCurrentIdx=idx;
+  var q=interviewQuestions[idx];
+  document.getElementById('iaStepLabel').textContent='QUESTION '+(idx+1)+' OF 7';
+  document.getElementById('iaQuestion').textContent=q.q;
+  document.getElementById('iaWhy').textContent=q.why;
+  var input=document.getElementById('iaInput');
+  input.value=interviewAnswers[idx]||'';
+  updateIaWordCount();
+  // Reset STAR panel
+  var sp=document.getElementById('starPanel');
+  sp.classList.remove('visible');
+  var sa=document.getElementById('starArrow');
+  sa.classList.remove('open');
+  // Inject mic row
+  var micRow=document.getElementById('iaMicRow');
+  if(micRow)micRow.innerHTML=buildMicRow('iaInput');
+  goToScreen(SCREENS.indexOf('s-interview-answer'));
+}
+
+function toggleStarHint(){
+  var panel=document.getElementById('starPanel');
+  var arrow=document.getElementById('starArrow');
+  panel.classList.toggle('visible');
+  arrow.classList.toggle('open');
+}
+
+function updateIaWordCount(){
+  var input=document.getElementById('iaInput');
+  var text=input.value.trim();
+  var wc=text?text.split(/\s+/).length:0;
+  document.getElementById('iaWc').textContent=wc;
+  var btn=document.getElementById('iaSubmitBtn');
+  if(wc>=5)btn.classList.remove('btn-disabled');
+  else btn.classList.add('btn-disabled');
+}
+
+function computeInterviewScore(wordCount){
+  if(wordCount<10)return{score:2,label:'out of 10 — too short',good:'You started, but this is not enough for an interviewer.',improve:'Aim for at least 50 words. Use the STAR method to structure your answer.'};
+  if(wordCount<30)return{score:4,label:'out of 10 — needs detail',good:'You have the right idea but it reads like bullet points.',improve:'Add a specific example — what exactly did you do, and what happened as a result?'};
+  if(wordCount<60)return{score:6,label:'out of 10 — decent start',good:'You are covering the basics. An interviewer would follow up for more detail.',improve:'Go deeper — add specifics like tools used, numbers, or what you personally contributed.'};
+  return null; // use question-specific feedback
+}
+
+function submitInterview(){
+  var input=document.getElementById('iaInput');
+  var text=input.value.trim();
+  var wc=text?text.split(/\s+/).length:0;
+  if(wc<5)return;
+  interviewAnswers[interviewCurrentIdx]=text;
+  interviewAnswered[interviewCurrentIdx]=true;
+  addXP(10,'Question answered');
+  saveInterviewState();
+  var q=interviewQuestions[interviewCurrentIdx];
+  var result=computeInterviewScore(wc);
+  var score,scoreLabel,good,improve;
+  if(result){
+    score=result.score;scoreLabel=result.label;good=result.good;improve=result.improve;
+  } else {
+    score=q.score;scoreLabel=q.scoreLabel;good=q.good;improve=q.improve;
+  }
+  // Populate feedback screen
+  document.getElementById('ifStepLabel').textContent='FEEDBACK — Q'+(interviewCurrentIdx+1);
+  document.getElementById('ifScoreVal').textContent=score;
+  document.getElementById('ifScoreLbl').textContent=scoreLabel;
+  document.getElementById('ifGood').textContent=good;
+  document.getElementById('ifImprove').textContent=improve;
+  // Score arc animation
+  var arc=document.getElementById('ifArc');
+  var offset=314-(314*score/10);
+  arc.setAttribute('stroke-dashoffset','314');
+  setTimeout(function(){arc.setAttribute('stroke-dashoffset',offset)},50);
+  // Sample answer
+  var samplePanel=document.getElementById('ifSamplePanel');
+  samplePanel.innerHTML=q.sample;
+  samplePanel.classList.remove('visible');
+  var sampleArrow=document.getElementById('ifSampleArrow');
+  sampleArrow.classList.remove('open');
+  // Check if this is the last question
+  var allDone=true;
+  for(var i=0;i<interviewQuestions.length;i++){
+    if(!interviewAnswered[i]){allDone=false;break;}
+  }
+  var nextBtn=document.getElementById('ifNextBtn');
+  if(allDone){
+    nextBtn.textContent='See your results';
+  } else {
+    nextBtn.textContent='Next question';
+  }
+  goToScreen(SCREENS.indexOf('s-interview-feedback'));
+}
+
+function retryInterview(){
+  interviewAnswers[interviewCurrentIdx]='';
+  interviewAnswered[interviewCurrentIdx]=false;
+  saveInterviewState();
+  openInterviewQuestion(interviewCurrentIdx);
+}
+
+function nextInterviewQ(){
+  // Check if all answered
+  var allDone=true;
+  for(var i=0;i<interviewQuestions.length;i++){
+    if(!interviewAnswered[i]){allDone=false;break;}
+  }
+  if(allDone){
+    goToScreen(SCREENS.indexOf('s-interview-list'));
+    renderInterviewList();
+    showToast('All 7 questions answered. You are interview-ready.');
+    return;
+  }
+  // Find next unanswered
+  var next=findNextUnanswered();
+  if(next>=0){
+    openInterviewQuestion(next);
+  } else {
+    goToScreen(SCREENS.indexOf('s-interview-list'));
+    renderInterviewList();
+  }
+}
+
+function toggleIfSample(){
+  var panel=document.getElementById('ifSamplePanel');
+  var arrow=document.getElementById('ifSampleArrow');
+  panel.classList.toggle('visible');
+  arrow.classList.toggle('open');
+}
+
+function resetInterview(){
+  interviewAnswered=[false,false,false,false,false,false,false];
+  interviewAnswers=new Array(7);
+  saveInterviewState();
+  renderInterviewList();
+  showToast('Reset — try again from the top.');
+}
+
+function startInterviewPractice(){
+  interviewQuestions=generateInterviewQuestions();
+  // Restore persisted answered state; init answers array
+  interviewAnswers=new Array(interviewQuestions.length);
+  // interviewAnswered is already loaded from loadInterviewState()
+  if(!interviewAnswered||interviewAnswered.length!==interviewQuestions.length){
+    interviewAnswered=[false,false,false,false,false,false,false];
+  }
+  renderInterviewList();
+  goToScreen(SCREENS.indexOf('s-interview-list'));
+}
+
+/* ── PAGE INIT ── */
+(function(){
+  var hasCv = cvState.name && cvState.course;
+  if(!hasCv){
+    // No CV data — show message instead of questions
+    var listEl=document.getElementById('iqListItems');
+    listEl.innerHTML=
+      '<div style="text-align:center;padding:30px 0">'
+      +'<div style="font-size:28px;margin-bottom:12px">&#128221;</div>'
+      +'<div class="q-title" style="font-size:16px;margin-bottom:8px">Build your CV first</div>'
+      +'<div class="q-hint" style="margin-bottom:20px">Interview questions are based on what you wrote in your CV. Complete your CV so we can tailor questions to you.</div>'
+      +'<button class="btn-primary" onclick="goToPage(\'cv-builder.html\')" style="max-width:260px;margin:0 auto">Build my CV</button>'
+      +'</div>';
+    document.getElementById('iqDots').style.display='none';
+    document.querySelector('.iq-done-count').style.display='none';
+    document.getElementById('interviewBackRow').innerHTML='<button class="btn-secondary" onclick="goToPage(\'index.html\')">Back to hub</button>';
+    // Show the list screen
+    document.getElementById('s-interview-list').classList.add('active');
+    return;
+  }
+  // Load persisted interview state
+  loadInterviewState();
+  startInterviewPractice();
+})();
+renderBottomNav('interview.html');
+updateProgressRing();
+</script>
+</body>
+</html>
