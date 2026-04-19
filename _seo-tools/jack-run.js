@@ -81,6 +81,26 @@ try {
   console.log('  Wave 6: not found, skipping');
 }
 
+// Wave 7: from wave7.js (Postgrad, Yayasan Negeri, Internship Gaps, MyTuition Phase 3, High-Intent)
+// Created: 2026-04-18
+try {
+  const w7 = require('./wave7.js');
+  KEYWORDS.push(...w7);
+  console.log('  Wave 7: ' + w7.length + ' keywords');
+} catch(e) {
+  console.log('  Wave 7: not found, skipping');
+}
+
+// Wave 8: from wave8.js (Internship Student Journey: Resume, Interview, How-To, Sector Gaps)
+// Created: 2026-04-19 — captures pre/during/post internship search queries, BM-heavy
+try {
+  const w8 = require('./wave8.js');
+  KEYWORDS.push(...w8);
+  console.log('  Wave 8: ' + w8.length + ' keywords');
+} catch(e) {
+  console.log('  Wave 8: not found, skipping');
+}
+
 console.log('  Total: ' + KEYWORDS.length + ' keywords');
 console.log('');
 

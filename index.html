@@ -864,7 +864,7 @@ document.addEventListener('click', function(e) {
 <div class="search-section">
   <div class="search-wrap">
     <svg class="search-icon" width="18" height="18" fill="none" stroke="#aab" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-    <input type="text" id="si" placeholder="Search by name, provider, field, keyword…" oninput="onSearchInput()">
+    <input type="text" id="si" placeholder="Search by name, provider, field, keyword…" oninput="onSearchInput()" aria-label="Search scholarships by name, provider, field, or keyword">
     <button class="search-clear" id="searchClear" onclick="clearSearch()" title="Clear search">×</button>
   </div>
 </div>
@@ -881,18 +881,18 @@ document.addEventListener('click', function(e) {
   <button class="match-strip-clear" onclick="clearMatch()">Clear match ✕</button>
 </div>
 <div class="tabs-wrap">
-  <div class="tabs">
-    <button class="tab active" data-cat="all" data-i18n="tabAll" onclick="setTab(this)">All</button>
-    <button class="tab gov" data-cat="Government" data-i18n="tabGov" onclick="setTab(this)">Government</button>
-    <button class="tab glc" data-cat="GLC" data-i18n="tabGlc" onclick="setTab(this)">GLC / Yayasan</button>
-    <button class="tab bank" data-cat="Banking" data-i18n="tabBank" onclick="setTab(this)">Banking</button>
-    <button class="tab corp" data-cat="Corporate" data-i18n="tabCorp" onclick="setTab(this)">Corporate</button>
-    <button class="tab loan" data-cat="Loan" data-i18n="tabLoan" onclick="setTab(this)">Loans</button>
-    <button class="tab state" data-cat="State" data-i18n="tabState" onclick="setTab(this)">State</button>
-    <button class="tab intl" data-cat="International" data-i18n="tabIntl" onclick="setTab(this)">International</button>
-    <button class="tab uni" data-cat="University" data-i18n="tabUni" onclick="setTab(this)">University</button>
-    <button class="tab found" data-cat="Foundation" data-i18n="tabFound" onclick="setTab(this)">Foundation & Media</button>
-    <button class="tab pg" data-cat="Postgraduate" data-i18n="tabPg" onclick="setTab(this)">Postgraduate</button>
+  <div class="tabs" role="tablist" aria-label="Scholarship categories">
+    <button class="tab active" role="tab" aria-selected="true" data-cat="all" data-i18n="tabAll" onclick="setTab(this)">All</button>
+    <button class="tab gov" role="tab" aria-selected="false" data-cat="Government" data-i18n="tabGov" onclick="setTab(this)">Government</button>
+    <button class="tab glc" role="tab" aria-selected="false" data-cat="GLC" data-i18n="tabGlc" onclick="setTab(this)">GLC / Yayasan</button>
+    <button class="tab bank" role="tab" aria-selected="false" data-cat="Banking" data-i18n="tabBank" onclick="setTab(this)">Banking</button>
+    <button class="tab corp" role="tab" aria-selected="false" data-cat="Corporate" data-i18n="tabCorp" onclick="setTab(this)">Corporate</button>
+    <button class="tab loan" role="tab" aria-selected="false" data-cat="Loan" data-i18n="tabLoan" onclick="setTab(this)">Loans</button>
+    <button class="tab state" role="tab" aria-selected="false" data-cat="State" data-i18n="tabState" onclick="setTab(this)">State</button>
+    <button class="tab intl" role="tab" aria-selected="false" data-cat="International" data-i18n="tabIntl" onclick="setTab(this)">International</button>
+    <button class="tab uni" role="tab" aria-selected="false" data-cat="University" data-i18n="tabUni" onclick="setTab(this)">University</button>
+    <button class="tab found" role="tab" aria-selected="false" data-cat="Foundation" data-i18n="tabFound" onclick="setTab(this)">Foundation & Media</button>
+    <button class="tab pg" role="tab" aria-selected="false" data-cat="Postgraduate" data-i18n="tabPg" onclick="setTab(this)">Postgraduate</button>
   </div>
 </div>
 <!-- ── QUICK FILTERS — always visible, phrased as student needs ── -->
@@ -1033,7 +1033,7 @@ document.addEventListener('click', function(e) {
 </section>
 
 <!-- Back to top -->
-<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">↑</button>
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top" aria-label="Back to top">↑</button>
 
 <!-- Copy/share toast -->
 <div class="copy-toast" id="copyToast">🔗 Link copied!</div>
@@ -1532,7 +1532,7 @@ document.addEventListener('click', function(e) {
   </div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 
 // ═══════════════════════════════════════════════════════════════════════════
 // MYSCHOLAR — SUPABASE EDITION
@@ -1744,7 +1744,6 @@ function cc(cat){return CC[cat]||'gov'}
 
 const now = new Date();
 const curMonth = now.getMonth()+1;
-const SOON_DAYS = 60;
 
 function isOpenNow(s){
   if(s.rolling) return true;
@@ -1852,7 +1851,9 @@ function toggleCorrectionForm(formId, triggerBtn){
 }
 
 // ── CORRECTION FORM: submit via Formspree ────────────────────────────────
-async function submitCorrection(id, scholarshipName, btn){
+async function submitCorrection(id, btn){
+  const s=DATA.find(x=>x.id===id);
+  const scholarshipName=s?s.name:'';
   const textEl=document.getElementById('corrText'+id);
   const msg=(textEl?textEl.value:'').trim();
   if(!msg){textEl&&textEl.focus();return;}
@@ -1897,7 +1898,7 @@ function openBookmarkPanel(){
   } else {
     list.innerHTML=saved.map(s=>`
       <div class="bookmark-item">
-        <div><div class="bookmark-item-name">${s.name}</div><div class="bookmark-item-prov">${s.prov}</div></div>
+        <div><div class="bookmark-item-name">${escapeHtml(s.name)}</div><div class="bookmark-item-prov">${escapeHtml(s.prov)}</div></div>
         <div class="bookmark-item-right">
           <button class="bm-view" onclick="closeBookmarkPanel();openModal(${s.id})">View →</button>
           <button class="bm-remove" onclick="toggleBookmark(${s.id});this.closest('.bookmark-item').remove();if(!document.querySelectorAll('.bookmark-item').length)openBookmarkPanel()">Remove</button>
@@ -1923,7 +1924,7 @@ function submitSuggestion(){
   const url=document.getElementById('sub-url').value.trim();
   if(!name||!url){alert('Please fill in the Scholarship Name and Official Website URL at minimum.');return;}
   const inner=document.getElementById('submitInner');
-  inner.innerHTML=`<div class="submit-success"><div class="submit-success-icon">🎉</div><h2>Thank you!</h2><p style="color:var(--muted);font-size:14px;line-height:1.8">We've received your suggestion for <strong>${name}</strong>. We'll review it and add it to the directory if verified.<br><br>You can help more students by sharing MyScholar with your friends!</p><button class="submit-btn" style="margin-top:20px" onclick="closeSubmitModal()">Close</button></div>`;
+  inner.innerHTML=`<div class="submit-success"><div class="submit-success-icon">🎉</div><h2>Thank you!</h2><p style="color:var(--muted);font-size:14px;line-height:1.8">We've received your suggestion for <strong>${escapeHtml(name)}</strong>. We'll review it and add it to the directory if verified.<br><br>You can help more students by sharing MyScholar with your friends!</p><button class="submit-btn" style="margin-top:20px" onclick="closeSubmitModal()">Close</button></div>`;
   // GA EVENT: correction_submitted — logs which scholarships students flag.
   // GA4: Events → correction_submitted → scholarship_name parameter.
   if(typeof gtag !== 'undefined'){
@@ -1937,19 +1938,6 @@ function submitSuggestion(){
 // ── FILTER STATE ──────────────────────────────────────────────────────────
 let activeCat='all', activeChips=new Set();
 
-function setTab(el){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-  activeCat=el.dataset.cat;
-  render();
-}
-
-function toggleChip(el){
-  const f=el.dataset.f;
-  if(activeChips.has(f)){activeChips.delete(f);el.classList.remove('on');}
-  else{activeChips.add(f);el.classList.add('on');}
-  updateFilterUI();render();
-}
 
 function toggleFilters(){
   // Toggle the advanced filter panel open/closed
@@ -1967,15 +1955,6 @@ function updateFilterUI(){
   ac.textContent=n===1?'1 filter active':n+' filters active';
   ac.style.display=n?'inline':'none';
   cb.style.display=n?'inline':'none';
-}
-
-function clearAll(){
-  activeChips.clear();
-  // Clear both old .chip and new .qf-chip classes
-  document.querySelectorAll('.chip.on, .qf-chip.on').forEach(c=>{
-    c.classList.remove('on','on-level','on-fund','on-dest');
-  });
-  updateFilterUI();render();
 }
 
 // ── MATCHES ───────────────────────────────────────────────────────────────
@@ -2040,9 +2019,9 @@ function matches(s){
 function buildCard(s,i){
   const c=cc(s.cat);
   // Show max 2 quals, 1 field collapsed, then entry levels — all in one 3-col grid
-  const qt=s.quals.slice(0,2).map(q=>`<span class="tag">${q}</span>`).join('');
+  const qt=s.quals.slice(0,2).map(q=>`<span class="tag">${escapeHtml(q)}</span>`).join('');
   const qtExtra=s.quals.length>2?`<span class="tag">+${s.quals.length-2}</span>`:'';
-  const ft=s.fields[0]?`<span class="tag">${s.fields[0]}${s.fields.length>1?` +${s.fields.length-1}`:''}</span>`:'';
+  const ft=s.fields[0]?`<span class="tag">${escapeHtml(s.fields[0])}${s.fields.length>1?` +${s.fields.length-1}`:''}</span>`:'';
   const ds=deadlineStatus(s);
   const urgentCard=ds==='urgent'||ds==='soon';
   const isSaved=bookmarks.has(s.id);
@@ -2084,14 +2063,14 @@ ${s.cov==='Full'?'<span class="badge bg-full">Full</span>':''}
 ${s.nb?'<span class="badge bg-nb">No Bond</span>':''}
 ${eligBadge}
 </div>
-<div class="card-name">${s.name}</div>
-<div class="card-provider">${s.prov}</div>
+<div class="card-name">${escapeHtml(s.name)}</div>
+<div class="card-provider">${escapeHtml(s.prov)}</div>
 </div>
-<div class="card-amount">${s.amt}</div>
+<div class="card-amount">${escapeHtml(s.amt)}</div>
 <div class="card-tags-spacer"></div>
 </div>
 <div class="card-foot">
-<div class="card-deadline${urgentCard?' urgent-dl':''}">Deadline: <strong>${s.dl}</strong></div>
+<div class="card-deadline${urgentCard?' urgent-dl':''}">Deadline: <strong>${escapeHtml(s.dl)}</strong></div>
 <div class="card-foot-right">
 <span class="cmp-tip-wrap">
   <button class="bookmark-btn${isSaved?' saved':''}" onclick="toggleBookmark(${s.id},event)">
@@ -2146,23 +2125,23 @@ ${s.nb?'<span class="badge bg-nb">No Bond</span>':''}
 ${s.b40?'<span class="badge bg-b40">B40 / Income-based</span>':''}
 ${s.global?'<span class="badge bg-intl" style="background:#e0f5ef;color:#0f766e">🌐 Global</span>':''}
 </div>
-<div class="modal-title">${s.name}</div>
-<div class="modal-provider">${s.prov}</div>
-<div class="modal-amount">💰 ${s.amt}</div>
+<div class="modal-title">${escapeHtml(s.name)}</div>
+<div class="modal-provider">${escapeHtml(s.prov)}</div>
+<div class="modal-amount">💰 ${escapeHtml(s.amt)}</div>
 <div class="modal-grid">
-<div class="modal-field"><div class="modal-field-label">Opens</div><div class="modal-field-val">${opensText}</div></div>
-<div class="modal-field"><div class="modal-field-label">Deadline</div><div class="modal-field-val urgent">${s.dl}</div></div>
-<div class="modal-field"><div class="modal-field-label">Destination</div><div class="modal-field-val">${s.dest}</div></div>
-<div class="modal-field"><div class="modal-field-label">Bond / Obligation</div><div class="modal-field-val">${s.bond}</div></div>
+<div class="modal-field"><div class="modal-field-label">Opens</div><div class="modal-field-val">${escapeHtml(opensText)}</div></div>
+<div class="modal-field"><div class="modal-field-label">Deadline</div><div class="modal-field-val urgent">${escapeHtml(s.dl)}</div></div>
+<div class="modal-field"><div class="modal-field-label">Destination</div><div class="modal-field-val">${escapeHtml(s.dest)}</div></div>
+<div class="modal-field"><div class="modal-field-label">Bond / Obligation</div><div class="modal-field-val">${escapeHtml(s.bond)}</div></div>
 </div>
 ${rollingNote}
 <div class="modal-section"><div class="modal-section-label">Ethnicity / Eligibility</div><div class="modal-tag-wrap">${ethnicityTags.join('')}</div></div>
-<div class="modal-section"><div class="modal-section-label">Entry Level</div><div class="modal-tag-wrap">${s.entry.map(e=>`<span class="modal-tag">${entryLabels[e]||e}</span>`).join('')}</div></div>
-<div class="modal-section"><div class="modal-section-label">Fields of Study</div><div class="modal-tag-wrap">${s.fields.map(f=>`<span class="modal-tag">${f}</span>`).join('')}</div></div>
-<div class="modal-section"><div class="modal-section-label">Eligible Qualifications</div><div class="modal-tag-wrap">${s.quals.map(q=>`<span class="modal-tag">${q}</span>`).join('')}</div></div>
-<div class="modal-section"><div class="modal-section-label">Minimum Grade Requirement</div><div style="font-size:13px;line-height:1.6;color:var(--midnight)">${s.grade}</div></div>
-<div class="modal-section"><div class="modal-section-label">Eligibility</div><div class="modal-tag-wrap">${s.elig.map(e=>`<span class="modal-tag">${e}</span>`).join('')}</div></div>
-<div class="modal-section"><div class="modal-section-label">Notes & Tips</div><div class="modal-notes">${s.notes}</div></div>
+<div class="modal-section"><div class="modal-section-label">Entry Level</div><div class="modal-tag-wrap">${s.entry.map(e=>`<span class="modal-tag">${escapeHtml(entryLabels[e]||e)}</span>`).join('')}</div></div>
+<div class="modal-section"><div class="modal-section-label">Fields of Study</div><div class="modal-tag-wrap">${s.fields.map(f=>`<span class="modal-tag">${escapeHtml(f)}</span>`).join('')}</div></div>
+<div class="modal-section"><div class="modal-section-label">Eligible Qualifications</div><div class="modal-tag-wrap">${s.quals.map(q=>`<span class="modal-tag">${escapeHtml(q)}</span>`).join('')}</div></div>
+<div class="modal-section"><div class="modal-section-label">Minimum Grade Requirement</div><div style="font-size:13px;line-height:1.6;color:var(--midnight)">${escapeHtml(s.grade)}</div></div>
+<div class="modal-section"><div class="modal-section-label">Eligibility</div><div class="modal-tag-wrap">${s.elig.map(e=>`<span class="modal-tag">${escapeHtml(e)}</span>`).join('')}</div></div>
+<div class="modal-section"><div class="modal-section-label">Notes & Tips</div><div class="modal-notes">${escapeHtml(s.notes)}</div></div>
 <div class="modal-actions">
   <div class="modal-actions-row">
     <a id="modalVisitBtn" class="btn-primary" href="${s.url}" target="_blank" onclick="recordVisit(${id},'${s.name.replace(/'/g,"\\'").replace(/"/g,'\\"')}')">Visit Official Website ↗</a>
@@ -2175,7 +2154,7 @@ ${rollingNote}
   </div>
   <div id="urlStatusBar" style="font-size:11px;color:var(--muted);display:flex;align-items:center;gap:5px;min-height:16px;margin-top:6px">
     <span id="urlStatusIcon"></span><span id="urlStatusText"></span>
-    <button id="urlAiFixBtn" onclick="aiFixThisUrl(${id},'${s.url.replace(/'/g,"\\'")}','${s.name.replace(/'/g,"\\'")}',this)" style="display:none;font-size:10px;font-weight:600;background:#fee2e2;color:#dc2626;border:1px solid #fca5a5;border-radius:4px;padding:2px 7px;cursor:pointer;font-family:var(--sans)">🤖 AI Fix</button>
+    <button id="urlAiFixBtn" onclick="aiFixThisUrl(${id},this)" style="display:none;font-size:10px;font-weight:600;background:#fee2e2;color:#dc2626;border:1px solid #fca5a5;border-radius:4px;padding:2px 7px;cursor:pointer;font-family:var(--sans)">🤖 AI Fix</button>
   </div>
   <div class="correction-wrap">
     <div class="correction-trigger-row">
@@ -2188,7 +2167,7 @@ ${rollingNote}
         <textarea id="corrText${id}" placeholder="Describe the correction..."></textarea>
         <div class="correction-form-btns">
           <button onclick="toggleCorrectionForm('corrForm${id}',null)">Cancel</button>
-          <button class="submit-correction" onclick="submitCorrection(${id},'${s.name.replace(/'/g,"\\'")}',this)">Submit</button>
+          <button class="submit-correction" onclick="submitCorrection(${id},this)">Submit</button>
         </div>
       </div>
       <div id="corrThanks${id}" class="correction-thanks" style="display:none">
@@ -2274,13 +2253,16 @@ function recordVisit(id, name){
 }
 
 // AI Fix for a single scholarship from modal
-async function aiFixThisUrl(id, currentUrl, name, btn){
+async function aiFixThisUrl(id, btn){
   btn.textContent = '⏳ Fixing...';
   btn.disabled = true;
   const text = document.getElementById('urlStatusText');
   const icon = document.getElementById('urlStatusIcon');
   text.textContent = 'AI searching for correct URL...';
 
+  const s = DATA.find(x => x.id === id);
+  const currentUrl = s ? s.url : '';
+  const name = s ? s.name : '';
   const newUrl = await findCorrectUrl(name, currentUrl);
   if(newUrl && newUrl !== currentUrl){
     const ok = await updateUrlInSupabase(id, newUrl);
@@ -2313,11 +2295,12 @@ document.addEventListener('keydown',e=>{
     document.getElementById('modal').classList.remove('open');
     document.getElementById('bookmarkModal').classList.remove('open');
     document.getElementById('submitModal').classList.remove('open');
+    closeCompareModal();
+    closeLinkChecker();
   }
 });
 
 // ── PAGINATION STATE ──────────────────────────────────────────────────────
-const PAGE_SIZE = 15; // 3 columns × 5 rows
 let currentPage = 1;
 let filteredItems = [];
 
@@ -2592,9 +2575,7 @@ function checkDeepLink(){
   }
 }
 
-// ── OVERRIDE setTab AND toggleChip to reset page ─────────────────────────
-const _origSetTab = setTab;
-// Wrap filter toggle to reset page
+// ── FILTER FUNCTIONS (with resetPage + GA tracking) ──────────────────────
 function toggleChip(el){
   const f=el.dataset.f;
   if(activeChips.has(f)){activeChips.delete(f);el.classList.remove('on');}
@@ -2615,8 +2596,9 @@ function toggleChip(el){
 }
 
 function setTab(el){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>{t.classList.remove('active');t.setAttribute('aria-selected','false');});
   el.classList.add('active');
+  el.setAttribute('aria-selected','true');
   activeCat=el.dataset.cat;
   resetPage();
   render();
@@ -2709,11 +2691,11 @@ function renderAuditList(){
     <div id="audit-row-${s.id}" style="padding:10px 14px;border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:center;background:var(--white)">
       <span style="font-size:15px;flex-shrink:0">${icon}</span>
       <div style="flex:1;min-width:0">
-        <div style="font-size:12px;font-weight:600;color:var(--midnight);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.name}</div>
-        <a href="${s.url}" target="_blank" rel="noopener"
+        <div style="font-size:12px;font-weight:600;color:var(--midnight);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(s.name)}</div>
+        <a href="${escapeHtml(s.url)}" target="_blank" rel="noopener"
            style="font-size:11px;color:${color};text-decoration:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block"
            onclick="markSuspected(${s.id})"
-           title="${s.url}">${s.url}</a>
+           title="${escapeHtml(s.url)}">${escapeHtml(s.url)}</a>
         <span style="font-size:10px;color:var(--muted)">${verifiedText}</span>
       </div>
       <div style="display:flex;gap:5px;flex-shrink:0">
@@ -2774,16 +2756,14 @@ async function updateUrlStatus(id, status){
   try {
     const today = new Date().toISOString().split('T')[0];
     const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/scholarships?id=eq.${id}`,
+      `${SUPABASE_URL}/functions/v1/update-url-status`,
       {
-        method: 'PATCH',
+        method: 'POST',
         headers: {
-          'apikey': SUPABASE_ANON_KEY,
           'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-          'Content-Type': 'application/json',
-          'Prefer': 'return=minimal'
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ url_status: status, last_verified: today })
+        body: JSON.stringify({ id, url_status: status, last_verified: today })
       }
     );
     return res.ok;
@@ -2835,7 +2815,9 @@ function showAiLog(){
 }
 function aiLog(msg){
   const el = document.getElementById('aiLog');
-  el.innerHTML += msg + '<br>';
+  const line = document.createElement('div');
+  line.textContent = msg;
+  el.appendChild(line);
   el.scrollTop = el.scrollHeight;
 }
 
@@ -2873,7 +2855,7 @@ async function runAiFix(){
             s.url_status = 'ok';
             s.last_verified = new Date().toISOString().split('T')[0];
             fixed++;
-            aiLog(`✅ Fixed: ${s.name}<br>&nbsp;&nbsp;&nbsp;→ ${newUrl}`);
+            aiLog(`✅ Fixed: ${s.name} → ${newUrl}`);
           } else {
             failed++;
             aiLog(`❌ DB error saving: ${s.name}`);
@@ -2900,58 +2882,30 @@ async function runAiFix(){
 
   btn.textContent = '🤖 AI Fix All Broken';
   btn.disabled = false;
-  aiLog(`<br>🎉 AI fix complete — ${fixed} fixed, ${failed} could not be resolved`);
+  aiLog(`🎉 AI fix complete — ${fixed} fixed, ${failed} could not be resolved`);
   renderAuditStats();
   renderAuditList();
   showToast(`AI fixed ${fixed} URLs`);
 }
 
-// ── CALL CLAUDE API TO FIND THE CORRECT URL ───────────────────────────────
-// Uses Claude Sonnet with web_search tool to find the official scholarship URL
+// ── FIND CORRECT URL VIA EDGE FUNCTION ────────────────────────────────────
+// Delegates to a Supabase Edge Function that calls Claude with web search
 async function findCorrectUrl(scholarshipName, currentUrl){
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch(`${SUPABASE_URL}/functions/v1/find-correct-url`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
-        system: `You are a URL verification assistant for a Malaysian scholarship website.
-Your job: find the correct, working official URL for a scholarship.
-Rules:
-- Search for the scholarship's official application/info page
-- Return ONLY the URL as plain text — no explanation, no markdown, no quotes
-- Must start with https://
-- Must be the official organisation's website, not a third-party aggregator
-- If the current URL looks correct, return it as-is
-- Return null if you genuinely cannot find it`,
-        messages: [{
-          role: 'user',
-          content: `Find the official website URL for this Malaysian scholarship: "${scholarshipName}"
-Current URL (may be broken): ${currentUrl}
-Search for the correct official URL and return ONLY the URL.`
-        }]
-      })
+      headers: {
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ scholarshipName, currentUrl })
     });
 
     const data = await response.json();
-
-    // Extract the final text response (after web search tool use)
-    const textBlock = data.content?.find(b => b.type === 'text');
-    if(!textBlock) return null;
-
-    const text = textBlock.text.trim();
-    // Validate it looks like a URL
-    if(text.startsWith('https://') || text.startsWith('http://')){
-      return text.replace(/['"]/g, '').trim();
-    }
-    // Sometimes Claude wraps it — try to extract URL from response
-    const match = text.match(/https?:\/\/[^\s'"]+/);
-    return match ? match[0] : null;
+    return data.url || null;
 
   } catch(e){
-    console.error('Claude API error:', e);
+    console.error('find-correct-url error:', e);
     return null;
   }
 }
@@ -2961,16 +2915,14 @@ async function updateUrlInSupabase(id, newUrl){
   try {
     const today = new Date().toISOString().split('T')[0];
     const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/scholarships?id=eq.${id}`,
+      `${SUPABASE_URL}/functions/v1/update-url-status`,
       {
-        method: 'PATCH',
+        method: 'POST',
         headers: {
-          'apikey': SUPABASE_ANON_KEY,
           'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-          'Content-Type': 'application/json',
-          'Prefer': 'return=minimal'
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ url: newUrl, url_status: 'ok', last_verified: today })
+        body: JSON.stringify({ id, url: newUrl, url_status: 'ok', last_verified: today })
       }
     );
     return res.ok;
@@ -3287,7 +3239,7 @@ function updateCompareTray(){
       const s = DATA.find(x=>x.id===id);
       const name = s ? s.name : '—';
       slot.className = 'compare-slot filled';
-      slot.innerHTML = `<span class="compare-slot-name" title="${name}">${name}</span><button class="compare-slot-remove" onclick="toggleCompare(${id},event)" title="Remove">✕</button>`;
+      slot.innerHTML = `<span class="compare-slot-name" title="${escapeHtml(name)}">${escapeHtml(name)}</span><button class="compare-slot-remove" onclick="toggleCompare(${id},event)" title="Remove">✕</button>`;
     } else {
       slot.className = 'compare-slot';
       slot.innerHTML = i < ids.length + 1 ? '+ Add scholarship' : '';
@@ -3354,8 +3306,8 @@ function buildCompareTable(){
   scholarships.forEach(s => {
     const col = SC_COLORS[s.cat] || '#1e3a6e';
     html += `<th class="col-head">
-      ${s.name}
-      <div class="col-provider">${s.prov}</div>
+      ${escapeHtml(s.name)}
+      <div class="col-provider">${escapeHtml(s.prov)}</div>
       <div class="col-stripe" style="background:${col}"></div>
     </th>`;
   });
@@ -3433,12 +3385,6 @@ function buildCompareTable(){
   document.getElementById('compareTable').innerHTML = html;
 }
 
-// ── ESCAPE KEY closes compare modal too ───────────────────────────────────
-document.addEventListener('keydown', e => {
-  if(e.key === 'Escape'){
-    closeCompareModal();
-  }
-});
 
 // Restore tray state on page load (after data loads)
 function restoreCompareState(){
