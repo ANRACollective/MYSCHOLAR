@@ -549,8 +549,7 @@ footer strong{color:rgba(255,255,255,.9)}footer a{color:rgba(255,255,255,.5);tex
 .advisory-eyebrow{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--coral);font-weight:600;margin-bottom:10px}
 .advisory-heading{font-family:var(--serif);font-size:26px;color:var(--midnight);font-weight:700;line-height:1.2;margin-bottom:10px}
 .advisory-sub{font-size:14px;color:var(--muted);line-height:1.8;max-width:480px;margin:0 auto 28px;font-weight:300}
-.advisory-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;text-align:left}
-.advisory-card-full{grid-column:1/-1;max-width:calc(50% - 7px);margin:0 auto;width:100%}
+.advisory-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:20px;text-align:left}
 .advisory-card{display:flex;flex-direction:column;gap:10px;padding:20px 22px;border:1px solid var(--border);border-left:3px solid var(--teal);border-radius:10px;background:#ffffff;text-decoration:none;color:inherit;transition:transform .18s,box-shadow .18s,border-color .18s;box-shadow:0 2px 8px rgba(15,31,61,.05)}
 .advisory-card:hover{border-color:var(--border-mid);border-left-color:var(--teal);box-shadow:0 8px 28px rgba(15,31,61,.11);transform:translateY(-3px)}
 .advisory-card-head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
@@ -566,7 +565,6 @@ footer strong{color:rgba(255,255,255,.9)}footer a{color:rgba(255,255,255,.5);tex
 @media(max-width:680px){
   .advisory-section{padding:36px 16px}
   .advisory-grid{grid-template-columns:1fr}
-  .advisory-card-full{max-width:100%}
 }
 /* ── RESULTS INFO UPDATE ── */
 .page-info{font-size:12px;color:var(--muted);margin-left:8px}
@@ -1032,7 +1030,7 @@ document.addEventListener('click', function(e) {
       <!-- Project Access Malaysia -->
       <a href="https://projectaccessmy.com"
          target="_blank" rel="noopener"
-         class="advisory-card advisory-card-full"
+         class="advisory-card"
          onclick="gtag('event','advisory_click',{resource:'project_access_malaysia',event_category:'outbound'})">
         <div class="advisory-card-head">
           <span class="advisory-card-identity">
