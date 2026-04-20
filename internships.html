@@ -744,6 +744,13 @@ function fmtQuals(item){
   return parts.length?'<div class="qrow">'+parts.join('')+'</div>':'';
 }
 
+// Returns the correct Apply button label based on url_type.
+// careers_page listings honestly label as "Careers page" — student knows what to expect.
+function applyBtnLabel(item){
+  if(item.url_type==='careers_page') return T?T.careersPageBtn:'Careers page';
+  return T?T.applyBtn:'Apply';
+}
+
 /* ── Build filter chips ────────────────── */
 function buildChips(){
   const inds=new Map();
@@ -1007,7 +1014,7 @@ function render(){
       +'<div class="meta">'+metaItems+'</div>'
       +quals
       +tipPrev
-      +'<div class="act-row"><a href="'+escapeHtml(item.url||'#')+'" target="_blank" rel="noopener" class="gbtn" onclick="event.stopPropagation();gtag(\'event\',\'intern_apply_click\',{co:\''+escapeHtml((item.company||'').replace(/'/g,''))+'\',source:\'card\'})">'+(T?T.applyBtn:'Apply')+' <span class="arr">&rarr;</span></a>'
+      +'<div class="act-row"><a href="'+escapeHtml(item.url||'#')+'" target="_blank" rel="noopener" class="gbtn" onclick="event.stopPropagation();gtag(\'event\',\'intern_apply_click\',{co:\''+escapeHtml((item.company||'').replace(/'/g,''))+'\',url_type:\''+(item.url_type||'')+'\',source:\'card\'})">'+applyBtnLabel(item)+' <span class="arr">&rarr;</span></a>'
       +'<button class="save-btn'+(savedInternships.has(item.id)?' saved':'')+'" onclick="event.stopPropagation();toggleSaved('+item.id+',this)" aria-label="Save internship"><svg width="16" height="16" fill="'+(savedInternships.has(item.id)?'currentColor':'none')+'" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>'
       +'</div>';
     feed.appendChild(el);
@@ -1063,7 +1070,11 @@ function openModal(idx){
   if(item.roles_available)h+='<div class="msec"><div class="msec-t">Roles Available</div><p>'+escapeHtml(item.roles_available)+'</p></div>';
   if(item.eligibility)h+='<div class="msec"><div class="msec-t">Eligibility</div><p>'+escapeHtml(item.eligibility)+'</p></div>';
   if(item.tips)h+='<div class="mtip"><strong>Tip:</strong> '+escapeHtml(item.tips)+'</div>';
-  h+='<a href="'+escapeHtml(item.url||'#')+'" target="_blank" rel="noopener" class="mapply" onclick="gtag(\'event\',\'intern_apply_click\',{co:\''+escapeHtml(item.company.replace(/'/g,''))+'\',source:\'modal\'})">Apply to '+escapeHtml(item.company)+' &rarr;</a>';
+  // Modal apply button — honest label for careers_page (student lands on general careers page, not specific internship)
+  const modalApplyLabel = item.url_type==='careers_page'
+    ? 'Find on '+escapeHtml(item.company)+' careers page &rarr;'
+    : 'Apply to '+escapeHtml(item.company)+' &rarr;';
+  h+='<a href="'+escapeHtml(item.url||'#')+'" target="_blank" rel="noopener" class="mapply" onclick="gtag(\'event\',\'intern_apply_click\',{co:\''+escapeHtml(item.company.replace(/'/g,''))+'\',url_type:\''+(item.url_type||'')+'\',source:\'modal\'})">'+modalApplyLabel+'</a>';
   document.getElementById('mbody').innerHTML=h;
   ov.classList.add('open');document.body.style.overflow='hidden';
   gtag('event','intern_detail',{co:item.company});
@@ -1155,7 +1166,7 @@ const INTERN_LANG = {
     chipAll:'All',
     prefPaid:'Paid Only', prefOpen:'Open Now', prefDiploma:'Diploma OK',
 
-    applyBtn:'Apply', tapDetails:'Tap for details', rollingLabel:'Rolling',
+    applyBtn:'Apply', careersPageBtn:'Careers page', tapDetails:'Tap for details', rollingLabel:'Rolling',
     foundSingular:'internship found', foundPlural:'internships found',
     emptyState:'No internships match your filters.',
     loadingText:'Loading internships...',
@@ -1171,7 +1182,7 @@ const INTERN_LANG = {
     chipAll:'Semua',
     prefPaid:'Berbayar Sahaja', prefOpen:'Terbuka Sekarang', prefDiploma:'Diploma OK',
 
-    applyBtn:'Mohon', tapDetails:'Ketuk untuk butiran', rollingLabel:'Berterusan',
+    applyBtn:'Mohon', careersPageBtn:'Halaman kerjaya', tapDetails:'Ketuk untuk butiran', rollingLabel:'Berterusan',
     foundSingular:'internship dijumpai', foundPlural:'internship dijumpai',
     emptyState:'Tiada internship yang sepadan dengan penapis anda.',
     loadingText:'Memuatkan internship...',
