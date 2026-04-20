@@ -101,6 +101,16 @@ try {
   console.log('  Wave 8: not found, skipping');
 }
 
+// Wave 9: from wave9.js (Scholarship Application Journey, Inner KL Tuition, Internship Company Gaps)
+// Created: 2026-04-19 — mirrors Wave 8 depth for scholarships; fills inner-KL tuition blanks; Grab/Shopee/logistics/fintech/East Malaysia
+try {
+  const w9 = require('./wave9.js');
+  KEYWORDS.push(...w9);
+  console.log('  Wave 9: ' + w9.length + ' keywords');
+} catch(e) {
+  console.log('  Wave 9: not found, skipping');
+}
+
 console.log('  Total: ' + KEYWORDS.length + ' keywords');
 console.log('');
 
