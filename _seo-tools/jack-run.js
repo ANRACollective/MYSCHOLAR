@@ -121,7 +121,7 @@ try {
   console.log('  Wave 10: not found, skipping');
 }
 
-// Wave 11: from wave11.js (New scholarship providers: Kuok/YTL/Razak/BOH/TFM, private uni scholarships, overseas scholarships, GLCs, state Yayasan gaps, STPM/non-Bumi)
+// Wave 11: from wave11.js (New scholarship providers: Kuok/YTL/Razak/BOH/TFM, private uni, overseas, GLCs, state Yayasan, STPM/non-Bumi)
 // Created: 2026-04-21 — DB-sourced gaps; provider-specific pages for scholarship searchers
 try {
   const w11 = require('./wave11.js');
@@ -131,17 +131,42 @@ try {
   console.log('  Wave 11: not found, skipping');
 }
 
+
 console.log('  Total: ' + KEYWORDS.length + ' keywords');
 console.log('');
 
-// ── HTML BUILDER v4 ──────────────────────────────────────────────
-// New in v4:
-//   - 'tuition' type support: links to /tuition, terracotta colour
-//   - Organization schema on ALL pages (E-E-A-T / entity authority signal)
-//   - dateModified in WebPage schema (content freshness)
-//   - BreadcrumbList has @id for richer entity resolution
-//   - GA4 event now includes page_wave derived from slug numbering
-function buildHTML(entry) {
+// ── RELATED PAGES HELPER ─────────────────────────────────────────
+// Picks the N most relevant sibling SEO pages for a given entry.
+// Used to build the "Also on MyScholar" internal link section.
+function getRelatedPages(entry, allKeywords, n) {
+  n = n || 4;
+  var sameType = allKeywords.filter(function(k) {
+    return k.slug !== entry.slug && k.type === entry.type;
+  });
+  var entryWords = {};
+  (entry.keywords.primary + ' ' + entry.keywords.longtail_en.join(' '))
+    .toLowerCase().split(/[\s\-]+/).forEach(function(w) {
+      if (w.length > 3) entryWords[w] = true;
+    });
+  var scored = sameType.map(function(k) {
+    var kWords = (k.keywords.primary + ' ' + k.keywords.longtail_en.join(' '))
+      .toLowerCase().split(/[\s\-]+/);
+    var overlap = kWords.filter(function(w) { return w.length > 3 && entryWords[w]; }).length;
+    return { entry: k, overlap: overlap };
+  });
+  scored.sort(function(a, b) { return b.overlap - a.overlap; });
+  return scored.slice(0, n).map(function(s) { return s.entry; });
+}
+
+// ── HTML BUILDER v5 ──────────────────────────────────────────────
+// New in v5:
+//   - "How it works" 3-step section — type-specific process copy, adds content depth
+//   - "Also on MyScholar" related pages section — internal links between SEO pages
+//   - relatedPages param: pre-computed array of sibling SEO page entries
+// Retained from v4:
+//   - tuition type support, Organization schema, dateModified, BreadcrumbList @id
+function buildHTML(entry, relatedPages) {
+  relatedPages = relatedPages || [];
   const isInternship = entry.type === 'internship';
   const isTuition = entry.type === 'tuition';
   // Color per type: scholarship=coral, internship=amber, tuition=terracotta
@@ -221,6 +246,30 @@ function buildHTML(entry) {
   const typeLabel = isInternship ? 'Internships' : isTuition ? 'Tuition Centres' : 'Scholarships';
   const eyebrow = isInternship ? 'Internships Malaysia' : isTuition ? 'Tuition Malaysia' : 'Biasiswa Malaysia';
 
+  // Steps section: type-specific 3-step process copy
+  const steps = isInternship ? [
+    { title: 'Browse by field or location', body: 'Filter internships by industry, area, or allowance. Real listings, updated regularly.' },
+    { title: 'Prepare your application', body: 'Resume guides, cover letter tips, and interview prep — all free on MyScholar.' },
+    { title: 'Apply directly to the company', body: 'We link straight to company portals. No signup, no fees, no middlemen.' }
+  ] : isTuition ? [
+    { title: 'Find centres near you', body: 'Search by area, subject, or exam level — SPM, IGCSE, A-Level, and more.' },
+    { title: 'Compare and read reviews', body: 'Verified reviews from students and parents. No paid rankings.' },
+    { title: 'Contact the centre directly', body: 'We give you the phone number and address. No booking commissions.' }
+  ] : [
+    { title: 'Find scholarships that match you', body: 'Browse by CGPA, field of study, race, income level, or target university.' },
+    { title: 'Check the requirements', body: 'Eligibility, bond conditions, amount, and deadlines — all in one place.' },
+    { title: 'Apply through the official link', body: "We link directly to the provider's application page. No fees, no agents." }
+  ];
+  const stepsHtml = steps.map(function(s, i) {
+    return '<div class="step"><span class="step-num">' + (i+1) + '</span><strong>' + s.title + '</strong><p>' + s.body + '</p></div>';
+  }).join('\n      ');
+
+  // Related pages: internal links to sibling SEO pages
+  const relatedBadge = isInternship ? 'Internship' : isTuition ? 'Tuition' : 'Scholarship';
+  const relatedCardsHtml = relatedPages.map(function(r) {
+    return '<a href="/' + r.slug + '" class="related-card"><span class="related-badge">' + relatedBadge + '</span><span class="related-title">' + r.keywords.primary + '</span></a>';
+  }).join('\n      ');
+
   return `<!DOCTYPE html>
 <html lang="en-MY">
 <head>
@@ -286,6 +335,23 @@ h1{font-family:var(--serif);font-size:clamp(32px,5vw,56px);line-height:1.1;margi
 .kw-pill{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.5);padding:6px 14px;border-radius:20px;font-size:12px;text-decoration:none;transition:all .2s}
 .kw-pill:hover{border-color:var(--coral);color:var(--coral)}
 .kw-pill.bm{border-color:rgba(255,179,71,.25);color:rgba(255,179,71,.7)}
+.steps-section{background:rgba(255,255,255,.03);border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06);padding:52px 24px}
+.steps-inner{max-width:680px;margin:0 auto;text-align:center}
+.steps-inner h2{font-family:var(--serif);font-size:22px;margin-bottom:36px;color:rgba(255,255,255,.85)}
+.steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+@media(max-width:600px){.steps-grid{grid-template-columns:1fr}}
+.step{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:24px 20px;text-align:left}
+.step-num{display:inline-block;background:var(--coral);color:#fff;font-size:11px;font-weight:700;width:22px;height:22px;line-height:22px;text-align:center;border-radius:50%;margin-bottom:12px}
+.step p{font-size:14px;color:rgba(255,255,255,.65);line-height:1.6}
+.step strong{display:block;font-size:15px;color:#fff;margin-bottom:6px;font-weight:600}
+.related-section{max-width:680px;margin:0 auto;padding:52px 24px}
+.related-section h2{font-family:var(--serif);font-size:20px;margin-bottom:24px;color:rgba(255,255,255,.6);text-align:center}
+.related-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+@media(max-width:480px){.related-grid{grid-template-columns:1fr}}
+.related-card{display:block;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:8px;padding:16px 18px;text-decoration:none;transition:border-color .2s,background .2s}
+.related-card:hover{border-color:var(--coral);background:rgba(255,255,255,.08)}
+.related-badge{display:inline-block;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--coral);margin-bottom:6px}
+.related-title{display:block;font-size:14px;color:rgba(255,255,255,.8);line-height:1.4;font-weight:500}
 footer{text-align:center;padding:32px 24px;font-size:12px;color:rgba(255,255,255,.3);border-top:1px solid rgba(255,255,255,.08)}
 footer a{color:rgba(255,255,255,.5);text-decoration:none}
 </style>
@@ -316,6 +382,20 @@ ${enPills}
 ${bmPills}
   </div>
 </div>
+<div class="steps-section">
+  <div class="steps-inner">
+    <h2>How it works</h2>
+    <div class="steps-grid">
+      ${stepsHtml}
+    </div>
+  </div>
+</div>
+${relatedCardsHtml ? `<div class="related-section">
+  <h2>Also on MyScholar</h2>
+  <div class="related-grid">
+    ${relatedCardsHtml}
+  </div>
+</div>` : ''}
 <footer>
   <p>&copy; 2026 <a href="https://myscholar.my">MyScholar.my</a> &mdash; ${footerCopy}</p>
 </footer>
@@ -346,7 +426,8 @@ const manifest = [];
 KEYWORDS.forEach(function(entry) {
   const filename = entry.slug + '.html';
   const filepath = path.join(OUT, filename);
-  fs.writeFileSync(filepath, buildHTML(entry), 'utf8');
+  const related = getRelatedPages(entry, KEYWORDS, 4);
+  fs.writeFileSync(filepath, buildHTML(entry, related), 'utf8');
   count++;
   console.log('  + ' + filename);
   manifest.push({
