@@ -436,6 +436,20 @@ nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:
 .iss-success-title{font-size:17px;font-weight:700;color:var(--t1);margin-bottom:6px}
 .iss-success-sub{font-size:13px;color:var(--t2);line-height:1.6}
 @media(max-width:400px){.iss-row{flex-direction:column}.iss-btn{width:100%}}
+
+/* ── CV NUDGE STRIP — surfaces CV Builder between hero and listings ──────── */
+.cv-nudge-wrap{max-width:720px;margin:20px auto 0;padding:0 20px}
+@media(min-width:768px){.cv-nudge-wrap{max-width:1100px}}
+.cv-nudge{display:flex;align-items:center;gap:16px;background:rgba(59,130,246,.07);border:1.5px solid rgba(59,130,246,.22);border-radius:14px;padding:16px 18px;position:relative}
+.cv-nudge-icon{width:36px;height:36px;background:rgba(59,130,246,.12);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cv-nudge-copy{flex:1;min-width:0}
+.cv-nudge-copy strong{font-size:13px;font-weight:600;color:var(--t1);display:block;margin-bottom:2px}
+.cv-nudge-copy span{font-size:12px;color:var(--t2);line-height:1.5}
+.cv-nudge-cta{display:inline-flex;align-items:center;gap:5px;background:rgba(59,130,246,.15);border:1.5px solid rgba(59,130,246,.38);border-radius:9px;padding:9px 16px;font-size:12.5px;font-weight:600;color:#93c5fd;text-decoration:none;white-space:nowrap;transition:all .2s;flex-shrink:0}
+.cv-nudge-cta:hover{background:rgba(59,130,246,.26);border-color:rgba(59,130,246,.6);color:#bfdbfe}
+.cv-nudge-close{position:absolute;top:8px;right:10px;background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;padding:4px;line-height:1;font-family:var(--sans);transition:color .15s}
+.cv-nudge-close:hover{color:var(--t1)}
+@media(max-width:560px){.cv-nudge{flex-wrap:wrap;gap:10px}.cv-nudge-cta{width:100%;justify-content:center}}
 </style>
 </head>
 <body>
@@ -517,6 +531,29 @@ document.addEventListener('click', function(e) {
   }
 });
 </script>
+<script>
+// ── CV Nudge: hide on load if already dismissed, fade out on dismiss ────────
+(function() {
+  // If the student already dismissed it, don't show it again
+  if (localStorage.getItem('cvNudgeDismissed') === '1') {
+    const w = document.getElementById('cvNudgeWrap');
+    if (w) w.style.display = 'none';
+  }
+})();
+function dismissCvNudge() {
+  localStorage.setItem('cvNudgeDismissed', '1');
+  const w = document.getElementById('cvNudgeWrap');
+  if (w) {
+    w.style.transition = 'opacity .25s, max-height .3s, margin .3s';
+    w.style.opacity = '0';
+    w.style.overflow = 'hidden';
+    // Collapse height after fade so the layout doesn't jump
+    setTimeout(() => { w.style.maxHeight = '0'; w.style.margin = '0'; }, 250);
+    setTimeout(() => { w.style.display = 'none'; }, 580);
+  }
+  gtag('event', 'cv_nudge_dismissed');
+}
+</script>
 
 <!-- ── DARK GLASS HERO — mirrors MyScholar hero structure, dark glass colours ── -->
 <div class="hero-intern">
@@ -550,6 +587,25 @@ document.addEventListener('click', function(e) {
       <div class="hero-tool-icon" style="background:rgba(167,139,250,.12)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2.2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg></div>
       <span class="hero-tool-label">Interview Prep</span>
     </a>
+  </div>
+</div>
+
+<!-- ── CV NUDGE STRIP — contextual prompt between hero and listings ─────────
+     Shown to students who are browsing internships but haven't started a CV.
+     Dismissed state persists via localStorage so it doesn't re-appear.        -->
+<div class="cv-nudge-wrap" id="cvNudgeWrap">
+  <div class="cv-nudge">
+    <div class="cv-nudge-icon">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+    </div>
+    <div class="cv-nudge-copy">
+      <strong>Found a programme you want to apply for?</strong>
+      <span>A strong CV is what gets you shortlisted. Build yours free — takes about 10 minutes.</span>
+    </div>
+    <a class="cv-nudge-cta" href="/myintern/cv-builder.html" onclick="gtag('event','cv_nudge_click',{location:'between_hero_search'})">
+      Build my CV →
+    </a>
+    <button class="cv-nudge-close" onclick="dismissCvNudge()" aria-label="Dismiss CV nudge">&times;</button>
   </div>
 </div>
 
@@ -617,6 +673,17 @@ document.addEventListener('click', function(e) {
     <p class="ft-about-body">A curated directory of internship programmes for Malaysian students, independently maintained by MyScholar. All listings are manually reviewed and updated regularly — not scraped or automated. We prioritise accuracy over volume. To report an outdated entry, use the correction link on each listing.</p>
   </div>
   <div class="ft-divider"></div>
+  <div style="display:flex;justify-content:center;gap:16px;margin-bottom:10px">
+    <a href="https://www.tiktok.com/@myscholar.my" target="_blank" rel="noopener" aria-label="TikTok" style="color:rgba(255,255,255,.4);transition:color .2s" onmouseover="this.style.color='rgba(255,255,255,.85)'" onmouseout="this.style.color='rgba(255,255,255,.4)'">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.34 6.34 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.24 8.24 0 0 0 4.84 1.55V6.79a4.85 4.85 0 0 1-1.07-.1z"/></svg>
+    </a>
+    <a href="https://www.facebook.com/profile.php?id=61575743415254" target="_blank" rel="noopener" aria-label="Facebook" style="color:rgba(255,255,255,.4);transition:color .2s" onmouseover="this.style.color='rgba(255,255,255,.85)'" onmouseout="this.style.color='rgba(255,255,255,.4)'">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+    </a>
+    <a href="https://www.linkedin.com/company/myscholar-my" target="_blank" rel="noopener" aria-label="LinkedIn" style="color:rgba(255,255,255,.4);transition:color .2s" onmouseover="this.style.color='rgba(255,255,255,.85)'" onmouseout="this.style.color='rgba(255,255,255,.4)'">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+    </a>
+  </div>
   <a href="https://myscholar.my">myscholar.my</a> · MyIntern is part of the MyScholar ecosystem
 </div>
 
@@ -1371,55 +1438,3 @@ async function submitInternSignup() {
 .nudge-close:hover{color:#f1f5f9;background:rgba(255,255,255,.12)}
 .nudge-title{font-family:'Playfair Display',Georgia,serif;font-size:20px;font-weight:700;color:#f1f5f9;line-height:1.25;margin-bottom:6px;padding-right:32px}
 .nudge-title em{color:#38bdf8;font-style:normal}
-.nudge-sub{font-size:13px;color:#64748b;line-height:1.6;margin-bottom:20px}
-.nudge-tools{display:flex;flex-direction:column;gap:8px}
-.nudge-tool{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);cursor:pointer;transition:all .2s;-webkit-tap-highlight-color:transparent}
-.nudge-tool:hover{background:rgba(56,189,248,.06);border-color:rgba(56,189,248,.2);transform:translateX(3px)}
-.nudge-tool:active{transform:scale(.98)}
-.nudge-tool-icon{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.nudge-tool-body{flex:1}
-.nudge-tool-name{font-size:14px;font-weight:600;color:#f1f5f9}
-.nudge-tool-desc{font-size:11px;color:#64748b;margin-top:1px}
-.nudge-tool-arrow{color:#64748b;font-size:16px;flex-shrink:0;transition:transform .2s}
-.nudge-tool:hover .nudge-tool-arrow{transform:translateX(3px);color:#38bdf8}
-.nudge-skip{display:block;width:100%;text-align:center;margin-top:14px;font-size:12px;color:#64748b;background:none;border:none;cursor:pointer;font-family:-apple-system,sans-serif;padding:6px}
-.nudge-skip:hover{color:#94a3b8}
-</style>
-
-<div class="nudge-ov" id="nudgeOv" onclick="if(event.target.id==='nudgeOv')closeNudge()">
-  <div class="nudge-card">
-    <button class="nudge-close" onclick="closeNudge()">&times;</button>
-    <div class="nudge-title">Before you apply —<br><em>is your CV ready?</em></div>
-    <p class="nudge-sub">Most students apply with a weak CV. These free tools take 5 minutes and actually help.</p>
-    <div class="nudge-tools">
-      <div class="nudge-tool" onclick="nudgeGo('cv-builder.html')">
-        <div class="nudge-tool-icon" style="background:rgba(59,130,246,.12)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
-        <div class="nudge-tool-body">
-          <div class="nudge-tool-name">Build your CV</div>
-          <div class="nudge-tool-desc">8 steps. Works even with zero experience.</div>
-        </div>
-        <span class="nudge-tool-arrow">&rsaquo;</span>
-      </div>
-      <div class="nudge-tool" onclick="nudgeGo('gap-analysis.html')">
-        <div class="nudge-tool-icon" style="background:rgba(251,191,36,.12)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fbbf24" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></div>
-        <div class="nudge-tool-body">
-          <div class="nudge-tool-name">Check your gaps</div>
-          <div class="nudge-tool-desc">See what employers expect vs what you have.</div>
-        </div>
-        <span class="nudge-tool-arrow">&rsaquo;</span>
-      </div>
-      <div class="nudge-tool" onclick="nudgeGo('interview.html')">
-        <div class="nudge-tool-icon" style="background:rgba(167,139,250,.12)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2.2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg></div>
-        <div class="nudge-tool-body">
-          <div class="nudge-tool-name">Practice interviews</div>
-          <div class="nudge-tool-desc">7 questions based on your actual CV.</div>
-        </div>
-        <span class="nudge-tool-arrow">&rsaquo;</span>
-      </div>
-    </div>
-    <button class="nudge-skip" onclick="closeNudge()">I'm just browsing for now</button>
-  </div>
-</div>
-</body>
-</html>
-

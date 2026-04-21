@@ -391,9 +391,9 @@ nav{position:sticky;top:0;z-index:200;background:var(--midnight);padding:0 20px;
 .about-cta button:hover{opacity:.88}
 footer{background:#080f1e;color:rgba(255,255,255,.55);text-align:center;padding:28px 32px;font-size:12px;line-height:2.2}
 footer strong{color:rgba(255,255,255,.9)}footer a{color:rgba(255,255,255,.5);text-decoration:none}footer a:hover{color:rgba(255,255,255,.85)}
-.footer-social{display:flex;justify-content:center;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
-.footer-social a{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:rgba(255,255,255,.5);background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:7px 14px;text-decoration:none;transition:all .2s;letter-spacing:.01em}
-.footer-social a:hover{background:rgba(255,255,255,.12);color:rgba(255,255,255,.9);border-color:rgba(255,255,255,.2)}
+.footer-social{display:flex;justify-content:center;align-items:center;gap:16px;margin-bottom:16px}
+.footer-social a{display:inline-flex;align-items:center;justify-content:center;color:rgba(255,255,255,.4);text-decoration:none;transition:color .2s}
+.footer-social a:hover{color:rgba(255,255,255,.85)}
 @media(max-width:680px){
   /* ── GLOBAL OVERFLOW LOCK ── */
   *{max-width:100%}
@@ -1070,13 +1070,17 @@ document.addEventListener('click', function(e) {
 </section>
 <footer>
   <div class="footer-social">
-    <a href="https://www.facebook.com/profile.php?id=61575743415254" target="_blank" rel="noopener">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-      Facebook
+    <a href="https://www.tiktok.com/@myscholar.my" target="_blank" rel="noopener" aria-label="TikTok">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.34 6.34 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.24 8.24 0 0 0 4.84 1.55V6.79a4.85 4.85 0 0 1-1.07-.1z"/></svg>
     </a>
-    <a href="javascript:void(0)" onclick="openEmailModalFromFooter()">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-      <span data-i18n="footerGetUpdates">Get updates</span>
+    <a href="https://www.facebook.com/profile.php?id=61575743415254" target="_blank" rel="noopener" aria-label="Facebook">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+    </a>
+    <a href="https://www.linkedin.com/company/myscholar-my" target="_blank" rel="noopener" aria-label="LinkedIn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+    </a>
+    <a href="javascript:void(0)" onclick="openEmailModalFromFooter()" aria-label="Get updates">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
     </a>
   </div>
   <strong>MyScholar.my</strong> · Free scholarship directory for Malaysian students · SPM to postgraduate<br>
@@ -2193,6 +2197,7 @@ ${rollingNote}
     </div>
   </div>
 </div>
+<p style="margin-top:16px;font-size:12px;color:var(--muted);text-align:center;line-height:1.6">Planning to apply? <a href="https://myscholar.my/myintern/cv-builder.html" target="_blank" rel="noopener" style="color:var(--navy);font-weight:600;text-decoration:none" onclick="gtag('event','modal_cv_crosslink_click')">Build your CV on MyIntern →</a></p>
 </div>`;
   document.getElementById('modal').classList.add('open');
   document.getElementById('modalBox').scrollTop=0;
@@ -4054,16 +4059,4 @@ setLang(currentLang);
 <li><a href="https://myscholar.my/#id=302">FGV Holdings Scholarship Programme</a> — FGV Holdings Berhad <span class="cat-tag">GLC</span></li>
 <li><a href="https://myscholar.my/#id=303">Swiss Government Excellence Scholarship</a> — Swiss Confederation <span class="cat-tag">International</span></li>
 <li><a href="https://myscholar.my/#id=304">Swedish Institute Scholarship for Global Professionals</a> — Swedish Institute <span class="cat-tag">International</span></li>
-<li><a href="https://myscholar.my/#id=305">Stipendium Hungaricum Scholarship Programme</a> — Hungarian Government <span class="cat-tag">International</span></li>
-<li><a href="https://myscholar.my/#id=306">WCT Holdings Scholarship</a> — WCT Holdings Berhad <span class="cat-tag">Corporate</span></li>
-<li><a href="https://myscholar.my/#id=307">Sunway Group Educational Assistance Programme</a> — Sunway Berhad <span class="cat-tag">Corporate</span></li>
-<li><a href="https://myscholar.my/#id=308">Bank Islam Sadaqa House Scholarship & Education Grant</a> — Bank Islam Malaysia Berhad <span class="cat-tag">Banking</span></li>
-<li><a href="https://myscholar.my/#id=309">IHH Healthcare Singapore Nursing Student Sponsorship</a> — IHH Healthcare Singapore <span class="cat-tag">Corporate</span></li>
-  </ul>
-  <p style="margin-top:24px"><a href="https://myscholar.my">← Back to full interactive directory with filters</a></p>
-  <p>Filter by category, field of study, grade requirement, coverage (full/partial), and deadline. Free, no login required.</p>
-</div>
-</noscript>
-<\!-- END NOSCRIPT FALLBACK -->
-</body>
-</html>
+<li><a href="https://myscholar.my/#id=305">Stipendium Hungaricum Scholarship Programme</a> — Hungarian Government <span class="cat-tag">Internat
