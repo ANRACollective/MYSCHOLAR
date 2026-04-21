@@ -111,6 +111,16 @@ try {
   console.log('  Wave 9: not found, skipping');
 }
 
+// Wave 10: from wave10.js (TikTok Bridge Pages, Uni Comparisons, Seasonal, MyTuition Gaps, Scam Trust, Internship Practical)
+// Created: 2026-04-21 — TikTok-first strategy; short-slug link-in-bio targets; conversational copy for viral traffic
+try {
+  const w10 = require('./wave10.js');
+  KEYWORDS.push(...w10);
+  console.log('  Wave 10: ' + w10.length + ' keywords');
+} catch(e) {
+  console.log('  Wave 10: not found, skipping');
+}
+
 console.log('  Total: ' + KEYWORDS.length + ' keywords');
 console.log('');
 
@@ -369,17 +379,6 @@ KEYWORDS.forEach(function(entry) {
   report += 'Long-tail BM: ' + entry.keywords.longtail_bm.join(' | ') + '\n\n';
 });
 fs.writeFileSync(path.join(OUT, 'keyword-report.md'), report, 'utf8');
-console.log('  + keyword-report.md');
-
-console.log('');
-console.log('===================');
-console.log('  DONE -- ' + count + ' pages generated');
-console.log('  Output: ./seo/');
-console.log('======================================================');
-console.log('');
-console.log('  CMD: copy seo/ to repo, then git push');
-console.log('');
-');
 console.log('  + keyword-report.md');
 
 console.log('');
