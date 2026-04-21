@@ -918,6 +918,17 @@ document.addEventListener('click', function(e) {
     <div class="qf-chip" data-f="NoBond" data-i18n="chipNoBond" onclick="toggleChip(this)">✓ No bond</div>
     <div class="qf-chip" data-f="B40" data-i18n="chipB40" onclick="toggleChip(this)">B40 / Income-based</div>
   </div>
+  <div class="qf-section" id="studyInSection">
+    <span class="qf-label" data-i18n="qfStudyIn">Study in</span>
+    <div class="qf-chip" data-f="dcUK" onclick="toggleChip(this)">United Kingdom</div>
+    <div class="qf-chip" data-f="dcUS" onclick="toggleChip(this)">United States</div>
+    <div class="qf-chip" data-f="dcJP" onclick="toggleChip(this)">Japan</div>
+    <div class="qf-chip" data-f="dcSG" onclick="toggleChip(this)">Singapore</div>
+    <div class="qf-chip" data-f="dcKR" onclick="toggleChip(this)">South Korea</div>
+    <div class="qf-chip" data-f="dcAU" onclick="toggleChip(this)">Australia</div>
+    <div class="qf-chip" data-f="dcCN" onclick="toggleChip(this)">China</div>
+    <div class="qf-chip" data-f="dcASEAN" onclick="toggleChip(this)">ASEAN</div>
+  </div>
   <div class="qf-section">
     <span class="qf-label" data-i18n="qfDeadline">Deadline</span>
     <div class="qf-chip chip-tooltip" data-f="OpenNow" onclick="toggleChip(this)"><span data-i18n="chipOpenNow">Open now</span><span class="tooltip-text" data-i18n="tooltipOpenNow">Applications are currently open based on the listed opening and closing months.</span></div>
@@ -1681,6 +1692,7 @@ function normaliseRow(row) {
     elig:             [],
     last_verified:    row.last_verified || null,
     created_at:       row.created_at    || null, // when this scholarship was added to the database
+    destCountries:    row.dest_countries || [],   // normalised array of destination countries — used by Study in filter
   };
 }
 
@@ -2027,6 +2039,15 @@ function matches(s){
     if(f==='eForeigner'&&!s.foreignerOk&&!s.global)return false;
     // other
     if(f==='Overseas'&&s.dest!=='Overseas')return false;
+    // Study in country filters — 'Multiple' (flexible destination) scholarships appear under every country
+    if(f==='dcUK'&&!s.destCountries.some(c=>c==='United Kingdom'||c==='Multiple'))return false;
+    if(f==='dcUS'&&!s.destCountries.some(c=>c==='United States'||c==='Multiple'))return false;
+    if(f==='dcJP'&&!s.destCountries.some(c=>c==='Japan'||c==='Multiple'))return false;
+    if(f==='dcSG'&&!s.destCountries.some(c=>c==='Singapore'||c==='Multiple'))return false;
+    if(f==='dcKR'&&!s.destCountries.some(c=>c==='South Korea'||c==='Multiple'))return false;
+    if(f==='dcAU'&&!s.destCountries.some(c=>c==='Australia'||c==='Multiple'))return false;
+    if(f==='dcCN'&&!s.destCountries.some(c=>c==='China'||c==='Multiple'))return false;
+    if(f==='dcASEAN'&&!s.destCountries.some(c=>c==='ASEAN'||c==='Multiple'))return false;
     if(f==='Full'&&s.cov!=='Full')return false;
     if(f==='B40'&&!s.b40)return false;
     if(f==='NoBond'&&!s.nb)return false;
@@ -2630,7 +2651,7 @@ function setTab(el){
 
 function clearAll(){
   activeChips.clear();
-  document.querySelectorAll('.chip.on').forEach(c=>c.classList.remove('on'));
+  document.querySelectorAll('.chip.on, .qf-chip.on').forEach(c=>c.classList.remove('on'));
   updateFilterUI();
   resetPage();
   render();
@@ -3677,7 +3698,7 @@ const TRANSLATIONS = {
     tabAll:'All', tabGov:'Government', tabGlc:'GLC / Yayasan', tabBank:'Banking',
     tabCorp:'Corporate', tabLoan:'Loans', tabState:'State', tabIntl:'International',
     tabUni:'University', tabFound:'Foundation & Media', tabPg:'Postgraduate',
-    qfIam:'I am', qfLooking:'Looking for', qfDeadline:'Deadline',
+    qfIam:'I am', qfLooking:'Looking for', qfStudyIn:'Study in', qfDeadline:'Deadline',
     chipPostSPM:'Post-SPM', chipPreU:'Pre-University', chipUndergrad:'Undergraduate', chipPostgrad:'Postgraduate',
     chipFull:'★ Full scholarship', chipOverseas:'✈ Overseas study', chipNoBond:'✓ No bond', chipB40:'B40 / Income-based',
     chipOpenNow:'Open now', chipSoon:'Closing soon', chip3Months:'Within 3 months', chipRolling:'Rolling / ongoing',
@@ -3762,7 +3783,7 @@ const TRANSLATIONS = {
     tabAll:'Semua', tabGov:'Kerajaan', tabGlc:'GLC / Yayasan', tabBank:'Perbankan',
     tabCorp:'Korporat', tabLoan:'Pinjaman', tabState:'Negeri', tabIntl:'Antarabangsa',
     tabUni:'Universiti', tabFound:'Yayasan & Media', tabPg:'Pascasiswazah',
-    qfIam:'Saya', qfLooking:'Mencari', qfDeadline:'Tarikh tutup',
+    qfIam:'Saya', qfLooking:'Mencari', qfStudyIn:'Belajar di', qfDeadline:'Tarikh tutup',
     chipPostSPM:'Lepasan SPM', chipPreU:'Pra-Universiti', chipUndergrad:'Sarjana Muda', chipPostgrad:'Pascasiswazah',
     chipFull:'★ Biasiswa penuh', chipOverseas:'✈ Pengajian luar negara', chipNoBond:'✓ Tanpa ikatan', chipB40:'B40 / Berasaskan pendapatan',
     chipOpenNow:'Terbuka sekarang', chipSoon:'Hampir tutup', chip3Months:'Dalam 3 bulan', chipRolling:'Berterusan / Tiada tarikh tutup',
