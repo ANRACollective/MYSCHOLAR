@@ -2039,15 +2039,15 @@ function matches(s){
     if(f==='eForeigner'&&!s.foreignerOk&&!s.global)return false;
     // other
     if(f==='Overseas'&&s.dest!=='Overseas')return false;
-    // Study in country filters — 'Multiple' (flexible destination) scholarships appear under every country
-    if(f==='dcUK'&&!s.destCountries.some(c=>c==='United Kingdom'||c==='Multiple'))return false;
-    if(f==='dcUS'&&!s.destCountries.some(c=>c==='United States'||c==='Multiple'))return false;
-    if(f==='dcJP'&&!s.destCountries.some(c=>c==='Japan'||c==='Multiple'))return false;
-    if(f==='dcSG'&&!s.destCountries.some(c=>c==='Singapore'||c==='Multiple'))return false;
-    if(f==='dcKR'&&!s.destCountries.some(c=>c==='South Korea'||c==='Multiple'))return false;
-    if(f==='dcAU'&&!s.destCountries.some(c=>c==='Australia'||c==='Multiple'))return false;
-    if(f==='dcCN'&&!s.destCountries.some(c=>c==='China'||c==='Multiple'))return false;
-    if(f==='dcASEAN'&&!s.destCountries.some(c=>c==='ASEAN'||c==='Multiple'))return false;
+    // Study in country filters — exact match only; flexible/multi-country scholarships surface via the Overseas chip
+    if(f==='dcUK'&&!s.destCountries.includes('United Kingdom'))return false;
+    if(f==='dcUS'&&!s.destCountries.includes('United States'))return false;
+    if(f==='dcJP'&&!s.destCountries.includes('Japan'))return false;
+    if(f==='dcSG'&&!s.destCountries.includes('Singapore'))return false;
+    if(f==='dcKR'&&!s.destCountries.includes('South Korea'))return false;
+    if(f==='dcAU'&&!s.destCountries.includes('Australia'))return false;
+    if(f==='dcCN'&&!s.destCountries.includes('China'))return false;
+    if(f==='dcASEAN'&&!s.destCountries.includes('ASEAN'))return false;
     if(f==='Full'&&s.cov!=='Full')return false;
     if(f==='B40'&&!s.b40)return false;
     if(f==='NoBond'&&!s.nb)return false;
