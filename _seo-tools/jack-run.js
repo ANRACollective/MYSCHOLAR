@@ -121,6 +121,16 @@ try {
   console.log('  Wave 10: not found, skipping');
 }
 
+// Wave 11: from wave11.js (New scholarship providers: Kuok/YTL/Razak/BOH/TFM, private uni scholarships, overseas scholarships, GLCs, state Yayasan gaps, STPM/non-Bumi)
+// Created: 2026-04-21 — DB-sourced gaps; provider-specific pages for scholarship searchers
+try {
+  const w11 = require('./wave11.js');
+  KEYWORDS.push(...w11);
+  console.log('  Wave 11: ' + w11.length + ' keywords');
+} catch(e) {
+  console.log('  Wave 11: not found, skipping');
+}
+
 console.log('  Total: ' + KEYWORDS.length + ' keywords');
 console.log('');
 
