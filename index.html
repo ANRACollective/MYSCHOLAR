@@ -119,40 +119,54 @@
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 html{scroll-behavior:smooth;overflow-x:hidden;max-width:100%}
 body{font-family:var(--sans);background:var(--ice);color:var(--midnight);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;width:100%}
-nav{position:sticky;top:0;z-index:200;background:var(--midnight);padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:52px;border-bottom:2px solid var(--coral);width:100%;max-width:100%;overflow:hidden}
-/* ── Nav left: product toggle ── */
-.nav-l{display:flex;align-items:center;flex-shrink:0}
-.nav-brand{font-family:var(--serif);font-size:24px;letter-spacing:-.4px;text-decoration:none;color:#fff;font-weight:900;transition:opacity .2s}
+nav{position:sticky;top:0;z-index:200;background:var(--midnight);padding:0 20px;display:flex;align-items:center;gap:10px;height:52px;border-bottom:2px solid var(--coral);width:100%;max-width:100%;overflow:hidden}
+/* ── Nav: global focus ring ── */
+*:focus-visible{outline:2px solid var(--coral);outline-offset:3px;border-radius:4px}
+/* ── Nav: brand ── */
+.nav-brand{font-family:var(--serif);font-size:24px;letter-spacing:-.4px;text-decoration:none;color:#fff;font-weight:900;transition:opacity .2s;flex-shrink:0}
 .nav-brand .coral{color:var(--coral)}
 .nav-brand .blue{color:var(--sky)}
-/* MyIntern link — visible and inviting, sky-blue glow pulse on the "Intern" text */
 .nav-brand.inactive{opacity:.7}
 .nav-brand.inactive .blue{animation:internGlow 3s ease-in-out infinite}
 .nav-brand.inactive:hover{opacity:1}
 @keyframes internGlow{0%,100%{text-shadow:0 0 6px rgba(56,189,248,.2)}50%{text-shadow:0 0 18px rgba(56,189,248,.75),0 0 28px rgba(56,189,248,.3)}}
-.nav-sep{color:rgba(255,255,255,.2);font-size:18px;margin:0 8px;font-weight:300;user-select:none}
-.pt-new{font-size:8px;font-weight:700;color:#0b1120;background:var(--sky);padding:2px 5px;border-radius:4px;letter-spacing:.5px;text-transform:uppercase;line-height:1.3;vertical-align:middle;margin-left:3px;animation:badgePulse 2.5s infinite}
-@keyframes badgePulse{0%,100%{opacity:1;box-shadow:0 0 6px rgba(56,189,248,.4)}50%{opacity:.7;box-shadow:0 0 14px rgba(56,189,248,.8)}}
-@media(max-width:680px){.nav-brand{font-size:20px}.products-btn{font-size:10.5px;padding:3px 9px}.products-btn-label{display:none}.btn-browse{display:none!important}}
+/* ── Nav: divider, tools button, spacer ── */
+.nav-divider{width:1px;height:20px;background:rgba(255,255,255,.15);flex-shrink:0}
+.tools-btn{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:6px 12px;font-size:12px;font-weight:600;color:rgba(255,255,255,.75);font-family:var(--sans);cursor:pointer;transition:background .18s,border-color .18s,color .18s;position:relative;flex-shrink:0;min-height:36px}
+.tools-btn:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.22);color:#fff}
+.dot-trio{display:flex;align-items:center;gap:3px}
+.dot-trio span{width:6px;height:6px;border-radius:50%}
+.dot-trio .d-teal{background:var(--teal)}
+.dot-trio .d-coral{background:var(--coral)}
+.dot-trio .d-sky{background:var(--sky)}
+.nav-active-indicator{position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);width:20px;height:2px;background:var(--coral);border-radius:2px;opacity:0}
+.tools-btn.active-product .nav-active-indicator{opacity:1}
+.nav-spacer{flex:1}
+/* ── Nav right ── */
 .nav-r{display:flex;align-items:center;gap:8px;overflow:hidden;min-width:0}
 .nav-r a{color:rgba(255,255,255,.5);font-size:12px;text-decoration:none;letter-spacing:.04em;transition:color .2s;flex-shrink:0}.nav-r a:hover{color:#fff}
-.nav-pill{font-size:11px;color:rgba(255,255,255,.4);background:rgba(255,255,255,.09);padding:3px 8px;border-radius:20px;white-space:nowrap;flex-shrink:0}
-/* ── Products button + dropdown ── */
-.products-btn{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.14);border-radius:20px;color:rgba(255,255,255,.65);font-family:var(--sans);font-size:11.5px;font-weight:600;padding:4px 12px;cursor:pointer;transition:all .18s;flex-shrink:0;letter-spacing:.02em}
-.products-btn:hover,.products-btn.active{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.28);color:#fff}
-.products-dropdown{position:fixed;top:56px;left:20px;background:var(--midnight);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:10px;width:270px;box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.04);z-index:300;opacity:0;transform:translateY(-6px);pointer-events:none;transition:opacity .18s,transform .18s}
-.products-dropdown.open{opacity:1;transform:translateY(0);pointer-events:auto}
-.pd-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:9px;text-decoration:none;transition:background .15s;margin-bottom:3px;cursor:pointer}
-.pd-item:last-child{margin-bottom:0}
+/* ── Our tools dropdown ── */
+.tools-dropdown{position:fixed;top:56px;left:20px;background:var(--midnight);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:10px;width:280px;box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.04);z-index:300;opacity:0;pointer-events:none}
+.tools-dropdown.open{opacity:1;pointer-events:auto}
+@media(prefers-reduced-motion:no-preference){
+  .tools-dropdown{transform:translateY(-8px) scale(0.97);transition:opacity .18s,transform .18s}
+  .tools-dropdown.open{transform:translateY(0) scale(1)}
+  .tools-btn svg.chevron{transition:transform .2s}
+  .tools-btn.open svg.chevron{transform:rotate(180deg)}
+}
+@media(max-width:680px){.nav-brand{font-size:20px}.tools-btn{font-size:10.5px;padding:3px 9px}.btn-browse{display:none!important}}
+.pd-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:9px;text-decoration:none;transition:background .15s;cursor:pointer}
 .pd-item:not(.pd-dim):hover{background:rgba(255,255,255,.07)}
 .pd-dim{cursor:default;opacity:.45}
 .pd-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.pd-info{flex:1}
-.pd-name{font-size:13px;font-weight:600;color:#fff}
-.pd-sub{font-size:11px;color:rgba(255,255,255,.35);margin-top:2px}
-.pd-arrow{font-size:12px;color:rgba(255,255,255,.25)}
-.pd-check{font-size:11px;color:var(--coral);font-weight:700}
-.pd-soon{font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.3);background:rgba(255,255,255,.07);padding:2px 7px;border-radius:4px}
+.pd-dot.teal{background:var(--teal)}.pd-dot.coral{background:var(--coral)}.pd-dot.sky{background:var(--sky)}
+.pd-text{flex:1}
+.pd-label{font-size:13px;font-weight:700;color:rgba(255,255,255,.5);letter-spacing:.08em;text-transform:uppercase}
+.pd-label span{font-weight:600;color:#fff;letter-spacing:0;text-transform:none}
+.pd-sub{font-size:11px;color:rgba(255,255,255,.38);margin-top:2px}
+.pd-divider{height:1px;background:rgba(255,255,255,.07);margin:4px 12px}
+.pd-current{font-size:9px;font-weight:700;color:var(--coral);background:rgba(232,85,30,.1);border-radius:4px;padding:2px 6px;flex-shrink:0}
+.pd-soon{font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.3);background:rgba(255,255,255,.07);padding:2px 7px;border-radius:4px;flex-shrink:0}
 .hero{background:var(--midnight);padding:60px 32px 76px;text-align:center;position:relative;overflow:hidden}
 .hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(255,255,255,.013) 0,rgba(255,255,255,.013) 1px,transparent 1px,transparent 80px),repeating-linear-gradient(0deg,rgba(255,255,255,.013) 0,rgba(255,255,255,.013) 1px,transparent 1px,transparent 80px);pointer-events:none}
 .hero::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:40px;background:linear-gradient(to bottom,transparent,var(--ice))}
@@ -802,24 +816,32 @@ footer strong{color:rgba(255,255,255,.9)}footer a{color:rgba(255,255,255,.5);tex
 }
 /* ── LANGUAGE TOGGLE ─────────────────────────────────────── */
 .lang-toggle{display:flex;align-items:center;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:20px;padding:3px;gap:2px;flex-shrink:0}
-.lt-opt{font-size:10px;font-weight:500;padding:3px 10px;border-radius:16px;cursor:pointer;color:rgba(255,255,255,.45);background:none;border:none;transition:all .15s;letter-spacing:.02em}
+.lt-opt{font-size:10px;font-weight:500;padding:0 12px;min-height:36px;min-width:44px;display:flex;align-items:center;justify-content:center;border-radius:16px;cursor:pointer;color:rgba(255,255,255,.6);background:none;border:none;transition:all .15s;letter-spacing:.02em}
 .lt-opt.active{background:rgba(255,255,255,.18);color:#fff}
-.lt-opt:focus-visible{outline:2px solid var(--coral);outline-offset:2px}
 </style>
 </head>
 <body>
 <nav>
-  <div class="nav-l">
-    <!-- Single brand — clean, no product clutter in the nav -->
-    <a class="nav-brand" href="/">My<span class="coral">Scholar</span></a>
-  </div>
+  <!-- Brand -->
+  <a class="nav-brand" href="/">My<span class="coral">Scholar</span></a>
+  <!-- Divider between brand and tools button -->
+  <div class="nav-divider" aria-hidden="true"></div>
+  <!-- Our tools button — opens dropdown with all 3 products -->
+  <button class="tools-btn active-product" id="toolsBtn" onclick="toggleDropdown()" aria-haspopup="true" aria-expanded="false" aria-controls="toolsDropdown">
+    <div class="dot-trio" aria-hidden="true">
+      <span class="d-teal"></span><span class="d-coral"></span><span class="d-sky"></span>
+    </div>
+    Our tools
+    <svg class="chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+      <path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <!-- Active-page indicator line underneath button -->
+    <div class="nav-active-indicator" aria-hidden="true"></div>
+  </button>
+  <!-- Spacer pushes right-side items to the end -->
+  <div class="nav-spacer"></div>
   <div class="nav-r">
-    <!-- Products button — opens dropdown showing all 3 products -->
-    <button class="products-btn" id="productsBtn" onclick="toggleProductsMenu()" aria-haspopup="true" aria-expanded="false">
-      <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-      <span class="products-btn-label">Products</span>
-      <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="margin-left:1px;transition:transform .18s" id="productsBtnChevron"><path d="M6 9l6 6 6-6"/></svg>
-    </button>
+    <!-- Bookmark — functional for the scholarship browser -->
     <button class="bookmark-nav-btn" id="bookmarkNavBtn" onclick="openBookmarkPanel()">
       <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
       <span class="nav-btn-label" data-i18n="navSaved">Saved</span> (<span id="bookmarkCount">0</span>)
@@ -831,46 +853,69 @@ footer strong{color:rgba(255,255,255,.9)}footer a{color:rgba(255,255,255,.5);tex
   </div>
 </nav>
 
-<!-- Products dropdown — position:fixed so it clears sticky nav -->
-<div class="products-dropdown" id="productsDropdown" role="menu" aria-label="Products">
-  <a class="pd-item" href="/" role="menuitem">
-    <div class="pd-dot" style="background:var(--coral)"></div>
-    <div class="pd-info">
-      <div class="pd-name">MyScholar</div>
-      <div class="pd-sub">Scholarships &amp; financial aid</div>
+<!-- Our tools dropdown — position:fixed so it clears sticky nav -->
+<div class="tools-dropdown" id="toolsDropdown" role="menu" aria-label="Our tools">
+  <!-- PLAN: MyJourney — coming soon -->
+  <a class="pd-item pd-dim" href="#" role="menuitem" aria-disabled="true" tabindex="-1">
+    <div class="pd-dot teal" aria-hidden="true"></div>
+    <div class="pd-text">
+      <div class="pd-label">PLAN <span>MyJourney</span></div>
+      <div class="pd-sub">Map your career pathway</div>
     </div>
-    <span class="pd-check">✓</span>
+    <span class="pd-soon">Coming soon</span>
   </a>
-  <a class="pd-item" href="/internships" onclick="gtag('event','nav_myintern_click')" role="menuitem">
-    <div class="pd-dot" style="background:var(--sky)"></div>
-    <div class="pd-info">
-      <div class="pd-name">MyIntern</div>
-      <div class="pd-sub">Internship programmes</div>
+  <div class="pd-divider" role="separator"></div>
+  <!-- FUND: MyScholar — current page -->
+  <a class="pd-item" href="/" role="menuitem" aria-current="page">
+    <div class="pd-dot coral" aria-hidden="true"></div>
+    <div class="pd-text">
+      <div class="pd-label">FUND <span>MyScholar</span></div>
+      <div class="pd-sub">Find scholarships for your studies</div>
     </div>
-    <span class="pd-arrow">→</span>
+    <span class="pd-current" aria-label="Current page">Here</span>
+  </a>
+  <div class="pd-divider" role="separator"></div>
+  <!-- LAUNCH: MyIntern -->
+  <a class="pd-item" href="/internships" onclick="gtag('event','nav_myintern_click')" role="menuitem">
+    <div class="pd-dot sky" aria-hidden="true"></div>
+    <div class="pd-text">
+      <div class="pd-label">LAUNCH <span>MyIntern</span></div>
+      <div class="pd-sub">Discover internship opportunities</div>
+    </div>
   </a>
 </div>
 <script>
-// ── Products dropdown toggle ──
-function toggleProductsMenu() {
-  const d   = document.getElementById('productsDropdown');
-  const btn = document.getElementById('productsBtn');
-  const chv = document.getElementById('productsBtnChevron');
-  const open = d.classList.toggle('open');
-  btn.classList.toggle('active', open);
-  btn.setAttribute('aria-expanded', open);
-  if (chv) chv.style.transform = open ? 'rotate(180deg)' : '';
-  if (open) gtag('event', 'products_menu_open'); // GA4
+// ── Our tools dropdown toggle ──
+function toggleDropdown() {
+  const dropdown = document.getElementById('toolsDropdown');
+  const toolsBtn = document.getElementById('toolsBtn');
+  const isOpen = dropdown.classList.toggle('open');
+  toolsBtn.classList.toggle('open', isOpen);
+  toolsBtn.setAttribute('aria-expanded', isOpen);
+  if (isOpen) gtag('event', 'tools_menu_open'); // GA4
 }
-// Close when clicking anywhere outside
+// Close when clicking anywhere outside the button or dropdown
 document.addEventListener('click', function(e) {
-  if (!e.target.closest('#productsBtn') && !e.target.closest('#productsDropdown')) {
-    const d = document.getElementById('productsDropdown');
-    if (d && d.classList.contains('open')) {
-      d.classList.remove('open');
-      const btn = document.getElementById('productsBtn');
-      btn.classList.remove('active');
-      btn.setAttribute('aria-expanded', 'false');
+  if (!e.target.closest('#toolsBtn') && !e.target.closest('#toolsDropdown')) {
+    const dropdown = document.getElementById('toolsDropdown');
+    if (dropdown && dropdown.classList.contains('open')) {
+      dropdown.classList.remove('open');
+      const toolsBtn = document.getElementById('toolsBtn');
+      toolsBtn.classList.remove('open');
+      toolsBtn.setAttribute('aria-expanded', 'false');
+    }
+  }
+});
+// Escape key closes dropdown and returns focus to button
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    const dropdown = document.getElementById('toolsDropdown');
+    if (dropdown && dropdown.classList.contains('open')) {
+      dropdown.classList.remove('open');
+      const toolsBtn = document.getElementById('toolsBtn');
+      toolsBtn.classList.remove('open');
+      toolsBtn.setAttribute('aria-expanded', 'false');
+      toolsBtn.focus();
     }
   }
 });
