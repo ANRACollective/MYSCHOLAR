@@ -140,7 +140,7 @@ html{scroll-behavior:smooth}
 body{font-family:var(--sans);background:var(--bg);color:var(--t1);min-height:100vh;-webkit-font-smoothing:antialiased}
 
 /* ── SHARED STICKY NAV (mirrors MyScholar index.html) ──────────────────── */
-nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:52px;border-bottom:2px solid #e8551e;width:100%;max-width:100%;overflow:hidden}
+nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:flex;align-items:center;gap:10px;height:52px;border-bottom:2px solid #e8551e;width:100%;max-width:100%;overflow:hidden}
 .nav-l{display:flex;align-items:center;flex-shrink:0}
 
 /* ── STANDARDIZED NAV — shared across all MyScholar products ── */
@@ -150,13 +150,13 @@ nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:
 .dot-trio{display:flex;align-items:center;gap:3.5px}
 .dot-trio span{width:6px;height:6px;border-radius:50%}
 .d-teal{background:#00a878}.d-coral{background:#e8551e}.d-sky{background:#38bdf8}
-.tools-btn{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-bottom:2px solid #e8551e;border-radius:8px 8px 0 0;padding:7px 13px 6px;font-size:13px;font-weight:600;color:rgba(255,255,255,.75);font-family:var(--sans);cursor:pointer;transition:background .15s,color .15s;flex-shrink:0}
+.tools-btn{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:6px 12px;font-size:12px;font-weight:600;color:rgba(255,255,255,.75);font-family:var(--sans);cursor:pointer;transition:background .18s,border-color .18s,color .18s;position:relative;flex-shrink:0;min-height:36px}
 .tools-btn:hover{background:rgba(255,255,255,.1);color:#fff}
 .chevron{color:rgba(255,255,255,.5);transition:transform .2s;flex-shrink:0}
 .tools-btn.open .chevron{transform:rotate(180deg)}
 .tools-dropdown{position:fixed;top:89px;left:32px;background:#0a1626;border:1px solid rgba(255,255,255,.13);border-top:none;border-radius:0 10px 10px 10px;width:300px;padding:8px;box-shadow:0 24px 60px rgba(0,0,0,.6);z-index:300;opacity:0;pointer-events:none;transform:translateY(-6px);transition:opacity .18s,transform .18s}
 .tools-dropdown.open{opacity:1;pointer-events:auto;transform:translateY(0)}
-.pd-label{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;flex-shrink:0}
+.pd-label{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;flex-shrink:0}.pd-label.teal-lbl{color:#00a878}.pd-label.coral-lbl{color:#e8551e}.pd-label.sky-lbl{color:#38bdf8}
 .pd-label span{font-weight:500;color:rgba(255,255,255,.8);letter-spacing:0;text-transform:none;font-size:13px}
 .pd-current{font-size:9px;font-weight:700;color:#e8551e;background:rgba(232,85,30,.1);border-radius:4px;padding:2px 6px;flex-shrink:0}
 .nav-brand{font-family:var(--serif);font-size:24px;letter-spacing:-.4px;text-decoration:none;color:#fff;font-weight:900;transition:opacity .2s}
@@ -506,7 +506,7 @@ nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:
   <a class="pd-item pd-dim" href="#" role="menuitem" aria-disabled="true" tabindex="-1">
     <div class="pd-dot teal" aria-hidden="true"></div>
     <div class="pd-text">
-      <div class="pd-label">PLAN <span>MyJourney</span></div>
+      <div class="pd-label teal-lbl">PLAN <span>MyJourney</span></div>
       <div class="pd-sub">Map your career pathway</div>
     </div>
     <span class="pd-soon">Coming soon</span>
@@ -515,7 +515,7 @@ nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:
   <a class="pd-item" href="scholarships.html" onclick="gtag('event','intern_nav_scholar_click')" role="menuitem">
     <div class="pd-dot coral" aria-hidden="true"></div>
     <div class="pd-text">
-      <div class="pd-label">FUND <span>MyScholar</span></div>
+      <div class="pd-label coral-lbl">FUND <span>MyScholar</span></div>
       <div class="pd-sub">Find scholarships for your studies</div>
     </div>
   </a>
@@ -523,7 +523,7 @@ nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:
   <a class="pd-item" href="internships.html" role="menuitem" aria-current="page">
     <div class="pd-dot sky" aria-hidden="true"></div>
     <div class="pd-text">
-      <div class="pd-label">LAUNCH <span>MyIntern</span></div>
+      <div class="pd-label sky-lbl">LAUNCH <span>MyIntern</span></div>
       <div class="pd-sub">Discover internship opportunities</div>
     </div>
     <span class="pd-current" aria-label="Current page">Here</span>
