@@ -354,16 +354,20 @@ nav {
 .try-row {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 8px;
-  flex-wrap: wrap;
-  margin-top: 16px;
+  margin-top: 20px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 4px;
+  justify-content: center;
+}
+.try-row::-webkit-scrollbar { display: none; }
+@media (max-width: 680px) {
+  .try-row { justify-content: flex-start; padding: 0 20px 4px; margin-left: -20px; width: calc(100% + 40px); }
 }
 .try-label {
-  font-size: 11px;
-  color: rgba(255,255,255,.35);
-  font-weight: 600;
-  letter-spacing: .1em;
+  display: none;
 }
 .try-chip {
   font-size: 13px;
@@ -758,14 +762,15 @@ footer {
   </div>
 
   <!-- Try: chips -->
-  <div class="try-row" aria-label="Search suggestions">
-    <span class="try-label" data-i18n="tryLabel">TRY:</span>
+  <div class="try-row" aria-label="Top searches">
     <button class="try-chip" onclick="fillSearch(this)">JPA</button>
     <button class="try-chip" onclick="fillSearch(this)">Petronas</button>
     <button class="try-chip" onclick="fillSearch(this)">MARA</button>
+    <button class="try-chip" onclick="fillSearch(this)">Khazanah</button>
     <button class="try-chip" onclick="fillSearch(this)">Lepasan SPM</button>
     <button class="try-chip" onclick="fillSearch(this)">UK</button>
     <button class="try-chip" onclick="fillSearch(this)">USA</button>
+    <button class="try-chip" onclick="fillSearch(this)">Postgraduate</button>
   </div>
 
 </section>
