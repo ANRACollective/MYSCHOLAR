@@ -114,7 +114,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"></noscript>
 <style>
-:root{--midnight:#0f1f3d;--navy:#1e3a6e;--coral:#e8551e;--ice:#f0f4ff;--ice-mid:#e4ebfa;--white:#ffffff;--teal:#00a878;--border:#dde4f5;--border-mid:#c8d3ee;--muted:#3d4663;--c-gov:#1e3a6e;--c-glc:#00a878;--c-bank:#c07a00;--c-corp:#7c3aed;--c-loan:#0891b2;--c-state:#b45309;--c-media:#be185d;--c-intl:#0f766e;--c-uni:#374151;--serif:'Playfair Display',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif;--sky:#38bdf8}
+:root{--midnight:#0f1f3d;--navy:#1e3a6e;--coral:#e8551e;--ice:#f0f4ff;--ice-mid:#e4ebfa;--white:#ffffff;--teal:#00a878;--border:#dde4f5;--border-mid:#c8d3ee;--muted:#3d4663;--c-gov:#1e3a6e;--c-glc:#00a878;--c-bank:#c07a00;--c-corp:#7c3aed;--c-loan:#0891b2;--c-state:#b45309;--c-media:#be185d;--c-intl:#0f766e;--c-uni:#374151;--c-tvet:#c2410c;--serif:'Playfair Display',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif;--sky:#38bdf8}
 *{box-sizing:border-box;margin:0;padding:0}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 html{scroll-behavior:smooth;overflow-x:hidden;max-width:100%}
@@ -182,7 +182,7 @@ nav{position:sticky;top:0;z-index:200;background:var(--midnight);padding:0 20px;
 .tab.loan.active{color:var(--c-loan);border-bottom-color:var(--c-loan)}.tab.state.active{color:var(--c-state);border-bottom-color:var(--c-state)}
 .tab.media.active{color:var(--c-media);border-bottom-color:var(--c-media)}.tab.intl.active{color:var(--c-intl);border-bottom-color:var(--c-intl)}
 .tab.uni.active{color:var(--c-uni);border-bottom-color:var(--c-uni)}
-.tab.found.active{color:#d97706;border-bottom-color:#d97706}.tab.pg.active{color:#0891b2;border-bottom-color:#0891b2}
+.tab.found.active{color:#d97706;border-bottom-color:#d97706}.tab.pg.active{color:#0891b2;border-bottom-color:#0891b2}.tab.tvet.active{color:var(--c-tvet);border-bottom-color:var(--c-tvet)}
 /* filter panel */
 .filter-panel{background:var(--white);border-bottom:1px solid var(--border);padding:14px 32px}
 .filter-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px}
@@ -195,7 +195,7 @@ nav{position:sticky;top:0;z-index:200;background:var(--midnight);padding:0 20px;
 .chip.soon-on{background:#ea580c;color:#fff;border-color:#ea580c}
 /* all chips: single active colour — midnight — no per-chip overrides */
 /* field chips (already midnight, kept explicit for clarity) */
-.chip[data-f="fSTEM"].on,.chip[data-f="fEngineering"].on,.chip[data-f="fMedicine"].on,.chip[data-f="fBusiness"].on,.chip[data-f="fIT"].on,.chip[data-f="fLaw"].on,.chip[data-f="fAny"].on{background:var(--midnight);border-color:var(--midnight)}
+.chip[data-f="fSTEM"].on,.chip[data-f="fEngineering"].on,.chip[data-f="fMedicine"].on,.chip[data-f="fBusiness"].on,.chip[data-f="fIT"].on,.chip[data-f="fLaw"].on,.chip[data-f="fAny"].on,.chip[data-f="fVocational"].on{background:var(--midnight);border-color:var(--midnight)}
 /* tooltip */
 .chip-tooltip{position:relative}
 .chip-tooltip .tooltip-text{display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--midnight);color:#fff;font-size:11px;line-height:1.5;padding:8px 12px;border-radius:6px;width:220px;white-space:normal;z-index:500;box-shadow:0 4px 16px rgba(0,0,0,.18);pointer-events:none}
@@ -277,13 +277,13 @@ nav{position:sticky;top:0;z-index:200;background:var(--midnight);padding:0 20px;
 .card.urgent-card{border-color:#fca5a5}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 .card-stripe{height:3px}
-.cs-gov{background:var(--c-gov)}.cs-glc{background:var(--c-glc)}.cs-bank{background:var(--c-bank)}.cs-corp{background:var(--c-corp)}.cs-loan{background:var(--c-loan)}.cs-state{background:var(--c-state)}.cs-media{background:var(--c-media)}.cs-intl{background:var(--c-intl)}.cs-uni{background:var(--c-uni)}.cs-found{background:#d97706}.cs-pg{background:#0891b2}
+.cs-gov{background:var(--c-gov)}.cs-glc{background:var(--c-glc)}.cs-bank{background:var(--c-bank)}.cs-corp{background:var(--c-corp)}.cs-loan{background:var(--c-loan)}.cs-state{background:var(--c-state)}.cs-media{background:var(--c-media)}.cs-intl{background:var(--c-intl)}.cs-uni{background:var(--c-uni)}.cs-found{background:#d97706}.cs-pg{background:#0891b2}.cs-tvet{background:var(--c-tvet)}
 .card-body{padding:20px 20px 16px;flex:1;min-height:0;display:flex;flex-direction:column}
 .card-tags-spacer{flex:1 1 0;min-height:0}
 .card-top{display:flex;flex-direction:column;gap:7px;margin-bottom:13px}
 .card-badges{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
 .badge{font-size:10px;padding:2px 8px;border-radius:6px;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
-.bg-gov{background:#e0e8f8;color:var(--c-gov)}.bg-glc{background:#e0f5ef;color:#007a57}.bg-bank{background:#fef3c7;color:#92400e}.bg-corp{background:#ede9fe;color:#5b21b6}.bg-loan{background:#e0f2fe;color:#075985}.bg-state{background:#fef3c7;color:#92400e}.bg-media{background:#fce7f3;color:#9d174d}.bg-intl{background:#e0f5ef;color:#0f766e}.bg-uni{background:#f3f4f6;color:#374151}.bg-found{background:#fef3c7;color:#92400e}.bg-pg{background:#e0f2fe;color:#075985}
+.bg-gov{background:#e0e8f8;color:var(--c-gov)}.bg-glc{background:#e0f5ef;color:#007a57}.bg-bank{background:#fef3c7;color:#92400e}.bg-corp{background:#ede9fe;color:#5b21b6}.bg-loan{background:#e0f2fe;color:#075985}.bg-state{background:#fef3c7;color:#92400e}.bg-media{background:#fce7f3;color:#9d174d}.bg-intl{background:#e0f5ef;color:#0f766e}.bg-uni{background:#f3f4f6;color:#374151}.bg-found{background:#fef3c7;color:#92400e}.bg-pg{background:#e0f2fe;color:#075985}.bg-tvet{background:#fff0e8;color:#9a3412}
 .bg-full{background:var(--midnight);color:#fff}.bg-ov{background:#fdeee8;color:var(--coral)}.bg-lo{background:#e0e8f8;color:var(--c-gov)}.bg-nb{background:#e0f5ef;color:#007a57}.bg-b40{background:#fef3c7;color:#92400e}.bg-bumi{background:#e0e8f8;color:var(--c-gov)}.bg-pg{background:#ede9fe;color:#5b21b6}
 .bg-urgent{background:#fef2f2;color:#dc2626}.bg-soon{background:#fff7ed;color:#ea580c}
 /* ethnicity badges */
@@ -895,6 +895,7 @@ document.addEventListener('click', function(e) {
     <button class="tab uni" role="tab" aria-selected="false" data-cat="University" data-i18n="tabUni" onclick="setTab(this)">University</button>
     <button class="tab found" role="tab" aria-selected="false" data-cat="Foundation" data-i18n="tabFound" onclick="setTab(this)">Foundation & Media</button>
     <button class="tab pg" role="tab" aria-selected="false" data-cat="Postgraduate" data-i18n="tabPg" onclick="setTab(this)">Postgraduate</button>
+    <button class="tab tvet" role="tab" aria-selected="false" data-cat="TVET" onclick="setTab(this)">Vocational / TVET</button>
   </div>
 </div>
 <!-- ── QUICK FILTERS — always visible, phrased as student needs ── -->
@@ -959,6 +960,7 @@ document.addEventListener('click', function(e) {
     <div class="chip" data-f="fBusiness" data-i18n="chipBusiness" onclick="toggleChip(this)">Business / Finance</div>
     <div class="chip" data-f="fIT" data-i18n="chipIT" onclick="toggleChip(this)">IT / Computer Science</div>
     <div class="chip" data-f="fLaw" data-i18n="chipLaw" onclick="toggleChip(this)">Law</div>
+    <div class="chip" data-f="fVocational" onclick="toggleChip(this)">Vocational / Trades</div>
   </div>
   <div class="filter-row">
     <span class="filter-label" data-i18n="filterGrade">Min grade</span>
@@ -1773,7 +1775,7 @@ async function initData() {
 
 
 // ── HELPERS ──────────────────────────────────────────────────────────────
-const CC={Government:'gov',GLC:'glc',Banking:'bank',Corporate:'corp',Loan:'loan',State:'state',International:'intl',University:'uni',Foundation:'found',Postgraduate:'pg'};
+const CC={Government:'gov',GLC:'glc',Banking:'bank',Corporate:'corp',Loan:'loan',State:'state',International:'intl',University:'uni',Foundation:'found',Postgraduate:'pg',TVET:'tvet'};
 const SC={Government:'#1e3a6e',GLC:'#00a878',Banking:'#c07a00',Corporate:'#7c3aed',Loan:'#0891b2',State:'#b45309',International:'#0f766e',University:'#374151',Foundation:'#d97706',Postgraduate:'#0891b2'};
 function cc(cat){return CC[cat]||'gov'}
 
@@ -2028,6 +2030,7 @@ function matches(s){
     if(f==='fBusiness'&&!s.fieldTags.includes('Business'))return false;
     if(f==='fIT'&&!s.fieldTags.some(x=>x==='IT'||x==='Computer Science'))return false;
     if(f==='fLaw'&&!s.fieldTags.includes('Law'))return false;
+    if(f==='fVocational'&&!s.fieldTags.includes('Vocational'))return false;
     // grade
     if(f==='gStraight'&&s.gradeMin!=='Straight')return false;
     if(f==='g7'&&!['Straight','7As'].includes(s.gradeMin))return false;
