@@ -162,7 +162,7 @@ nav{position:sticky;top:0;z-index:200;background:var(--midnight);padding:0 20px;
 .pd-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .pd-dot.teal{background:var(--teal)}.pd-dot.coral{background:var(--coral)}.pd-dot.sky{background:var(--sky)}
 .pd-text{flex:1}
-.pd-label{font-size:13px;font-weight:700;color:rgba(255,255,255,.5);letter-spacing:.08em;text-transform:uppercase}
+.pd-label{font-size:13px;font-weight:700;color:rgba(255,255,255,.5);letter-spacing:.08em;text-transform:uppercase}.pd-label.teal-lbl{color:#00a878}.pd-label.coral-lbl{color:#e8551e}.pd-label.sky-lbl{color:#38bdf8}
 .pd-label span{font-weight:600;color:#fff;letter-spacing:0;text-transform:none}
 .pd-sub{font-size:11px;color:rgba(255,255,255,.38);margin-top:2px}
 .pd-divider{height:1px;background:rgba(255,255,255,.07);margin:4px 12px}
@@ -829,7 +829,7 @@ footer strong{color:rgba(255,255,255,.9)}footer a{color:rgba(255,255,255,.5);tex
   <!-- Divider between brand and tools button -->
   <div class="nav-divider" aria-hidden="true"></div>
   <!-- Our tools button — opens dropdown with all 3 products -->
-  <button class="tools-btn active-product" id="toolsBtn" onclick="toggleDropdown()" aria-haspopup="true" aria-expanded="false" aria-controls="toolsDropdown">
+  <button class="tools-btn" id="toolsBtn" onclick="toggleDropdown()" aria-haspopup="true" aria-expanded="false" aria-controls="toolsDropdown">
     <div class="dot-trio" aria-hidden="true">
       <span class="d-teal"></span><span class="d-coral"></span><span class="d-sky"></span>
     </div>
@@ -838,7 +838,6 @@ footer strong{color:rgba(255,255,255,.9)}footer a{color:rgba(255,255,255,.5);tex
       <path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
     <!-- Active-page indicator line underneath button -->
-    <div class="nav-active-indicator" aria-hidden="true"></div>
   </button>
   <!-- Spacer pushes right-side items to the end -->
   <div class="nav-spacer"></div>
@@ -861,7 +860,7 @@ footer strong{color:rgba(255,255,255,.9)}footer a{color:rgba(255,255,255,.5);tex
   <a class="pd-item pd-dim" href="#" role="menuitem" aria-disabled="true" tabindex="-1">
     <div class="pd-dot teal" aria-hidden="true"></div>
     <div class="pd-text">
-      <div class="pd-label">PLAN <span>MyJourney</span></div>
+      <div class="pd-label teal-lbl">PLAN <span>MyJourney</span></div>
       <div class="pd-sub">Map your career pathway</div>
     </div>
     <span class="pd-soon">Coming soon</span>
@@ -871,7 +870,7 @@ footer strong{color:rgba(255,255,255,.9)}footer a{color:rgba(255,255,255,.5);tex
   <a class="pd-item" href="scholarships.html" role="menuitem" aria-current="page">
     <div class="pd-dot coral" aria-hidden="true"></div>
     <div class="pd-text">
-      <div class="pd-label">FUND <span>MyScholar</span></div>
+      <div class="pd-label coral-lbl">FUND <span>MyScholar</span></div>
       <div class="pd-sub">Find scholarships for your studies</div>
     </div>
     <span class="pd-current" aria-label="Current page">Here</span>
@@ -881,7 +880,7 @@ footer strong{color:rgba(255,255,255,.9)}footer a{color:rgba(255,255,255,.5);tex
   <a class="pd-item" href="internships.html" onclick="gtag('event','nav_myintern_click')" role="menuitem">
     <div class="pd-dot sky" aria-hidden="true"></div>
     <div class="pd-text">
-      <div class="pd-label">LAUNCH <span>MyIntern</span></div>
+      <div class="pd-label sky-lbl">LAUNCH <span>MyIntern</span></div>
       <div class="pd-sub">Discover internship opportunities</div>
     </div>
   </a>
