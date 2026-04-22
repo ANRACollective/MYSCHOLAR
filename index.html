@@ -674,7 +674,7 @@ footer {
       <span class="d-coral"></span>
       <span class="d-sky"></span>
     </div>
-    Our tools
+    <span data-i18n="toolsBtn">Our tools</span>
     <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <polyline points="4 6 8 10 12 6"></polyline>
     </svg>
@@ -699,9 +699,9 @@ footer {
         <span class="pd-phase teal">Plan</span>
         <span class="pd-name">MyJourney</span>
       </div>
-      <div class="pd-desc">Map your career pathway</div>
+      <div class="pd-desc" data-i18n="planDesc">Map your career pathway</div>
     </div>
-    <div class="pd-badge soon">Coming soon</div>
+    <div class="pd-badge soon" data-i18n="comingSoon">Coming soon</div>
   </a>
 
   <div class="pd-divider"></div>
@@ -713,9 +713,9 @@ footer {
         <span class="pd-phase coral">Fund</span>
         <span class="pd-name">MyScholar</span>
       </div>
-      <div class="pd-desc">Find scholarships for your studies</div>
+      <div class="pd-desc" data-i18n="fundDesc">Find scholarships for your studies</div>
     </div>
-    <div class="pd-badge here">Here</div>
+    <div class="pd-badge here" data-i18n="hereLabel">Here</div>
   </a>
 
   <div class="pd-divider"></div>
@@ -727,7 +727,7 @@ footer {
         <span class="pd-phase sky">Launch</span>
         <span class="pd-name">MyIntern</span>
       </div>
-      <div class="pd-desc">Discover internship opportunities</div>
+      <div class="pd-desc" data-i18n="launchDesc">Discover internship opportunities</div>
     </div>
   </a>
 
@@ -736,15 +736,9 @@ footer {
 <!-- ── HERO ─────────────────────────────────────────────── -->
 <section class="hero">
 
-  <h1>
-    Find Your<br>
-    <span class="coral">Scholarship.</span>
-  </h1>
+  <h1 data-i18n="heroH1">Find Your<br><span class="coral">Scholarship.</span></h1>
 
-  <p class="hero-sub">
-    A free directory of scholarships, financial aid, and study loans for
-    Malaysian students — SPM to postgraduate.
-  </p>
+  <p class="hero-sub" data-i18n="heroSub">A free directory of scholarships, financial aid, and study loans for Malaysian students — SPM to postgraduate.</p>
 
   <!-- Search -->
   <div class="search-wrap">
@@ -752,6 +746,7 @@ footer {
       type="search"
       id="si"
       placeholder="Search by name, field, or provider…"
+      data-i18n-placeholder="searchPlaceholder"
       autocomplete="off"
       aria-label="Search scholarships"
     >
@@ -762,7 +757,7 @@ footer {
 
   <!-- Try: chips -->
   <div class="try-row" aria-label="Search suggestions">
-    <span class="try-label">TRY:</span>
+    <span class="try-label" data-i18n="tryLabel">TRY:</span>
     <button class="try-chip" onclick="fillSearch(this)">JPA</button>
     <button class="try-chip" onclick="fillSearch(this)">Petronas</button>
     <button class="try-chip" onclick="fillSearch(this)">MARA</button>
@@ -779,32 +774,32 @@ footer {
 
     <!-- PLAN: MyJourney — not live yet -->
     <a href="#" class="prod-card">
-      <div class="prod-phase teal">Plan</div>
+      <div class="prod-phase teal" data-i18n="phasePlan">Plan</div>
       <div class="prod-name">MyJourney</div>
       <p class="prod-desc">
-        Map your interests to real careers and the qualifications that get you there.
+        <span data-i18n="planCardDesc">Map your interests to real careers and the qualifications that get you there.</span>
       </p>
-      <div class="prod-cta prod-cta-soon">Coming soon</div>
+      <div class="prod-cta prod-cta-soon" data-i18n="comingSoon">Coming soon</div>
     </a>
 
     <!-- FUND: MyScholar (current — active state) -->
     <a href="scholarships.html" class="prod-card active">
-      <div class="prod-phase coral">Fund</div>
+      <div class="prod-phase coral" data-i18n="phaseFund">Fund</div>
       <div class="prod-name">MyScholar</div>
       <p class="prod-desc">
-        200+ scholarships filtered by field, eligibility, and deadline — all free.
+        <span data-i18n="scholarCardDesc">200+ scholarships filtered by field, eligibility, and deadline — all free.</span>
       </p>
-      <div class="prod-cta prod-cta-primary">Browse scholarships →</div>
+      <div class="prod-cta prod-cta-primary" data-i18n="scholarCardCta">Browse scholarships →</div>
     </a>
 
     <!-- LAUNCH: MyIntern -->
     <a href="internships.html" class="prod-card">
-      <div class="prod-phase sky">Launch</div>
+      <div class="prod-phase sky" data-i18n="phaseLaunch">Launch</div>
       <div class="prod-name">MyIntern</div>
       <p class="prod-desc">
-        Find internship openings that match your course and availability.
+        <span data-i18n="internCardDesc">Find internship openings that match your course and availability.</span>
       </p>
-      <div class="prod-cta">Find internships →</div>
+      <div class="prod-cta" data-i18n="internCardCta">Find internships →</div>
     </a>
 
   </div>
@@ -813,20 +808,20 @@ footer {
 <!-- ── ABOUT + GET UPDATES ────────────────────────────────── -->
 <section class="about">
   <div class="about-inner">
-    <p class="about-eyebrow">About this project</p>
-    <h2>Built for Malaysian students.</h2>
+    <p class="about-eyebrow" data-i18n="aboutEyebrow">About this project</p>
+    <h2 data-i18n="aboutH2">Built for Malaysian students.</h2>
     <p class="about-trust">
-      Built by <strong>ANRA</strong> · Free, no ads, no login · Not affiliated with any scholarship body or government agency
+      <span data-i18n="aboutTrust">Built by <strong>ANRA</strong> · Free, no ads, no login · Not affiliated with any scholarship body or government agency</span>
     </p>
     <p class="about-data">
-      Data last reviewed: 20 Apr 2026 · Sourced from official portals
+      <span data-i18n="aboutData">Data last reviewed: 20 Apr 2026 · Sourced from official portals</span>
     </p>
     <div class="about-cta">
       <a href="#" class="updates-btn">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,14 22,4"/>
         </svg>
-        Get updates
+        <span data-i18n="aboutCta">Get updates</span>
       </a>
     </div>
   </div>
@@ -857,8 +852,8 @@ footer {
 
 <!-- ── FOOTER: COPYRIGHT BAR ──────────────────────────────── -->
 <footer>
-  <p class="footer-copy">© 2026 MyScholar. Free, independent, built for Malaysian students.</p>
-  <p class="footer-right">No ads. No paywalls.</p>
+  <p class="footer-copy" data-i18n="footerCopy">© 2026 MyScholar. Free, independent, built for Malaysian students.</p>
+  <p class="footer-right" data-i18n="footerRight">No ads. No paywalls.</p>
 </footer>
 
 
@@ -896,18 +891,96 @@ document.addEventListener('keydown', function(e) {
   }
 });
 
+// ── i18n translations ───────────────────────────────────────
+const TRANSLATIONS = {
+  en: {
+    heroH1:        'Find Your<br><span class=\'coral\'>Scholarship.</span>',
+    heroSub:       'A free directory of scholarships, financial aid, and study loans for Malaysian students — SPM to postgraduate.',
+    searchPlaceholder: 'Search by name, field, or provider…',
+    tryLabel:      'TRY:',
+    toolsBtn:      'Our tools',
+    planDesc:      'Map your career pathway',
+    fundDesc:      'Find scholarships for your studies',
+    launchDesc:    'Discover internship opportunities',
+    comingSoon:    'Coming soon',
+    hereLabel:     'Here',
+    phasePlan:     'Plan',
+    phaseFund:     'Fund',
+    phaseLaunch:   'Launch',
+    planCardDesc:  'Map your interests to real careers and the qualifications that get you there.',
+    scholarCardDesc: '200+ scholarships filtered by field, eligibility, and deadline — all free.',
+    scholarCardCta: 'Browse scholarships →',
+    internCardDesc: 'Find internship openings that match your course and availability.',
+    internCardCta: 'Find internships →',
+    aboutEyebrow:  'About this project',
+    aboutH2:       'Built for Malaysian students.',
+    aboutTrust:    'Built by <strong>ANRA</strong> · Free, no ads, no login · Not affiliated with any scholarship body or government agency',
+    aboutData:     'Data last reviewed: 20 Apr 2026 · Sourced from official portals',
+    aboutCta:      'Get updates',
+    footerCopy:    '© 2026 MyScholar. Free, independent, built for Malaysian students.',
+    footerRight:   'No ads. No paywalls.',
+  },
+  bm: {
+    heroH1:        'Cari<br><span class=\'coral\'>Biasiswa Anda.</span>',
+    heroSub:       'Direktori percuma biasiswa, bantuan kewangan, dan pinjaman pengajian untuk pelajar Malaysia — SPM hingga pascasiswazah.',
+    searchPlaceholder: 'Cari mengikut nama, bidang, atau pemberi…',
+    tryLabel:      'CUBA:',
+    toolsBtn:      'Alatan kami',
+    planDesc:      'Petakan laluan kerjaya anda',
+    fundDesc:      'Cari biasiswa untuk pengajian anda',
+    launchDesc:    'Terokai peluang latihan industri',
+    comingSoon:    'Akan datang',
+    hereLabel:     'Di sini',
+    phasePlan:     'Rancang',
+    phaseFund:     'Biayai',
+    phaseLaunch:   'Mulakan',
+    planCardDesc:  'Kenalpasti kerjaya yang sesuai dan kelayakan yang diperlukan untuk sampai ke sana.',
+    scholarCardDesc: '200+ biasiswa ditapis mengikut bidang, kelayakan, dan tarikh tutup — semuanya percuma.',
+    scholarCardCta: 'Lihat biasiswa →',
+    internCardDesc: 'Cari peluang latihan industri yang sesuai dengan kursus dan waktu anda.',
+    internCardCta: 'Cari latihan industri →',
+    aboutEyebrow:  'Tentang projek ini',
+    aboutH2:       'Dibina untuk pelajar Malaysia.',
+    aboutTrust:    'Dibina oleh <strong>ANRA</strong> · Percuma, tanpa iklan, tanpa log masuk · Tidak berafiliasi dengan mana-mana badan biasiswa atau agensi kerajaan',
+    aboutData:     'Data dikemaskini: 20 Apr 2026 · Bersumber dari portal rasmi',
+    aboutCta:      'Dapatkan kemaskini',
+    footerCopy:    '© 2026 MyScholar. Percuma, bebas, dibina untuk pelajar Malaysia.',
+    footerRight:   'Tiada iklan. Tiada bayaran.',
+  }
+};
+
+function applyLocale(lang) {
+  const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
+  // innerHTML elements
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    if (t[key] !== undefined) el.innerHTML = t[key];
+  });
+  // placeholder attributes
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.dataset.i18nPlaceholder;
+    if (t[key] !== undefined) el.placeholder = t[key];
+  });
+  document.documentElement.lang = lang === 'bm' ? 'ms' : 'en';
+  localStorage.setItem('scholar_lang', lang);
+}
+
 // ── Language toggle ─────────────────────────────────────────
 const btnEN = document.getElementById('btnEN');
 const btnBM = document.getElementById('btnBM');
 
-[btnEN, btnBM].forEach(btn => {
-  btn.addEventListener('click', () => {
-    btnEN.classList.remove('active');
-    btnBM.classList.remove('active');
-    btn.classList.add('active');
-    // BM locale placeholder — hook up i18n here later
-  });
-});
+function setLang(lang) {
+  btnEN.classList.toggle('active', lang === 'en');
+  btnBM.classList.toggle('active', lang === 'bm');
+  applyLocale(lang);
+}
+
+btnEN.addEventListener('click', () => setLang('en'));
+btnBM.addEventListener('click', () => setLang('bm'));
+
+// restore saved preference
+const savedLang = localStorage.getItem('scholar_lang');
+if (savedLang && savedLang !== 'en') setLang(savedLang);
 
 // ── Search redirect helper ──────────────────────────────────
 function goToScholarships(query) {
