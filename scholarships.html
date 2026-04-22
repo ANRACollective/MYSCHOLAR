@@ -1625,17 +1625,17 @@ document.addEventListener('keydown', function(e) {
           <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
         </div>
         <div class="esm-interest-text">
-          <span class="esm-interest-title">Internship listings — launching Q3 2026</span>
-          <span class="esm-interest-desc">Free. Curated. No login. Notify me when it's live.</span>
+          <span class="esm-interest-title">MyIntern — internship directory</span>
+          <span class="esm-interest-desc">Paid and unpaid programmes from GLCs, banks, and startups. Already live.</span>
         </div>
       </div>
-      <div class="esm-interest-row unchecked" id="esmTuitionRow" onclick="toggleTuitionInterest()" style="margin-top:8px">
-        <div class="esm-interest-check unchecked" id="esmTuitionCheck">
+      <div class="esm-interest-row unchecked" id="esmJourneyRow" onclick="toggleJourneyInterest()" style="margin-top:8px">
+        <div class="esm-interest-check unchecked" id="esmJourneyCheck">
           <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
         </div>
         <div class="esm-interest-text">
-          <span class="esm-interest-title">Tuition centre recommendations</span>
-          <span class="esm-interest-desc">Tips on finding the right tuition for your level and subjects.</span>
+          <span class="esm-interest-title">MyJourney — career pathway tool</span>
+          <span class="esm-interest-desc">Match your interests to careers and the right qualifications. Launching soon.</span>
         </div>
       </div>
 
@@ -3688,8 +3688,8 @@ function openEmailModalFromFooter() {
   // Reset both interest checkboxes to unchecked default
   document.getElementById("esmInternshipCheck").classList.add("unchecked");
   document.getElementById("esmInternshipRow").classList.add("unchecked");
-  document.getElementById("esmTuitionCheck").classList.add("unchecked");
-  document.getElementById("esmTuitionRow").classList.add("unchecked");
+  document.getElementById("esmJourneyCheck").classList.add("unchecked");
+  document.getElementById("esmJourneyRow").classList.add("unchecked");
   document.getElementById("esmOverlay").classList.add("visible");
   if(typeof gtag !== "undefined") {
     gtag("event", "email_modal_shown", { event_category: "engagement", event_label: "footer" });
@@ -3703,9 +3703,9 @@ function toggleInternshipInterest() {
 }
 
 // Toggle tuition interest checkbox on/off
-function toggleTuitionInterest() {
-  document.getElementById('esmTuitionCheck').classList.toggle('unchecked');
-  document.getElementById('esmTuitionRow').classList.toggle('unchecked');
+function toggleJourneyInterest() {
+  document.getElementById('esmJourneyCheck').classList.toggle('unchecked');
+  document.getElementById('esmJourneyRow').classList.toggle('unchecked');
 }
 
 // ── SUBMIT LOGIC ───────────────────────────────────────────────────────────
@@ -3757,7 +3757,7 @@ async function submitEmailSignup() {
         email: email,
         source: 'modal',
         internship_interest: !document.getElementById('esmInternshipCheck').classList.contains('unchecked'),
-        tuition_interest: !document.getElementById('esmTuitionCheck').classList.contains('unchecked')
+        journey_interest: !document.getElementById('esmJourneyCheck').classList.contains('unchecked')
       })
     });
   }
@@ -3804,7 +3804,7 @@ function showEmailSuccess(email) {
       event_category: 'conversion',
       event_label: 'modal',
       internship_interest: !document.getElementById('esmInternshipCheck').classList.contains('unchecked'),
-      tuition_interest: !document.getElementById('esmTuitionCheck').classList.contains('unchecked')
+      journey_interest: !document.getElementById('esmJourneyCheck').classList.contains('unchecked')
     });
   }
 }
