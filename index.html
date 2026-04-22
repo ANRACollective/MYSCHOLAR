@@ -683,13 +683,13 @@ footer {
   display: flex; align-items: center; gap: 12px;
   padding: 12px 18px; cursor: pointer; text-decoration: none;
   border-bottom: 1px solid rgba(255,255,255,.06);
-  transition: background .12s; min-height: 0; overflow: hidden;
+  transition: background .12s; min-height: 0; overflow: hidden; text-align: left;
 }
 .sd-item:last-of-type { border-bottom: none; }
 .sd-item:hover, .sd-item.sd-focused { background: rgba(255,255,255,.07); }
 .sd-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--coral); flex-shrink: 0; }
-.sd-text { flex: 1; min-width: 0; }
-.sd-name { font-size: 14px; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sd-text { flex: 1; min-width: 0; text-align: left; }
+.sd-name { font-size: 14px; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: left; }
 .sd-prov { font-size: 11px; color: rgba(255,255,255,.38); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 260px; }
 .sd-amt  { font-size: 11px; font-weight: 600; color: var(--coral); white-space: nowrap; flex-shrink: 0; opacity: .9; max-width: 220px; overflow: hidden; text-overflow: ellipsis; }
 .sd-see-all {
@@ -697,7 +697,7 @@ footer {
   padding: 11px 18px; font-family: var(--sans);
   font-size: 13px; color: rgba(255,255,255,.45);
   background: rgba(255,255,255,.03); border: none; width: 100%;
-  cursor: pointer; text-decoration: none;
+  cursor: pointer; text-decoration: none; text-align: left;
   transition: background .12s, color .12s;
 }
 .sd-see-all:hover, .sd-see-all.sd-focused { background: rgba(255,255,255,.08); color: rgba(255,255,255,.85); }
