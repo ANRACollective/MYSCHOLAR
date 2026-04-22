@@ -660,6 +660,49 @@ footer {
   .prod-card { padding: 22px 18px 20px; }
 }
 
+
+/* ── Live search dropdown ──────────────────────────────────── */
+.search-icon { pointer-events: auto; cursor: pointer; }
+.search-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0; right: 0;
+  background: #0a1626;
+  border: 1px solid rgba(255,255,255,.13);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.04);
+  z-index: 500;
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+  transition: opacity .15s, transform .15s;
+}
+.search-dropdown.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.sd-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 18px; cursor: pointer; text-decoration: none;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  transition: background .12s;
+}
+.sd-item:last-of-type { border-bottom: none; }
+.sd-item:hover, .sd-item.sd-focused { background: rgba(255,255,255,.07); }
+.sd-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--coral); flex-shrink: 0; }
+.sd-text { flex: 1; min-width: 0; }
+.sd-name { font-size: 14px; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sd-prov { font-size: 11px; color: rgba(255,255,255,.38); margin-top: 2px; }
+.sd-amt  { font-size: 11px; font-weight: 600; color: var(--coral); white-space: nowrap; flex-shrink: 0; opacity: .9; }
+.sd-see-all {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 11px 18px; font-family: var(--sans);
+  font-size: 13px; color: rgba(255,255,255,.45);
+  background: rgba(255,255,255,.03); border: none; width: 100%;
+  cursor: pointer; text-decoration: none;
+  transition: background .12s, color .12s;
+}
+.sd-see-all:hover, .sd-see-all.sd-focused { background: rgba(255,255,255,.08); color: rgba(255,255,255,.85); }
+.sd-see-all strong { color: rgba(255,255,255,.7); font-weight: 600; }
+.sd-msg { padding: 16px 18px; font-size: 13px; color: rgba(255,255,255,.3); text-align: center; }
 </style>
 </head>
 <body>
@@ -991,42 +1034,131 @@ btnBM.addEventListener('click', () => setLang('bm'));
 const savedLang = localStorage.getItem('scholar_lang');
 if (savedLang && savedLang !== 'en') setLang(savedLang);
 
-// ── Search redirect helper ──────────────────────────────────
+// ── Supabase config (read-only anon key — safe to expose) ──
+const SB_URL = 'https://ywvfvjvxwhcfprfrkgqm.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl3dmZ2anZ4d2hjZnByZnJrZ3FtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNTQ5MzEsImV4cCI6MjA5MDYzMDkzMX0.5EzrJuW1fdPca2ZEKGPXXgbd_XYDqKzzu6e-iRQT9po';
+
+// ── Search redirect ─────────────────────────────────────────
 function goToScholarships(query) {
   const q = (query || '').trim();
-  const url = q
-    ? 'scholarships.html?q=' + encodeURIComponent(q)
-    : 'scholarships.html';
-  window.location.href = url;
+  window.location.href = q ? 'scholarships.html?q=' + encodeURIComponent(q) : 'scholarships.html';
 }
+function fillSearch(chipEl) { goToScholarships(chipEl.textContent.trim()); }
 
-// Fill search input from try-chips, then navigate
-function fillSearch(chipEl) {
-  const q = chipEl.textContent.trim();
-  goToScholarships(q);
-}
-
-// Search input: navigate on Enter key or search icon click
+// ── Live search dropdown ────────────────────────────────────
 (function() {
   const input = document.getElementById('si');
-  if (!input) return;
+  const wrap  = input ? input.closest('.search-wrap') : null;
+  if (!wrap) return;
 
-  // Enter key
-  input.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') {
+  // Inject dropdown container
+  const dd = document.createElement('div');
+  dd.className = 'search-dropdown';
+  dd.id = 'searchDropdown';
+  wrap.appendChild(dd);
+
+  let timer = null, currentQuery = '', focusIdx = -1, items = [];
+
+  function sdOpen()  { dd.classList.add('open'); }
+  function sdClose() { dd.classList.remove('open'); focusIdx = -1; items = []; }
+  function sdHighlight() {
+    dd.querySelectorAll('.sd-item, .sd-see-all').forEach((el, i) =>
+      el.classList.toggle('sd-focused', i === focusIdx)
+    );
+  }
+
+  function esc(str) {
+    return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function render(results, q) {
+    focusIdx = -1;
+    if (!results.length) {
+      dd.innerHTML = `<div class="sd-msg">No results for "${esc(q)}"</div>`;
+      sdOpen(); return;
+    }
+    // Each result: clicking opens the scholarship's own URL in a new tab
+    const rows = results.map(r => {
+      const href = r.url ? esc(r.url) : `scholarships.html?q=${encodeURIComponent(r.name)}`;
+      const target = r.url ? 'target="_blank" rel="noopener"' : '';
+      const amt = r.amt ? `<span class="sd-amt">${esc(r.amt)}</span>` : '';
+      return `<a class="sd-item" href="${href}" ${target} onclick="if(typeof gtag!='undefined')gtag('event','homepage_result_click',{event_label:'${esc(r.name)}'})">
+        <div class="sd-dot"></div>
+        <div class="sd-text">
+          <div class="sd-name">${esc(r.name)}</div>
+          <div class="sd-prov">${esc(r.provider || '')}</div>
+        </div>${amt}</a>`;
+    }).join('');
+    const seeAll = `<a class="sd-see-all" href="scholarships.html?q=${encodeURIComponent(q)}">
+      See all results for <strong>"${esc(q)}"</strong> &nbsp;→</a>`;
+    dd.innerHTML = rows + seeAll;
+    // Track mouse hover for keyboard sync
+    dd.querySelectorAll('.sd-item, .sd-see-all').forEach((el, i) => {
+      el.addEventListener('mouseenter', () => { focusIdx = i; sdHighlight(); });
+    });
+    items = Array.from(dd.querySelectorAll('.sd-item, .sd-see-all'));
+    sdOpen();
+  }
+
+  async function doFetch(q) {
+    dd.innerHTML = '<div class="sd-msg">Searching…</div>';
+    sdOpen();
+    try {
+      const encoded = encodeURIComponent(q);
+      const url = `${SB_URL}/rest/v1/scholarships_full?select=id,name,provider,amt,url` +
+                  `&or=(name.ilike.*${encoded}*,provider.ilike.*${encoded}*)&limit=6`;
+      const res = await fetch(url, {
+        headers: { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}` }
+      });
+      if (!res.ok) throw new Error('fetch error');
+      render(await res.json(), q);
+    } catch(e) {
+      dd.innerHTML = '<div class="sd-msg">Could not load results — try searching on the next page.</div>';
+    }
+  }
+
+  // Input: debounce 300ms, min 2 chars
+  input.addEventListener('input', () => {
+    const q = input.value.trim();
+    currentQuery = q;
+    clearTimeout(timer);
+    if (q.length < 2) { sdClose(); return; }
+    timer = setTimeout(() => doFetch(q), 300);
+  });
+
+  // Keyboard navigation
+  input.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown') {
       e.preventDefault();
-      goToScholarships(input.value);
+      focusIdx = Math.min(focusIdx + 1, items.length - 1);
+      sdHighlight();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      focusIdx = Math.max(focusIdx - 1, -1);
+      sdHighlight();
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      if (focusIdx >= 0 && items[focusIdx]) { items[focusIdx].click(); }
+      else { sdClose(); goToScholarships(input.value); }
+    } else if (e.key === 'Escape') {
+      sdClose();
     }
   });
 
-  // Search icon click — find the icon sibling and make it clickable
-  const icon = input.closest('.search-wrap') && input.closest('.search-wrap').querySelector('.search-icon');
-  if (icon) {
-    icon.style.cursor = 'pointer';
-    icon.addEventListener('click', function() {
-      goToScholarships(input.value);
-    });
-  }
+  // Search icon click
+  const icon = wrap.querySelector('.search-icon');
+  if (icon) icon.addEventListener('click', () => {
+    if (dd.classList.contains('open') && focusIdx >= 0 && items[focusIdx]) {
+      items[focusIdx].click();
+    } else {
+      sdClose(); goToScholarships(input.value);
+    }
+  });
+
+  // Click outside closes
+  document.addEventListener('click', e => {
+    if (!wrap.contains(e.target)) sdClose();
+  });
 })();
 
 </script>
