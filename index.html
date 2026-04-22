@@ -370,6 +370,7 @@ nav{position:sticky;top:0;z-index:200;background:var(--midnight);padding:0 20px;
 .modal-icon-btn{width:40px;height:40px;border-radius:8px;border:1px solid var(--border);background:var(--white);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .12s,transform .1s;flex-shrink:0;font-family:var(--sans)}
 .modal-icon-btn:hover{background:var(--ice)}.modal-icon-btn:active{transform:scale(.96)}
 .modal-icon-btn.saved{background:#fff7ed;border-color:#fed7aa;color:#b45309}
+.modal-icon-btn.in-compare{background:#fff7ed;border-color:#fed7aa;color:#b45309}
 .modal-icon-btn svg{pointer-events:none}
 .modal-close-row{text-align:center;margin-top:10px}
 .modal-close-link{font-size:12px;color:var(--muted);background:none;border:none;cursor:pointer;font-family:var(--sans);padding:4px 8px;border-radius:4px;transition:color .12s}
@@ -2265,6 +2266,9 @@ ${rollingNote}
     <button id="modalBookmarkBtn" class="modal-icon-btn${isSaved?' saved':''}" onclick="toggleBookmarkIcon(${id},this)" title="${isSaved?'Remove bookmark':'Save scholarship'}">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="${isSaved?'#b45309':'none'}" stroke="${isSaved?'#b45309':'currentColor'}" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
     </button>
+    <button id="modalCompareBtn" class="modal-icon-btn${compareSet.has(id)?' in-compare':''}" onclick="toggleCompare(${id},event)" title="${compareSet.has(id)?'Remove from comparison':'Add to comparison'}">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="8" height="18" rx="1"/><rect x="14" y="3" width="8" height="18" rx="1"/></svg>
+    </button>
     <button class="modal-icon-btn" title="Flag an issue" onclick="toggleCorrectionForm('corrForm${id}',this)">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
     </button>
@@ -2334,9 +2338,9 @@ async function checkModalUrl(id, url){
 
     const ms = Date.now() - start;
     if(ms < 5000){
-      icon.textContent = '✅';
-      text.textContent = 'Link looks good';
-      text.style.color = '#15803d';
+      icon.textContent = '';
+      text.textContent = 'Verified';
+      text.style.color = 'var(--muted)';
       // Note: url_status is updated by the weekly Edge Function (check-urls),
       // not on every modal open — avoids unnecessary Supabase writes per student visit
     } else {
@@ -2353,9 +2357,9 @@ async function checkModalUrl(id, url){
       // Note: not writing to Supabase here — weekly cron handles url_status updates
     } else {
       // CORS block — site is probably fine but blocks automated checks
-      icon.textContent = '✅';
-      text.textContent = 'Link looks good';
-      text.style.color = '#15803d';
+      icon.textContent = '';
+      text.textContent = 'Verified';
+      text.style.color = 'var(--muted)';
     }
   }
 }
@@ -3366,6 +3370,13 @@ function toggleCompare(id, e){
   saveCompare();
   updateCompareTray();
   render(); // refresh card buttons
+  // update modal compare btn if open
+  const modalCmpBtn = document.getElementById('modalCompareBtn');
+  if(modalCmpBtn){
+    const inCmp = compareSet.has(id);
+    modalCmpBtn.className = 'modal-icon-btn' + (inCmp ? ' in-compare' : '');
+    modalCmpBtn.title = inCmp ? 'Remove from comparison' : 'Add to comparison';
+  }
 }
 
 // ── TRAY ──────────────────────────────────────────────────────────────────
