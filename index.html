@@ -259,6 +259,44 @@ nav{position:sticky;top:0;z-index:200;background:var(--midnight);padding:0 20px;
     text-align:center;
   }
 }
+/* ── MOBILE FILTER BUTTON + BOTTOM SHEET ─────────────────────────────────── */
+/* Default: mobile filter bar hidden on desktop */
+.mobile-filter-bar{display:none}
+@media(max-width:680px){
+  /* Hide inline filter wall — replaced by bottom sheet */
+  .qf-panel,.filter-panel,.qf-more-row{display:none!important}
+  /* Slim bar between tabs and results */
+  .mobile-filter-bar{display:flex;align-items:center;padding:9px 16px;background:var(--white);border-bottom:1px solid var(--border);gap:8px}
+  .mobile-filter-btn{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--midnight);background:var(--white);border:1.5px solid var(--border);border-radius:20px;padding:7px 16px;cursor:pointer;font-family:var(--sans);transition:all .15s}
+  .mobile-filter-btn.active{background:var(--midnight);color:#fff;border-color:var(--midnight)}
+}
+/* Sheet overlay — hidden by default on all breakpoints */
+#filterSheet{position:fixed;inset:0;z-index:600;background:rgba(0,0,0,0);pointer-events:none;transition:background .25s;display:flex;align-items:flex-end}
+#filterSheet.open{background:rgba(0,0,0,.5);pointer-events:auto}
+/* Sheet panel slides up */
+#filterSheetPanel{width:100%;background:var(--white);border-radius:20px 20px 0 0;max-height:88vh;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .3s cubic-bezier(.32,.72,0,1)}
+#filterSheet.open #filterSheetPanel{transform:translateY(0)}
+/* Header */
+.fsh-header{display:flex;align-items:center;justify-content:space-between;padding:18px 20px 14px;border-bottom:1px solid var(--border);flex-shrink:0}
+.fsh-title{font-size:16px;font-weight:700;color:var(--midnight);font-family:var(--sans)}
+.fsh-close{font-size:22px;line-height:1;color:var(--muted);background:none;border:none;cursor:pointer;padding:0 2px;font-family:var(--sans)}
+/* Scrollable body */
+.fsh-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+/* Accordion rows */
+.fsh-section{border-bottom:1px solid var(--border)}
+.fsh-acc-btn{width:100%;display:flex;align-items:center;gap:8px;padding:14px 20px;background:none;border:none;cursor:pointer;font-family:var(--sans);text-align:left}
+.fsh-acc-label{font-size:14px;font-weight:600;color:var(--midnight);flex:1}
+.fsh-acc-count{font-size:12px;color:var(--coral);font-weight:700;min-width:14px}
+.fsh-acc-chevron{flex-shrink:0;transition:transform .2s;color:var(--muted)}
+.fsh-acc-btn.open .fsh-acc-chevron{transform:rotate(180deg)}
+.fsh-acc-content{padding:4px 20px 16px;display:flex;flex-wrap:wrap;gap:8px}
+.fsh-acc-content.hidden{display:none}
+/* Footer */
+.fsh-footer{display:flex;gap:10px;padding:14px 20px;border-top:1px solid var(--border);flex-shrink:0}
+.fsh-clear-btn{font-size:13px;font-weight:600;color:var(--muted);background:none;border:1.5px solid var(--border);border-radius:8px;padding:11px 16px;cursor:pointer;font-family:var(--sans);transition:all .15s;flex-shrink:0}
+.fsh-clear-btn:hover{border-color:var(--midnight);color:var(--midnight)}
+.fsh-show-btn{flex:1;font-size:14px;font-weight:700;color:#fff;background:var(--midnight);border:none;border-radius:8px;padding:13px 20px;cursor:pointer;font-family:var(--sans);transition:background .15s}
+.fsh-show-btn:active{background:var(--navy)}
 /* bookmark button in nav area */
 .bookmark-nav-btn{font-size:12px;color:rgba(255,255,255,.5);background:rgba(255,255,255,.09);border:none;border-radius:20px;padding:4px 10px;cursor:pointer;font-family:var(--sans);display:flex;align-items:center;gap:4px;transition:all .2s;white-space:nowrap;flex-shrink:0}
 .bookmark-nav-btn:hover{color:#fff;background:rgba(255,255,255,.18)}
@@ -889,6 +927,13 @@ document.addEventListener('click', function(e) {
     <button class="tab pg" role="tab" aria-selected="false" data-cat="Postgraduate" data-i18n="tabPg" onclick="setTab(this)">Postgraduate</button>
     <button class="tab tvet" role="tab" aria-selected="false" data-cat="TVET" onclick="setTab(this)">Vocational / TVET</button>
   </div>
+</div>
+<!-- Mobile filter bar: visible only on ≤680px, replaced inline filter wall -->
+<div class="mobile-filter-bar" id="mobileFilterBar">
+  <button class="mobile-filter-btn" id="mobileFilterBtn" onclick="openFilterSheet()">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+    <span id="mobileFilterBtnLabel">Filters</span>
+  </button>
 </div>
 <!-- ── QUICK FILTERS — always visible, phrased as student needs ── -->
 <!-- The 3 most-used filters (level, funding, destination) are always shown. -->
@@ -1984,6 +2029,39 @@ function updateFilterUI(){
   ac.textContent=n===1?'1 filter active':n+' filters active';
   ac.style.display=n?'inline':'none';
   cb.style.display=n?'inline':'none';
+
+  // Update mobile filter button label
+  const mbl=document.getElementById('mobileFilterBtnLabel');
+  const mbb=document.getElementById('mobileFilterBtn');
+  if(mbl) mbl.textContent=n>0?'Filters ('+n+')':'Filters';
+  if(mbb) mbb.classList.toggle('active',n>0);
+
+  // Update per-section counts in the sheet
+  const sectionMap={
+    fshCntIam:   ['PostSPM','PreU','Undergrad','Postgrad','UEC','SPM','STPM'],
+    fshCntLooking:['Full','Overseas','NoBond','B40'],
+    fshCntStudyIn:['dcUK','dcUS','dcJP','dcSG','dcKR','dcAU','dcCN','dcASEAN'],
+    fshCntDeadline:['OpenNow','Soon','3Months','Rolling'],
+    fshCntField: ['fAny','fSTEM','fEngineering','fMedicine','fBusiness','fIT','fLaw','fVocational'],
+    fshCntGrade: ['gStraight','g7','g5','gAny'],
+    fshCntElig:  ['eAll','eBumi','eForeigner','Global']
+  };
+  for(const [id,keys] of Object.entries(sectionMap)){
+    const el=document.getElementById(id);
+    if(!el) continue;
+    const cnt=keys.filter(k=>activeChips.has(k)).length;
+    el.textContent=cnt>0?cnt:'';
+    // Auto-expand section if it has active chips
+    if(cnt>0){
+      const btn=el.closest('.fsh-acc-btn');
+      const content=btn&&btn.nextElementSibling;
+      if(btn&&!btn.classList.contains('open')){
+        btn.classList.add('open');
+        btn.setAttribute('aria-expanded','true');
+        if(content) content.classList.remove('hidden');
+      }
+    }
+  }
 }
 
 // ── MATCHES ───────────────────────────────────────────────────────────────
@@ -2418,6 +2496,9 @@ function render(){
   // Update counts
   document.getElementById('countDisplay').textContent = n;
   const _np2 = document.getElementById('navPill'); if (_np2) _np2.textContent = `${n}`;
+  // Update sheet footer button with live count
+  const fshBtn=document.getElementById('fshShowBtn');
+  if(fshBtn) fshBtn.textContent='Show '+n+' result'+(n===1?'':'s');
   document.getElementById('pageInfo').textContent =
     n > PAGE_SIZE ? ` · Page ${currentPage} of ${totalPages}` : '';
 
@@ -2618,8 +2699,14 @@ function checkDeepLink(){
 // ── FILTER FUNCTIONS (with resetPage + GA tracking) ──────────────────────
 function toggleChip(el){
   const f=el.dataset.f;
-  if(activeChips.has(f)){activeChips.delete(f);el.classList.remove('on');}
-  else{activeChips.add(f);el.classList.add('on');}
+  // Sync .on state across ALL chips sharing this data-f (inline panel + bottom sheet)
+  if(activeChips.has(f)){
+    activeChips.delete(f);
+    document.querySelectorAll('[data-f="'+f+'"]').forEach(c=>c.classList.remove('on'));
+  } else {
+    activeChips.add(f);
+    document.querySelectorAll('[data-f="'+f+'"]').forEach(c=>c.classList.add('on'));
+  }
   updateFilterUI();
   resetPage();
   render();
@@ -2634,6 +2721,26 @@ function toggleChip(el){
     });
   }
 }
+
+// ── FILTER BOTTOM SHEET ──────────────────────────────────────────────────────
+function openFilterSheet(){
+  const sheet=document.getElementById('filterSheet');
+  if(sheet){ sheet.classList.add('open'); document.body.style.overflow='hidden'; }
+}
+function closeFilterSheet(){
+  const sheet=document.getElementById('filterSheet');
+  if(sheet){ sheet.classList.remove('open'); document.body.style.overflow=''; }
+}
+// Toggle accordion section open/closed within the filter sheet
+function toggleFshSection(btn){
+  const content=btn.nextElementSibling;
+  const isOpen=btn.classList.contains('open');
+  btn.classList.toggle('open',!isOpen);
+  btn.setAttribute('aria-expanded',String(!isOpen));
+  if(content) content.classList.toggle('hidden',isOpen);
+}
+// Close sheet on Escape key
+document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeFilterSheet(); });
 
 function setTab(el){
   document.querySelectorAll('.tab').forEach(t=>{t.classList.remove('active');t.setAttribute('aria-selected','false');});
@@ -4038,48 +4145,137 @@ setLang(currentLang);
 <li><a href="https://myscholar.my/#id=230">Securities Commission Malaysia Scholarship</a> — Securities Commission Malaysia <span class="cat-tag">Government</span></li>
 <li><a href="https://myscholar.my/#id=231">MyBrain 2.0 — MyMaster Programme</a> — Ministry of Higher Education Malaysia <span class="cat-tag">Postgraduate</span></li>
 <li><a href="https://myscholar.my/#id=232">MyBrain 2.0 — MyPhD Programme</a> — Ministry of Higher Education Malaysia <span class="cat-tag">Postgraduate</span></li>
-<li><a href="https://myscholar.my/#id=233">Yayasan Sime Darby Postgraduate Scholarship</a> — Yayasan Sime Darby <span class="cat-tag">Postgraduate</span></li>
-<li><a href="https://myscholar.my/#id=235">Yayasan Hasanah Education Grant</a> — Yayasan Hasanah <span class="cat-tag">Foundation</span></li>
-<li><a href="https://myscholar.my/#id=238">Axiata Foundation Scholarship (ASEAN Tech Talent)</a> — Axiata Foundation <span class="cat-tag">GLC</span></li>
-<li><a href="https://myscholar.my/#id=239">MCA Education Scholarship (Biasiswa MCA)</a> — Malaysian Chinese Association (MCA) <span class="cat-tag">Foundation</span></li>
-<li><a href="https://myscholar.my/#id=246">ASEAN-Maybank Scholarship Programme</a> — Maybank Foundation / ASEAN Secretariat <span class="cat-tag">Banking</span></li>
-<li><a href="https://myscholar.my/#id=247">Standard Chartered Scholarship Malaysia</a> — Standard Chartered Bank Malaysia <span class="cat-tag">Banking</span></li>
-<li><a href="https://myscholar.my/#id=248">Boustead Holdings Scholarship</a> — Boustead Holdings Berhad <span class="cat-tag">GLC</span></li>
-<li><a href="https://myscholar.my/#id=249">Malaysia Airports Holdings (MAHB) Scholarship</a> — Malaysia Airports Holdings Berhad <span class="cat-tag">GLC</span></li>
-<li><a href="https://myscholar.my/#id=250">Pos Malaysia Foundation Scholarship</a> — Yayasan Pos Malaysia <span class="cat-tag">GLC</span></li>
-<li><a href="https://myscholar.my/#id=252">DRB-Hicom Scholarship</a> — DRB-Hicom Berhad <span class="cat-tag">GLC</span></li>
-<li><a href="https://myscholar.my/#id=255">Berjaya Corporation Foundation Scholarship</a> — Yayasan Berjaya / Berjaya Corporation <span class="cat-tag">Corporate</span></li>
-<li><a href="https://myscholar.my/#id=259">UiTM Vice Chancellor Merit Award</a> — Universiti Teknologi MARA (UiTM) <span class="cat-tag">University</span></li>
-<li><a href="https://myscholar.my/#id=260">Universiti Utara Malaysia (UUM) Merit Scholarship</a> — Universiti Utara Malaysia <span class="cat-tag">University</span></li>
-<li><a href="https://myscholar.my/#id=261">UNIMAS Excellence Award</a> — Universiti Malaysia Sarawak (UNIMAS) <span class="cat-tag">University</span></li>
-<li><a href="https://myscholar.my/#id=262">Universiti Malaysia Terengganu (UMT) Merit Scholarship</a> — Universiti Malaysia Terengganu <span class="cat-tag">University</span></li>
-<li><a href="https://myscholar.my/#id=263">Xiamen University Malaysia (XMUM) Scholarship</a> — Xiamen University Malaysia <span class="cat-tag">University</span></li>
-<li><a href="https://myscholar.my/#id=271">Dong Zong / UCSCAM Chinese Education Fund</a> — UCSCAM / Dong Zong <span class="cat-tag">Foundation</span></li>
-<li><a href="https://myscholar.my/#id=276">Boh Tea Scholarship (BOH Foundation)</a> — Boh Plantations / BOH Foundation <span class="cat-tag">Foundation</span></li>
-<li><a href="https://myscholar.my/#id=277">UPM Graduate Research Assistantship (GRA)</a> — Universiti Putra Malaysia (UPM) <span class="cat-tag">Postgraduate</span></li>
-<li><a href="https://myscholar.my/#id=278">USM Graduate Research Fellowship</a> — Universiti Sains Malaysia (USM) <span class="cat-tag">Postgraduate</span></li>
-<li><a href="https://myscholar.my/#id=279">MARA Postgraduate Scholarship (Master's & PhD)</a> — Majlis Amanah Rakyat (MARA) <span class="cat-tag">Postgraduate</span></li>
-<li><a href="https://myscholar.my/#id=280">Yayasan Khazanah Postgraduate Fellowship</a> — Yayasan Khazanah <span class="cat-tag">Postgraduate</span></li>
-<li><a href="https://myscholar.my/#id=281">Marshall Scholarship (UK)</a> — Marshall Aid Commemoration Commission <span class="cat-tag">International</span></li>
-<li><a href="https://myscholar.my/#id=285">Jardine Scholarship (Malaysia)</a> — Jardine Matheson / Jardine Foundation <span class="cat-tag">International</span></li>
-<li><a href="https://myscholar.my/#id=286">UTHM Vice Chancellor Scholarship</a> — Universiti Tun Hussein Onn Malaysia <span class="cat-tag">University</span></li>
-<li><a href="https://myscholar.my/#id=287">UTEM Merit Award</a> — Universiti Teknikal Malaysia Melaka <span class="cat-tag">University</span></li>
-<li><a href="https://myscholar.my/#id=288">UMP Merit Scholarship</a> — Universiti Malaysia Pahang Al-Sultan Abdullah <span class="cat-tag">University</span></li>
-<li><a href="https://myscholar.my/#id=289">UMS Excellence Scholarship</a> — Universiti Malaysia Sabah <span class="cat-tag">University</span></li>
-<li><a href="https://myscholar.my/#id=290">Ministry of Agriculture Malaysia — Skim Latihan Akademik Pertanian</a> — Kementerian Pertanian Malaysia <span class="cat-tag">Government</span></li>
-<li><a href="https://myscholar.my/#id=291">KPT Biasiswa Pelajar Asnaf (B40 University Entry)</a> — Kementerian Pendidikan Tinggi Malaysia <span class="cat-tag">Government</span></li>
-<li><a href="https://myscholar.my/#id=294">Kossan Rubber Industries Scholarship</a> — Kossan Rubber Industries Berhad <span class="cat-tag">Corporate</span></li>
-<li><a href="https://myscholar.my/#id=295">Yayasan Pelajaran Islam Malaysia (YPIM) Scholarship</a> — Yayasan Pelajaran Islam Malaysia <span class="cat-tag">Foundation</span></li>
-<li><a href="https://myscholar.my/#id=296">MCMC Scholarship</a> — Malaysian Communications and Multimedia Commission <span class="cat-tag">Government</span></li>
-<li><a href="https://myscholar.my/#id=297">Commonwealth Split-Site Scholarship (UK)</a> — Commonwealth Scholarship Commission <span class="cat-tag">Postgraduate</span></li>
-<li><a href="https://myscholar.my/#id=299">Affin Bank Education Financing-i</a> — Affin Bank Berhad <span class="cat-tag">Loan</span></li>
-<li><a href="https://myscholar.my/#id=300">Fulbright FLTA Program</a> — MACEE Malaysia <span class="cat-tag">International</span></li>
-<li><a href="https://myscholar.my/#id=301">Astro Scholarship Award</a> — Astro Malaysia Holdings Berhad <span class="cat-tag">Media</span></li>
-<li><a href="https://myscholar.my/#id=302">FGV Holdings Scholarship Programme</a> — FGV Holdings Berhad <span class="cat-tag">GLC</span></li>
-<li><a href="https://myscholar.my/#id=303">Swiss Government Excellence Scholarship</a> — Swiss Confederation <span class="cat-tag">International</span></li>
-<li><a href="https://myscholar.my/#id=304">Swedish Institute Scholarship for Global Professionals</a> — Swedish Institute <span class="cat-tag">International</span></li>
 </ul>
 </div>
 </noscript>
+
+<!-- ++ FILTER BOTTOM SHEET (mobile only) ++
+     Chips here mirror the inline qf-panel + filter-panel chips.
+     toggleChip() syncs .on state via querySelectorAll across both sets.
+-->
+<div id="filterSheet" onclick="if(event.target===this)closeFilterSheet()">
+  <div id="filterSheetPanel">
+    <div class="fsh-header">
+      <span class="fsh-title">Filters</span>
+      <button class="fsh-close" onclick="closeFilterSheet()" aria-label="Close filters">&#215;</button>
+    </div>
+    <div class="fsh-body">
+
+      <div class="fsh-section">
+        <button class="fsh-acc-btn open" onclick="toggleFshSection(this)" aria-expanded="true">
+          <span class="fsh-acc-label">I am</span>
+          <span class="fsh-acc-count" id="fshCntIam"></span>
+          <svg class="fsh-acc-chevron" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="fsh-acc-content">
+          <div class="qf-chip" data-f="PostSPM" onclick="toggleChip(this)">Post-SPM</div>
+          <div class="qf-chip" data-f="PreU" onclick="toggleChip(this)">Pre-University</div>
+          <div class="qf-chip" data-f="Undergrad" onclick="toggleChip(this)">Undergraduate</div>
+          <div class="qf-chip" data-f="Postgrad" onclick="toggleChip(this)">Postgraduate</div>
+          <div class="qf-chip" data-f="UEC" onclick="toggleChip(this)">UEC / O-Level / IGCSE</div>
+          <div class="qf-chip" data-f="SPM" onclick="toggleChip(this)">SPM Leavers</div>
+          <div class="qf-chip" data-f="STPM" onclick="toggleChip(this)">STPM / A-Level</div>
+        </div>
+      </div>
+
+      <div class="fsh-section">
+        <button class="fsh-acc-btn open" onclick="toggleFshSection(this)" aria-expanded="true">
+          <span class="fsh-acc-label">Looking for</span>
+          <span class="fsh-acc-count" id="fshCntLooking"></span>
+          <svg class="fsh-acc-chevron" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="fsh-acc-content">
+          <div class="qf-chip" data-f="Full" onclick="toggleChip(this)">&#9733; Full scholarship</div>
+          <div class="qf-chip" data-f="Overseas" onclick="toggleChip(this)">&#9992; Overseas study</div>
+          <div class="qf-chip" data-f="NoBond" onclick="toggleChip(this)">&#10003; No bond</div>
+          <div class="qf-chip" data-f="B40" onclick="toggleChip(this)">B40 / Income-based</div>
+        </div>
+      </div>
+
+      <div class="fsh-section">
+        <button class="fsh-acc-btn" onclick="toggleFshSection(this)" aria-expanded="false">
+          <span class="fsh-acc-label">Study in</span>
+          <span class="fsh-acc-count" id="fshCntStudyIn"></span>
+          <svg class="fsh-acc-chevron" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="fsh-acc-content hidden">
+          <div class="qf-chip" data-f="dcUK" onclick="toggleChip(this)">United Kingdom</div>
+          <div class="qf-chip" data-f="dcUS" onclick="toggleChip(this)">United States</div>
+          <div class="qf-chip" data-f="dcJP" onclick="toggleChip(this)">Japan</div>
+          <div class="qf-chip" data-f="dcSG" onclick="toggleChip(this)">Singapore</div>
+          <div class="qf-chip" data-f="dcKR" onclick="toggleChip(this)">South Korea</div>
+          <div class="qf-chip" data-f="dcAU" onclick="toggleChip(this)">Australia</div>
+          <div class="qf-chip" data-f="dcCN" onclick="toggleChip(this)">China</div>
+          <div class="qf-chip" data-f="dcASEAN" onclick="toggleChip(this)">ASEAN</div>
+        </div>
+      </div>
+
+      <div class="fsh-section">
+        <button class="fsh-acc-btn" onclick="toggleFshSection(this)" aria-expanded="false">
+          <span class="fsh-acc-label">Deadline</span>
+          <span class="fsh-acc-count" id="fshCntDeadline"></span>
+          <svg class="fsh-acc-chevron" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="fsh-acc-content hidden">
+          <div class="qf-chip" data-f="OpenNow" onclick="toggleChip(this)">Open now</div>
+          <div class="qf-chip" data-f="Soon" onclick="toggleChip(this)">Closing soon</div>
+          <div class="qf-chip" data-f="3Months" onclick="toggleChip(this)">Within 3 months</div>
+          <div class="qf-chip" data-f="Rolling" onclick="toggleChip(this)">Rolling / ongoing</div>
+        </div>
+      </div>
+
+      <div class="fsh-section">
+        <button class="fsh-acc-btn" onclick="toggleFshSection(this)" aria-expanded="false">
+          <span class="fsh-acc-label">Field of study</span>
+          <span class="fsh-acc-count" id="fshCntField"></span>
+          <svg class="fsh-acc-chevron" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="fsh-acc-content hidden">
+          <div class="qf-chip" data-f="fAny" onclick="toggleChip(this)">Any field</div>
+          <div class="qf-chip" data-f="fSTEM" onclick="toggleChip(this)">STEM / Science</div>
+          <div class="qf-chip" data-f="fEngineering" onclick="toggleChip(this)">Engineering</div>
+          <div class="qf-chip" data-f="fMedicine" onclick="toggleChip(this)">Medicine / Health</div>
+          <div class="qf-chip" data-f="fBusiness" onclick="toggleChip(this)">Business / Finance</div>
+          <div class="qf-chip" data-f="fIT" onclick="toggleChip(this)">IT / Computer Science</div>
+          <div class="qf-chip" data-f="fLaw" onclick="toggleChip(this)">Law</div>
+          <div class="qf-chip" data-f="fVocational" onclick="toggleChip(this)">Vocational / Trades</div>
+        </div>
+      </div>
+
+      <div class="fsh-section">
+        <button class="fsh-acc-btn" onclick="toggleFshSection(this)" aria-expanded="false">
+          <span class="fsh-acc-label">Min grade</span>
+          <span class="fsh-acc-count" id="fshCntGrade"></span>
+          <svg class="fsh-acc-chevron" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="fsh-acc-content hidden">
+          <div class="qf-chip" data-f="gStraight" onclick="toggleChip(this)">Straight As (9A+)</div>
+          <div class="qf-chip" data-f="g7" onclick="toggleChip(this)">7&#8211;8 As</div>
+          <div class="qf-chip" data-f="g5" onclick="toggleChip(this)">5&#8211;6 As</div>
+          <div class="qf-chip" data-f="gAny" onclick="toggleChip(this)">Any / No minimum</div>
+        </div>
+      </div>
+
+      <div class="fsh-section">
+        <button class="fsh-acc-btn" onclick="toggleFshSection(this)" aria-expanded="false">
+          <span class="fsh-acc-label">Eligibility</span>
+          <span class="fsh-acc-count" id="fshCntElig"></span>
+          <svg class="fsh-acc-chevron" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="fsh-acc-content hidden">
+          <div class="qf-chip" data-f="eAll" onclick="toggleChip(this)">Open to all</div>
+          <div class="qf-chip" data-f="eBumi" onclick="toggleChip(this)">Bumiputera only</div>
+          <div class="qf-chip" data-f="eForeigner" onclick="toggleChip(this)">Open to non-Malaysians</div>
+          <div class="qf-chip" data-f="Global" onclick="toggleChip(this)">&#127760; Global scholarships</div>
+        </div>
+      </div>
+
+    </div>
+    <div class="fsh-footer">
+      <button class="fsh-clear-btn" onclick="clearAll()">Clear all</button>
+      <button class="fsh-show-btn" id="fshShowBtn" onclick="closeFilterSheet()">Show results</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>

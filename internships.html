@@ -153,7 +153,7 @@ nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:
 .nav-r{display:flex;align-items:center;gap:8px;overflow:hidden;min-width:0}
 .nav-r a{color:rgba(255,255,255,.5);font-size:12px;text-decoration:none;letter-spacing:.04em;transition:color .2s}
 .nav-r a:hover{color:#fff}
-@media(max-width:680px){.nav-brand{font-size:20px}.products-btn{font-size:10.5px;padding:3px 9px}nav{padding:0 12px}.saved-label{display:none}.saved-nav-btn{padding:4px 8px;gap:3px}}
+@media(max-width:680px){.nav-brand{font-size:20px}.products-btn{font-size:10.5px;padding:3px 9px}nav{padding:0 12px}.saved-label{display:none}.saved-nav-btn{padding:4px 8px;gap:3px}.products-btn-label{display:none}}
 /* ── Language toggle — same pattern as MyScholar index.html ── */
 .lang-toggle{display:flex;align-items:center;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:20px;padding:3px;gap:2px;flex-shrink:0}
 .lt-opt{font-size:10px;font-weight:500;padding:3px 10px;border-radius:16px;cursor:pointer;color:rgba(255,255,255,.45);background:none;border:none;transition:all .15s;letter-spacing:.02em;font-family:var(--sans)}
@@ -464,7 +464,7 @@ nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:
     <!-- Products button — same pattern as MyScholar nav -->
     <button class="products-btn" id="productsBtn" onclick="toggleProductsMenu()" aria-haspopup="true" aria-expanded="false">
       <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-      Products
+      <span class="products-btn-label">Products</span>
       <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="margin-left:1px;transition:transform .18s" id="productsBtnChevron"><path d="M6 9l6 6 6-6"/></svg>
     </button>
     <!-- Saved button — opens saved internships panel -->
@@ -498,14 +498,6 @@ nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:
     </div>
     <span class="pd-check">✓</span>
   </a>
-  <div class="pd-item pd-dim" role="menuitem" aria-disabled="true">
-    <div class="pd-dot" style="background:#00a878"></div>
-    <div class="pd-info">
-      <div class="pd-name">MyTuition</div>
-      <div class="pd-sub">Tuition centres by distance &amp; rating</div>
-    </div>
-    <span class="pd-soon">Soon</span>
-  </div>
 </div>
 <script>
 // ── Products dropdown toggle ──
