@@ -305,6 +305,7 @@ nav {
 }
 .hero h1 .coral { color: var(--coral); }
 
+.hero-eyebrow { font-size: 10px; font-weight: 600; letter-spacing: .18em; color: var(--coral); text-transform: uppercase; margin-bottom: 18px; }
 .hero-sub {
   font-size: 16px;
   color: var(--muted);
@@ -638,7 +639,8 @@ footer {
 @media (max-width: 680px) {
   nav { padding: 0 16px; gap: 10px; }
   .hero { padding: 56px 20px 52px; }
-  .hero-sub { font-size: 14px; }
+  .hero-eyebrow { font-size: 10px; font-weight: 600; letter-spacing: .18em; color: var(--coral); text-transform: uppercase; margin-bottom: 18px; }
+.hero-sub { font-size: 14px; }
   .products { padding: 0 16px 60px; }
   .products-grid { grid-template-columns: 1fr; gap: 12px; }
   .about { padding: 56px 20px; }
@@ -659,7 +661,6 @@ footer {
 <body>
 
 <!-- ── ANNOUNCEMENT BAR ──────────────────────────────── -->
-<div class="ann-bar">Malaysia · 2025 / 2026 Academic Year</div>
 
 <!-- ── NAV ─────────────────────────────────────────────── -->
 <nav>
@@ -736,6 +737,7 @@ footer {
 <!-- ── HERO ─────────────────────────────────────────────── -->
 <section class="hero">
 
+  <p class="hero-eyebrow" data-i18n="heroEyebrow">MALAYSIA · 2025 / 2026 ACADEMIC YEAR</p>
   <h1 data-i18n="heroH1">Find Your<br><span class="coral">Scholarship.</span></h1>
 
   <p class="hero-sub" data-i18n="heroSub">A free directory of scholarships, financial aid, and study loans for Malaysian students — SPM to postgraduate.</p>
@@ -894,6 +896,7 @@ document.addEventListener('keydown', function(e) {
 // ── i18n translations ───────────────────────────────────────
 const TRANSLATIONS = {
   en: {
+    heroEyebrow:   'MALAYSIA · TAHUN AKADEMIK 2025 / 2026',
     heroH1:        'Find Your<br><span class=\'coral\'>Scholarship.</span>',
     heroSub:       'A free directory of scholarships, financial aid, and study loans for Malaysian students — SPM to postgraduate.',
     searchPlaceholder: 'Search by name, field, or provider…',
@@ -921,6 +924,7 @@ const TRANSLATIONS = {
     footerRight:   'No ads. No paywalls.',
   },
   bm: {
+    heroEyebrow:   'MALAYSIA · TAHUN AKADEMIK 2025 / 2026',
     heroH1:        'Cari<br><span class=\'coral\'>Biasiswa Anda.</span>',
     heroSub:       'Direktori percuma biasiswa, bantuan kewangan, dan pinjaman pengajian untuk pelajar Malaysia — SPM hingga pascasiswazah.',
     searchPlaceholder: 'Cari mengikut nama, bidang, atau pemberi…',
