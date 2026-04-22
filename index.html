@@ -668,7 +668,7 @@ footer {
   <div class="nav-sep"></div>
 
   <!-- Our tools dropdown trigger -->
-  <button class="tools-btn" id="toolsBtn" aria-expanded="false" aria-haspopup="true">
+  <button class="tools-btn" id="toolsBtn" onclick="toggleDropdown()" aria-expanded="false" aria-haspopup="true">
     <div class="dot-trio">
       <span class="d-teal"></span>
       <span class="d-coral"></span>
@@ -866,22 +866,34 @@ footer {
 <script>
 
 // ── Our tools dropdown ──────────────────────────────────────
-const toolsBtn      = document.getElementById('toolsBtn');
-const toolsDropdown = document.getElementById('toolsDropdown');
-
-toolsBtn.addEventListener('click', (e) => {
-  e.stopPropagation();
-  const isOpen = toolsDropdown.classList.contains('open');
-  toolsDropdown.classList.toggle('open', !isOpen);
-  toolsBtn.classList.toggle('open', !isOpen);
-  toolsBtn.setAttribute('aria-expanded', String(!isOpen));
+function toggleDropdown() {
+  const dropdown = document.getElementById('toolsDropdown');
+  const btn      = document.getElementById('toolsBtn');
+  const isOpen   = dropdown.classList.toggle('open');
+  btn.classList.toggle('open', isOpen);
+  btn.setAttribute('aria-expanded', isOpen);
+}
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('#toolsBtn') && !e.target.closest('#toolsDropdown')) {
+    const dropdown = document.getElementById('toolsDropdown');
+    if (dropdown && dropdown.classList.contains('open')) {
+      dropdown.classList.remove('open');
+      document.getElementById('toolsBtn').classList.remove('open');
+      document.getElementById('toolsBtn').setAttribute('aria-expanded', 'false');
+    }
+  }
 });
-
-// Close dropdown when clicking outside
-document.addEventListener('click', () => {
-  toolsDropdown.classList.remove('open');
-  toolsBtn.classList.remove('open');
-  toolsBtn.setAttribute('aria-expanded', 'false');
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    const dropdown = document.getElementById('toolsDropdown');
+    if (dropdown && dropdown.classList.contains('open')) {
+      dropdown.classList.remove('open');
+      const btn = document.getElementById('toolsBtn');
+      btn.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+      btn.focus();
+    }
+  }
 });
 
 // ── Language toggle ─────────────────────────────────────────
@@ -900,4 +912,41 @@ const btnBM = document.getElementById('btnBM');
 // ── Search redirect helper ──────────────────────────────────
 function goToScholarships(query) {
   const q = (query || '').trim();
-  const url = q ? 'scholar
+  const url = q
+    ? 'scholarships.html?q=' + encodeURIComponent(q)
+    : 'scholarships.html';
+  window.location.href = url;
+}
+
+// Fill search input from try-chips, then navigate
+function fillSearch(chipEl) {
+  const q = chipEl.textContent.trim();
+  goToScholarships(q);
+}
+
+// Search input: navigate on Enter key or search icon click
+(function() {
+  const input = document.getElementById('si');
+  if (!input) return;
+
+  // Enter key
+  input.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      goToScholarships(input.value);
+    }
+  });
+
+  // Search icon click — find the icon sibling and make it clickable
+  const icon = input.closest('.search-wrap') && input.closest('.search-wrap').querySelector('.search-icon');
+  if (icon) {
+    icon.style.cursor = 'pointer';
+    icon.addEventListener('click', function() {
+      goToScholarships(input.value);
+    });
+  }
+})();
+
+</script>
+</body>
+</html>
