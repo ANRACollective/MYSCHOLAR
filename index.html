@@ -443,16 +443,17 @@ nav {
   border-color: rgba(232,85,30,.35);
   background: rgba(232,85,30,.05);
 }
-.prod-card.active::before {
+/* Every card gets a colour line on top matching its product colour */
+.prod-card::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
+  top: 0; left: 0; right: 0;
   height: 2px;
-  background: var(--coral);
   border-radius: 16px 16px 0 0;
 }
+.prod-card:first-child::before  { background: var(--teal); }   /* PLAN */
+.prod-card.active::before       { background: var(--coral); }  /* FUND */
+.prod-card:last-child::before   { background: var(--sky); }    /* LAUNCH */
 
 .prod-phase {
   font-family: var(--sans);
