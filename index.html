@@ -1554,14 +1554,11 @@ function fillSearch(chipEl) {
     if (section) section.style.display = '';
     grid.innerHTML = data.map(s => {
       const label  = daysUntil(s.deadline_date);
-      const href   = s.url || `scholarships.html?q=${encodeURIComponent(s.name)}`;
-      const target = s.url ? 'target="_blank" rel="noopener"' : '';
-      const name   = String(s.name || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      const href   = s.url ? s.url : `/scholarships?q=${encodeURIComponent(s.name)}`;
+      const target = s.url ? ' target="_blank" rel="noopener"' : '';
+      const name   = String(s.name || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/'/g,'&#39;');
       const prov   = String(s.provider || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-      // Track clicks
-      const onclick = s.url
-        ? `onclick="logClick(${s.id},'${name}','${href}')"` : '';
-      return `<a class="cs-card" href="${href}" ${target} ${onclick}>
+      return `<a class="cs-card" href="${href}"${target} data-id="${s.id}">
         <div class="cs-deadline">${label}</div>
         <div class="cs-name">${name}</div>
         <div class="cs-provider">${prov}</div>
