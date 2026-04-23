@@ -494,12 +494,11 @@ nav {
   font-family: var(--sans);
   font-size: 12px;
   font-weight: 400;
-  color: rgba(56,189,248,0.7);  /* sky blue to match LAUNCH */
+  color: rgba(255,255,255,0.5);
   transition: color .15s;
 }
-.prod-card:hover .prod-cta { color: var(--sky); }
 
-/* MyScholar Browse CTA — elevated so it reads as a real action */
+/* MyScholar — coral, bold */
 .prod-cta-primary {
   font-size: 13px;
   font-weight: 600;
@@ -507,11 +506,20 @@ nav {
 }
 .prod-card.active:hover .prod-cta-primary { color: #ff6b35; }
 
-/* MyJourney coming soon — muted teal, clearly not a link */
+/* MyIntern — sky blue, bold */
+.prod-cta-launch {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(56,189,248,0.75);
+  transition: color .15s;
+}
+.prod-card:hover .prod-cta-launch { color: var(--sky); }
+
+/* MyJourney coming soon — muted teal, not clickable */
 .prod-cta-soon {
   font-size: 11px;
   font-weight: 500;
-  color: rgba(0,168,120,0.45);  /* teal at 45% opacity = inactive but on-brand */
+  color: rgba(0,168,120,0.45);
   cursor: default;
   letter-spacing: .04em;
 }
@@ -1100,7 +1108,7 @@ footer {
       <p class="prod-desc">
         <span data-i18n="internCardDesc">Find internship openings that match your course and availability.</span>
       </p>
-      <div class="prod-cta" data-i18n="internCardCta">Browse internships →</div>
+      <div class="prod-cta-launch" data-i18n="internCardCta">Browse internships →</div>
     </a>
 
   </div>
