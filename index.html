@@ -1,11 +1,8 @@
 <!DOCTYPE html>
 <!--
-  MyScholar — New Landing Page Prototype
-  Based on: nav-dropdown-concept.pdf (designed by ANRA, Apr 2026)
-  Status: PROTOTYPE — not for deployment
-
-  Architecture note: This is a portal/hub page. The scholarship browser
-  (currently index.html) would need to move to /scholarships or scroll below.
+  MyScholar — Landing Page
+  myscholar.my
+  Updated: Apr 2026
 -->
 <html lang="en">
 <head>
@@ -27,6 +24,14 @@
 <meta name="twitter:title"       content="MyScholar — Find Your Scholarship" />
 <meta name="twitter:description" content="200+ scholarships for Malaysian students. Free to search, no sign-up needed." />
 <meta name="twitter:image"       content="https://anracollective.github.io/MYSCHOLAR/myscholar-og.png" />
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZETBRDDMTV"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-ZETBRDDMTV");
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -643,27 +648,8 @@ footer {
   color: rgba(255,255,255,.2);
 }
 
-/* ─────────────────────────────────────────────
-   PROTOTYPE BANNER (remove before deploy)
-   ───────────────────────────────────────────── */
-.proto-banner {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(232,85,30,.95);
-  color: #fff;
-  font-size: 12px;
-  font-weight: 700;
-  padding: 8px 20px;
-  border-radius: 20px;
-  letter-spacing: .04em;
-  z-index: 999;
-  pointer-events: none;
-  font-family: var(--sans);
-  white-space: nowrap;
-  box-shadow: 0 4px 20px rgba(0,0,0,.4);
-}
+
+
 
 /* ─────────────────────────────────────────────
    MOBILE
@@ -1086,7 +1072,7 @@ footer {
       <div class="prod-phase teal" data-i18n="phasePlan">Plan</div>
       <div class="prod-name">MyJourney</div>
       <p class="prod-desc">
-        <span data-i18n="planCardDesc">Map your interests to real careers and the qualifications that get you there.</span>
+        <span data-i18n="planCardDesc">Not sure what to do after SPM? Answer a few questions and find careers that fit you.</span>
       </p>
       <div class="prod-cta prod-cta-soon" data-i18n="comingSoon">Coming soon</div>
     </a>
@@ -1106,7 +1092,7 @@ footer {
       <div class="prod-phase sky" data-i18n="phaseLaunch">Launch</div>
       <div class="prod-name">MyIntern</div>
       <p class="prod-desc">
-        <span data-i18n="internCardDesc">Find internship openings that match your course and availability.</span>
+        <span data-i18n="internCardDesc">Verified internships. Free CV builder. Start your career here.</span>
       </p>
       <div class="prod-cta-launch" data-i18n="internCardCta">Browse internships →</div>
     </a>
@@ -1248,10 +1234,10 @@ const TRANSLATIONS = {
     phasePlan:     'Plan',
     phaseFund:     'Fund',
     phaseLaunch:   'Launch',
-    planCardDesc:  'Map your interests to real careers and the qualifications that get you there.',
+    planCardDesc:  'Not sure what to do after SPM? Answer a few questions and find careers that fit you.',
     scholarCardDesc: '200+ scholarships filtered by field, eligibility, and deadline — all free.',
     scholarCardCta: 'Browse scholarships →',
-    internCardDesc: 'Find internship openings that match your course and availability.',
+    internCardDesc: 'Verified internships. Free CV builder. Start your career here.',
     internCardCta: 'Browse internships →',
     aboutEyebrow:  'About this project',
     aboutH2:       'Built for Malaysian students.',
