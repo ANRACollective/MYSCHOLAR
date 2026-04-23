@@ -1635,7 +1635,28 @@ document.getElementById('popupForm').addEventListener('submit', async function(e
       body: JSON.stringify({
         email,
         source: 'homepage_popup',
-        internship_interest: false
+        internship_interest: false,
+        tuition_interest: false
       })
     });
+    if (res.ok || res.status === 409) {
+      localStorage.setItem(POPUP_KEY, '1');
+      document.getElementById('popupContent').innerHTML =
+        '<div class="popup-success">' +
+        '<div class="ps-tick">✓</div>' +
+        '<h4>You\'re in.</h4>' +
+        '<p>We\'ll send updates when new scholarships open.</p>' +
+        '</div>';
+    } else {
+      btn.disabled = false;
+      btn.textContent = 'Get updates';
+    }
+  } catch(err) {
+    btn.disabled = false;
+    btn.textContent = 'Get updates';
+  }
+});
+</script>
+</body>
+</html>
 
