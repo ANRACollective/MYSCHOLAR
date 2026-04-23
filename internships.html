@@ -154,9 +154,9 @@ nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:
 .tools-btn:hover{background:rgba(255,255,255,.1);color:#fff}
 .chevron{color:rgba(255,255,255,.5);transition:transform .2s;flex-shrink:0}
 .tools-btn.open .chevron{transform:rotate(180deg)}
-.tools-dropdown{position:fixed;top:89px;left:32px;background:#0a1626;border:1px solid rgba(255,255,255,.13);border-top:none;border-radius:0 10px 10px 10px;width:300px;padding:8px;box-shadow:0 24px 60px rgba(0,0,0,.6);z-index:300;opacity:0;pointer-events:none;transform:translateY(-6px);transition:opacity .18s,transform .18s}
+.tools-dropdown{position:fixed;top:56px;left:20px;background:#0f1f3d;border:1px solid rgba(255,255,255,.12);border-radius:14px;width:280px;padding:10px;box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.04);z-index:300;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s}
 .tools-dropdown.open{opacity:1;pointer-events:auto;transform:translateY(0)}
-.pd-label{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;flex-shrink:0}.pd-label.teal-lbl{color:#00a878}.pd-label.coral-lbl{color:#e8551e}.pd-label.sky-lbl{color:#38bdf8}
+.pd-label{font-size:13px;font-weight:700;color:rgba(255,255,255,.5);letter-spacing:.08em;text-transform:uppercase}.pd-label span{font-weight:600;color:#fff;letter-spacing:0;text-transform:none}.pd-label.teal-lbl{color:#00a878}.pd-label.coral-lbl{color:#e8551e}.pd-label.sky-lbl{color:#38bdf8}
 .pd-label span{font-weight:500;color:rgba(255,255,255,.8);letter-spacing:0;text-transform:none;font-size:13px}
 .pd-current{font-size:9px;font-weight:700;color:#e8551e;background:rgba(232,85,30,.1);border-radius:4px;padding:2px 6px;flex-shrink:0}
 .nav-brand{font-family:var(--serif);font-size:24px;letter-spacing:-.4px;text-decoration:none;color:#fff;font-weight:900;transition:opacity .2s}
@@ -181,12 +181,12 @@ nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:
 .products-btn:hover,.products-btn.active{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.26);color:#fff}
 .products-dropdown{position:fixed;top:56px;left:20px;background:#131b2e;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:10px;width:270px;box-shadow:0 20px 60px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.04);z-index:300;opacity:0;transform:translateY(-6px);pointer-events:none;transition:opacity .18s,transform .18s}
 .products-dropdown.open{opacity:1;transform:translateY(0);pointer-events:auto}
-.pd-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:9px;text-decoration:none;transition:background .15s;margin-bottom:3px;cursor:pointer}
+.pd-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:9px;text-decoration:none;transition:background .15s;cursor:pointer}.pd-item:not(.pd-dim):hover{background:rgba(255,255,255,.07)}
 .pd-item:last-child{margin-bottom:0}
 .pd-item:not(.pd-dim):hover{background:rgba(255,255,255,.07)}
 .pd-dim{cursor:default;opacity:.4}
 .pd-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.pd-info{flex:1}
+.pd-info{flex:1}.pd-text{flex:1}
 .pd-name{font-size:13px;font-weight:600;color:#f1f5f9}
 .pd-sub{font-size:11px;color:rgba(255,255,255,.33);margin-top:2px}
 .pd-arrow{font-size:12px;color:rgba(255,255,255,.25)}
