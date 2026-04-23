@@ -598,7 +598,7 @@ nav {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 28px;
+  gap: 12px;
 }
 .footer-social-row a {
   color: rgba(255,255,255,.35);
@@ -606,6 +606,10 @@ nav {
   transition: color .2s;
   display: flex;
   align-items: center;
+  justify-content: center;
+  /* WCAG 2.5.5: minimum 44×44px touch target */
+  min-width: 44px;
+  min-height: 44px;
 }
 .footer-social-row a:hover { color: rgba(255,255,255,.8); }
 
@@ -659,15 +663,23 @@ footer {
   nav { padding: 0 16px; gap: 10px; }
   .hero { padding: 56px 20px 52px; }
   .hero-eyebrow { font-size: 10px; font-weight: 600; letter-spacing: .18em; color: var(--coral); text-transform: uppercase; margin-bottom: 18px; }
-.hero-sub { font-size: 14px; }
+  .hero-sub { font-size: 14px; }
   .products { padding: 0 16px 60px; }
   .products-grid { grid-template-columns: 1fr; gap: 12px; }
+  /* On mobile: FUND first, LAUNCH second, PLAN last (it's coming soon) */
+  .prod-card.active   { order: 1; }
+  .prod-card:last-child { order: 2; }
+  .prod-card:first-child { order: 3; }
   .about { padding: 56px 20px; }
   .footer-social-row { padding: 20px 16px; }
   footer { padding: 14px 16px; flex-direction: column; align-items: center; text-align: center; gap: 4px; }
   .footer-right { display: none; }
   .tools-dropdown { left: 16px; right: 16px; width: auto; }
   .ann-bar { font-size: 9px; letter-spacing: .12em; }
+  /* Closing soon — single column on mobile */
+  .cs-grid { grid-template-columns: 1fr !important; }
+  /* Popup — full screen on mobile */
+  .popup-box { padding: 32px 24px; margin: 16px; border-radius: 16px; }
 }
 
 @media (max-width: 480px) {
@@ -675,6 +687,229 @@ footer {
   .prod-card { padding: 22px 18px 20px; }
 }
 
+
+/* ─────────────────────────────────────────────
+   CLOSING SOON STRIP
+   ───────────────────────────────────────────── */
+.closing-soon {
+  background: var(--midnight);
+  padding: 0 32px 64px;
+  border-top: 1px solid var(--border);
+}
+.cs-inner {
+  max-width: 1020px;
+  margin: 0 auto;
+}
+.cs-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 48px 0 24px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.cs-eyebrow {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--coral);
+}
+.cs-see-all-link {
+  font-size: 12px;
+  color: rgba(255,255,255,.4);
+  text-decoration: none;
+  transition: color .15s;
+}
+.cs-see-all-link:hover { color: rgba(255,255,255,.8); }
+.cs-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.cs-card {
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 12px;
+  padding: 18px 20px;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: background .15s, border-color .15s;
+  position: relative;
+  overflow: hidden;
+}
+.cs-card::before {
+  /* coral left accent */
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--coral);
+  opacity: .5;
+}
+.cs-card:hover {
+  background: rgba(255,255,255,.07);
+  border-color: rgba(255,255,255,.14);
+}
+.cs-card:hover::before { opacity: 1; }
+.cs-deadline {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--coral);
+}
+.cs-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--white);
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.cs-provider {
+  font-size: 11px;
+  color: rgba(255,255,255,.38);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ─────────────────────────────────────────────
+   SIGNUP POPUP
+   ───────────────────────────────────────────── */
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.65);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s;
+}
+.popup-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.popup-box {
+  background: #0e1e33;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 20px;
+  padding: 44px 40px;
+  max-width: 440px;
+  width: 100%;
+  position: relative;
+  box-shadow: 0 32px 80px rgba(0,0,0,.7);
+  transform: translateY(12px);
+  transition: transform .25s;
+}
+.popup-overlay.open .popup-box { transform: translateY(0); }
+.popup-close {
+  position: absolute;
+  top: 16px; right: 16px;
+  background: rgba(255,255,255,.07);
+  border: none;
+  border-radius: 50%;
+  width: 32px; height: 32px;
+  color: rgba(255,255,255,.5);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s, color .15s;
+}
+.popup-close:hover { background: rgba(255,255,255,.13); color: var(--white); }
+.popup-eyebrow {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--coral);
+  margin-bottom: 12px;
+}
+.popup-box h3 {
+  font-family: var(--serif);
+  font-size: 26px;
+  font-weight: 900;
+  color: var(--white);
+  line-height: 1.15;
+  margin-bottom: 10px;
+}
+.popup-box p {
+  font-size: 14px;
+  color: rgba(255,255,255,.5);
+  line-height: 1.65;
+  margin-bottom: 24px;
+}
+.popup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.popup-form input[type="email"] {
+  width: 100%;
+  padding: 13px 18px;
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 10px;
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--white);
+  outline: none;
+  transition: border-color .2s;
+}
+.popup-form input[type="email"]::placeholder { color: rgba(255,255,255,.3); }
+.popup-form input[type="email"]:focus { border-color: rgba(255,255,255,.35); }
+.popup-form button[type="submit"] {
+  width: 100%;
+  padding: 13px;
+  background: var(--coral);
+  border: none;
+  border-radius: 10px;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--white);
+  cursor: pointer;
+  transition: opacity .18s;
+}
+.popup-form button[type="submit"]:hover { opacity: .88; }
+.popup-fine {
+  font-size: 11px !important;
+  color: rgba(255,255,255,.25) !important;
+  text-align: center;
+  margin-top: 10px !important;
+  margin-bottom: 0 !important;
+}
+.popup-success {
+  text-align: center;
+  padding: 12px 0;
+}
+.popup-success .ps-tick {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+.popup-success h4 {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--white);
+  margin-bottom: 6px;
+}
+.popup-success p {
+  font-size: 13px;
+  color: rgba(255,255,255,.45);
+  margin-bottom: 0;
+}
 
 /* ── Live search dropdown ──────────────────────────────────── */
 .search-icon { pointer-events: auto; cursor: pointer; }
@@ -737,7 +972,7 @@ footer {
       <span class="d-coral"></span>
       <span class="d-sky"></span>
     </div>
-    <span data-i18n="toolsBtn">Our tools</span>
+    <span data-i18n="toolsBtn">Explore</span>
     <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <polyline points="4 6 8 10 12 6"></polyline>
     </svg>
@@ -821,14 +1056,14 @@ footer {
 
   <!-- Try: chips -->
   <div class="try-row" aria-label="Top searches">
-    <button class="try-chip" onclick="fillSearch(this)">JPA</button>
-    <button class="try-chip" onclick="fillSearch(this)">Petronas</button>
-    <button class="try-chip" onclick="fillSearch(this)">MARA</button>
-    <button class="try-chip" onclick="fillSearch(this)">Khazanah</button>
-    <button class="try-chip" onclick="fillSearch(this)">Lepasan SPM</button>
-    <button class="try-chip" onclick="fillSearch(this)">UK</button>
-    <button class="try-chip" onclick="fillSearch(this)">USA</button>
-    <button class="try-chip" onclick="fillSearch(this)">Postgraduate</button>
+    <button class="try-chip" onclick="fillSearch(this)" aria-label="Search for JPA scholarships">JPA</button>
+    <button class="try-chip" onclick="fillSearch(this)" aria-label="Search for Petronas scholarships">Petronas</button>
+    <button class="try-chip" onclick="fillSearch(this)" aria-label="Search for MARA scholarships">MARA</button>
+    <button class="try-chip" onclick="fillSearch(this)" aria-label="Search for Khazanah scholarships">Khazanah</button>
+    <button class="try-chip" onclick="fillSearch(this)" aria-label="Search for Lepasan SPM scholarships">Lepasan SPM</button>
+    <button class="try-chip" onclick="fillSearch(this)" aria-label="Search for UK scholarships">UK</button>
+    <button class="try-chip" onclick="fillSearch(this)" aria-label="Search for USA scholarships">USA</button>
+    <button class="try-chip" onclick="fillSearch(this)" aria-label="Search for Postgraduate scholarships">Postgraduate</button>
   </div>
 
 </section>
@@ -864,11 +1099,42 @@ footer {
       <p class="prod-desc">
         <span data-i18n="internCardDesc">Find internship openings that match your course and availability.</span>
       </p>
-      <div class="prod-cta" data-i18n="internCardCta">Find internships →</div>
+      <div class="prod-cta" data-i18n="internCardCta">Browse internships →</div>
     </a>
 
   </div>
 </section>
+
+<!-- ── CLOSING SOON STRIP ─────────────────────────────────── -->
+<section class="closing-soon" id="closingSoon">
+  <div class="cs-inner">
+    <div class="cs-header">
+      <p class="cs-eyebrow">Closing within 30 days</p>
+      <a href="scholarships.html" class="cs-see-all-link">See all scholarships →</a>
+    </div>
+    <div class="cs-grid" id="csGrid">
+      <!-- Populated by JS from Supabase -->
+    </div>
+  </div>
+</section>
+
+<!-- ── SIGNUP POPUP ───────────────────────────────────────── -->
+<div class="popup-overlay" id="popupOverlay" role="dialog" aria-modal="true" aria-labelledby="popupTitle">
+  <div class="popup-box">
+    <button class="popup-close" id="popupClose" aria-label="Close">×</button>
+    <div id="popupContent">
+      <p class="popup-eyebrow">Stay ahead</p>
+      <h3 id="popupTitle">Don't miss a deadline.</h3>
+      <p>Get the monthly update — new scholarships, what's closing soon, nothing else.</p>
+      <form class="popup-form" id="popupForm" novalidate>
+        <label for="popupEmail" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Your email address</label>
+        <input type="email" id="popupEmail" placeholder="Your email address" autocomplete="email" required>
+        <button type="submit">Get updates</button>
+      </form>
+      <p class="popup-fine">No spam. Unsubscribe anytime.</p>
+    </div>
+  </div>
+</div>
 
 <!-- ── ABOUT + GET UPDATES ────────────────────────────────── -->
 <section class="about">
@@ -882,12 +1148,12 @@ footer {
       <span data-i18n="aboutData">Data last reviewed: 20 Apr 2026 · Sourced from official portals</span>
     </p>
     <div class="about-cta">
-      <a href="#" class="updates-btn">
+      <button class="updates-btn" onclick="openPopup()">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,14 22,4"/>
         </svg>
         <span data-i18n="aboutCta">Get updates</span>
-      </a>
+      </button>
     </div>
   </div>
 </section>
@@ -964,7 +1230,7 @@ const TRANSLATIONS = {
     heroSub:       'A free directory of scholarships, financial aid, and study loans for Malaysian students — SPM to postgraduate.',
     searchPlaceholder: 'Search by name, field, or provider…',
     tryLabel:      'TRY:',
-    toolsBtn:      'Our tools',
+    toolsBtn:      'Explore',
     planDesc:      'Map your career pathway',
     fundDesc:      'Find scholarships for your studies',
     launchDesc:    'Discover internship opportunities',
@@ -977,7 +1243,7 @@ const TRANSLATIONS = {
     scholarCardDesc: '200+ scholarships filtered by field, eligibility, and deadline — all free.',
     scholarCardCta: 'Browse scholarships →',
     internCardDesc: 'Find internship openings that match your course and availability.',
-    internCardCta: 'Find internships →',
+    internCardCta: 'Browse internships →',
     aboutEyebrow:  'About this project',
     aboutH2:       'Built for Malaysian students.',
     aboutTrust:    'Built by <strong>ANRA</strong> · Free, no ads, no login · Not affiliated with any scholarship body or government agency',
@@ -1260,6 +1526,149 @@ function fillSearch(chipEl) {
     if (!wrap.contains(e.target)) sdClose();
   });
 })();
+
+// ── Closing soon strip ──────────────────────────────────────
+(async function loadClosingSoon() {
+  const grid = document.getElementById('csGrid');
+  const section = document.getElementById('closingSoon');
+  if (!grid) return;
+
+  try {
+    // Fetch scholarships where deadline_date is within 30 days, ordered soonest first
+    const today = new Date().toISOString().split('T')[0];
+    const in30  = new Date(Date.now() + 30 * 86400000).toISOString().split('T')[0];
+    const url   = `${SB_URL}/rest/v1/scholarships?select=id,name,provider,deadline_date,deadline_text,url` +
+                  `&deadline_date=gte.${today}&deadline_date=lte.${in30}&is_active=eq.true&order=deadline_date.asc&limit=6`;
+
+    const res  = await fetch(url, { headers: { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}` } });
+    if (!res.ok) throw new Error('fetch failed');
+    const data = await res.json();
+
+    if (!data.length) {
+      // No scholarships closing soon — hide the section entirely
+      if (section) section.style.display = 'none';
+      return;
+    }
+
+    function daysUntil(dateStr) {
+      const diff = Math.ceil((new Date(dateStr) - new Date()) / 86400000);
+      return diff <= 0 ? 'Today' : diff === 1 ? 'Tomorrow' : `${diff} days left`;
+    }
+
+    grid.innerHTML = data.map(s => {
+      const label  = daysUntil(s.deadline_date);
+      const href   = s.url || `scholarships.html?q=${encodeURIComponent(s.name)}`;
+      const target = s.url ? 'target="_blank" rel="noopener"' : '';
+      const name   = String(s.name || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      const prov   = String(s.provider || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      // Track clicks
+      const onclick = s.url
+        ? `onclick="logClick(${s.id},'${name}','${href}')"` : '';
+      return `<a class="cs-card" href="${href}" ${target} ${onclick}>
+        <div class="cs-deadline">${label}</div>
+        <div class="cs-name">${name}</div>
+        <div class="cs-provider">${prov}</div>
+      </a>`;
+    }).join('');
+
+  } catch(e) {
+    // Silently hide the section if fetch fails — never break the page
+    if (section) section.style.display = 'none';
+  }
+})();
+
+// ── Signup popup ────────────────────────────────────────────
+const POPUP_KEY = 'scholar_popup_seen';
+
+function openPopup() {
+  document.getElementById('popupOverlay').classList.add('open');
+  document.getElementById('popupEmail') && document.getElementById('popupEmail').focus();
+}
+function closePopup() {
+  document.getElementById('popupOverlay').classList.remove('open');
+}
+
+// Close on overlay click (outside the box)
+document.getElementById('popupOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closePopup();
+});
+// Close on X button
+document.getElementById('popupClose').addEventListener('click', function() {
+  localStorage.setItem(POPUP_KEY, '1'); // mark seen even on manual close
+  closePopup();
+});
+// Close on Escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closePopup();
+});
+
+// Trigger at 60% scroll depth — once per device
+if (!localStorage.getItem(POPUP_KEY)) {
+  let popupFired = false;
+  window.addEventListener('scroll', function onScroll() {
+    if (popupFired) return;
+    const scrolled  = window.scrollY + window.innerHeight;
+    const total     = document.documentElement.scrollHeight;
+    if (scrolled / total >= 0.6) {
+      popupFired = true;
+      window.removeEventListener('scroll', onScroll);
+      setTimeout(openPopup, 400); // small delay feels less jarring
+    }
+  }, { passive: true });
+}
+
+// Submit popup form
+document.getElementById('popupForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const emailInput = document.getElementById('popupEmail');
+  const email = (emailInput.value || '').trim().toLowerCase();
+  if (!email) return;
+
+  const btn = this.querySelector('button[type="submit"]');
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+
+  try {
+    const res = await fetch(`${SB_URL}/rest/v1/subscribers`, {
+      method: 'POST',
+      headers: {
+        'apikey': SB_KEY,
+        'Authorization': `Bearer ${SB_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({
+        email,
+        source: 'homepage_popup',
+        internship_interest: false
+      })
+    });
+
+    if (res.ok || res.status === 409) {
+      // 409 = already subscribed — still treat as success
+      localStorage.setItem(POPUP_KEY, '1');
+      // Show success state
+      document.getElementById('popupContent').innerHTML = `
+        <div class="popup-success">
+          <div class="ps-tick">✓</div>
+          <h4>You're in.</h4>
+          <p>We'll send you the monthly update — no spam, ever.</p>
+        </div>`;
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'popup_subscribe', { source: 'homepage_popup' });
+      }
+      setTimeout(closePopup, 2400);
+    } else {
+      btn.disabled = false;
+      btn.textContent = 'Get updates';
+      btn.style.background = '#c0392b';
+      btn.textContent = 'Something went wrong — try again';
+    }
+  } catch(err) {
+    btn.disabled = false;
+    btn.textContent = 'Get updates';
+  }
+});
 
 </script>
 </body>
