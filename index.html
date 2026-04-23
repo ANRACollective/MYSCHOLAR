@@ -494,10 +494,10 @@ nav {
   font-family: var(--sans);
   font-size: 12px;
   font-weight: 400;
-  color: rgba(255,255,255,0.5);
+  color: rgba(56,189,248,0.7);  /* sky blue to match LAUNCH */
   transition: color .15s;
 }
-.prod-card:hover .prod-cta { color: rgba(255,255,255,.8); }
+.prod-card:hover .prod-cta { color: var(--sky); }
 
 /* MyScholar Browse CTA — elevated so it reads as a real action */
 .prod-cta-primary {
@@ -507,11 +507,11 @@ nav {
 }
 .prod-card.active:hover .prod-cta-primary { color: #ff6b35; }
 
-/* MyJourney coming soon — muted, clearly not a link */
+/* MyJourney coming soon — muted teal, clearly not a link */
 .prod-cta-soon {
   font-size: 11px;
   font-weight: 500;
-  color: rgba(255,255,255,0.28);
+  color: rgba(0,168,120,0.45);  /* teal at 45% opacity = inactive but on-brand */
   cursor: default;
   letter-spacing: .04em;
 }
