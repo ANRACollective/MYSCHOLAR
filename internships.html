@@ -137,7 +137,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 html{scroll-behavior:smooth}
-body{font-family:var(--sans);background:var(--bg);color:var(--t1);min-height:100vh;-webkit-font-smoothing:antialiased}
+body{font-family:var(--sans);background:var(--bg);color:var(--t1);min-height:100vh;font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
 
 /* ── SHARED STICKY NAV (mirrors MyScholar index.html) ──────────────────── */
 nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:flex;align-items:center;gap:10px;height:52px;border-bottom:2px solid #e8551e;width:100%;max-width:100%;overflow:hidden}
@@ -202,10 +202,10 @@ nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:
 .hero-eyebrow{font-size:10px;letter-spacing:.18em;color:var(--accent);text-transform:uppercase;font-weight:600;margin-bottom:14px;position:relative}
 .hero-h1{font-family:var(--serif);font-size:clamp(36px,6vw,68px);color:#fff;line-height:1.06;margin-bottom:16px;font-weight:900;position:relative}
 .hero-h1 em{color:var(--accent);font-style:normal}
-.hero-sub{font-size:14px;color:rgba(255,255,255,.6);max-width:420px;margin:0 auto 36px;font-weight:300;line-height:1.75;position:relative}
+.hero-sub{font-size:15px;color:rgba(255,255,255,.6);max-width:420px;margin:0 auto 36px;font-weight:300;line-height:1.75;position:relative}
 .hero-stats{display:flex;justify-content:center;gap:44px;flex-wrap:wrap;position:relative}
 .hs-item .hs-num{font-family:var(--serif);font-size:34px;color:#fff;font-weight:700;line-height:1;display:block}
-.hs-item .hs-lbl{font-size:10px;color:rgba(255,255,255,.5);margin-top:4px;letter-spacing:.08em;text-transform:uppercase;display:block}
+.hs-item .hs-lbl{font-size:11px;color:rgba(255,255,255,.5);margin-top:4px;letter-spacing:.08em;text-transform:uppercase;display:block}
 @media(max-width:680px){.hero-intern{padding:40px 20px 36px}.hero-stats{gap:28px}.hs-item .hs-num{font-size:28px}}
 
 /* ── SEARCH ────────────────────────────── */
@@ -217,9 +217,9 @@ nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:
 /* ── FILTER SECTIONS ───────────────────── */
 .filters{max-width:720px;margin:18px auto 0;padding:0 20px}
 .f-section{margin-bottom:12px}
-.f-label{font-size:10px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px}
+.f-label{font-size:11px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px}
 .f-row{display:flex;flex-wrap:wrap;gap:8px}
-.chip{padding:7px 14px;border-radius:18px;border:1.5px solid var(--border);background:transparent;color:var(--t2);font-size:12px;font-weight:500;cursor:pointer;transition:all .2s;user-select:none}
+.chip{padding:7px 14px;border-radius:18px;border:1.5px solid var(--border);background:transparent;color:var(--t2);font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;user-select:none}
 .chip:hover{border-color:var(--accent);color:var(--accent)}
 .chip.active{background:var(--accent);color:var(--bg);border-color:var(--accent);font-weight:600}
 /* Preference toggles — different visual from industry chips */
@@ -255,7 +255,7 @@ nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:
 .row-hd{flex:1;min-width:0}
 .co-line{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .co{font-size:18px;font-weight:700;color:var(--t1);letter-spacing:-.3px}
-.pill{font-size:9px;font-weight:600;padding:3px 8px;border-radius:7px;text-transform:uppercase;letter-spacing:.4px}
+.pill{font-size:10px;font-weight:600;padding:3px 8px;border-radius:7px;text-transform:uppercase;letter-spacing:.4px}
 .p-fin{background:rgba(96,165,250,.1);color:var(--c-fin)}.p-ene{background:rgba(251,191,36,.1);color:var(--c-ene)}
 .p-tec{background:rgba(244,114,182,.1);color:var(--c-tec)}.p-gov{background:rgba(52,211,153,.1);color:var(--c-gov)}
 .p-hea{background:rgba(167,139,250,.1);color:var(--c-hea)}.p-eng{background:rgba(249,115,22,.1);color:var(--c-eng)}
@@ -379,7 +379,7 @@ nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:
 .hero-tool:hover{background:rgba(56,189,248,.08);border-color:rgba(56,189,248,.25);transform:translateY(-2px)}
 .hero-tool:active{transform:scale(.93)}
 .hero-tool-icon{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center}
-.hero-tool-label{font-size:10px;font-weight:600;color:rgba(255,255,255,.6);text-align:center;white-space:nowrap;letter-spacing:.02em}
+.hero-tool-label{font-size:11px;font-weight:600;color:rgba(255,255,255,.6);text-align:center;white-space:nowrap;letter-spacing:.02em}
 .hero-tool:hover .hero-tool-label{color:#fff}
 @media(max-width:680px){.hero-tools{justify-content:flex-start;padding:0 20px}}
 /* Quiz overlay — same pattern as internship detail modal */
