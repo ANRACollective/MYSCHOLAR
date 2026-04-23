@@ -8,16 +8,16 @@ echo.
 echo [MyScholar] Checking file integrity before push...
 echo.
 
-:: Safety check: verify initData() is present in index.html
-findstr /c:"initData(" index.html >nul 2>&1
+:: Safety check: verify initData() is present in scholarships.html (main app file)
+findstr /c:"initData(" scholarships.html >nul 2>&1
 if errorlevel 1 (
-    echo [ERROR] initData^(^) not found in index.html!
+    echo [ERROR] initData^(^) not found in scholarships.html!
     echo         Something may be corrupted. DO NOT push.
     echo         Check the file before continuing.
     pause
     exit /b 1
 )
-echo [OK] index.html integrity check passed.
+echo [OK] scholarships.html integrity check passed.
 
 :: Safety check: verify internships.html exists and is not empty
 if not exist internships.html (

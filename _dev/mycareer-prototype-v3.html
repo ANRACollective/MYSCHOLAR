@@ -1,0 +1,2908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyJourney v3 — Vertical Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&display=swap" rel="stylesheet">
+<style>
+  /* =========================================================
+     v3 — Jade reskin + 11 careers
+     Palette: jade greens for MyJourney, kept distinct from
+     MyScholar (sky blue) and MyIntern (dark slate + cyan).
+     ========================================================= */
+  :root {
+    /* Backgrounds: warm cream-to-sage — feels deliberate, not clinical */
+    --bg-grad-1: #FAF8F2;
+    --bg-grad-2: #EDF5EC;
+    --card: #ffffff;
+    --card-hover: #F6FAF4;
+    --border: #C8DDD0;
+    --border-strong: #94C0AB;
+    --text: #0A2818;
+    --text-body: #1A3D2A;
+    --text-muted: #436855;
+    --text-faint: #7A9E8A;
+
+    /* Primary: deep jade — more saturated, less washed out */
+    --primary: #047857;
+    --primary-dark: #065F46;
+    --primary-light: #D1FAE5;
+
+    /* Forest + gold — brand spec tokens, now actually used */
+    --forest: #0E3B2E;
+    --forest-mid: #1A5C3A;
+    --gold: #C9A96A;
+    --gold-light: #FBF4E4;
+    --gold-dark: #96721F;
+
+    /* Accents */
+    --accent-green: #059669;
+    --accent-amber: #D97706;
+    --accent-coin: #92400E;
+
+    /* Route colors — all in green family but distinct */
+    --route-a: #047857; /* deep emerald */
+    --route-b: #0E7490; /* deep teal */
+    --route-c: #4D7C0F; /* olive */
+    --route-d: #065F46; /* forest */
+
+    /* Category colors — kept distinct for browsing */
+    --cat-health: #DB2777;
+    --cat-biz: #7C3AED;
+    --cat-eng: #2563EB;
+    --cat-tech: #0891B2;
+    --cat-creative: #D97706;
+    --cat-law: #4F46E5;
+
+    --shadow-sm: 0 1px 3px rgba(10, 40, 24, 0.07);
+    --shadow: 0 4px 14px rgba(10, 40, 24, 0.09);
+    --shadow-lg: 0 12px 32px rgba(10, 40, 24, 0.14);
+    --radius: 12px;
+    --radius-lg: 16px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: linear-gradient(180deg, var(--bg-grad-1) 0%, var(--bg-grad-2) 100%);
+    color: var(--text);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; padding: 0; }
+  button:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+  button:disabled { cursor: not-allowed; }
+
+  .app {
+    max-width: 440px;
+    margin: 0 auto;
+    min-height: 100vh;
+    padding: 0 16px 80px;
+    position: relative;
+  }
+
+  .page { display: none; animation: fadeIn 0.2s ease-out; }
+  .page.active { display: block; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* =========================================================
+     Top bar
+     ========================================================= */
+  .topbar {
+    padding: 18px 0 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  /* Home page gets the full dark forest header band */
+  #page-home .topbar {
+    background: var(--forest);
+    margin: 0 -16px;
+    padding: 18px 16px 16px;
+    border-radius: 0;
+  }
+  #page-home .home-hero {
+    background: var(--forest);
+    margin: 0 -16px;
+    padding: 4px 16px 24px;
+    border-radius: 0 0 20px 20px;
+    margin-bottom: 16px;
+  }
+  #page-home .home-hero h1 { color: #ffffff; }
+  #page-home .home-hero p { color: rgba(255,255,255,0.65); }
+
+  .brand {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 0.3px;
+  }
+  .brand span { color: rgba(201, 169, 106, 0.6); font-weight: 500; }
+
+  /* Back button topbars (non-home pages) keep light styling */
+  #page-career .brand,
+  #page-coming-soon .brand,
+  #page-quiz .brand,
+  #page-results .brand {
+    color: var(--primary-dark);
+  }
+  #page-career .brand span,
+  #page-coming-soon .brand span,
+  #page-quiz .brand span,
+  #page-results .brand span {
+    color: var(--text-muted);
+  }
+
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 10px 8px 4px;
+    margin-left: -4px;
+    font-size: 14px;
+    color: var(--text-body);
+    border-radius: 8px;
+  }
+  .back-btn:hover { background: var(--card); }
+
+  /* =========================================================
+     Home — hero
+     ========================================================= */
+  .home-hero { padding: 16px 0 16px; }
+  .home-hero h1 {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+    margin-bottom: 6px;
+  }
+  .home-hero p { font-size: 14px; color: var(--text-muted); }
+
+  .search-wrap { position: relative; margin-top: 0; margin-bottom: 12px; }
+  .search-wrap input {
+    width: 100%;
+    padding: 12px 40px 12px 40px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 14px;
+    background: var(--card);
+    box-shadow: var(--shadow-sm);
+    color: var(--text);
+  }
+  .search-wrap input::placeholder { color: var(--text-faint); }
+  .search-wrap input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.12);
+  }
+  .search-wrap .search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-faint);
+    font-size: 14px;
+    pointer-events: none;
+  }
+  .search-clear {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--border);
+    color: var(--text-body);
+    font-size: 13px;
+    line-height: 22px;
+    text-align: center;
+    display: none;
+  }
+  .search-clear.visible { display: block; }
+
+  .quiz-nudge {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius);
+    margin-bottom: 18px;
+    font-size: 13px;
+    color: var(--text-body);
+  }
+  .quiz-nudge strong { font-weight: 600; color: var(--text); }
+  .quiz-nudge .quiz-link {
+    color: var(--primary-dark);
+    font-weight: 600;
+    font-size: 13px;
+    flex-shrink: 0;
+    margin-left: 10px;
+  }
+
+  /* =========================================================
+     Bookmarked strip on home
+     ========================================================= */
+  .bookmark-strip {
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    margin-bottom: 18px;
+  }
+  .bookmark-strip-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 8px;
+  }
+  .bookmark-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-top: 1px solid var(--border);
+    font-size: 13px;
+    width: 100%;
+    text-align: left;
+  }
+  .bookmark-item:first-of-type { border-top: none; }
+  .bookmark-item .bm-main { color: var(--text); font-weight: 600; }
+  .bookmark-item .bm-sub { color: var(--text-muted); font-size: 12px; margin-top: 1px; }
+  .bookmark-item .bm-arrow { color: var(--text-faint); }
+
+  /* =========================================================
+     Category groups — the compact vertical list
+     ========================================================= */
+  .category-group { margin-bottom: 22px; }
+  .cat-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0 10px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 4px;
+  }
+  .cat-header .cat-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .cat-header .cat-name {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+  .cat-header .cat-count {
+    font-size: 11px;
+    color: var(--text-faint);
+    font-weight: 600;
+    margin-left: auto;
+  }
+
+  .career-row {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 10px 4px 10px 16px;
+    border-radius: 8px;
+    transition: background 0.12s ease;
+    position: relative;
+  }
+  .career-row:hover, .career-row:active { background: rgba(255, 255, 255, 0.75); }
+  .career-row::before {
+    content: "";
+    position: absolute;
+    left: 4px;
+    top: 14px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    opacity: 0.85;
+  }
+  .career-row[data-cat="health"]::before    { background: var(--cat-health); }
+  .career-row[data-cat="biz"]::before       { background: var(--cat-biz); }
+  .career-row[data-cat="eng"]::before       { background: var(--cat-eng); }
+  .career-row[data-cat="tech"]::before      { background: var(--cat-tech); }
+  .career-row[data-cat="creative"]::before  { background: var(--cat-creative); }
+  .career-row[data-cat="law"]::before       { background: var(--cat-law); }
+
+  .career-row .career-top { display: flex; align-items: center; gap: 8px; }
+  .career-row .career-name { font-size: 14px; font-weight: 600; color: var(--text); }
+  .career-row .career-hook {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-top: 1px;
+  }
+  .career-row .soon-tag {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    background: rgba(138, 167, 153, 0.2);
+    padding: 2px 6px;
+    border-radius: 6px;
+  }
+  .career-row.soon .career-name { color: var(--text-muted); }
+  .career-row.soon .career-hook { opacity: 0.8; }
+
+  .note-banner {
+    background: #fef9c3;
+    border: 1px solid #fde047;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: #713f12;
+    margin-top: 20px;
+    line-height: 1.5;
+  }
+  .note-banner strong { font-weight: 700; }
+
+  /* =========================================================
+     Career detail — hero
+     ========================================================= */
+  .career-hero {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    margin-top: 8px;
+    box-shadow: var(--shadow);
+    position: relative;
+  }
+  .career-hero h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.3px;
+    margin-bottom: 2px;
+    padding-right: 46px;
+  }
+  .career-hero .hero-sub {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+  }
+  .bookmark-btn {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--card-hover);
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: all 0.15s ease;
+    border: 1px solid var(--border);
+  }
+  .bookmark-btn:hover { background: var(--border); }
+  .bookmark-btn.saved {
+    background: var(--primary-light);
+    color: var(--primary-dark);
+    border-color: var(--primary);
+  }
+  .quick-facts {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 16px;
+    padding: 12px 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .fact { text-align: center; }
+  .fact .label {
+    font-size: 10px;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 2px;
+  }
+  .fact .value {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .fact .fact-sub {
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-top: 2px;
+    font-weight: 500;
+  }
+  /* Gold treatment for salary stat — the one number students always look at first */
+  .fact .value.salary { color: var(--gold-dark); font-weight: 700; }
+  .fact .value.demand-high { color: var(--accent-green); }
+  .fact .value.demand-moderate { color: var(--accent-amber); }
+  .fact .value.demand-high::before, .fact .value.demand-moderate::before {
+    content: "";
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin-right: 5px;
+    vertical-align: middle;
+  }
+  .fact .value.demand-high::before { background: var(--accent-green); }
+  .fact .value.demand-moderate::before { background: var(--accent-amber); }
+  .career-hero .description {
+    font-size: 14px;
+    color: var(--text-body);
+    line-height: 1.6;
+  }
+
+  /* =========================================================
+     Where-are-you picker
+     ========================================================= */
+  .status-picker {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 14px 14px;
+  }
+  .status-picker-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 8px;
+  }
+  .status-picker-label span {
+    color: var(--text-muted);
+    font-weight: 500;
+    text-transform: none;
+    letter-spacing: 0;
+    margin-left: 4px;
+  }
+  .status-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .status-chip {
+    padding: 6px 12px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-body);
+    transition: all 0.15s ease;
+  }
+  .status-chip:hover { border-color: var(--border-strong); }
+  .status-chip.active {
+    background: var(--primary-dark);
+    color: white;
+    border-color: var(--primary-dark);
+    font-weight: 600;
+  }
+
+  /* =========================================================
+     Route selector — labelled chips
+     ========================================================= */
+  .routes-section { margin-top: 24px; }
+  .routes-heading h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .routes-sub {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+  }
+
+  .route-chips { display: flex; gap: 6px; margin-bottom: 14px; }
+  .route-chip {
+    flex: 1;
+    padding: 8px 4px;
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    transition: all 0.15s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    min-width: 0;
+  }
+  .route-chip .rc-letter {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    opacity: 0.75;
+  }
+  .route-chip .rc-word {
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+  .route-chip:hover { border-color: var(--border-strong); }
+  .route-chip[data-r="A"] { border-color: var(--route-a); color: var(--route-a); }
+  .route-chip[data-r="B"] { border-color: var(--route-b); color: var(--route-b); }
+  .route-chip[data-r="C"] { border-color: var(--route-c); color: var(--route-c); }
+  .route-chip[data-r="D"] { border-color: var(--route-d); color: var(--route-d); }
+  .route-chip.active[data-r="A"] { background: var(--route-a); color: white; }
+  .route-chip.active[data-r="B"] { background: var(--route-b); color: white; }
+  .route-chip.active[data-r="C"] { background: var(--route-c); color: white; }
+  .route-chip.active[data-r="D"] { background: var(--route-d); color: white; }
+
+  .route-summary {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 16px;
+    border-left: 4px solid var(--route-a);
+    transition: border-left-color 0.2s ease;
+    box-shadow: var(--shadow-sm);
+  }
+  .route-summary[data-r="B"] { border-left-color: var(--route-b); }
+  .route-summary[data-r="C"] { border-left-color: var(--route-c); }
+  .route-summary[data-r="D"] { border-left-color: var(--route-d); }
+
+  .route-summary .rs-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .route-summary .rs-meta {
+    font-size: 12px;
+    color: var(--text-muted);
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+  }
+  .route-summary .rs-meta .sep { color: var(--text-faint); }
+  .route-summary .rs-tagline {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-style: italic;
+  }
+
+  /* =========================================================
+     Vertical timeline
+     ========================================================= */
+  .v-timeline { padding: 4px 0 4px 0; margin-bottom: 10px; }
+  .v-station {
+    display: flex;
+    gap: 14px;
+    padding: 4px 0;
+    align-items: flex-start;
+    cursor: pointer;
+    position: relative;
+    width: 100%;
+    text-align: left;
+    border-radius: 8px;
+    padding-left: 4px;
+    padding-right: 6px;
+    transition: background 0.12s ease;
+  }
+  .v-station:hover { background: rgba(255, 255, 255, 0.75); }
+  .v-station:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 32px;
+    bottom: -4px;
+    width: 3px;
+    background: var(--route-a);
+    z-index: 0;
+    border-radius: 2px;
+  }
+  .v-timeline[data-r="B"] .v-station:not(:last-child)::after { background: var(--route-b); }
+  .v-timeline[data-r="C"] .v-station:not(:last-child)::after { background: var(--route-c); }
+  .v-timeline[data-r="D"] .v-station:not(:last-child)::after { background: var(--route-d); }
+
+  .v-dot {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: white;
+    border: 3px solid var(--route-a);
+    flex-shrink: 0;
+    margin-top: 8px;
+    z-index: 1;
+    transition: transform 0.15s ease;
+    position: relative;
+  }
+  .v-timeline[data-r="B"] .v-dot { border-color: var(--route-b); }
+  .v-timeline[data-r="C"] .v-dot { border-color: var(--route-c); }
+  .v-timeline[data-r="D"] .v-dot { border-color: var(--route-d); }
+
+  .v-station.end .v-dot { background: var(--route-a); }
+  .v-timeline[data-r="B"] .v-station.end .v-dot { background: var(--route-b); }
+  .v-timeline[data-r="C"] .v-station.end .v-dot { background: var(--route-c); }
+  .v-timeline[data-r="D"] .v-station.end .v-dot { background: var(--route-d); }
+
+  /* Done state — for stages the student already completed */
+  .v-station.done .v-dot {
+    background: var(--text-faint);
+    border-color: var(--text-faint);
+  }
+  .v-station.done .v-dot::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 8px;
+    height: 4px;
+    border-left: 2px solid white;
+    border-bottom: 2px solid white;
+    transform: translate(-50%, -65%) rotate(-45deg);
+  }
+  .v-station.done:not(:last-child)::after {
+    background: var(--text-faint);
+    opacity: 0.5;
+  }
+  .v-station.done .v-name { color: var(--text-muted); }
+  .v-station.done .v-sub { opacity: 0.7; }
+  .v-station.done .v-year-badge { opacity: 0.5; }
+  .v-timeline[data-r="B"] .v-station.done .v-dot,
+  .v-timeline[data-r="C"] .v-station.done .v-dot,
+  .v-timeline[data-r="D"] .v-station.done .v-dot { background: var(--text-faint); border-color: var(--text-faint); }
+
+  .v-station:active .v-dot { transform: scale(1.18); }
+
+  .v-content { flex: 1; padding: 4px 0 16px; min-width: 0; }
+  .v-station:last-child .v-content { padding-bottom: 4px; }
+  .v-name-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .v-name { font-size: 14px; font-weight: 600; color: var(--text); }
+  .v-scholarship-mark {
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--accent-coin);
+    background: #fef3c7;
+    padding: 2px 6px;
+    border-radius: 6px;
+    letter-spacing: 0.4px;
+  }
+  .v-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .v-year-badge {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-muted);
+    background: var(--card-hover);
+    padding: 3px 7px;
+    border-radius: 6px;
+    letter-spacing: 0.3px;
+    flex-shrink: 0;
+    align-self: center;
+    margin-right: 4px;
+    white-space: nowrap;
+    border: 1px solid var(--border);
+  }
+  .v-arrow { color: var(--text-faint); font-size: 14px; align-self: center; padding-right: 2px; }
+
+  /* =========================================================
+     Info blocks
+     ========================================================= */
+  .info-block {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px;
+    margin-top: 14px;
+    box-shadow: var(--shadow-sm);
+  }
+  .info-block h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+  .info-block p {
+    font-size: 14px;
+    color: var(--text-body);
+    line-height: 1.6;
+  }
+  .info-block.real-talk {
+    background: #fffbeb;
+    border-color: #fde68a;
+  }
+  .info-block.real-talk h3 { color: #92400e; }
+  .info-block.real-talk p { color: #78350f; }
+
+  .related-careers {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .related-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 14px;
+    background: var(--card-hover);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    text-align: left;
+    transition: all 0.15s ease;
+    cursor: pointer;
+    width: 100%;
+  }
+  .related-card:hover { border-color: var(--primary); background: var(--card); }
+  .related-card.disabled { opacity: 0.7; cursor: default; }
+  .related-card.disabled:hover { border-color: var(--border); background: var(--card-hover); }
+  .related-card .name { font-size: 14px; font-weight: 600; color: var(--text); }
+  .related-card .why { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .related-card .arrow { color: var(--primary); font-size: 16px; font-weight: 700; }
+  .related-card .soon-pill {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    background: rgba(138, 167, 153, 0.22);
+    padding: 3px 8px;
+    border-radius: 6px;
+    white-space: nowrap;
+    margin-left: 10px;
+    flex-shrink: 0;
+  }
+
+  /* =========================================================
+     Bottom sheet
+     ========================================================= */
+  .sheet-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(5, 46, 29, 0.45);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: 50;
+  }
+  .sheet-overlay.active { opacity: 1; pointer-events: auto; }
+  .sheet {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%) translateY(100%);
+    width: 100%;
+    max-width: 440px;
+    background: white;
+    border-radius: 20px 20px 0 0;
+    padding: 16px 20px 28px;
+    box-shadow: 0 -10px 40px rgba(5, 46, 29, 0.18);
+    transition: transform 0.25s cubic-bezier(0.32, 0.72, 0, 1);
+    z-index: 60;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  .sheet.active { transform: translateX(-50%) translateY(0); }
+  .sheet-handle {
+    width: 36px;
+    height: 4px;
+    background: var(--border-strong);
+    border-radius: 2px;
+    margin: 0 auto 14px;
+  }
+  .sheet-close {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--card-hover);
+    color: var(--text-body);
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border);
+  }
+  .sheet h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+    padding-right: 36px;
+  }
+  .sheet .sheet-formal {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 2px;
+    font-style: italic;
+  }
+  .sheet .sheet-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 14px; }
+  .sheet .sheet-section { margin-bottom: 14px; }
+  .sheet .sheet-section-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 6px;
+  }
+  .sheet p { font-size: 13px; color: var(--text-body); line-height: 1.6; }
+  .inst-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px dashed var(--border);
+    font-size: 13px;
+  }
+  .inst-row:last-child { border-bottom: none; }
+  .inst-row .inst-name { color: var(--text-body); font-weight: 500; }
+  .inst-row .inst-fee { color: var(--text-muted); font-size: 12px; }
+
+  .sheet-cta {
+    display: block;
+    width: 100%;
+    padding: 13px 16px;
+    background: var(--primary);
+    color: white;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    margin-top: 16px;
+    transition: background 0.15s ease;
+    text-decoration: none;
+  }
+  .sheet-cta:hover { background: var(--primary-dark); }
+  .sheet-cta.hidden { display: none; }
+
+  /* =========================================================
+     Coming soon page
+     ========================================================= */
+  .coming-soon-wrap { padding: 30px 0 20px; text-align: center; }
+  .coming-soon-wrap .cs-icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: var(--card);
+    border: 2px dashed var(--border-strong);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    color: var(--text-muted);
+    margin: 0 auto 20px;
+  }
+  .coming-soon-wrap h1 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+    letter-spacing: -0.3px;
+  }
+  .coming-soon-wrap .cs-hook {
+    font-size: 14px;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 22px;
+  }
+  .cs-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 16px;
+    text-align: left;
+    box-shadow: var(--shadow-sm);
+  }
+  .cs-card h3 { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+  .cs-card p { font-size: 13px; color: var(--text-body); line-height: 1.6; margin-bottom: 14px; }
+  .cs-email-row { display: flex; gap: 8px; }
+  .cs-email-row input {
+    flex: 1;
+    padding: 11px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 13px;
+    background: white;
+    color: var(--text);
+    font-family: inherit;
+  }
+  .cs-email-row input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.12);
+  }
+  .cs-email-row button {
+    padding: 11px 16px;
+    background: var(--primary);
+    color: white;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .cs-email-row button:hover { background: var(--primary-dark); }
+  .cs-confirmation {
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--accent-green);
+    font-weight: 600;
+    display: none;
+  }
+  .cs-confirmation.visible { display: block; }
+  .cs-back {
+    display: inline-block;
+    margin-top: 10px;
+    color: var(--primary-dark);
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  /* =========================================================
+     Quiz
+     ========================================================= */
+  .quiz-wrap { padding: 30px 0 20px; }
+  .quiz-q {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.3;
+    margin-bottom: 6px;
+    letter-spacing: -0.3px;
+  }
+  .quiz-hint { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
+  .quiz-step {
+    font-size: 11px;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 10px;
+  }
+  .chip-group { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .chip {
+    padding: 9px 14px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 13px;
+    color: var(--text-body);
+    font-weight: 500;
+    transition: all 0.15s ease;
+  }
+  .chip:hover { border-color: var(--primary); }
+  .chip.selected { background: var(--primary); color: white; border-color: var(--primary); }
+  .card-options { display: grid; grid-template-columns: 1fr; gap: 8px; margin-bottom: 20px; }
+  .card-option {
+    padding: 14px 16px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 14px;
+    color: var(--text-body);
+    font-weight: 500;
+    text-align: left;
+    transition: all 0.15s ease;
+  }
+  .card-option:hover { border-color: var(--primary); }
+  .card-option.selected {
+    background: var(--primary-light);
+    border-color: var(--primary);
+    color: var(--primary-dark);
+    font-weight: 600;
+  }
+  .btn-primary {
+    display: block;
+    width: 100%;
+    padding: 14px 16px;
+    background: var(--primary);
+    color: white;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    text-align: center;
+    transition: all 0.15s ease;
+    margin-top: 10px;
+  }
+  .btn-primary:hover { background: var(--primary-dark); }
+  .btn-primary:disabled { background: var(--border-strong); cursor: not-allowed; }
+  .btn-link {
+    display: block;
+    text-align: center;
+    padding: 10px;
+    color: var(--text-muted);
+    font-size: 13px;
+    margin-top: 6px;
+  }
+
+  /* =========================================================
+     Results
+     ========================================================= */
+  .results-header { padding: 20px 0 12px; }
+  .results-header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.3;
+    margin-bottom: 6px;
+    letter-spacing: -0.3px;
+  }
+  .results-header p { font-size: 13px; color: var(--text-muted); }
+
+  .match-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 10px;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.15s ease;
+    display: block;
+    width: 100%;
+    text-align: left;
+  }
+  .match-card:hover {
+    border-color: var(--primary);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow);
+  }
+  .match-card .match-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .match-card .match-why {
+    font-size: 13px;
+    color: var(--text-body);
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+  .match-card .match-cta {
+    font-size: 13px;
+    color: var(--primary-dark);
+    font-weight: 600;
+    display: inline-block;
+  }
+  .match-card .match-cta::after { content: " \2192"; }
+
+  /* =========================================================
+     SHARED SITE NAV — matches MyScholar and MyIntern exactly
+     Background: #0f1f3d (midnight), bottom: 2px coral #e8551e
+     ========================================================= */
+  .site-nav {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    background: #0f1f3d;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 52px;
+    border-bottom: 2px solid #e8551e;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .site-nav-l { display: flex; align-items: center; flex-shrink: 0; }
+  .site-nav-brand {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 22px;
+    letter-spacing: -0.4px;
+    text-decoration: none;
+    color: #fff;
+    font-weight: 900;
+    transition: opacity 0.2s;
+    opacity: 0.6;
+    white-space: nowrap;
+  }
+  .site-nav-brand:hover { opacity: 1; }
+  .site-nav-brand.active { opacity: 1; }
+  .site-nav-brand .coral  { color: #e8551e; }
+  .site-nav-brand .sky    { color: #38bdf8; }
+  .site-nav-brand .gold   { color: #C9A96A; }
+  .site-nav-sep {
+    color: rgba(255,255,255,0.2);
+    font-size: 18px;
+    margin: 0 8px;
+    font-weight: 300;
+    user-select: none;
+  }
+  .site-nav-r { display: flex; align-items: center; gap: 8px; overflow: hidden; min-width: 0; }
+  .site-nav-r a {
+    color: rgba(255,255,255,0.45);
+    font-size: 12px;
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    transition: color 0.2s;
+    flex-shrink: 0;
+  }
+  .site-nav-r a:hover { color: #fff; }
+  .site-nav-pill {
+    font-size: 10px;
+    color: rgba(201,169,106,0.7);
+    background: rgba(201,169,106,0.12);
+    border: 1px solid rgba(201,169,106,0.2);
+    padding: 2px 8px;
+    border-radius: 20px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  @media (max-width: 680px) {
+    .site-nav { padding: 0 12px; }
+    .site-nav-brand { font-size: 18px; }
+    .site-nav-r .hide-mobile { display: none; }
+  }
+
+  /* =========================================================
+     DESKTOP RESPONSIVE LAYOUT
+     Goal: fill a browser window without dead space.
+     768px+: wider container, 2-col career grid.
+     1100px+: 3-col career grid.
+     ========================================================= */
+  @media (min-width: 768px) {
+    .app {
+      max-width: 960px;
+      padding: 0 40px 80px;
+    }
+    /* 2-column career grid — category groups flow naturally into columns */
+    #careerList {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0 36px;
+      align-items: start;
+    }
+    /* Home hero gets more breathing room on desktop */
+    #page-home .home-hero {
+      padding: 12px 40px 28px;
+      margin: 0 -40px 20px;
+    }
+    #page-home .topbar {
+      margin: 0 -40px;
+      padding: 20px 40px 16px;
+    }
+    #page-home .home-hero h1 { font-size: 30px; }
+    /* Detail page: constrain to readable width */
+    #page-career, #page-quiz, #page-results, #page-coming-soon {
+      max-width: 640px;
+      margin: 0 auto;
+    }
+    /* Bottom sheet wider on desktop */
+    .sheet { max-width: 600px; }
+    /* Search + quiz nudge span to full width (above the grid) */
+    .search-wrap, .quiz-nudge, #bookmarkStrip, .note-banner {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (min-width: 1100px) {
+    .app { max-width: 1160px; padding: 0 48px 80px; }
+    #careerList { grid-template-columns: 1fr 1fr 1fr; gap: 0 40px; }
+    #page-home .home-hero {
+      padding: 12px 48px 32px;
+      margin: 0 -48px 20px;
+    }
+    #page-home .topbar { margin: 0 -48px; padding: 20px 48px 16px; }
+    #page-home .home-hero h1 { font-size: 34px; }
+  }
+
+  /* =========================================================
+     ANIMATION POLISH
+     — Staggered career row entrance (applied by JS)
+     — Smoother page transitions
+     — Timeline dot pulse on route switch
+     ========================================================= */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes slideInRight {
+    from { opacity: 0; transform: translateX(16px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes dotPulse {
+    0%   { box-shadow: 0 0 0 0 rgba(4, 120, 87, 0.4); }
+    70%  { box-shadow: 0 0 0 8px rgba(4, 120, 87, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(4, 120, 87, 0); }
+  }
+  .career-row { animation: fadeInUp 0.2s ease-out both; }
+  /* Delay applied inline via JS for stagger effect */
+
+  .page.active { animation: fadeInUp 0.22s ease-out; }
+  #page-career.active { animation: slideInRight 0.22s ease-out; }
+
+  /* Dot pulse plays once when a route chip is selected */
+  .v-dot.pulse { animation: dotPulse 0.5s ease-out; }
+
+  /* =========================================================
+     IMPROVED EMPTY STATE
+     — Search no-results gets an icon + helpful nudge
+     ========================================================= */
+  .empty-results {
+    padding: 36px 16px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 14px;
+    grid-column: 1 / -1; /* spans full width in desktop grid */
+  }
+  .empty-results .empty-icon {
+    font-size: 32px;
+    margin-bottom: 10px;
+    opacity: 0.5;
+  }
+  .empty-results .empty-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .empty-results .empty-sub {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+  }
+  .empty-results .empty-suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 12px;
+  }
+  .empty-suggestion-chip {
+    padding: 6px 12px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 12px;
+    color: var(--primary-dark);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .empty-suggestion-chip:hover {
+    background: var(--primary-light);
+    border-color: var(--primary);
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     SHARED SITE NAV — same pattern as MyScholar and MyIntern.
+     Midnight bg + coral bottom border. Product names in brand font.
+     Active product at full opacity, others at 0.6.
+     ============================================================ -->
+<nav class="site-nav">
+  <div class="site-nav-l">
+    <a class="site-nav-brand" href="https://myscholar.my" title="MyScholar — scholarships">My<span class="coral">Scholar</span></a>
+    <span class="site-nav-sep">|</span>
+    <a class="site-nav-brand" href="https://myscholar.my/internships" title="MyIntern — internships">My<span class="sky">Intern</span></a>
+    <span class="site-nav-sep">|</span>
+    <a class="site-nav-brand active" href="#" title="MyJourney — career pathways">My<span class="gold">Journey</span></a>
+  </div>
+  <div class="site-nav-r">
+    <span class="site-nav-pill">Preview</span>
+    <a href="https://myscholar.my" class="hide-mobile">Back to MyScholar &rarr;</a>
+  </div>
+</nav>
+
+<div class="app">
+
+  <!-- ============================================================
+       PAGE: HOME
+       ============================================================ -->
+  <section id="page-home" class="page active">
+    <!-- topbar is the dark forest band; brand is now in the shared site nav above -->
+    <div class="topbar"></div>
+
+    <div class="home-hero">
+      <h1>What do you want to do?</h1>
+      <p>Pick a career and see the real routes Malaysian students take.</p>
+    </div>
+
+    <div class="search-wrap">
+      <span class="search-icon">&#128269;</span>
+      <input type="text" id="careerSearch" placeholder="Search e.g. accountant, doctor" oninput="filterCareers(this.value)" aria-label="Search careers">
+      <button class="search-clear" id="searchClear" onclick="clearSearch()" aria-label="Clear search">&times;</button>
+    </div>
+
+    <div class="quiz-nudge">
+      <span><strong>Not sure yet?</strong> Answer 3 questions.</span>
+      <a href="#" class="quiz-link" onclick="event.preventDefault(); startQuiz();">Start &rarr;</a>
+    </div>
+
+    <div id="bookmarkStrip" class="bookmark-strip" style="display:none;">
+      <div class="bookmark-strip-title">Your saved routes</div>
+      <div id="bookmarkList"></div>
+    </div>
+
+    <div id="careerList"></div>
+
+    <div class="note-banner">
+      <strong>Prototype note:</strong> 11 careers have full pathways drafted. Data is my best estimate and will be verified before launch. Others marked "soon" are still being built.
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PAGE: CAREER DETAIL
+       ============================================================ -->
+  <section id="page-career" class="page">
+    <div class="topbar">
+      <button class="back-btn" onclick="goHome()">&larr; All careers</button>
+    </div>
+
+    <div class="career-hero">
+      <button class="bookmark-btn" id="bookmarkBtn" onclick="toggleBookmark()" aria-label="Save this route">&#9734;</button>
+      <h1 id="careerTitle">Accountant</h1>
+      <div class="hero-sub" id="careerSub"></div>
+      <div class="quick-facts" id="quickFacts"></div>
+      <p class="description" id="careerDescription"></p>
+    </div>
+
+    <div class="status-picker">
+      <div class="status-picker-label">Where are you now? <span>so we show what is still ahead</span></div>
+      <div class="status-chips" id="statusChips"></div>
+    </div>
+
+    <div class="routes-section">
+      <div class="routes-heading">
+        <h2>Ways to get there</h2>
+      </div>
+      <p class="routes-sub" id="routesSub">Pick a route to see the stages.</p>
+
+      <div class="route-chips" id="routeChips"></div>
+      <div class="route-summary" id="routeSummary" data-r="A"></div>
+      <div class="v-timeline" id="vTimeline" data-r="A"></div>
+    </div>
+
+    <div class="info-block">
+      <h3>SPM subjects that matter</h3>
+      <p id="careerSubjects"></p>
+    </div>
+
+    <div class="info-block real-talk">
+      <h3>Real talk</h3>
+      <p id="careerRealTalk"></p>
+    </div>
+
+    <div class="info-block">
+      <h3>If this half-fits, try these</h3>
+      <div class="related-careers" id="relatedCareers"></div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PAGE: COMING SOON
+       ============================================================ -->
+  <section id="page-coming-soon" class="page">
+    <div class="topbar">
+      <button class="back-btn" onclick="goHome()">&larr; All careers</button>
+    </div>
+    <div class="coming-soon-wrap">
+      <div class="cs-icon">&#9201;</div>
+      <h1 id="csCareerName">Doctor</h1>
+      <div class="cs-hook" id="csCareerHook">Long road, high trust</div>
+    </div>
+    <div class="cs-card">
+      <h3>This one is still being built</h3>
+      <p>
+        I am adding new careers every week. Drop your email and I will tell you when this one is ready. No spam, nothing else.
+      </p>
+      <div class="cs-email-row">
+        <input type="email" id="csEmail" placeholder="your@email.com" aria-label="Email address">
+        <button onclick="submitCSEmail()">Notify me</button>
+      </div>
+      <div class="cs-confirmation" id="csConfirmation">Saved. I will email you the moment this one is live.</div>
+    </div>
+    <div style="text-align:center;">
+      <a href="#" class="cs-back" onclick="event.preventDefault(); goHome();">See all careers</a>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PAGE: QUIZ
+       ============================================================ -->
+  <section id="page-quiz" class="page">
+    <div class="topbar">
+      <button class="back-btn" onclick="goHome()">&larr; Back</button>
+    </div>
+    <div class="quiz-wrap">
+      <div class="quiz-step" id="quizStep">Question 1 of 3</div>
+      <h1 class="quiz-q" id="quizQuestion">Which subjects do you actually enjoy?</h1>
+      <p class="quiz-hint" id="quizHint">Pick up to 3. No wrong answers.</p>
+      <div id="quizOptions"></div>
+      <button class="btn-primary" id="quizNext" onclick="quizAdvance()" disabled>Next</button>
+      <button class="btn-link" onclick="goHome()">Skip the quiz</button>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PAGE: RESULTS
+       ============================================================ -->
+  <section id="page-results" class="page">
+    <div class="topbar">
+      <button class="back-btn" onclick="goHome()">&larr; Start over</button>
+    </div>
+    <div class="results-header">
+      <h1>Based on what you picked, these might fit.</h1>
+      <p>These are a nudge, not a verdict. Open any one to see the full route.</p>
+    </div>
+    <div id="resultsList"></div>
+  </section>
+
+</div>
+
+<!-- Bottom sheet -->
+<div class="sheet-overlay" id="sheetOverlay" onclick="closeSheet()"></div>
+<div class="sheet" id="stationSheet" role="dialog" aria-labelledby="sheetTitle">
+  <div class="sheet-handle"></div>
+  <button class="sheet-close" onclick="closeSheet()" aria-label="Close">&times;</button>
+  <h3 id="sheetTitle">Foundation</h3>
+  <div class="sheet-formal" id="sheetFormal"></div>
+  <div class="sheet-sub" id="sheetSub">Stage 2 on Route B</div>
+  <div class="sheet-section">
+    <div class="sheet-section-label">What this is</div>
+    <p id="sheetWhat"></p>
+  </div>
+  <div class="sheet-section">
+    <div class="sheet-section-label">Minimum entry</div>
+    <p id="sheetEntry"></p>
+  </div>
+  <div class="sheet-section">
+    <div class="sheet-section-label">Where to study</div>
+    <div id="sheetInstitutions"></div>
+  </div>
+  <a class="sheet-cta" id="sheetCta" href="https://myscholar.my" target="_blank" rel="noopener">
+    See scholarships for this stage
+  </a>
+</div>
+
+<script>
+  /* =========================================================
+     CAREER DATA — 11 careers with full pathways
+     Each career has: title, subtitle, quickFacts, description,
+     subjects, realTalk, related, and routes (with stations).
+     ========================================================= */
+
+  const CAREERS = [
+    { id: 'accountant',     name: 'Accountant',            hook: 'Numbers, rules, business brains',   cat: 'biz',      built: true  },
+    { id: 'doctor',         name: 'Doctor',                hook: 'Long road, high trust',             cat: 'health',   built: true  },
+    { id: 'lawyer',         name: 'Lawyer',                hook: 'Argue, advise, get it in writing',  cat: 'law',      built: true  },
+    { id: 'developer',      name: 'Software Developer',    hook: 'Build things, solve problems',      cat: 'tech',     built: true  },
+    { id: 'engineer-civil', name: 'Civil Engineer',        hook: 'Bridges, buildings, cities',        cat: 'eng',      built: true  },
+    { id: 'engineer-mech',  name: 'Mechanical Engineer',   hook: 'Machines and how they move',        cat: 'eng',      built: false },
+    { id: 'teacher',        name: 'Teacher',               hook: 'Shape how people think',            cat: 'law',      built: true  },
+    { id: 'nurse',          name: 'Nurse',                 hook: 'Care, steady, always needed',       cat: 'health',   built: true  },
+    { id: 'pharmacist',     name: 'Pharmacist',            hook: 'Medicine with a human face',        cat: 'health',   built: true  },
+    { id: 'dentist',        name: 'Dentist',               hook: 'Hands-on healthcare',               cat: 'health',   built: false },
+    { id: 'architect',      name: 'Architect',             hook: 'Design spaces people live in',      cat: 'creative', built: true  },
+    { id: 'designer',       name: 'Graphic Designer',      hook: 'Make things look right',            cat: 'creative', built: false },
+    { id: 'psychologist',   name: 'Psychologist',          hook: 'Understand people deeply',          cat: 'law',      built: false },
+    { id: 'marketing',      name: 'Marketing',             hook: 'Get people to pay attention',       cat: 'biz',      built: true  },
+    { id: 'analyst',        name: 'Financial Analyst',     hook: 'Numbers into decisions',            cat: 'biz',      built: false },
+    { id: 'data',           name: 'Data Scientist',        hook: 'Find the story in the data',        cat: 'tech',     built: true  },
+    { id: 'vet',            name: 'Veterinarian',          hook: 'Medicine for animals',              cat: 'health',   built: false },
+    { id: 'chef',           name: 'Chef',                  hook: 'Feed people, run a kitchen',        cat: 'creative', built: false },
+    { id: 'engineer-elec',  name: 'Electrical Engineer',   hook: 'Power, circuits, signals',          cat: 'eng',      built: false },
+    { id: 'journalist',     name: 'Journalist',            hook: 'Ask questions, find answers',       cat: 'law',      built: false }
+  ];
+
+  const CATEGORIES = [
+    { id: 'health',    label: 'Healthcare' },
+    { id: 'biz',       label: 'Business & Finance' },
+    { id: 'eng',       label: 'Engineering' },
+    { id: 'tech',      label: 'Tech' },
+    { id: 'creative',  label: 'Creative' },
+    { id: 'law',       label: 'Law & Society' }
+  ];
+
+  const STATUS_OPTIONS = [
+    { id: 'spm',     label: 'SPM',        level: 0 },
+    { id: 'found',   label: 'Foundation', level: 1 },
+    { id: 'alevel',  label: 'A-Levels',   level: 1 },
+    { id: 'diploma', label: 'Diploma',    level: 2 },
+    { id: 'degree',  label: 'Degree',     level: 3 }
+  ];
+
+  // Reusable station helpers — keep short and Malaysian-specific
+  const SPM_STAGE = (note) => ({
+    name: 'SPM', formal: 'Malaysian Certificate of Education',
+    sub: 'Starting point', byYear: 0,
+    what: note || 'Your starting point. Most pathways need 5 credits minimum.',
+    entry: 'Credits in Maths and English', institutions: []
+  });
+
+  /* =========================================================
+     CAREER_DATA
+     ========================================================= */
+  const CAREER_DATA = {
+
+    /* ========== ACCOUNTANT ========== */
+    accountant: {
+      title: 'Accountant',
+      subtitle: 'Pathway to Chartered Certified Accountant (ACCA / ICAEW)',
+      quickFacts: {
+        startPay: { value: 'RM3,500', sub: 'Big 4 junior' },
+        years:    { value: '5 to 8', sub: 'varies by route' },
+        demand:   { value: 'High', sub: 'MIA 2025', tone: 'high' }
+      },
+      description: 'Accountants check, report, and advise on money. Every business needs one. Stable profession with clear progression and internationally recognised qualifications. The road is long but the steps are well defined.',
+      subjects: 'Add Maths helps but is not required. English is important because ACCA and ICAEW exams are in English. A credit in Maths is the real minimum.',
+      realTalk: 'Accounting is a slog. Most people take 7 years to fully qualify. The pay is decent but not big until year 5 or 6. You need patience with detail and routine work. If you hate rules and rechecking things, this is not for you.',
+      related: [
+        { id: 'analyst', name: 'Financial Analyst', why: 'Less compliance, more decision making' },
+        { id: 'data', name: 'Data Scientist', why: 'Numbers career with more technical edge' }
+      ],
+      routes: [
+        {
+          id: 'A', title: 'SPM straight to ACCA', word: 'Cheapest',
+          time: '7 to 8 years', cost: 'RM25k to RM40k',
+          tagline: 'Cheapest route, self-paced, long haul',
+          stations: [
+            SPM_STAGE(),
+            { name: 'First 3 ACCA papers', formal: 'ACCA Applied Knowledge (BT, MA, FA)', sub: '1 to 2 years', byYear: 2, what: 'Three Applied Knowledge papers: Business Technology (BT), Management Accounting (MA), and Financial Accounting (FA). The starting block — no prior accounting knowledge needed.', entry: 'SPM with Maths and English', institutions: [
+              { name: 'Sunway TES', fee: 'RM3k to 4k per paper' },
+              { name: 'Self-study via ACCA direct', fee: 'RM500 to 1k per paper' }
+            ]},
+            { name: 'Next 6 ACCA papers', formal: 'ACCA Applied Skills (LW, PM, TX, FR, AA, FM)', sub: '1 to 2 years', byYear: 4, what: 'Six Applied Skills papers covering Law, Performance Management, Taxation, Financial Reporting, Audit, and Financial Management. The technical core of the qualification.', entry: 'Pass Applied Knowledge', institutions: [
+              { name: 'Sunway TES', fee: 'RM3k to 4k per paper' }
+            ]},
+            { name: 'Final 2 strategic papers', formal: 'ACCA SBL + SBR', sub: '1 to 2 years', byYear: 6, what: 'Strategic Business Leader and Strategic Business Reporter. Mandatory professional papers.', entry: 'Pass F5 to F9', institutions: [
+              { name: 'Sunway TES', fee: 'RM4k per paper' }
+            ]},
+            { name: '3 years work experience', formal: 'ACCA PER', sub: 'often parallel', byYear: 6, what: 'Three years of relevant work experience, signed off by a practising accountant.', entry: 'Employment in accounting or finance', institutions: [] },
+            { name: 'Fully qualified accountant', formal: 'ACCA Member + MIA', sub: 'qualified', byYear: 7, what: 'Fully qualified chartered certified accountant. Apply for MIA to practise in Malaysia.', entry: 'All papers + experience logged', institutions: [] }
+          ]
+        },
+        {
+          id: 'B', title: 'Foundation to Degree to ACCA', word: 'Common',
+          time: '5 to 6 years', cost: 'RM80k to RM150k',
+          tagline: 'Most common path. Structured and familiar.',
+          stations: [
+            SPM_STAGE(),
+            { name: 'Foundation', formal: 'Pre-university foundation programme', sub: '1 year', byYear: 1, what: 'A 1-year pre-university programme that prepares you for a business or accounting degree.', entry: 'Credits in Maths and English, usually 5 credits total', institutions: [
+              { name: 'Sunway University', fee: 'RM26k to 30k' },
+              { name: "Taylor's University", fee: 'RM28k to 32k' },
+              { name: 'HELP University', fee: 'RM20k to 24k' }
+            ]},
+            { name: 'Degree', formal: 'BSc / BAcc in Accounting or Finance', sub: '3 years', byYear: 4, what: 'Recognised degree with exemptions from up to 9 ACCA papers.', entry: 'Pass Foundation or equivalent', institutions: [
+              { name: 'Sunway University', fee: 'RM90k to 110k total' },
+              { name: "Taylor's University", fee: 'RM95k to 115k total' },
+              { name: 'UM / USM / UKM (public)', fee: 'RM15k to 25k total' }
+            ]},
+            { name: 'Remaining ACCA papers', formal: 'ACCA SBL, SBR + 2 optional', sub: '1 to 2 years', byYear: 5, what: 'With a recognised degree, you get exemptions from F1 to F9. Only SBL, SBR, and two optional papers left.', entry: 'Relevant degree with exemptions', institutions: [
+              { name: 'Sunway TES', fee: 'RM4k per paper' },
+              { name: 'Self-study', fee: 'RM1k to 1.5k per paper' }
+            ]},
+            { name: '3 years work experience', formal: 'ACCA PER', sub: 'often parallel', byYear: 5, what: 'Three years practical experience, usually during the ACCA papers.', entry: 'Accounting or finance role', institutions: [] },
+            { name: 'Fully qualified accountant', formal: 'ACCA Member + MIA', sub: 'qualified', byYear: 6, what: 'Fully qualified.', entry: 'Degree + papers + experience', institutions: [] }
+          ]
+        },
+        {
+          id: 'C', title: 'Diploma to Degree to ACCA', word: 'Flexible',
+          time: '6 to 7 years', cost: 'RM60k to RM100k',
+          tagline: 'Flexible. You can exit after diploma and work.',
+          stations: [
+            SPM_STAGE(),
+            { name: 'Diploma', formal: 'Diploma in Accounting or Commerce', sub: '2.5 years', byYear: 2.5, what: 'Lets you start work earlier if needed, or continue to a degree.', entry: '3 credits at SPM', institutions: [
+              { name: 'Politeknik', fee: 'RM5k to 10k total' },
+              { name: 'TAR UMT', fee: 'RM25k to 35k total' }
+            ]},
+            { name: 'Degree topup', formal: 'Bachelor topup programme', sub: '1.5 years', byYear: 4, what: 'Topup degree that builds on your diploma to full bachelor level.', entry: 'Diploma with CGPA 2.5+', institutions: [
+              { name: "Taylor's University", fee: 'RM40k to 50k' },
+              { name: 'TAR UMT', fee: 'RM25k to 35k' }
+            ]},
+            { name: 'ACCA papers with exemptions', formal: '6 to 9 exemptions', sub: '1 year', byYear: 5, what: 'Depending on the topup, you may get 6 to 9 exemptions.', entry: 'Recognised degree', institutions: [
+              { name: 'Sunway TES', fee: 'RM3k to 4k per paper' }
+            ]},
+            { name: 'Final papers + work', formal: 'ACCA SBL, SBR + PER', sub: '2 years', byYear: 7, what: 'Clear remaining papers while working.', entry: 'Pass exempt stage', institutions: [] },
+            { name: 'Fully qualified accountant', formal: 'ACCA Member + MIA', sub: 'qualified', byYear: 7, what: 'Qualified chartered certified accountant.', entry: 'All papers + experience', institutions: [] }
+          ]
+        },
+        {
+          id: 'D', title: 'A-Levels to ICAEW', word: 'Fast',
+          time: '5 to 6 years', cost: 'RM100k to RM180k',
+          tagline: 'UK prestige track. Competitive entry, faster finish.',
+          stations: [
+            SPM_STAGE('Starting point. Strong SPM results needed for A-Level entry.'),
+            { name: 'A-Levels', formal: 'Cambridge A-Level', sub: '1.5 years', byYear: 1.5, what: 'Take Maths, Economics, Accounting and one other. Grades A to B expected for ICAEW entry.', entry: '5As at SPM is typical minimum', institutions: [
+              { name: 'Sunway College', fee: 'RM35k to 45k' },
+              { name: "Taylor's College", fee: 'RM38k to 48k' }
+            ]},
+            { name: 'First 6 ICAEW papers', formal: 'ICAEW CFAB', sub: '1 year', byYear: 2.5, what: 'Certificate in Finance, Accounting and Business.', entry: 'A-Levels or equivalent', institutions: [
+              { name: 'Sunway TES', fee: 'RM5k per paper' }
+            ]},
+            { name: '3 years training at firm', formal: 'ICAEW Training Agreement', sub: '3 years', byYear: 5.5, what: 'Three years of supervised training at an ICAEW-approved firm.', entry: 'Training contract', institutions: [
+              { name: 'KPMG / PwC / EY / Deloitte', fee: 'Paid traineeship' }
+            ]},
+            { name: 'Final 6 ICAEW papers', formal: 'ICAEW Advanced Level', sub: '1 year parallel', byYear: 5.5, what: 'Final six ACA papers. Taken while in training.', entry: 'CFAB complete', institutions: [] },
+            { name: 'UK chartered accountant', formal: 'ICAEW ACA Chartered', sub: 'qualified', byYear: 6, what: 'UK-recognised chartered accountant. High demand across ASEAN.', entry: 'All papers + training', institutions: [] }
+          ]
+        }
+      ]
+    },
+
+    /* ========== DOCTOR ========== */
+    doctor: {
+      title: 'Doctor',
+      subtitle: 'Pathway to Medical Officer (MBBS + Housemanship)',
+      quickFacts: {
+        startPay: { value: 'RM3,800', sub: 'housemanship' },
+        years:    { value: '7 to 10', sub: 'MBBS + HO' },
+        demand:   { value: 'Moderate', sub: 'saturated urban', tone: 'moderate' }
+      },
+      description: 'Doctors diagnose and treat illness. The career is prestigious but saturated at housemanship in urban Malaysia. You need a strong science brain and a higher tolerance for long hours and stress than most realise.',
+      subjects: 'Biology and Chemistry are required. Physics or Maths is usually needed at SPM. All MBBS programmes require 5As including Biology and Chemistry at minimum.',
+      realTalk: 'Housemanship is brutal: 36-hour shifts are normal. Pay is modest for the workload until you specialise (10+ years in). Many doctors leave for private practice or overseas. Know this before you commit.',
+      related: [
+        { id: 'dentist', name: 'Dentist', why: 'Same biology base, shorter patient hours' },
+        { id: 'pharmacist', name: 'Pharmacist', why: 'Science and medicine without the on-call hours' },
+        { id: 'nurse', name: 'Nurse', why: 'Frontline care, faster qualification, less debt' }
+      ],
+      routes: [
+        {
+          id: 'A', title: 'Private foundation to MBBS', word: 'Standard',
+          time: '7 to 8 years', cost: 'RM400k to RM600k',
+          tagline: 'Private track. Fast but expensive.',
+          stations: [
+            SPM_STAGE('Need 5As minimum including Biology and Chemistry.'),
+            { name: 'Foundation in Science', formal: 'Pre-university Science stream', sub: '1 year', byYear: 1, what: 'Science-focused pre-university programme. Must meet minimum CGPA to progress to MBBS.', entry: 'Minimum 5As at SPM including Bio and Chem', institutions: [
+              { name: 'IMU (Intl Medical University)', fee: 'RM40k to 50k' },
+              { name: "Taylor's University", fee: 'RM35k to 45k' }
+            ]},
+            { name: 'MBBS', formal: 'Bachelor of Medicine, Bachelor of Surgery', sub: '5 years', byYear: 6, what: 'Full medical degree with clinical rotations from year 3.', entry: 'Foundation with CGPA 3.0+ and interview', institutions: [
+              { name: 'IMU', fee: 'RM350k to 450k total' },
+              { name: 'MAHSA / Manipal / MSU', fee: 'RM300k to 400k total' }
+            ]},
+            { name: 'Housemanship', formal: 'Housemanship (HO)', sub: '2 years', byYear: 8, what: 'Compulsory two years supervised clinical training at a MOH hospital.', entry: 'Pass MBBS + MMC registration', institutions: [] },
+            { name: 'Medical Officer', formal: 'MO (Medical Officer)', sub: 'qualified', byYear: 8, what: 'Fully registered doctor. Can start specialising after 2 to 3 years as MO.', entry: 'Complete HO + MMC full registration', institutions: [] }
+          ]
+        },
+        {
+          id: 'B', title: 'Matriculation to Public MBBS', word: 'Cheapest',
+          time: '8 to 9 years', cost: 'RM30k to RM80k',
+          tagline: 'Cheapest path. Needs top SPM results and luck.',
+          stations: [
+            SPM_STAGE('Need straight As for a realistic shot at public MBBS.'),
+            { name: 'Matriculation', formal: 'KPM Matrikulasi Science', sub: '1 to 2 years', byYear: 1.5, what: 'Government-subsidised pre-university. Highly competitive entry.', entry: '9A+ at SPM typical for Matrik Sains', institutions: [
+              { name: 'KPM Matriculation Colleges', fee: 'RM1k per year' }
+            ]},
+            { name: 'Public MBBS', formal: 'MBBS at public university', sub: '5 years', byYear: 6.5, what: 'Heavily subsidised MBBS. Very competitive seats.', entry: 'Matriculation CGPA 3.8+ and university selection interview (verify: UPU + faculty interview process — "MEDSI" needs source confirmation)', institutions: [
+              { name: 'UM / USM / UKM', fee: 'RM15k to 25k total' },
+              { name: 'UPM / UiTM', fee: 'RM15k to 25k total' }
+            ]},
+            { name: 'Housemanship', formal: 'Housemanship (HO)', sub: '2 years', byYear: 8.5, what: 'Mandatory 2-year clinical training at MOH hospital.', entry: 'Pass MBBS + MMC registration', institutions: [] },
+            { name: 'Medical Officer', formal: 'MO', sub: 'qualified', byYear: 8.5, what: 'Fully registered doctor.', entry: 'Complete HO', institutions: [] }
+          ]
+        },
+        {
+          id: 'C', title: 'A-Levels to Overseas MBBS', word: 'Overseas',
+          time: '8 to 10 years', cost: 'RM500k to RM1m+',
+          tagline: 'Overseas prestige. Expensive, but good English-speaking schools.',
+          stations: [
+            SPM_STAGE('Strong SPM needed for A-Level entry.'),
+            { name: 'A-Levels', formal: 'Cambridge A-Level Science', sub: '1.5 to 2 years', byYear: 2, what: 'Take Biology, Chemistry, and Maths or Physics. Grades AAA typical for top overseas med schools.', entry: '5As at SPM', institutions: [
+              { name: 'Sunway College / KYUEM', fee: 'RM40k to 60k' },
+              { name: "Taylor's College", fee: 'RM38k to 48k' }
+            ]},
+            { name: 'Overseas MBBS', formal: 'MBBS at overseas university', sub: '5 to 6 years', byYear: 8, what: 'Full medical degree at an MMC-recognised overseas school. Must be on MMC recognised list or you cannot practise in Malaysia.', entry: 'AAA at A-Levels + school requirements', institutions: [
+              { name: 'UK (Cardiff, Newcastle, Queen\u2019s Belfast)', fee: 'RM800k to 1.2m total' },
+              { name: 'Ireland (RCSI, UCD, TCD)', fee: 'RM600k to 900k total' },
+              { name: 'Indonesia (UI, UGM)', fee: 'RM150k to 250k total' }
+            ]},
+            { name: 'Housemanship', formal: 'Housemanship (HO)', sub: '2 years', byYear: 10, what: 'Must return to Malaysia for 2-year HO at MOH hospital.', entry: 'MMC recognition + successful HO placement', institutions: [] },
+            { name: 'Medical Officer', formal: 'MO', sub: 'qualified', byYear: 10, what: 'Fully registered doctor in Malaysia.', entry: 'Complete HO', institutions: [] }
+          ]
+        }
+      ]
+    },
+
+    /* ========== LAWYER ========== */
+    lawyer: {
+      title: 'Lawyer',
+      subtitle: 'Pathway to Advocate & Solicitor of the High Court of Malaya',
+      quickFacts: {
+        startPay: { value: 'RM2,800', sub: 'pupillage start' },
+        years:    { value: '5 to 7', sub: 'LLB + CLP + pupillage' },
+        demand:   { value: 'Moderate', sub: 'crowded market', tone: 'moderate' }
+      },
+      description: 'Lawyers advise clients, draft contracts, and represent parties in court. The job rewards patience, reading stamina, and clear writing more than arguing. Competitive market in KL but steady work for those who find a niche.',
+      subjects: 'English is non-negotiable. BM is required for CLP. History, Economics, and ICT help but are not required. Credit in English at SPM is the real minimum.',
+      realTalk: 'Starting pupil pay is low (RM2,500 to 3,500). Hours in litigation are punishing. KL is saturated with lawyers. The ones who do well either specialise early or own their practice by year 7.',
+      related: [
+        { id: 'journalist', name: 'Journalist', why: 'Word-driven, research-heavy, lower earning ceiling' },
+        { id: 'accountant', name: 'Accountant', why: 'Also rules-heavy, more stability' }
+      ],
+      routes: [
+        {
+          id: 'A', title: 'Foundation to Local LLB', word: 'Standard',
+          time: '5 to 6 years', cost: 'RM100k to RM180k',
+          tagline: 'Most common local path.',
+          stations: [
+            SPM_STAGE(),
+            { name: 'Foundation in Law or Arts', formal: 'Pre-university', sub: '1 year', byYear: 1, what: 'Law or Arts stream foundation that feeds into LLB.', entry: 'Credit in English and BM, 5 credits total', institutions: [
+              { name: 'HELP University', fee: 'RM18k to 22k' },
+              { name: "Taylor's University", fee: 'RM28k to 32k' }
+            ]},
+            { name: 'LLB Degree', formal: 'Bachelor of Laws', sub: '3 years', byYear: 4, what: 'Core law degree. Most private unis teach the UK curriculum; public unis teach local.', entry: 'Pass Foundation', institutions: [
+              { name: 'HELP University', fee: 'RM60k to 80k total' },
+              { name: 'Brickfields Asia College', fee: 'RM55k to 75k total' },
+              { name: 'UM / UKM / UIA (public)', fee: 'RM15k to 25k total' }
+            ]},
+            { name: 'CLP', formal: 'Certificate in Legal Practice', sub: '1 year', byYear: 5, what: 'Compulsory for UK-curriculum LLB holders who want to practise in Malaysia.', entry: 'Recognised LLB degree', institutions: [
+              { name: 'Brickfields Asia College', fee: 'RM15k to 22k' },
+              { name: 'Advance Tertiary College', fee: 'RM12k to 18k' }
+            ]},
+            { name: 'Pupillage', formal: 'Chambering / Pupillage', sub: '9 months', byYear: 5.75, what: '9 months under a senior lawyer (pupil master). Ends with a long call ceremony.', entry: 'CLP + pupil master', institutions: [] },
+            { name: 'Advocate & Solicitor', formal: 'Admitted to the Bar', sub: 'qualified', byYear: 6, what: 'Called to the Bar of the High Court of Malaya.', entry: 'Complete pupillage + long call', institutions: [] }
+          ]
+        },
+        {
+          id: 'B', title: 'A-Levels to UK LLB', word: 'UK Track',
+          time: '5 to 6 years', cost: 'RM180k to RM300k',
+          tagline: 'UK prestige. Strong for KL firms.',
+          stations: [
+            SPM_STAGE('Strong English results help.'),
+            { name: 'A-Levels', formal: 'Cambridge A-Level', sub: '1.5 years', byYear: 1.5, what: 'English Lit, History, Economics typical. UK law schools want AAB or better.', entry: '5As at SPM', institutions: [
+              { name: 'Sunway College', fee: 'RM35k to 45k' },
+              { name: "Taylor's College", fee: 'RM38k to 48k' }
+            ]},
+            { name: 'UK LLB or Twinning', formal: 'Bachelor of Laws (UK)', sub: '3 years', byYear: 4.5, what: 'UK LLB in England or as a twinning/franchise programme in Malaysia.', entry: 'A-Levels AAB+', institutions: [
+              { name: 'University of London (external)', fee: 'RM60k to 80k total' },
+              { name: "Brickfields / Taylor's twinning", fee: 'RM90k to 130k total' }
+            ]},
+            { name: 'CLP', formal: 'Certificate in Legal Practice', sub: '1 year', byYear: 5.5, what: 'Compulsory bridge from UK LLB to Malaysian practice.', entry: 'Recognised UK LLB', institutions: [
+              { name: 'Brickfields Asia College', fee: 'RM15k to 22k' }
+            ]},
+            { name: 'Pupillage', formal: 'Chambering / Pupillage', sub: '9 months', byYear: 6.25, what: '9 months under a pupil master.', entry: 'CLP complete', institutions: [] },
+            { name: 'Advocate & Solicitor', formal: 'Admitted to the Bar', sub: 'qualified', byYear: 6.5, what: 'Called to the Bar.', entry: 'Long call ceremony', institutions: [] }
+          ]
+        },
+        {
+          id: 'C', title: 'Public University LLB', word: 'Cheapest',
+          time: '6 to 7 years', cost: 'RM20k to RM40k',
+          tagline: 'Cheapest. Competitive entry.',
+          stations: [
+            SPM_STAGE('Top SPM results needed.'),
+            { name: 'Matriculation or STPM', formal: 'Pre-university', sub: '1 to 2 years', byYear: 1.5, what: 'Matriculation Arts or STPM. Very competitive for law seats.', entry: '8A+ at SPM typical', institutions: [
+              { name: 'KPM Matriculation', fee: 'RM1k per year' },
+              { name: 'Form 6 (STPM)', fee: 'Free' }
+            ]},
+            { name: 'Public LLB', formal: 'Bachelor of Laws (Malaysia)', sub: '4 years', byYear: 5.5, what: 'Teaches Malaysian law directly. No CLP needed.', entry: 'Matriculation CGPA 3.5+ or STPM 3As', institutions: [
+              { name: 'UM / UKM / UIA', fee: 'RM15k to 25k total' },
+              { name: 'UUM / USIM', fee: 'RM12k to 20k total' }
+            ]},
+            { name: 'Pupillage', formal: 'Chambering / Pupillage', sub: '9 months', byYear: 6.25, what: '9 months under a pupil master. No CLP needed for local LLB.', entry: 'Local LLB degree', institutions: [] },
+            { name: 'Advocate & Solicitor', formal: 'Admitted to the Bar', sub: 'qualified', byYear: 6.5, what: 'Called to the Bar.', entry: 'Long call ceremony', institutions: [] }
+          ]
+        }
+      ]
+    },
+
+    /* ========== SOFTWARE DEVELOPER ========== */
+    developer: {
+      title: 'Software Developer',
+      subtitle: 'Pathway to Software Engineer / Developer',
+      quickFacts: {
+        startPay: { value: 'RM4,000', sub: 'junior' },
+        years:    { value: '4 to 5', sub: 'to first role' },
+        demand:   { value: 'Very High', sub: 'JobStreet 2025', tone: 'high' }
+      },
+      description: 'Software developers build the apps, websites, and systems that businesses run on. Highest ceiling of any STEM career in Malaysia. The field values working code over formal credentials, so the shortest path is often not the most traditional.',
+      subjects: 'Maths and ICT matter most. Physics helps. No specific SPM subject is required by most employers, just a willingness to build things outside school hours.',
+      realTalk: 'A portfolio of working projects matters more than your degree by year 3. Self-taught developers do reach the same ceiling but need the discipline to finish projects. The fastest-growing sub-fields are AI/ML, cloud, and data. Basic web dev is crowded.',
+      related: [
+        { id: 'data', name: 'Data Scientist', why: 'Same logic brain, different output' },
+        { id: 'engineer-elec', name: 'Electrical Engineer', why: 'More hardware, similar problem-solving' }
+      ],
+      routes: [
+        {
+          id: 'A', title: 'Degree in Computer Science', word: 'Standard',
+          time: '4 to 5 years', cost: 'RM80k to RM150k',
+          tagline: 'Standard route. Strong for multinationals.',
+          stations: [
+            SPM_STAGE(),
+            { name: 'Foundation in Science or Computing', formal: 'Pre-university', sub: '1 year', byYear: 1, what: 'Science or Computing foundation feeds into CS degree.', entry: 'Credits in Maths and English', institutions: [
+              { name: 'Sunway University', fee: 'RM25k to 30k' },
+              { name: 'APU (Asia Pacific University)', fee: 'RM20k to 26k' }
+            ]},
+            { name: 'CS / SE Degree', formal: 'BSc Computer Science / Software Engineering', sub: '3 years', byYear: 4, what: 'Covers programming, algorithms, systems, databases. Most unis require a final-year project or internship.', entry: 'Pass Foundation', institutions: [
+              { name: 'APU / Asia Pacific University', fee: 'RM60k to 85k total' },
+              { name: 'Monash Malaysia', fee: 'RM150k to 180k total' },
+              { name: 'UM / USM / UTM (public)', fee: 'RM15k to 25k total' }
+            ]},
+            { name: 'First developer role', formal: 'Junior Developer', sub: '0 to 6 months to land', byYear: 4.5, what: 'Entry-level role. A portfolio of projects makes the difference. Big 4 tech and GrabTech actively hire fresh grads.', entry: 'Degree + working portfolio', institutions: [] },
+            { name: 'Software Developer', formal: 'Mid-level Engineer', sub: 'established', byYear: 5, what: 'Fully productive developer after 1 to 2 years of first role.', entry: '1 to 2 years on the job', institutions: [] }
+          ]
+        },
+        {
+          id: 'B', title: 'Diploma + Degree', word: 'Flexible',
+          time: '5 to 6 years', cost: 'RM60k to RM100k',
+          tagline: 'Cheaper, exit-friendly.',
+          stations: [
+            SPM_STAGE(),
+            { name: 'Diploma in IT', formal: 'Diploma in Information Technology', sub: '2.5 years', byYear: 2.5, what: 'Practical IT programme. You can start work as a junior IT support or self-develop while studying.', entry: '3 credits at SPM', institutions: [
+              { name: 'Politeknik', fee: 'RM5k to 10k total' },
+              { name: 'TAR UMT', fee: 'RM20k to 30k total' }
+            ]},
+            { name: 'Degree topup', formal: 'BSc Computer Science topup', sub: '1.5 to 2 years', byYear: 4.5, what: 'Topup degree to full bachelor level.', entry: 'Diploma with CGPA 2.5+', institutions: [
+              { name: 'APU', fee: 'RM40k to 55k' },
+              { name: "Taylor's University", fee: 'RM45k to 60k' }
+            ]},
+            { name: 'First developer role', formal: 'Junior Developer', sub: '0 to 6 months', byYear: 5, what: 'Entry-level role. Portfolio matters.', entry: 'Degree + portfolio', institutions: [] },
+            { name: 'Software Developer', formal: 'Mid-level Engineer', sub: 'established', byYear: 5.5, what: 'Fully productive developer.', entry: '1 to 2 years on the job', institutions: [] }
+          ]
+        },
+        {
+          id: 'C', title: 'Self-taught + Bootcamp', word: 'Fast',
+          time: '2 to 4 years', cost: 'RM5k to RM30k',
+          tagline: 'Fastest. Needs discipline, no credential safety net.',
+          stations: [
+            SPM_STAGE('No specific SPM credits needed for this path.'),
+            { name: 'Self-study', formal: 'Online courses + projects', sub: '6 to 18 months', byYear: 1, what: 'Free and paid online courses. Build 3 to 5 working projects on GitHub.', entry: 'None', institutions: [
+              { name: 'freeCodeCamp / The Odin Project', fee: 'Free' },
+              { name: 'Udemy / Coursera', fee: 'RM100 to 1k per course' }
+            ]},
+            { name: 'Bootcamp', formal: 'Coding bootcamp (optional)', sub: '3 to 6 months', byYear: 1.5, what: 'Intensive career-switch programme. Often includes job placement help.', entry: 'Self-study portfolio', institutions: [
+              { name: 'NEXT Academy / Le Wagon KL', fee: 'RM15k to 25k' }
+            ]},
+            { name: 'First developer role', formal: 'Junior Developer', sub: '1 to 6 months to land', byYear: 2, what: 'Harder to land without a degree but real. Startups and SMEs are most open.', entry: 'Portfolio + bootcamp cert or strong GitHub', institutions: [] },
+            { name: 'Software Developer', formal: 'Mid-level Engineer', sub: 'established', byYear: 3, what: 'Productive developer. No ceiling from missing degree once you have experience.', entry: '1 to 2 years on the job', institutions: [] }
+          ]
+        }
+      ]
+    },
+
+    /* ========== CIVIL ENGINEER ========== */
+    'engineer-civil': {
+      title: 'Civil Engineer',
+      subtitle: 'Pathway to Professional Engineer (P.Eng) with BEM',
+      quickFacts: {
+        startPay: { value: 'RM3,200', sub: 'graduate engineer' },
+        years:    { value: '7 to 9', sub: 'degree + 5yr work for P.Eng' },
+        demand:   { value: 'High', sub: 'IEM 2025', tone: 'high' }
+      },
+      description: 'Civil engineers design and supervise the construction of roads, buildings, water systems, and infrastructure. Malaysian engineering is governed by BEM and IEM. The title "Engineer" is protected by law, you cannot call yourself one without P.Eng registration.',
+      subjects: 'Add Maths and Physics are required. Many programmes also ask for a credit in Chemistry. 5As at SPM including Add Maths gets you most doors.',
+      realTalk: 'Site work is physical, dusty, and exposed to weather. Office-based design work is calmer but politics-heavy. Malaysian P.Eng takes 5+ years after degree because of the training requirement. Pay grows slowly until you are P.Eng, then jumps.',
+      related: [
+        { id: 'engineer-mech', name: 'Mechanical Engineer', why: 'Same engineering route, different specialisation' },
+        { id: 'architect', name: 'Architect', why: 'Design focus, creative-leaning' }
+      ],
+      routes: [
+        {
+          id: 'A', title: 'Foundation to Private Degree', word: 'Standard',
+          time: '8 to 9 years', cost: 'RM90k to RM160k',
+          tagline: 'Private path. Faster start to work.',
+          stations: [
+            SPM_STAGE(),
+            { name: 'Foundation in Engineering', formal: 'Pre-university', sub: '1 year', byYear: 1, what: 'Engineering-focused foundation with strong Maths and Physics.', entry: 'Credits in Add Maths, Physics, English', institutions: [
+              { name: "Taylor's University", fee: 'RM28k to 32k' },
+              { name: 'UCSI', fee: 'RM22k to 28k' }
+            ]},
+            { name: 'Engineering Degree', formal: 'BEng (Hons) Civil Engineering', sub: '4 years', byYear: 5, what: 'BEM/EAC-accredited degree. Includes industrial training (internship).', entry: 'Pass Foundation with CGPA 3.0+', institutions: [
+              { name: "Taylor's University", fee: 'RM100k to 130k total' },
+              { name: 'UTAR', fee: 'RM55k to 75k total' },
+              { name: 'Monash Malaysia', fee: 'RM170k to 200k total' }
+            ]},
+            { name: 'Graduate Engineer', formal: 'Graduate Engineer (GE) with BEM', sub: '3 to 5 years', byYear: 9, what: 'Work under a P.Eng, log project hours, sit for Professional Assessment Examination.', entry: 'Degree + BEM registration as GE', institutions: [] },
+            { name: 'Professional Engineer', formal: 'P.Eng (BEM + IEM Corporate Member)', sub: 'qualified', byYear: 9, what: 'Fully registered. Can sign off designs and open own practice.', entry: 'Pass Professional Interview + training log', institutions: [] }
+          ]
+        },
+        {
+          id: 'B', title: 'Matriculation to Public Degree', word: 'Cheapest',
+          time: '8 to 9 years', cost: 'RM30k to RM60k',
+          tagline: 'Cheapest. Competitive entry.',
+          stations: [
+            SPM_STAGE('Top science results needed for matric engineering.'),
+            { name: 'Matriculation Science', formal: 'KPM Matrik Sains', sub: '1 to 2 years', byYear: 1.5, what: 'Subsidised pre-university. Heavy maths and science focus.', entry: '8A+ at SPM including Add Maths and Physics', institutions: [
+              { name: 'KPM Matriculation', fee: 'RM1k per year' }
+            ]},
+            { name: 'Public Engineering Degree', formal: 'BEng Civil Engineering', sub: '4 years', byYear: 5.5, what: 'BEM-accredited degree. Includes final-year project and industrial training.', entry: 'Matriculation CGPA 3.5+', institutions: [
+              { name: 'UM / UTM / USM', fee: 'RM20k to 35k total' },
+              { name: 'UKM / UPM', fee: 'RM20k to 35k total' }
+            ]},
+            { name: 'Graduate Engineer', formal: 'GE with BEM', sub: '3 to 5 years', byYear: 9.5, what: 'Log hours under a P.Eng.', entry: 'Degree + BEM GE registration', institutions: [] },
+            { name: 'Professional Engineer', formal: 'P.Eng', sub: 'qualified', byYear: 9.5, what: 'Fully registered.', entry: 'Pass Professional Interview', institutions: [] }
+          ]
+        },
+        {
+          id: 'C', title: 'Diploma to Degree', word: 'Flexible',
+          time: '9 to 10 years', cost: 'RM60k to RM100k',
+          tagline: 'Practical start, exit-friendly.',
+          stations: [
+            SPM_STAGE(),
+            { name: 'Diploma in Engineering', formal: 'Diploma Civil Engineering', sub: '3 years', byYear: 3, what: 'Practical hands-on programme. Graduates can work as technician-engineers.', entry: '3 credits at SPM including Maths and Science', institutions: [
+              { name: 'Politeknik', fee: 'RM5k to 10k total' },
+              { name: 'UniKL', fee: 'RM30k to 45k total' }
+            ]},
+            { name: 'Degree topup', formal: 'BEng topup', sub: '2 years', byYear: 5, what: 'Topup to full engineering degree. Must be BEM-accredited to continue to P.Eng.', entry: 'Diploma CGPA 2.75+', institutions: [
+              { name: 'UniKL', fee: 'RM30k to 45k' },
+              { name: "Taylor's / UTAR", fee: 'RM40k to 60k' }
+            ]},
+            { name: 'Graduate Engineer', formal: 'GE with BEM', sub: '3 to 5 years', byYear: 9, what: 'Log hours under P.Eng.', entry: 'Degree + BEM registration', institutions: [] },
+            { name: 'Professional Engineer', formal: 'P.Eng', sub: 'qualified', byYear: 10, what: 'Fully registered.', entry: 'Pass Professional Interview', institutions: [] }
+          ]
+        }
+      ]
+    },
+
+    /* ========== PHARMACIST ========== */
+    pharmacist: {
+      title: 'Pharmacist',
+      subtitle: 'Pathway to Registered Pharmacist (PRP + Full Registration)',
+      quickFacts: {
+        startPay: { value: 'RM3,800', sub: 'provisional' },
+        years:    { value: '5 to 6', sub: 'BPharm + 1yr PRP' },
+        demand:   { value: 'Moderate', sub: 'saturated', tone: 'moderate' }
+      },
+      description: 'Pharmacists dispense medication, counsel patients, and advise on drug use. Science-heavy but with less acute stress than medicine. Malaysia requires 1 year of Provisionally Registered Pharmacist training after BPharm.',
+      subjects: 'Biology and Chemistry required. Physics or Maths usually needed. 5As at SPM including Bio and Chem opens most doors.',
+      realTalk: 'The market is saturated in urban Malaysia. Hospital pharmacy jobs are hard to land. Most grads end up in retail (Guardian, Watsons) which pays less. Industry and regulatory roles pay more but are rarer.',
+      related: [
+        { id: 'doctor', name: 'Doctor', why: 'Same science base, different patient contact' },
+        { id: 'nurse', name: 'Nurse', why: 'Faster qualification, more hands-on patient care' }
+      ],
+      routes: [
+        {
+          id: 'A', title: 'Foundation to Private BPharm', word: 'Standard',
+          time: '6 years', cost: 'RM200k to RM300k',
+          tagline: 'Private route. Standard pathway.',
+          stations: [
+            SPM_STAGE('Need 5As minimum including Bio and Chem.'),
+            { name: 'Foundation in Science', formal: 'Pre-university Science', sub: '1 year', byYear: 1, what: 'Science-focused pre-university programme.', entry: '5As at SPM including Bio and Chem', institutions: [
+              { name: 'IMU', fee: 'RM35k to 45k' },
+              { name: "Taylor's University", fee: 'RM30k to 40k' }
+            ]},
+            { name: 'BPharm', formal: 'Bachelor of Pharmacy (Hons)', sub: '4 years', byYear: 5, what: 'MQA-accredited 4-year degree covering pharmaceutical science, pharmacology, and clinical pharmacy.', entry: 'Foundation CGPA 3.0+', institutions: [
+              { name: 'IMU', fee: 'RM160k to 220k total' },
+              { name: 'MAHSA / UCSI', fee: 'RM130k to 180k total' },
+              { name: 'USM / UM (public)', fee: 'RM20k to 35k total' }
+            ]},
+            { name: 'Provisional Pharmacist', formal: 'PRP (Provisionally Registered Pharmacist)', sub: '1 year', byYear: 6, what: 'Compulsory 1 year supervised training, usually at a MOH hospital or approved community pharmacy.', entry: 'BPharm + PRP placement', institutions: [] },
+            { name: 'Registered Pharmacist', formal: 'Fully Registered Pharmacist', sub: 'qualified', byYear: 6, what: 'Fully registered with the Pharmacy Board Malaysia.', entry: 'Complete PRP + viva voce competency assessment (verify: "Forensic Pharmacy exam" phrasing needs source confirmation with Pharmacy Board Malaysia)', institutions: [] }
+          ]
+        },
+        {
+          id: 'B', title: 'Matriculation to Public BPharm', word: 'Cheapest',
+          time: '6 years', cost: 'RM25k to RM50k',
+          tagline: 'Cheapest path. Limited seats.',
+          stations: [
+            SPM_STAGE('Top SPM results needed.'),
+            { name: 'Matriculation Science', formal: 'KPM Matrik Sains', sub: '1 to 2 years', byYear: 1.5, what: 'Subsidised pre-university. Very competitive for pharmacy.', entry: '8A+ at SPM', institutions: [
+              { name: 'KPM Matriculation', fee: 'RM1k per year' }
+            ]},
+            { name: 'Public BPharm', formal: 'BPharm at public university', sub: '4 years', byYear: 5.5, what: 'Subsidised pharmacy degree. Fewer seats than private.', entry: 'Matriculation CGPA 3.5+', institutions: [
+              { name: 'USM (top pharmacy school)', fee: 'RM15k to 25k total' },
+              { name: 'UM / UIA', fee: 'RM15k to 25k total' }
+            ]},
+            { name: 'Provisional Pharmacist', formal: 'PRP', sub: '1 year', byYear: 6.5, what: '1 year supervised training.', entry: 'BPharm + PRP placement', institutions: [] },
+            { name: 'Registered Pharmacist', formal: 'Fully Registered', sub: 'qualified', byYear: 6.5, what: 'Fully registered with Pharmacy Board Malaysia.', entry: 'Complete PRP', institutions: [] }
+          ]
+        }
+      ]
+    },
+
+    /* ========== ARCHITECT ========== */
+    architect: {
+      title: 'Architect',
+      subtitle: 'Pathway to Registered Architect with LAM (Parts 1, 2, 3)',
+      quickFacts: {
+        startPay: { value: 'RM3,000', sub: 'Part 1 graduate' },
+        years:    { value: '7 to 10', sub: 'three-part qualification' },
+        demand:   { value: 'Moderate', sub: 'LAM 2025', tone: 'moderate' }
+      },
+      description: 'Architects design buildings and lead construction projects. In Malaysia the qualification has three parts (Part 1 degree, Part 2 masters, Part 3 practice exam). The title "Architect" is protected by LAM (Board of Architects Malaysia).',
+      subjects: 'Art, Maths, and Physics are most relevant. No strict SPM requirement but a portfolio of drawing work helps the interview. Credits in Maths and English are the practical minimum.',
+      realTalk: 'Junior pay is weak (RM3k to 4k) for long hours. Part 2 Masters adds two more years before you can register. Many drop out between Part 1 and Part 2. Those who push through and specialise (sustainable design, heritage) do well.',
+      related: [
+        { id: 'engineer-civil', name: 'Civil Engineer', why: 'Same construction world, more technical' },
+        { id: 'designer', name: 'Graphic Designer', why: 'Creative visual work, faster qualification' }
+      ],
+      routes: [
+        {
+          id: 'A', title: 'Local Part 1 + Part 2', word: 'Standard',
+          time: '7 to 8 years', cost: 'RM150k to RM250k',
+          tagline: 'Full local pathway. Longest commitment.',
+          stations: [
+            SPM_STAGE(),
+            { name: 'Foundation in Design', formal: 'Pre-university Art/Design', sub: '1 year', byYear: 1, what: 'Art and design foundation. Includes technical drawing.', entry: 'Credits in Maths and English', institutions: [
+              { name: 'Limkokwing', fee: 'RM20k to 28k' },
+              { name: "Taylor's / Dasein", fee: 'RM25k to 32k' }
+            ]},
+            { name: 'Part 1 (BSc Architecture)', formal: 'LAM Part 1 accredited degree', sub: '3 years', byYear: 4, what: 'Bachelor in Architectural Studies. Graduates work as "Architectural Assistant", cannot call themselves Architect yet.', entry: 'Foundation + portfolio interview', institutions: [
+              { name: 'UCSI', fee: 'RM80k to 110k total' },
+              { name: "Taylor's / UiTM", fee: 'RM85k to 130k total' }
+            ]},
+            { name: 'Practice year', formal: 'Supervised practice', sub: '1 year', byYear: 5, what: 'One year working at a LAM-registered architecture firm.', entry: 'Part 1 complete', institutions: [] },
+            { name: 'Part 2 (MArch)', formal: 'LAM Part 2 accredited Masters', sub: '2 years', byYear: 7, what: 'Masters in Architecture. Opens door to Part 3.', entry: 'Part 1 + practice year + portfolio', institutions: [
+              { name: 'UCSI / UiTM', fee: 'RM40k to 60k' },
+              { name: 'UM / USM', fee: 'RM15k to 25k' }
+            ]},
+            { name: 'Part 3 exam', formal: 'LAM Part 3 Professional Practice Exam', sub: '6 to 12 months prep', byYear: 8, what: 'Written and oral exam on practice, contracts, and professional ethics.', entry: 'Part 2 + 1 to 2 years post-Part 2 practice', institutions: [] },
+            { name: 'Registered Architect', formal: 'LAM Registered Architect', sub: 'qualified', byYear: 8, what: 'Fully registered. Can sign off designs and run own firm.', entry: 'Pass Part 3', institutions: [] }
+          ]
+        },
+        {
+          id: 'B', title: 'Overseas Part 1 + Local Part 2', word: 'Overseas',
+          time: '7 to 9 years', cost: 'RM400k to RM700k',
+          tagline: 'Overseas prestige + LAM route.',
+          stations: [
+            SPM_STAGE('Strong SPM needed for A-Levels.'),
+            { name: 'A-Levels', formal: 'Cambridge A-Level', sub: '1.5 years', byYear: 1.5, what: 'Art, Maths, Physics typical for architecture.', entry: '5As at SPM', institutions: [
+              { name: "Taylor's / Sunway", fee: 'RM35k to 48k' }
+            ]},
+            { name: 'Overseas Part 1', formal: 'RIBA Part 1 (UK) or equivalent', sub: '3 years', byYear: 4.5, what: 'Overseas architecture degree. Must be LAM-recognised for Malaysian practice.', entry: 'A-Levels + portfolio', institutions: [
+              { name: 'UK (Bartlett, Manchester)', fee: 'RM300k to 500k total' }
+            ]},
+            { name: 'Practice year', formal: 'Supervised practice', sub: '1 year', byYear: 5.5, what: 'One year at a LAM-registered firm.', entry: 'Part 1 complete', institutions: [] },
+            { name: 'Part 2 (MArch) local', formal: 'LAM Part 2 Masters', sub: '2 years', byYear: 7.5, what: 'Local masters to maintain LAM pathway.', entry: 'Part 1 + practice + portfolio', institutions: [
+              { name: 'UCSI / UiTM', fee: 'RM40k to 60k' }
+            ]},
+            { name: 'Part 3 exam', formal: 'LAM Part 3', sub: '6 to 12 months', byYear: 8.5, what: 'Professional practice exam.', entry: 'Part 2 + 1 to 2 years post-Part 2 practice', institutions: [] },
+            { name: 'Registered Architect', formal: 'LAM Registered Architect', sub: 'qualified', byYear: 9, what: 'Fully registered.', entry: 'Pass Part 3', institutions: [] }
+          ]
+        }
+      ]
+    },
+
+    /* ========== TEACHER ========== */
+    teacher: {
+      title: 'Teacher',
+      subtitle: 'Pathway to Registered Teacher (MOE / IPG / DPLI)',
+      quickFacts: {
+        startPay: { value: 'RM2,500', sub: 'DG29 starting' },
+        years:    { value: '4 to 5', sub: 'to posting' },
+        demand:   { value: 'Moderate', sub: 'MOE hiring cycles', tone: 'moderate' }
+      },
+      description: 'Teachers in Malaysia work in government (MOE), private, and international schools. Government teaching offers strong job security, pensions, and fixed hours. Private and international pay more but with less security. The path depends on which system you target.',
+      subjects: 'Depends on the subject you want to teach. BM and English are required regardless. For Science subjects, strong science results at SPM matter. Strong BM is mandatory for government posting.',
+      realTalk: 'Government starting pay is modest (DG29 around RM2,500) but benefits are real (pension, medical, housing). Classroom realities are hard: behaviour management, paperwork, weekends eaten by marking. International schools pay 2 to 3x but contracts are tougher and classes less predictable.',
+      related: [
+        { id: 'psychologist', name: 'Psychologist', why: 'Same "understand how people work" instinct' },
+        { id: 'nurse', name: 'Nurse', why: 'Stable government career with benefits' }
+      ],
+      routes: [
+        {
+          id: 'A', title: 'IPG (teacher training college)', word: 'Standard',
+          time: '5 years', cost: 'Free', // IPG is fully subsidised
+          tagline: 'Most direct route to MOE posting. Fully subsidised.',
+          stations: [
+            SPM_STAGE('Credits in BM and subject-relevant areas. Medical check required.'),
+            { name: 'IPG PISMP', formal: 'Institut Pendidikan Guru (PISMP)', sub: '4 years', byYear: 4, what: 'A 4-year Bachelor of Teaching (Hons) programme run by IPG across campuses nationwide. Combines subject knowledge with teaching pedagogy and includes practical school placement rotations. Fully subsidised with a monthly training allowance. (Verify: confirm whether current intake is a 4-year direct programme or includes a separate preparatory semester — structure may vary by intake year.)', entry: '5 credits at SPM including BM + interview + aptitude test', institutions: [
+              { name: 'IPG campuses nationwide', fee: 'Free (with monthly allowance)' }
+            ]},
+            { name: 'MOE Posting', formal: 'Guru (DG29) KPM appointment', sub: 'immediate', byYear: 4, what: 'Direct appointment as government teacher on graduation. Location not guaranteed — rural postings are common in first placement.', entry: 'Complete PISMP', institutions: [] },
+            { name: 'Registered Teacher', formal: 'Qualified Teacher (MOE)', sub: 'qualified', byYear: 4, what: 'Full government teacher. Pension track.', entry: 'Appointment letter', institutions: [] }
+          ]
+        },
+        {
+          id: 'B', title: 'Any Degree + DPLI', word: 'Flexible',
+          time: '5 to 6 years', cost: 'RM40k to RM90k',
+          tagline: 'Good if you already have a degree in another field.',
+          stations: [
+            SPM_STAGE(),
+            { name: 'Foundation', formal: 'Pre-university', sub: '1 year', byYear: 1, what: 'Any stream foundation that feeds into a bachelor degree.', entry: '5 credits at SPM', institutions: [
+              { name: 'Various', fee: 'RM15k to 28k' }
+            ]},
+            { name: 'Bachelor Degree', formal: 'Any recognised bachelor degree', sub: '3 to 4 years', byYear: 4.5, what: 'Any degree in a teaching-eligible subject (e.g. English, Maths, Science, History).', entry: 'Foundation pass', institutions: [
+              { name: 'Public universities', fee: 'RM20k to 35k total' },
+              { name: 'Private universities', fee: 'RM60k to 100k total' }
+            ]},
+            { name: 'DPLI', formal: 'Diploma Pendidikan Lepasan Ijazah', sub: '1 year', byYear: 5.5, what: 'Postgraduate teaching diploma. Converts a general degree into a teaching qualification.', entry: 'Recognised bachelor degree + BM credit', institutions: [
+              { name: 'IPG campuses', fee: 'Free (with allowance)' }
+            ]},
+            { name: 'MOE Posting', formal: 'Guru DG29', sub: 'on DPLI completion', byYear: 5.5, what: 'Government teacher appointment.', entry: 'Complete DPLI', institutions: [] },
+            { name: 'Registered Teacher', formal: 'Qualified Teacher (MOE)', sub: 'qualified', byYear: 5.5, what: 'Full government teacher.', entry: 'Appointment letter', institutions: [] }
+          ]
+        },
+        {
+          id: 'C', title: 'Education Degree', word: 'Common',
+          time: '4 to 5 years', cost: 'RM25k to RM80k',
+          tagline: 'Direct Bachelor of Education. Faster.',
+          stations: [
+            SPM_STAGE(),
+            { name: 'Matriculation or Foundation', formal: 'Pre-university', sub: '1 year', byYear: 1, what: 'Matriculation Arts/Science or Education Foundation.', entry: '5 credits at SPM', institutions: [
+              { name: 'KPM Matriculation', fee: 'RM1k per year' },
+              { name: 'Private Foundation', fee: 'RM15k to 25k' }
+            ]},
+            { name: 'Bachelor of Education', formal: 'B.Ed (Hons)', sub: '4 years', byYear: 5, what: 'Direct teaching degree combining subject and pedagogy.', entry: 'Matriculation or Foundation pass', institutions: [
+              { name: 'UPSI (education focus)', fee: 'RM15k to 25k total' },
+              { name: 'UM / UKM / USM', fee: 'RM20k to 35k total' }
+            ]},
+            { name: 'MOE Posting', formal: 'Guru DG29', sub: 'on graduation', byYear: 5, what: 'Direct appointment for B.Ed grads.', entry: 'Complete B.Ed', institutions: [] },
+            { name: 'Registered Teacher', formal: 'Qualified Teacher (MOE)', sub: 'qualified', byYear: 5, what: 'Full government teacher.', entry: 'Appointment letter', institutions: [] }
+          ]
+        }
+      ]
+    },
+
+    /* ========== NURSE ========== */
+    nurse: {
+      title: 'Nurse',
+      subtitle: 'Pathway to Registered Nurse (Nursing Board Malaysia)',
+      quickFacts: {
+        startPay: { value: 'RM2,500', sub: 'diploma grad' },
+        years:    { value: '3 to 4', sub: 'fastest healthcare path' },
+        demand:   { value: 'High', sub: 'always needed', tone: 'high' }
+      },
+      description: 'Nurses are the frontline of healthcare. Malaysia has a Diploma route (3 years, fastest) and a Degree route (4 years, better progression). Registered nurses can work in government, private hospitals, or abroad (especially Singapore and the UK).',
+      subjects: 'Biology and Chemistry help. English matters for nursing courses taught in English. Minimum 3 credits at SPM including Science is typical for diploma.',
+      realTalk: 'Shift work is real: nights, weekends, public holidays. Government starting pay is modest but benefits are steady. Many Malaysian nurses move to Singapore (2 to 3x pay) or UK/Australia after 2 to 3 years. Emotional toll is underrated.',
+      related: [
+        { id: 'pharmacist', name: 'Pharmacist', why: 'Healthcare, no shift work' },
+        { id: 'doctor', name: 'Doctor', why: 'Same field, much longer road' }
+      ],
+      routes: [
+        {
+          id: 'A', title: 'Diploma in Nursing', word: 'Fastest',
+          time: '3 years', cost: 'RM30k to RM60k',
+          tagline: 'Fastest qualified route. Start earning at 20.',
+          stations: [
+            SPM_STAGE('3 credits minimum including one science subject. Medical check required.'),
+            { name: 'Diploma in Nursing', formal: 'Nursing Board Malaysia Diploma', sub: '3 years', byYear: 3, what: '3-year full-time diploma. Includes clinical placements at hospital from year 1.', entry: '3 credits at SPM + medical fitness check', institutions: [
+              { name: 'MOH Nursing Colleges (KKM)', fee: 'RM5k to 15k total' },
+              { name: "Kolej Islam Teknologi", fee: 'RM25k to 35k total' },
+              { name: 'IMU / MAHSA', fee: 'RM40k to 55k total' }
+            ]},
+            { name: 'Registration exam', formal: 'NBM Registration', sub: '1 to 3 months', byYear: 3, what: 'Final registration exam with the Nursing Board Malaysia.', entry: 'Complete diploma', institutions: [] },
+            { name: 'Registered Nurse', formal: 'Registered Nurse (RN)', sub: 'qualified', byYear: 3, what: 'Fully registered to practise. Can work in any hospital or clinic in Malaysia.', entry: 'Pass NBM exam', institutions: [] }
+          ]
+        },
+        {
+          id: 'B', title: 'Degree in Nursing', word: 'Common',
+          time: '4 to 5 years', cost: 'RM60k to RM120k',
+          tagline: 'Longer but better for overseas and promotion.',
+          stations: [
+            SPM_STAGE('5 credits including Bio and Chem needed.'),
+            { name: 'Foundation in Health Sciences', formal: 'Pre-university', sub: '1 year', byYear: 1, what: 'Health science foundation.', entry: '5 credits at SPM including Bio', institutions: [
+              { name: 'IMU / MAHSA', fee: 'RM20k to 28k' }
+            ]},
+            { name: 'BSc Nursing', formal: 'Bachelor of Nursing (Hons)', sub: '3 to 4 years', byYear: 4.5, what: '4-year degree. More management, research, and specialisation prep than diploma.', entry: 'Foundation pass', institutions: [
+              { name: 'IMU / MAHSA / UCSI', fee: 'RM50k to 90k total' },
+              { name: 'USM / UKM / UPM (public)', fee: 'RM18k to 30k total' }
+            ]},
+            { name: 'Registration exam', formal: 'NBM Registration', sub: '1 to 3 months', byYear: 4.5, what: 'Final exam with Nursing Board Malaysia.', entry: 'Complete degree', institutions: [] },
+            { name: 'Registered Nurse', formal: 'Registered Nurse (RN) with degree', sub: 'qualified', byYear: 4.5, what: 'Registered with degree credential. Faster promotion to Sister, ward manager, specialty nurse.', entry: 'Pass NBM exam', institutions: [] }
+          ]
+        }
+      ]
+    },
+
+    /* ========== DATA SCIENTIST ========== */
+    data: {
+      title: 'Data Scientist',
+      subtitle: 'Pathway to Data Scientist / Analyst',
+      quickFacts: {
+        startPay: { value: 'RM5,000', sub: 'junior' },
+        years:    { value: '4 to 6', sub: 'degree + projects' },
+        demand:   { value: 'Very High', sub: 'rising fast', tone: 'high' }
+      },
+      description: 'Data scientists find patterns in data and build models that drive business decisions. Most in-demand technical role in Malaysia post-2023. Heavy mix of statistics, coding, and communication. Banking, e-commerce, and telco hire the most.',
+      subjects: 'Add Maths and ICT are key. Physics helps. Many successful data scientists come from Maths, Statistics, or Economics degrees rather than pure CS.',
+      realTalk: 'The job title is loose. "Data Scientist" at one company means ML engineer, at another means SQL analyst. Portfolio projects (Kaggle, personal) matter more than degree brand. Masters helps for top-tier roles but is not required.',
+      related: [
+        { id: 'developer', name: 'Software Developer', why: 'Same technical base, more engineering' },
+        { id: 'analyst', name: 'Financial Analyst', why: 'Numbers career with business focus' }
+      ],
+      routes: [
+        {
+          id: 'A', title: 'Degree in CS / Stats / Math', word: 'Standard',
+          time: '4 to 5 years', cost: 'RM80k to RM150k',
+          tagline: 'Most common route.',
+          stations: [
+            SPM_STAGE(),
+            { name: 'Foundation in Science or Computing', formal: 'Pre-university', sub: '1 year', byYear: 1, what: 'Science or Computing foundation.', entry: 'Credits in Add Maths and English', institutions: [
+              { name: 'APU / Sunway', fee: 'RM22k to 30k' }
+            ]},
+            { name: 'Degree (CS / Stats / Math)', formal: 'BSc Computer Science / Statistics / Mathematics', sub: '3 years', byYear: 4, what: 'CS for engineering-focused roles, Stats for modelling-focused, Math for both. Build portfolio projects alongside coursework.', entry: 'Pass Foundation', institutions: [
+              { name: 'APU / Sunway / Monash', fee: 'RM80k to 180k total' },
+              { name: 'UM / USM / UKM (public)', fee: 'RM15k to 25k total' }
+            ]},
+            { name: 'First data role', formal: 'Junior Data Analyst / Scientist', sub: '0 to 6 months to land', byYear: 4.5, what: 'Entry role. Kaggle competitions, personal projects, and a GitHub make or break the interview.', entry: 'Degree + demonstrable projects', institutions: [] },
+            { name: 'Data Scientist', formal: 'Mid-level Data Scientist', sub: 'established', byYear: 5, what: 'Fully contributing DS. Next step is Senior, ML Engineer, or specialisation.', entry: '1 to 2 years experience', institutions: [] }
+          ]
+        },
+        {
+          id: 'B', title: 'Degree + Masters', word: 'Premium',
+          time: '6 to 7 years', cost: 'RM150k to RM300k',
+          tagline: 'Stronger for top-tier roles and research.',
+          stations: [
+            SPM_STAGE(),
+            { name: 'Foundation', formal: 'Pre-university', sub: '1 year', byYear: 1, what: 'Science or Computing foundation.', entry: 'Credits in Add Maths', institutions: [
+              { name: 'Sunway / Taylor\u2019s', fee: 'RM25k to 32k' }
+            ]},
+            { name: 'Bachelor degree', formal: 'BSc CS / Stats / Math', sub: '3 years', byYear: 4, what: 'Strong academic track record needed for masters.', entry: 'Foundation pass', institutions: [
+              { name: 'Top private / public', fee: 'RM70k to 180k total' }
+            ]},
+            { name: 'Masters in Data Science', formal: 'MSc Data Science / AI', sub: '1.5 to 2 years', byYear: 6, what: 'Specialised masters. Strong for research, ML engineering, overseas roles.', entry: 'Bachelor CGPA 3.3+', institutions: [
+              { name: 'Monash Malaysia', fee: 'RM60k to 90k' },
+              { name: 'UM / USM / APU', fee: 'RM15k to 50k' }
+            ]},
+            { name: 'First data role', formal: 'Junior or mid Data Scientist', sub: '0 to 3 months', byYear: 6.5, what: 'Masters opens doors at Grab, Shopee, banks for DS-specific roles (not just analyst).', entry: 'Masters + portfolio', institutions: [] },
+            { name: 'Data Scientist', formal: 'Mid to senior DS', sub: 'established', byYear: 7, what: 'Productive DS, often at mid-level directly with masters.', entry: '6 to 12 months on the job', institutions: [] }
+          ]
+        },
+        {
+          id: 'C', title: 'Any degree + self-taught', word: 'Switcher',
+          time: '5 to 6 years', cost: 'RM60k to RM120k',
+          tagline: 'For career switchers from Econ, Physics, Math, etc.',
+          stations: [
+            SPM_STAGE(),
+            { name: 'Foundation', formal: 'Pre-university', sub: '1 year', byYear: 1, what: 'Any quantitative foundation.', entry: 'Credits in Maths', institutions: [
+              { name: 'Various', fee: 'RM18k to 28k' }
+            ]},
+            { name: 'Analytical bachelor degree', formal: 'BSc Econ / Physics / Actuarial / Math', sub: '3 years', byYear: 4, what: 'Quant-heavy degree. Build data projects during the degree.', entry: 'Foundation pass', institutions: [
+              { name: 'Public or private universities', fee: 'RM25k to 100k total' }
+            ]},
+            { name: 'Self-study + bootcamp', formal: 'Online courses + projects', sub: '6 to 12 months', byYear: 5, what: 'Python, SQL, ML basics. Build 3 to 5 portfolio projects.', entry: 'Self-discipline', institutions: [
+              { name: 'Coursera / DataCamp / Kaggle', fee: 'RM500 to 3k' }
+            ]},
+            { name: 'First data role', formal: 'Junior Data Analyst', sub: '3 to 6 months to land', byYear: 5.5, what: 'Usually starts as analyst, moves up to DS in 1 to 2 years.', entry: 'Portfolio + interview skills', institutions: [] },
+            { name: 'Data Scientist', formal: 'Mid-level DS', sub: 'established', byYear: 6, what: 'Productive DS after analyst-to-DS transition.', entry: '1 to 2 years post-first-role', institutions: [] }
+          ]
+        }
+      ]
+    },
+
+    /* ========== MARKETING ========== */
+    marketing: {
+      title: 'Marketing',
+      subtitle: 'Pathway to Marketing Executive / Manager',
+      quickFacts: {
+        startPay: { value: 'RM2,800', sub: 'junior exec' },
+        years:    { value: '4 to 5', sub: 'to first role' },
+        demand:   { value: 'Moderate', sub: 'competitive', tone: 'moderate' }
+      },
+      description: 'Marketing covers campaigns, content, brand, digital, and product. One of the easier fields to break into but hardest to stand out in. Practical skills (running ads, writing well, analytics) matter more than the brand of your degree.',
+      subjects: 'English, BM, Art, and Economics are useful but not required. This field cares about portfolio and taste more than SPM subjects.',
+      realTalk: 'Junior pay is low (RM2,500 to 3,500) and agencies burn people out. In-house marketing at MNCs pays better but hires selectively. The skill ceiling is in performance marketing (ads, analytics) and product marketing, not content writing.',
+      related: [
+        { id: 'designer', name: 'Graphic Designer', why: 'Same creative space, more visual' },
+        { id: 'journalist', name: 'Journalist', why: 'Same "words that work" craft' }
+      ],
+      routes: [
+        {
+          id: 'A', title: 'Degree in Marketing / Business', word: 'Standard',
+          time: '4 to 5 years', cost: 'RM70k to RM130k',
+          tagline: 'Standard route.',
+          stations: [
+            SPM_STAGE(),
+            { name: 'Foundation in Business', formal: 'Pre-university', sub: '1 year', byYear: 1, what: 'Business or Arts foundation.', entry: '5 credits at SPM', institutions: [
+              { name: "Taylor's / Sunway", fee: 'RM25k to 32k' },
+              { name: 'HELP University', fee: 'RM18k to 22k' }
+            ]},
+            { name: 'Marketing or Business Degree', formal: 'BA Marketing / BBA', sub: '3 years', byYear: 4, what: 'Degree covering marketing, finance, management, and analytics. Digital marketing electives are where the real value is.', entry: 'Foundation pass', institutions: [
+              { name: 'Sunway University', fee: 'RM85k to 105k total' },
+              { name: "Taylor's University", fee: 'RM90k to 115k total' },
+              { name: 'UM / USM (public)', fee: 'RM15k to 25k total' }
+            ]},
+            { name: 'Junior Marketing role', formal: 'Marketing Executive', sub: '0 to 3 months to land', byYear: 4.25, what: 'Agency or in-house junior role. Internship during degree often converts.', entry: 'Degree + internship or portfolio', institutions: [] },
+            { name: 'Marketing Executive', formal: 'Mid-level Marketing', sub: 'established', byYear: 5, what: 'Fully productive exec after 1 to 2 years.', entry: '1 to 2 years experience', institutions: [] }
+          ]
+        },
+        {
+          id: 'B', title: 'Diploma + Degree Topup', word: 'Flexible',
+          time: '5 years', cost: 'RM40k to RM80k',
+          tagline: 'Cheaper, exit after diploma possible.',
+          stations: [
+            SPM_STAGE(),
+            { name: 'Diploma in Marketing', formal: 'Diploma in Marketing / Business', sub: '2.5 years', byYear: 2.5, what: 'Practical marketing diploma. You can start working as a marketing assistant.', entry: '3 credits at SPM', institutions: [
+              { name: 'Politeknik', fee: 'RM5k to 10k total' },
+              { name: 'TAR UMT', fee: 'RM20k to 30k total' }
+            ]},
+            { name: 'Degree Topup', formal: 'BA Marketing topup', sub: '1.5 to 2 years', byYear: 4.5, what: 'Topup to full bachelor level.', entry: 'Diploma CGPA 2.5+', institutions: [
+              { name: "Taylor's / HELP", fee: 'RM30k to 50k' }
+            ]},
+            { name: 'Junior Marketing role', formal: 'Marketing Exec', sub: '0 to 3 months', byYear: 4.75, what: 'Junior marketing role.', entry: 'Degree + portfolio', institutions: [] },
+            { name: 'Marketing Executive', formal: 'Mid-level', sub: 'established', byYear: 5, what: 'Fully productive.', entry: '1 to 2 years experience', institutions: [] }
+          ]
+        },
+        {
+          id: 'C', title: 'Any Degree + Lateral Entry', word: 'Lateral',
+          time: '4 to 5 years', cost: 'RM50k to RM130k',
+          tagline: 'Marketing welcomes any degree if you build a portfolio.',
+          stations: [
+            SPM_STAGE(),
+            { name: 'Foundation', formal: 'Pre-university', sub: '1 year', byYear: 1, what: 'Any stream.', entry: '5 credits at SPM', institutions: [
+              { name: 'Various', fee: 'RM18k to 30k' }
+            ]},
+            { name: 'Any bachelor degree', formal: 'Any recognised bachelor', sub: '3 years', byYear: 4, what: 'Any degree (Comm, Econ, Psych, even STEM). Skills from side projects matter more.', entry: 'Foundation pass', institutions: [
+              { name: 'Various', fee: 'RM30k to 120k total' }
+            ]},
+            { name: 'Portfolio + Junior role', formal: 'Marketing Assistant / Executive', sub: '0 to 6 months', byYear: 4.5, what: 'Self-run projects (blog, e-commerce, content) become your portfolio. Easier lateral entry than most fields.', entry: 'Degree + demonstrable marketing projects', institutions: [] },
+            { name: 'Marketing Executive', formal: 'Mid-level', sub: 'established', byYear: 5, what: 'Fully productive.', entry: '1 to 2 years experience', institutions: [] }
+          ]
+        }
+      ]
+    }
+  };
+
+  /* =========================================================
+     QUIZ
+     ========================================================= */
+  const QUIZ = [
+    {
+      q: 'Which subjects do you actually enjoy?',
+      hint: 'Pick up to 3. No wrong answers.',
+      type: 'multi', max: 3,
+      options: ['Maths', 'English', 'BM', 'Science', 'Biology', 'Physics', 'Chemistry', 'Accounts', 'Economics', 'History', 'ICT', 'Art']
+    },
+    {
+      q: 'How do you prefer to work?',
+      hint: 'Pick the one that feels most like you.',
+      type: 'single',
+      options: ['Alone and focused', 'With a small team', 'With lots of people', 'With my hands', 'Making creative things']
+    },
+    {
+      q: 'What matters most to you right now?',
+      hint: 'Pick one. This changes, and that is fine.',
+      type: 'single',
+      options: ['Earning well', 'Job security', 'Helping people', 'Freedom and flexibility', 'Respect and prestige']
+    }
+  ];
+
+  const CAREER_TAGS = {
+    accountant: { subjects: ['Maths', 'Accounts', 'Economics'], workstyle: ['Alone and focused', 'With a small team'], priority: ['Job security', 'Earning well'], why: 'You like numbers and a steady structure. Accounting suits people happy sitting with rules and detail.' },
+    doctor: { subjects: ['Biology', 'Chemistry', 'Science'], workstyle: ['With lots of people', 'With my hands'], priority: ['Helping people', 'Respect and prestige'], why: 'You lean toward science and working with people. Medicine is long but has clear purpose.' },
+    lawyer: { subjects: ['English', 'History', 'BM'], workstyle: ['Alone and focused', 'With lots of people'], priority: ['Respect and prestige', 'Earning well'], why: 'You are comfortable with writing, arguing, and heavy reading. Law rewards that.' },
+    developer: { subjects: ['Maths', 'ICT', 'Physics'], workstyle: ['Alone and focused', 'With a small team'], priority: ['Earning well', 'Freedom and flexibility'], why: 'You like logic and building things. Software has the highest ceiling for self-taught skill.' },
+    'engineer-civil': { subjects: ['Maths', 'Physics'], workstyle: ['With my hands', 'With a small team'], priority: ['Job security'], why: 'You like maths and the physical world. Civil engineering stays relevant through any economy.' },
+    'engineer-mech': { subjects: ['Maths', 'Physics'], workstyle: ['With my hands'], priority: ['Job security'], why: 'You are mechanical and like understanding how things move. Strong industrial demand.' },
+    teacher: { subjects: ['English', 'BM', 'History'], workstyle: ['With lots of people'], priority: ['Helping people', 'Job security'], why: 'You want a role with meaning and stable hours. Teaching has both.' },
+    nurse: { subjects: ['Biology', 'Science'], workstyle: ['With my hands', 'With lots of people'], priority: ['Helping people'], why: 'Hands-on, people-facing healthcare. Demand never drops.' },
+    pharmacist: { subjects: ['Chemistry', 'Biology'], workstyle: ['Alone and focused'], priority: ['Job security', 'Helping people'], why: 'Science you can use, with less direct stress than medicine.' },
+    dentist: { subjects: ['Biology', 'Chemistry'], workstyle: ['With my hands'], priority: ['Earning well'], why: 'Hands-on healthcare. High income ceiling.' },
+    architect: { subjects: ['Art', 'Maths'], workstyle: ['Making creative things'], priority: ['Respect and prestige'], why: 'You like design and space. Architecture is the long road version of that instinct.' },
+    designer: { subjects: ['Art', 'ICT'], workstyle: ['Making creative things'], priority: ['Freedom and flexibility'], why: 'Creative and visual work. Freelance-friendly.' },
+    psychologist: { subjects: ['Biology', 'English'], workstyle: ['With lots of people', 'Alone and focused'], priority: ['Helping people'], why: 'You want to understand how people work and help them.' },
+    marketing: { subjects: ['English', 'Art'], workstyle: ['With a small team', 'Making creative things'], priority: ['Earning well'], why: 'Creative and commercial. Strong progression into product or strategy.' },
+    analyst: { subjects: ['Maths', 'Economics'], workstyle: ['Alone and focused'], priority: ['Earning well'], why: 'Numbers-driven but less compliance than accounting.' },
+    data: { subjects: ['Maths', 'ICT'], workstyle: ['Alone and focused'], priority: ['Earning well'], why: 'Deep work with numbers and code. Highest growth ceiling.' },
+    vet: { subjects: ['Biology', 'Science'], workstyle: ['With my hands'], priority: ['Helping people'], why: 'Medicine for animals. Passion-driven, smaller earning ceiling.' },
+    chef: { subjects: ['Art'], workstyle: ['With my hands', 'Making creative things'], priority: ['Freedom and flexibility'], why: 'Creative, fast-paced, physically demanding.' },
+    'engineer-elec': { subjects: ['Maths', 'Physics', 'ICT'], workstyle: ['With my hands', 'Alone and focused'], priority: ['Job security'], why: 'Circuits, power, signals. Steady industrial demand.' },
+    journalist: { subjects: ['English', 'BM', 'History'], workstyle: ['With lots of people'], priority: ['Helping people'], why: 'Curious, relentless, word-driven.' }
+  };
+
+  /* =========================================================
+     Stage helpers
+     ========================================================= */
+  function stageLevel(name) {
+    const n = name.toLowerCase();
+    if (n.startsWith('spm')) return 0;
+    if (n.includes('a-level')) return 1;
+    if (n.includes('foundation')) return 1;
+    if (n.includes('matriculation')) return 1;
+    if (n.includes('stpm')) return 1;
+    if (n.includes('diploma')) return 2;
+    if (n.includes('degree') || n.includes('llb') || n.includes('bpharm') || n.includes('mbbs') || n.includes('beng') || n.includes('bsc') || n.includes('ba ') || n.includes('bba') || n.includes('bachelor') || n.includes('pismp') || n.includes('part 1')) return 3;
+    return 999;
+  }
+
+  function hasScholarships(name) {
+    const lvl = stageLevel(name);
+    return lvl >= 1 && lvl <= 3;
+  }
+
+  /* =========================================================
+     State
+     ========================================================= */
+  let currentCareer = 'accountant';
+  let currentRoute = 'A';
+  let currentStatus = 'spm';
+  const BOOKMARK_KEY = 'myjourney_bookmarks';
+  const NOTIFY_KEY = 'myjourney_notify';
+
+  /* =========================================================
+     Bookmarks
+     ========================================================= */
+  function getBookmarks() {
+    try { return JSON.parse(localStorage.getItem(BOOKMARK_KEY) || '[]'); }
+    catch { return []; }
+  }
+  function setBookmarks(list) { localStorage.setItem(BOOKMARK_KEY, JSON.stringify(list)); }
+  function bookmarkId(careerId, routeId) { return careerId + '::' + routeId; }
+  function isBookmarked(careerId, routeId) { return getBookmarks().some(b => b.id === bookmarkId(careerId, routeId)); }
+
+  function toggleBookmark() {
+    const id = bookmarkId(currentCareer, currentRoute);
+    const career = CAREERS.find(c => c.id === currentCareer);
+    const data = CAREER_DATA[currentCareer];
+    const route = data.routes.find(r => r.id === currentRoute);
+    let list = getBookmarks();
+    if (list.some(b => b.id === id)) {
+      list = list.filter(b => b.id !== id);
+      track('bookmark_remove', { career: currentCareer, route: currentRoute });
+    } else {
+      list.unshift({
+        id,
+        careerId: currentCareer,
+        routeId: currentRoute,
+        careerName: career.name,
+        routeTitle: route.title,
+        routeWord: route.word,
+        savedAt: new Date().toISOString()
+      });
+      track('bookmark_add', { career: currentCareer, route: currentRoute });
+    }
+    setBookmarks(list);
+    updateBookmarkBtn();
+  }
+
+  function updateBookmarkBtn() {
+    const btn = document.getElementById('bookmarkBtn');
+    if (isBookmarked(currentCareer, currentRoute)) {
+      btn.classList.add('saved');
+      btn.innerHTML = '&#9733;';
+      btn.setAttribute('aria-label', 'Remove bookmark');
+    } else {
+      btn.classList.remove('saved');
+      btn.innerHTML = '&#9734;';
+      btn.setAttribute('aria-label', 'Save this route');
+    }
+  }
+
+  function renderBookmarkStrip() {
+    const list = getBookmarks();
+    const strip = document.getElementById('bookmarkStrip');
+    const listEl = document.getElementById('bookmarkList');
+    if (list.length === 0) { strip.style.display = 'none'; return; }
+    strip.style.display = 'block';
+    listEl.innerHTML = list.slice(0, 3).map(b => `
+      <button class="bookmark-item" onclick="openBookmark('${b.careerId}', '${b.routeId}')">
+        <div>
+          <div class="bm-main">${b.careerName}</div>
+          <div class="bm-sub">Route ${b.routeId}${b.routeWord ? ', ' + b.routeWord : ''} &mdash; ${b.routeTitle}</div>
+        </div>
+        <span class="bm-arrow">&rsaquo;</span>
+      </button>
+    `).join('');
+  }
+
+  function openBookmark(careerId, routeId) {
+    currentRoute = routeId;
+    openCareer(careerId, true);
+  }
+
+  /* =========================================================
+     Navigation
+     ========================================================= */
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    track('page_view', { page: id });
+  }
+
+  function goHome() {
+    showPage('page-home');
+    closeSheet();
+    renderBookmarkStrip();
+  }
+
+  function openCareer(careerId, keepRoute) {
+    const career = CAREERS.find(c => c.id === careerId);
+    if (!career) return;
+    currentCareer = careerId;
+    if (!career.built || !CAREER_DATA[careerId]) {
+      track('coming_soon_view', { career_id: careerId });
+      document.getElementById('csCareerName').textContent = career.name;
+      document.getElementById('csCareerHook').textContent = career.hook;
+      document.getElementById('csEmail').value = '';
+      document.getElementById('csConfirmation').classList.remove('visible');
+      showPage('page-coming-soon');
+      return;
+    }
+    track('career_view', { career_id: careerId });
+    if (!keepRoute) currentRoute = CAREER_DATA[careerId].routes[0].id;
+    currentStatus = 'spm';
+    renderCareerDetail();
+    showPage('page-career');
+  }
+
+  /* =========================================================
+     Coming soon email capture
+     ========================================================= */
+  function submitCSEmail() {
+    const input = document.getElementById('csEmail');
+    const email = input.value.trim();
+    if (!email || !email.includes('@')) {
+      input.focus();
+      input.style.borderColor = '#ef4444';
+      setTimeout(() => { input.style.borderColor = ''; }, 1500);
+      return;
+    }
+    try {
+      const existing = JSON.parse(localStorage.getItem(NOTIFY_KEY) || '[]');
+      existing.push({ email, career: currentCareer, at: new Date().toISOString() });
+      localStorage.setItem(NOTIFY_KEY, JSON.stringify(existing));
+    } catch { /* ignore */ }
+    track('coming_soon_notify', { career_id: currentCareer });
+    document.getElementById('csConfirmation').classList.add('visible');
+    input.value = '';
+  }
+
+  /* =========================================================
+     Home — render grouped list
+     ========================================================= */
+  function renderCareerList(filter = '') {
+    const list = document.getElementById('careerList');
+    const f = filter.trim().toLowerCase();
+
+    const grouped = CATEGORIES.map(cat => {
+      const matches = CAREERS.filter(c =>
+        c.cat === cat.id &&
+        (!f || c.name.toLowerCase().includes(f) || c.hook.toLowerCase().includes(f))
+      );
+      return { ...cat, careers: matches };
+    }).filter(g => g.careers.length > 0);
+
+    if (grouped.length === 0) {
+      // Improved empty state: icon + title + suggestions to get people unstuck
+      list.innerHTML = `
+        <div class="empty-results">
+          <div class="empty-icon">&#128270;</div>
+          <div class="empty-title">No careers match "${filter}"</div>
+          <div class="empty-sub">Try a different word, or pick from these:</div>
+          <div class="empty-suggestions">
+            ${['Doctor','Accountant','Teacher','Lawyer','Nurse','Developer','Architect'].map(s =>
+              `<button class="empty-suggestion-chip" onclick="document.getElementById('careerSearch').value='${s}'; filterCareers('${s}')">${s}</button>`
+            ).join('')}
+          </div>
+        </div>`;
+      return;
+    }
+
+    // Stagger: each career-row gets a small animation delay so the list "flows in"
+    let rowIndex = 0;
+    list.innerHTML = grouped.map(g => `
+      <div class="category-group">
+        <div class="cat-header">
+          <span class="cat-dot" style="background: var(--cat-${g.id});"></span>
+          <span class="cat-name">${g.label}</span>
+          <span class="cat-count">${g.careers.length}</span>
+        </div>
+        ${g.careers.map(c => {
+          const delay = `style="animation-delay:${rowIndex++ * 30}ms"`;
+          return `
+          <button class="career-row ${c.built ? '' : 'soon'}" data-cat="${g.id}" onclick="openCareer('${c.id}')" ${delay}>
+            <div class="career-top">
+              <span class="career-name">${c.name}</span>
+              ${c.built ? '' : '<span class="soon-tag">soon</span>'}
+            </div>
+            <div class="career-hook">${c.hook}</div>
+          </button>`;
+        }).join('')}
+      </div>
+    `).join('');
+  }
+
+  function filterCareers(v) {
+    track('career_search', { query: v });
+    renderCareerList(v);
+    document.getElementById('searchClear').classList.toggle('visible', v.length > 0);
+  }
+
+  function clearSearch() {
+    const input = document.getElementById('careerSearch');
+    input.value = '';
+    renderCareerList('');
+    document.getElementById('searchClear').classList.remove('visible');
+    input.focus();
+  }
+
+  /* =========================================================
+     Career detail — data-driven render
+     ========================================================= */
+  function renderCareerDetail() {
+    const data = CAREER_DATA[currentCareer];
+    if (!data) return;
+
+    // Hero
+    document.getElementById('careerTitle').textContent = data.title;
+    document.getElementById('careerSub').textContent = data.subtitle;
+    document.getElementById('careerDescription').textContent = data.description;
+
+    // Quick facts
+    const qf = data.quickFacts;
+    document.getElementById('quickFacts').innerHTML = `
+      <div class="fact">
+        <div class="label">Start pay</div>
+        <div class="value salary">${qf.startPay.value}</div>
+        <div class="fact-sub">${qf.startPay.sub}</div>
+      </div>
+      <div class="fact">
+        <div class="label">Years</div>
+        <div class="value">${qf.years.value}</div>
+        <div class="fact-sub">${qf.years.sub}</div>
+      </div>
+      <div class="fact">
+        <div class="label">Demand</div>
+        <div class="value demand-${qf.demand.tone}">${qf.demand.value}</div>
+        <div class="fact-sub">${qf.demand.sub}</div>
+      </div>
+    `;
+
+    // Subjects and real talk
+    document.getElementById('careerSubjects').textContent = data.subjects;
+    document.getElementById('careerRealTalk').textContent = data.realTalk;
+
+    // Related careers
+    document.getElementById('relatedCareers').innerHTML = data.related.map(r => {
+      const rc = CAREERS.find(c => c.id === r.id);
+      const isBuilt = rc && rc.built;
+      const cls = isBuilt ? 'related-card' : 'related-card disabled';
+      const right = isBuilt ? '<span class="arrow">&rsaquo;</span>' : '<span class="soon-pill">Soon</span>';
+      const click = isBuilt ? `onclick="openCareer('${r.id}')"` : '';
+      return `
+        <button class="${cls}" ${click}>
+          <div>
+            <div class="name">${r.name}</div>
+            <div class="why">${r.why}</div>
+          </div>
+          ${right}
+        </button>
+      `;
+    }).join('');
+
+    // Status picker
+    document.getElementById('statusChips').innerHTML = STATUS_OPTIONS.map(s => `
+      <button class="status-chip ${s.id === currentStatus ? 'active' : ''}" onclick="selectStatus('${s.id}')">${s.label}</button>
+    `).join('');
+
+    // Route chips
+    const routes = data.routes;
+    const chipsEl = document.getElementById('routeChips');
+    chipsEl.innerHTML = routes.map(r => {
+      const label = `Route ${r.id}, ${r.word}, ${r.title}`;
+      return `
+        <button class="route-chip ${r.id === currentRoute ? 'active' : ''}" data-r="${r.id}" onclick="selectRoute('${r.id}')" aria-label="${label}">
+          <span class="rc-letter">${r.id}</span>
+          <span class="rc-word">${r.word}</span>
+        </button>
+      `;
+    }).join('');
+
+    // Route heading and sub
+    document.getElementById('routesSub').textContent = routes.length === 1
+      ? 'Here is how most students go.'
+      : `Pick one of ${routes.length} routes to see the stages.`;
+
+    // Summary + Timeline
+    const route = routes.find(r => r.id === currentRoute) || routes[0];
+    currentRoute = route.id;
+    const sumEl = document.getElementById('routeSummary');
+    sumEl.setAttribute('data-r', route.id);
+    sumEl.innerHTML = `
+      <div class="rs-title">${route.title}</div>
+      <div class="rs-meta">
+        <span>${route.time}</span>
+        <span class="sep">&bull;</span>
+        <span>${route.cost}</span>
+      </div>
+      <div class="rs-tagline">${route.tagline}</div>
+    `;
+
+    const studentLevel = (STATUS_OPTIONS.find(s => s.id === currentStatus) || STATUS_OPTIONS[0]).level;
+    const tlEl = document.getElementById('vTimeline');
+    tlEl.setAttribute('data-r', route.id);
+    tlEl.innerHTML = route.stations.map((s, i) => {
+      const isLast = i === route.stations.length - 1;
+      const sLevel = stageLevel(s.name);
+      const isDone = sLevel <= studentLevel;
+      const yearText = s.byYear === 0 ? 'Year 0' : `Year ${s.byYear}`;
+      const scholarMark = hasScholarships(s.name) ? '<span class="v-scholarship-mark">RM</span>' : '';
+      return `
+        <button class="v-station ${isLast ? 'end' : ''} ${isDone ? 'done' : ''}" onclick="openStation(${i}, '${route.id}')" aria-label="Stage ${i+1}, ${s.name}, ${s.sub}">
+          <div class="v-dot"></div>
+          <div class="v-content">
+            <div class="v-name-row">
+              <span class="v-name">${s.name}</span>
+              ${scholarMark}
+            </div>
+            <div class="v-sub">${s.sub || ''}</div>
+          </div>
+          <div class="v-year-badge">${yearText}</div>
+          <div class="v-arrow">&rsaquo;</div>
+        </button>
+      `;
+    }).join('');
+
+    updateBookmarkBtn();
+  }
+
+  function selectRoute(id) {
+    if (currentRoute === id) return;
+    track('route_select', { route: id, career: currentCareer });
+    currentRoute = id;
+    renderCareerDetail();
+    // Brief dot pulse on the first station to make the switch feel responsive
+    requestAnimationFrame(() => {
+      const firstDot = document.querySelector('#vTimeline .v-dot');
+      if (firstDot) {
+        firstDot.classList.remove('pulse');
+        void firstDot.offsetWidth; // reflow to restart animation
+        firstDot.classList.add('pulse');
+        setTimeout(() => firstDot.classList.remove('pulse'), 600);
+      }
+    });
+  }
+
+  function selectStatus(id) {
+    if (currentStatus === id) return;
+    track('status_select', { status: id });
+    currentStatus = id;
+    renderCareerDetail();
+  }
+
+  /* =========================================================
+     Bottom sheet
+     ========================================================= */
+  function openStation(stationIndex, routeId) {
+    const data = CAREER_DATA[currentCareer];
+    const route = data.routes.find(r => r.id === routeId);
+    const station = route.stations[stationIndex];
+    track('station_open', { career: currentCareer, route: routeId, station: station.name });
+    document.getElementById('sheetTitle').textContent = station.name;
+    document.getElementById('sheetFormal').textContent = station.formal || '';
+    document.getElementById('sheetSub').textContent = `Stage ${stationIndex + 1} on Route ${routeId}`;
+    document.getElementById('sheetWhat').textContent = station.what;
+    document.getElementById('sheetEntry').textContent = station.entry;
+
+    const instHtml = station.institutions && station.institutions.length
+      ? station.institutions.map(i => `
+          <div class="inst-row">
+            <span class="inst-name">${i.name}</span>
+            <span class="inst-fee">${i.fee}</span>
+          </div>
+        `).join('')
+      : '<p style="font-size:13px;color:var(--text-muted);">No specific institutions for this stage. This is practical experience or self-study.</p>';
+
+    document.getElementById('sheetInstitutions').innerHTML = instHtml;
+
+    const cta = document.getElementById('sheetCta');
+    if (hasScholarships(station.name)) cta.classList.remove('hidden');
+    else cta.classList.add('hidden');
+
+    document.getElementById('sheetOverlay').classList.add('active');
+    document.getElementById('stationSheet').classList.add('active');
+  }
+
+  function closeSheet() {
+    document.getElementById('sheetOverlay').classList.remove('active');
+    document.getElementById('stationSheet').classList.remove('active');
+  }
+
+  /* =========================================================
+     Quiz
+     ========================================================= */
+  let quizStep = 0;
+  let quizAnswers = [[], null, null];
+
+  function startQuiz() {
+    track('quiz_start');
+    quizStep = 0;
+    quizAnswers = [[], null, null];
+    renderQuizStep();
+    showPage('page-quiz');
+  }
+
+  function renderQuizStep() {
+    const q = QUIZ[quizStep];
+    document.getElementById('quizStep').textContent = `Question ${quizStep + 1} of ${QUIZ.length}`;
+    document.getElementById('quizQuestion').textContent = q.q;
+    document.getElementById('quizHint').textContent = q.hint;
+
+    const optionsEl = document.getElementById('quizOptions');
+    const current = quizAnswers[quizStep];
+
+    if (q.type === 'multi') {
+      optionsEl.className = 'chip-group';
+      optionsEl.innerHTML = q.options.map(opt => {
+        const isSelected = current.includes(opt);
+        return `<button class="chip ${isSelected ? 'selected' : ''}" onclick="toggleMulti('${opt.replace(/'/g, "\\'")}')">${opt}</button>`;
+      }).join('');
+    } else {
+      optionsEl.className = 'card-options';
+      optionsEl.innerHTML = q.options.map(opt => {
+        const isSelected = current === opt;
+        return `<button class="card-option ${isSelected ? 'selected' : ''}" onclick="selectSingle('${opt.replace(/'/g, "\\'")}')">${opt}</button>`;
+      }).join('');
+    }
+
+    updateNextBtn();
+    const btn = document.getElementById('quizNext');
+    btn.textContent = quizStep === QUIZ.length - 1 ? 'See my matches' : 'Next';
+  }
+
+  function toggleMulti(opt) {
+    const current = quizAnswers[quizStep];
+    const idx = current.indexOf(opt);
+    if (idx > -1) current.splice(idx, 1);
+    else {
+      if (current.length >= QUIZ[quizStep].max) return;
+      current.push(opt);
+    }
+    renderQuizStep();
+  }
+
+  function selectSingle(opt) {
+    quizAnswers[quizStep] = opt;
+    renderQuizStep();
+  }
+
+  function updateNextBtn() {
+    const q = QUIZ[quizStep];
+    const ans = quizAnswers[quizStep];
+    const hasAnswer = q.type === 'multi' ? ans.length > 0 : ans !== null;
+    document.getElementById('quizNext').disabled = !hasAnswer;
+  }
+
+  function quizAdvance() {
+    track('quiz_step_complete', { step: quizStep + 1 });
+    if (quizStep < QUIZ.length - 1) {
+      quizStep++;
+      renderQuizStep();
+    } else {
+      scoreAndShowResults();
+    }
+  }
+
+  function scoreAndShowResults() {
+    const [subjects, workstyle, priority] = quizAnswers;
+    const scored = Object.entries(CAREER_TAGS).map(([id, tags]) => {
+      let score = 0;
+      subjects.forEach(s => { if (tags.subjects.includes(s)) score += 2; });
+      if (tags.workstyle.includes(workstyle)) score += 3;
+      if (tags.priority.includes(priority)) score += 3;
+      return { id, score, ...tags, name: CAREERS.find(c => c.id === id)?.name };
+    });
+    scored.sort((a, b) => b.score - a.score);
+    const top = scored.slice(0, 5).filter(s => s.score > 0);
+    track('quiz_complete', { top_match: top[0]?.id });
+
+    const list = document.getElementById('resultsList');
+    if (top.length === 0) {
+      list.innerHTML = `<div class="info-block"><p>No strong matches yet. Try the career list and see what catches your eye.</p></div>`;
+    } else {
+      list.innerHTML = top.map(t => `
+        <button class="match-card" onclick="openCareer('${t.id}')">
+          <div class="match-name">${t.name}</div>
+          <div class="match-why">${t.why}</div>
+          <span class="match-cta">See the routes</span>
+        </button>
+      `).join('');
+    }
+    showPage('page-results');
+  }
+
+  function track(event, params) {
+    if (window.console) console.log('[track]', event, params || {});
+  }
+
+  /* =========================================================
+     Init
+     ========================================================= */
+  document.addEventListener('DOMContentLoaded', () => {
+    renderCareerList();
+    renderBookmarkStrip();
+  });
+</script>
+
+</body>
+</html>
