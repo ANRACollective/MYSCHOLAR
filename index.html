@@ -1038,12 +1038,85 @@ if (savedLang && savedLang !== 'en') setLang(savedLang);
 const SB_URL = 'https://ywvfvjvxwhcfprfrkgqm.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl3dmZ2anZ4d2hjZnByZnJrZ3FtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNTQ5MzEsImV4cCI6MjA5MDYzMDkzMX0.5EzrJuW1fdPca2ZEKGPXXgbd_XYDqKzzu6e-iRQT9po';
 
+// ── Session ID (persisted in localStorage, shared with scholarships.html) ──
+function getSessionId() {
+  let sid = localStorage.getItem('scholar_session');
+  if (!sid) {
+    sid = Math.random().toString(36).slice(2, 10);
+    localStorage.setItem('scholar_session', sid);
+  }
+  return sid;
+}
+
+// ── Log search query to Supabase search_logs ────────────────
+async function logSearch(term, count) {
+  try {
+    await fetch(`${SB_URL}/rest/v1/search_logs`, {
+      method: 'POST',
+      headers: {
+        'apikey': SB_KEY,
+        'Authorization': `Bearer ${SB_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({
+        search_term: term,
+        results_count: count,
+        filters_active: ['homepage'],   // tag so we can tell apart from /scholarships
+        session_id: getSessionId()
+      })
+    });
+  } catch(e) { /* silent — tracking must never break the UI */ }
+}
+
+// ── Log outbound click (user tapping through to a scholarship site) ──
+async function logClick(id, name, url) {
+  // GA4
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'outbound_click', {
+      event_label: name,
+      event_category: 'scholarship',
+      outbound_url: url
+    });
+  }
+  // Supabase
+  try {
+    await fetch(`${SB_URL}/rest/v1/outbound_clicks`, {
+      method: 'POST',
+      headers: {
+        'apikey': SB_KEY,
+        'Authorization': `Bearer ${SB_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({
+        scholarship_id: id || null,
+        scholarship_name: name,
+        url: url,
+        source: 'homepage',
+        session_id: getSessionId()
+      })
+    });
+  } catch(e) { /* silent */ }
+}
+
 // ── Search redirect ─────────────────────────────────────────
 function goToScholarships(query) {
   const q = (query || '').trim();
+  // GA4 event for "see all" / Enter search from homepage
+  if (q && typeof gtag !== 'undefined') {
+    gtag('event', 'homepage_search_submit', { search_term: q });
+  }
   window.location.href = q ? 'scholarships.html?q=' + encodeURIComponent(q) : 'scholarships.html';
 }
-function fillSearch(chipEl) { goToScholarships(chipEl.textContent.trim()); }
+function fillSearch(chipEl) {
+  const term = chipEl.textContent.trim();
+  // Track chip click in GA4
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'homepage_chip_click', { chip_label: term });
+  }
+  goToScholarships(term);
+}
 
 // ── Live search dropdown ────────────────────────────────────
 (function() {
@@ -1082,14 +1155,19 @@ function fillSearch(chipEl) { goToScholarships(chipEl.textContent.trim()); }
       const href = r.url ? esc(r.url) : `scholarships.html?q=${encodeURIComponent(r.name)}`;
       const target = r.url ? 'target="_blank" rel="noopener"' : '';
       const amt = r.amt ? `<span class="sd-amt">${esc(r.amt)}</span>` : '';
-      return `<a class="sd-item" href="${href}" ${target} onclick="if(typeof gtag!='undefined')gtag('event','homepage_result_click',{event_label:'${esc(r.name)}'})">
+      // onclick: log to GA4 + Supabase outbound_clicks (only for external URLs)
+      const clickHandler = r.url
+        ? `onclick="logClick(${r.id},'${esc(r.name)}','${esc(r.url)}')"`
+        : `onclick="if(typeof gtag!='undefined')gtag('event','homepage_result_click',{event_label:'${esc(r.name)}'})"`;
+      return `<a class="sd-item" href="${href}" ${target} ${clickHandler}>
         <div class="sd-dot"></div>
         <div class="sd-text">
           <div class="sd-name">${esc(r.name)}</div>
           <div class="sd-prov">${esc(r.provider || '')}</div>
         </div>${amt}</a>`;
     }).join('');
-    const seeAll = `<a class="sd-see-all" href="scholarships.html?q=${encodeURIComponent(q)}">
+    const seeAll = `<a class="sd-see-all" href="scholarships.html?q=${encodeURIComponent(q)}"
+      onclick="if(typeof gtag!='undefined')gtag('event','homepage_see_all',{search_term:'${esc(q)}'})">
       See all results for <strong>"${esc(q)}"</strong> &nbsp;→</a>`;
     dd.innerHTML = rows + seeAll;
     // Track mouse hover for keyboard sync
@@ -1111,7 +1189,14 @@ function fillSearch(chipEl) { goToScholarships(chipEl.textContent.trim()); }
         headers: { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}` }
       });
       if (!res.ok) throw new Error('fetch error');
-      render(await res.json(), q);
+      const data = await res.json();
+      render(data, q);
+      // Log to Supabase search_logs + GA4 after a short debounce pause
+      // (we only log when results actually come back, not on every keystroke)
+      logSearch(q, data.length);
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'homepage_search', { search_term: q, result_count: data.length });
+      }
     } catch(e) {
       dd.innerHTML = '<div class="sd-msg">Could not load results — try searching on the next page.</div>';
     }
