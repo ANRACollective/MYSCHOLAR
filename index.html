@@ -688,6 +688,7 @@ footer {
    CLOSING SOON STRIP
    ───────────────────────────────────────────── */
 .closing-soon {
+  display: none;
   background: var(--midnight);
   padding: 0 32px 64px;
   border-top: 1px solid var(--border);
@@ -1105,7 +1106,7 @@ footer {
 <section class="closing-soon" id="closingSoon">
   <div class="cs-inner">
     <div class="cs-header">
-      <p class="cs-eyebrow">Closing within 30 days</p>
+      <p class="cs-eyebrow">Closing within 60 days</p>
       <a href="scholarships.html" class="cs-see-all-link">See all scholarships →</a>
     </div>
     <div class="cs-grid" id="csGrid">
@@ -1530,11 +1531,11 @@ function fillSearch(chipEl) {
   if (!grid) return;
 
   try {
-    // Fetch scholarships where deadline_date is within 30 days, ordered soonest first
+    // Fetch scholarships where deadline_date is within 60 days, ordered soonest first
     const today = new Date().toISOString().split('T')[0];
-    const in30  = new Date(Date.now() + 30 * 86400000).toISOString().split('T')[0];
+    const in60  = new Date(Date.now() + 60 * 86400000).toISOString().split('T')[0];
     const url   = `${SB_URL}/rest/v1/scholarships?select=id,name,provider,deadline_date,deadline_text,url` +
-                  `&deadline_date=gte.${today}&deadline_date=lte.${in30}&is_active=eq.true&order=deadline_date.asc&limit=6`;
+                  `&deadline_date=gte.${today}&deadline_date=lte.${in60}&is_active=eq.true&order=deadline_date.asc&limit=6`;
 
     const res  = await fetch(url, { headers: { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}` } });
     if (!res.ok) throw new Error('fetch failed');
@@ -1551,6 +1552,7 @@ function fillSearch(chipEl) {
       return diff <= 0 ? 'Today' : diff === 1 ? 'Tomorrow' : `${diff} days left`;
     }
 
+    if (section) section.style.display = '';
     grid.innerHTML = data.map(s => {
       const label  = daysUntil(s.deadline_date);
       const href   = s.url || `scholarships.html?q=${encodeURIComponent(s.name)}`;
