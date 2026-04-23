@@ -140,8 +140,25 @@ html{scroll-behavior:smooth}
 body{font-family:var(--sans);background:var(--bg);color:var(--t1);min-height:100vh;-webkit-font-smoothing:antialiased}
 
 /* ── SHARED STICKY NAV (mirrors MyScholar index.html) ──────────────────── */
-nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:52px;border-bottom:2px solid #e8551e;width:100%;max-width:100%;overflow:hidden}
+nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:flex;align-items:center;gap:10px;height:52px;border-bottom:2px solid #e8551e;width:100%;max-width:100%;overflow:hidden}
 .nav-l{display:flex;align-items:center;flex-shrink:0}
+
+/* ── STANDARDIZED NAV — shared across all MyScholar products ── */
+.ann-bar{background:#0f1f3d;border-bottom:1px solid rgba(255,255,255,.08);text-align:center;padding:7px 20px;font-size:10px;font-weight:600;letter-spacing:.18em;color:rgba(255,255,255,.55);text-transform:uppercase}
+.nav-divider{width:1px;height:20px;background:rgba(255,255,255,.28);flex-shrink:0;margin:0 4px}
+.nav-spacer{flex:1}
+.dot-trio{display:flex;align-items:center;gap:3.5px}
+.dot-trio span{width:6px;height:6px;border-radius:50%}
+.d-teal{background:#00a878}.d-coral{background:#e8551e}.d-sky{background:#38bdf8}
+.tools-btn{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:6px 12px;font-size:12px;font-weight:600;color:rgba(255,255,255,.75);font-family:var(--sans);cursor:pointer;transition:background .18s,border-color .18s,color .18s;position:relative;flex-shrink:0;min-height:36px}
+.tools-btn:hover{background:rgba(255,255,255,.1);color:#fff}
+.chevron{color:rgba(255,255,255,.5);transition:transform .2s;flex-shrink:0}
+.tools-btn.open .chevron{transform:rotate(180deg)}
+.tools-dropdown{position:fixed;top:89px;left:32px;background:#0a1626;border:1px solid rgba(255,255,255,.13);border-top:none;border-radius:0 10px 10px 10px;width:300px;padding:8px;box-shadow:0 24px 60px rgba(0,0,0,.6);z-index:300;opacity:0;pointer-events:none;transform:translateY(-6px);transition:opacity .18s,transform .18s}
+.tools-dropdown.open{opacity:1;pointer-events:auto;transform:translateY(0)}
+.pd-label{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;flex-shrink:0}.pd-label.teal-lbl{color:#00a878}.pd-label.coral-lbl{color:#e8551e}.pd-label.sky-lbl{color:#38bdf8}
+.pd-label span{font-weight:500;color:rgba(255,255,255,.8);letter-spacing:0;text-transform:none;font-size:13px}
+.pd-current{font-size:9px;font-weight:700;color:#e8551e;background:rgba(232,85,30,.1);border-radius:4px;padding:2px 6px;flex-shrink:0}
 .nav-brand{font-family:var(--serif);font-size:24px;letter-spacing:-.4px;text-decoration:none;color:#fff;font-weight:900;transition:opacity .2s}
 .nav-brand .coral{color:#e8551e}
 .nav-brand .blue{color:#38bdf8}
@@ -153,11 +170,11 @@ nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:
 .nav-r{display:flex;align-items:center;gap:8px;overflow:hidden;min-width:0}
 .nav-r a{color:rgba(255,255,255,.5);font-size:12px;text-decoration:none;letter-spacing:.04em;transition:color .2s}
 .nav-r a:hover{color:#fff}
-@media(max-width:680px){.nav-brand{font-size:20px}.products-btn{font-size:10.5px;padding:3px 9px}nav{padding:0 12px}.saved-label{display:none}.saved-nav-btn{padding:4px 8px;gap:3px}.products-btn-label{display:none}}
+@media(max-width:680px){.nav-brand{font-size:20px}.tools-btn{font-size:10.5px;padding:3px 9px}nav{padding:0 12px}.saved-label{display:none}.saved-nav-btn{padding:4px 8px;gap:3px}.tools-text{display:none}}
 /* ── Language toggle — same pattern as MyScholar index.html ── */
-.lang-toggle{display:flex;align-items:center;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:20px;padding:3px;gap:2px;flex-shrink:0}
-.lt-opt{font-size:10px;font-weight:500;padding:3px 10px;border-radius:16px;cursor:pointer;color:rgba(255,255,255,.45);background:none;border:none;transition:all .15s;letter-spacing:.02em;font-family:var(--sans)}
-.lt-opt.active{background:rgba(255,255,255,.18);color:#fff}
+.lang-toggle{display:flex;align-items:center;gap:0;flex-shrink:0}
+.lt-opt{font-size:11px;font-weight:600;padding:4px 7px;border-radius:4px;cursor:pointer;color:rgba(255,255,255,.32);background:none;border:none;transition:color .15s;letter-spacing:.05em;font-family:var(--sans)}
+.lt-opt.active{color:rgba(255,255,255,.85);background:none}
 .lt-opt:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 /* ── Products button + dropdown (internships) ── */
 .products-btn{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);border-radius:20px;color:rgba(255,255,255,.6);font-family:var(--sans);font-size:11.5px;font-weight:600;padding:4px 12px;cursor:pointer;transition:all .18s;flex-shrink:0;letter-spacing:.02em}
@@ -454,25 +471,30 @@ nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:
 </head>
 <body>
 
-<!-- ── SHARED STICKY NAV — mirrors MyScholar, MyIntern is the active tab ── -->
+<!-- ── STANDARDIZED NAV — same across index, scholarships, internships ── -->
+
 <nav>
-  <div class="nav-l">
-    <!-- Single brand — MyIntern as the active product on this page -->
-    <a class="nav-brand" href="/internships">My<span style="color:#38bdf8">Intern</span></a>
-  </div>
+  <!-- Brand links back to hub -->
+  <a class="nav-brand" href="/">My<span class="blue">Intern</span></a>
+  <div class="nav-divider" aria-hidden="true"></div>
+  <!-- Our tools button -->
+  <button class="tools-btn active-product" id="toolsBtn" onclick="toggleDropdown()" aria-haspopup="true" aria-expanded="false" aria-controls="toolsDropdown">
+    <div class="dot-trio" aria-hidden="true">
+      <span class="d-teal"></span><span class="d-coral"></span><span class="d-sky"></span>
+    </div>
+    Our tools
+    <div class="nav-active-indicator" aria-hidden="true"></div>
+    <svg class="chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+      <path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+  <div class="nav-spacer"></div>
   <div class="nav-r">
-    <!-- Products button — same pattern as MyScholar nav -->
-    <button class="products-btn" id="productsBtn" onclick="toggleProductsMenu()" aria-haspopup="true" aria-expanded="false">
-      <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-      <span class="products-btn-label">Products</span>
-      <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="margin-left:1px;transition:transform .18s" id="productsBtnChevron"><path d="M6 9l6 6 6-6"/></svg>
-    </button>
-    <!-- Saved button — opens saved internships panel -->
+    <!-- Saved button — functional for internships -->
     <button class="saved-nav-btn" id="savedNavBtn" onclick="openSavedPanel()">
-      <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-      <span class="saved-label">Saved </span>(<span id="savedCount">0</span>)
+      <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+      <span class="saved-label">Saved</span> (<span id="savedCount">0</span>)
     </button>
-    <!-- Language toggle — mirrors MyScholar index.html, shares scholar_lang localStorage key -->
     <div class="lang-toggle" role="group" aria-label="Language">
       <button class="lt-opt active" id="lt-en" onclick="setLang('en')" aria-pressed="true">EN</button>
       <button class="lt-opt" id="lt-bm" onclick="setLang('bm')" aria-pressed="false">BM</button>
@@ -480,45 +502,61 @@ nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:
   </div>
 </nav>
 
-<!-- Products dropdown -->
-<div class="products-dropdown" id="productsDropdown" role="menu" aria-label="Products">
-  <a class="pd-item" href="https://myscholar.my" onclick="gtag('event','intern_nav_scholar_click')" role="menuitem">
-    <div class="pd-dot" style="background:#e8551e"></div>
-    <div class="pd-info">
-      <div class="pd-name">MyScholar</div>
-      <div class="pd-sub">Scholarships &amp; financial aid</div>
+<!-- Our tools dropdown — MyIntern is current -->
+<div class="tools-dropdown" id="toolsDropdown" role="menu" aria-label="Our tools">
+  <a class="pd-item pd-dim" href="#" role="menuitem" aria-disabled="true" tabindex="-1">
+    <div class="pd-dot teal" aria-hidden="true"></div>
+    <div class="pd-text">
+      <div class="pd-label">PLAN <span>MyJourney</span></div>
+      <div class="pd-sub">Map your career pathway</div>
     </div>
-    <span class="pd-arrow">→</span>
+    <span class="pd-soon">Coming soon</span>
   </a>
-  <a class="pd-item" href="/internships" role="menuitem">
-    <div class="pd-dot" style="background:#38bdf8"></div>
-    <div class="pd-info">
-      <div class="pd-name">MyIntern</div>
-      <div class="pd-sub">Internship programmes</div>
+  <div class="pd-divider" role="separator"></div>
+  <a class="pd-item" href="/" onclick="gtag('event','intern_nav_scholar_click')" role="menuitem">
+    <div class="pd-dot coral" aria-hidden="true"></div>
+    <div class="pd-text">
+      <div class="pd-label">FUND <span>MyScholar</span></div>
+      <div class="pd-sub">Find scholarships for your studies</div>
     </div>
-    <span class="pd-check">✓</span>
+  </a>
+  <div class="pd-divider" role="separator"></div>
+  <a class="pd-item" href="/internships" role="menuitem" aria-current="page">
+    <div class="pd-dot sky" aria-hidden="true"></div>
+    <div class="pd-text">
+      <div class="pd-label">LAUNCH <span>MyIntern</span></div>
+      <div class="pd-sub">Discover internship opportunities</div>
+    </div>
+    <span class="pd-current" aria-label="Current page">Here</span>
   </a>
 </div>
 <script>
-// ── Products dropdown toggle ──
-function toggleProductsMenu() {
-  const d   = document.getElementById('productsDropdown');
-  const btn = document.getElementById('productsBtn');
-  const chv = document.getElementById('productsBtnChevron');
-  const open = d.classList.toggle('open');
-  btn.classList.toggle('active', open);
-  btn.setAttribute('aria-expanded', open);
-  if (chv) chv.style.transform = open ? 'rotate(180deg)' : '';
-  if (open) gtag('event', 'products_menu_open');
+// ── Our tools dropdown toggle ──
+function toggleDropdown() {
+  const dropdown = document.getElementById('toolsDropdown');
+  const toolsBtn = document.getElementById('toolsBtn');
+  const isOpen = dropdown.classList.toggle('open');
+  toolsBtn.classList.toggle('open', isOpen);
+  toolsBtn.setAttribute('aria-expanded', isOpen);
+  if (typeof gtag !== 'undefined' && isOpen) gtag('event', 'tools_menu_open');
 }
 document.addEventListener('click', function(e) {
-  if (!e.target.closest('#productsBtn') && !e.target.closest('#productsDropdown')) {
-    const d = document.getElementById('productsDropdown');
-    if (d && d.classList.contains('open')) {
-      d.classList.remove('open');
-      const btn = document.getElementById('productsBtn');
-      btn.classList.remove('active');
+  if (!e.target.closest('#toolsBtn') && !e.target.closest('#toolsDropdown')) {
+    const dropdown = document.getElementById('toolsDropdown');
+    if (dropdown && dropdown.classList.contains('open')) {
+      dropdown.classList.remove('open');
+      document.getElementById('toolsBtn').setAttribute('aria-expanded', 'false');
+    }
+  }
+});
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    const dropdown = document.getElementById('toolsDropdown');
+    if (dropdown && dropdown.classList.contains('open')) {
+      dropdown.classList.remove('open');
+      const btn = document.getElementById('toolsBtn');
       btn.setAttribute('aria-expanded', 'false');
+      btn.focus();
     }
   }
 });
@@ -651,6 +689,7 @@ function dismissCvNudge() {
         <button class="iss-btn" id="issBtn" onclick="submitInternSignup()">Notify me &#8594;</button>
       </div>
       <p class="iss-privacy">We don't share your email. Unsubscribe anytime.</p>
+      <p class="iss-privacy" style="margin-top:10px;border-top:1px solid rgba(255,255,255,.07);padding-top:10px">Also interested in <strong style="color:rgba(255,255,255,.7)">MyJourney</strong> — career pathway mapping? We'll include it when it launches.</p>
     </div>
     <div class="iss-success" id="issSuccess">
       <div class="iss-success-title">You're in.</div>
