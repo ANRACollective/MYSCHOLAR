@@ -1000,7 +1000,7 @@ footer {
 
   <div class="pd-divider"></div>
 
-  <a href="scholarships.html" class="pd-item current" role="menuitem">
+  <a href="scholarships" class="pd-item current" role="menuitem">
     <div class="pd-dot coral"></div>
     <div class="pd-text">
       <div class="pd-title-row">
@@ -1014,7 +1014,7 @@ footer {
 
   <div class="pd-divider"></div>
 
-  <a href="internships.html" class="pd-item" role="menuitem">
+  <a href="internships" class="pd-item" role="menuitem">
     <div class="pd-dot sky"></div>
     <div class="pd-text">
       <div class="pd-title-row">
@@ -1079,7 +1079,7 @@ footer {
     </a>
 
     <!-- FUND: MyScholar (current — active state) -->
-    <a href="scholarships.html" class="prod-card active">
+    <a href="scholarships" class="prod-card active">
       <div class="prod-phase coral" data-i18n="phaseFund">Fund</div>
       <div class="prod-name">MyScholar</div>
       <p class="prod-desc">
@@ -1089,7 +1089,7 @@ footer {
     </a>
 
     <!-- LAUNCH: MyIntern -->
-    <a href="internships.html" class="prod-card">
+    <a href="internships" class="prod-card">
       <div class="prod-phase sky" data-i18n="phaseLaunch">Launch</div>
       <div class="prod-name">MyIntern</div>
       <p class="prod-desc">
@@ -1106,7 +1106,7 @@ footer {
   <div class="cs-inner">
     <div class="cs-header">
       <p class="cs-eyebrow">Closing soon</p>
-      <a href="scholarships.html" class="cs-see-all-link">See all scholarships →</a>
+      <a href="scholarships" class="cs-see-all-link">See all scholarships →</a>
     </div>
     <div class="cs-grid" id="csGrid">
       <!-- Populated by JS from Supabase -->
@@ -1315,7 +1315,7 @@ if (savedLang && savedLang !== 'en') setLang(savedLang);
 const SB_URL = 'https://ywvfvjvxwhcfprfrkgqm.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl3dmZ2anZ4d2hjZnByZnJrZ3FtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNTQ5MzEsImV4cCI6MjA5MDYzMDkzMX0.5EzrJuW1fdPca2ZEKGPXXgbd_XYDqKzzu6e-iRQT9po';
 
-// ── Session ID (persisted in localStorage, shared with scholarships.html) ──
+// ── Session ID (persisted in localStorage, shared with scholarships) ──
 function getSessionId() {
   let sid = localStorage.getItem('scholar_session');
   if (!sid) {
@@ -1384,7 +1384,7 @@ function goToScholarships(query) {
   if (q && typeof gtag !== 'undefined') {
     gtag('event', 'homepage_search_submit', { search_term: q });
   }
-  window.location.href = q ? 'scholarships.html?q=' + encodeURIComponent(q) : 'scholarships.html';
+  window.location.href = q ? 'scholarships?q=' + encodeURIComponent(q) : 'scholarships';
 }
 function fillSearch(chipEl) {
   const term = chipEl.textContent.trim();
@@ -1429,7 +1429,7 @@ function fillSearch(chipEl) {
     }
     // Each result: clicking opens the scholarship's own URL in a new tab
     const rows = results.map(r => {
-      const href = r.url ? esc(r.url) : `scholarships.html?q=${encodeURIComponent(r.name)}`;
+      const href = r.url ? esc(r.url) : `scholarships?q=${encodeURIComponent(r.name)}`;
       const target = r.url ? 'target="_blank" rel="noopener"' : '';
       const amt = r.amt ? `<span class="sd-amt">${esc(r.amt)}</span>` : '';
       // onclick: log to GA4 + Supabase outbound_clicks (only for external URLs)
@@ -1443,7 +1443,7 @@ function fillSearch(chipEl) {
           <div class="sd-prov">${esc(r.provider || '')}</div>
         </div>${amt}</a>`;
     }).join('');
-    const seeAll = `<a class="sd-see-all" href="scholarships.html?q=${encodeURIComponent(q)}"
+    const seeAll = `<a class="sd-see-all" href="scholarships?q=${encodeURIComponent(q)}"
       onclick="if(typeof gtag!='undefined')gtag('event','homepage_see_all',{search_term:'${esc(q)}'})">
       See all results for <strong>"${esc(q)}"</strong> &nbsp;→</a>`;
     dd.innerHTML = rows + seeAll;
@@ -1638,32 +1638,3 @@ document.getElementById('popupForm').addEventListener('submit', async function(e
       })
     });
 
-    if (res.ok || res.status === 409) {
-      // 409 = already subscribed — still treat as success
-      localStorage.setItem(POPUP_KEY, '1');
-      // Show success state
-      document.getElementById('popupContent').innerHTML = `
-        <div class="popup-success">
-          <div class="ps-tick">✓</div>
-          <h4>You're in.</h4>
-          <p>We'll send you the monthly update — no spam, ever.</p>
-        </div>`;
-      if (typeof gtag !== 'undefined') {
-        gtag('event', 'popup_subscribe', { source: 'homepage_popup' });
-      }
-      setTimeout(closePopup, 2400);
-    } else {
-      btn.disabled = false;
-      btn.textContent = 'Get updates';
-      btn.style.background = '#c0392b';
-      btn.textContent = 'Something went wrong — try again';
-    }
-  } catch(err) {
-    btn.disabled = false;
-    btn.textContent = 'Get updates';
-  }
-});
-
-</script>
-</body>
-</html>
