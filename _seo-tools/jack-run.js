@@ -131,6 +131,27 @@ try {
   console.log('  Wave 11: not found, skipping');
 }
 
+// Wave 12: from wave12.js (MyJourney career path pages — new product launch)
+// Created: 2026-04-23 — introduces 'journey' type linking to /journey.html?career=<id>
+// No tuition pages from this wave forward. MyTuition is paused.
+try {
+  const w12 = require('./wave12.js');
+  KEYWORDS.push(...w12);
+  console.log('  Wave 12: ' + w12.length + ' keywords');
+} catch(e) {
+  console.log('  Wave 12: not found, skipping');
+}
+
+// Wave 13: from wave13.js (MyJourney new careers, scholarship deep how-to, internship sector gaps, discovery pages)
+// Created: 2026-04-27 — 5 pillars: new careers, scholarship outcomes/how-to, internship gaps, journey discovery, niche scholarship
+try {
+  const w13 = require('./wave13.js');
+  KEYWORDS.push(...w13);
+  console.log('  Wave 13: ' + w13.length + ' keywords');
+} catch(e) {
+  console.log('  Wave 13: not found, skipping');
+}
+
 
 console.log('  Total: ' + KEYWORDS.length + ' keywords');
 console.log('');
