@@ -37,10 +37,10 @@
   --sky:    #38bdf8;
 
   /* MyJourney gold */
-  --gold:       #C9A96A;
-  --gold-dark:  #a87e40;
-  --gold-dim:   rgba(201,169,106,.15);
-  --gold-dimmer:rgba(201,169,106,.08);
+  --gold:       #F0CC6C;
+  --gold-dark:  #D4A83A;
+  --gold-dim:   rgba(240,204,108,.15);
+  --gold-dimmer:rgba(240,204,108,.08);
 
   /* Demand tones */
   --demand-high:     #34d399;
@@ -726,6 +726,7 @@ nav{position:sticky;top:0;z-index:200;background:#0d1f11;padding:0 20px;display:
 }
 .cs-card h3 { font-size: 14px; font-weight: 700; color: var(--t1); margin-bottom: 6px; }
 .cs-card p { font-size: 13px; color: var(--t2); line-height: 1.6; margin-bottom: 14px; }
+.cs-label { display:block; font-size:11px; font-weight:600; color:var(--t2); letter-spacing:.05em; text-transform:uppercase; margin-bottom:6px; }
 .cs-email-row { display: flex; gap: 8px; }
 .cs-email-row input {
   flex: 1; padding: 11px 12px;
@@ -842,6 +843,7 @@ nav{position:sticky;top:0;z-index:200;background:#0d1f11;padding:0 20px;display:
   gtag('js', new Date());
   gtag('config', 'G-ZETBRDDMTV');
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
 <body>
 
@@ -1026,15 +1028,16 @@ nav{position:sticky;top:0;z-index:200;background:#0d1f11;padding:0 20px;display:
       <div class="cs-hook" id="csCareerHook">Long road, high trust</div>
     </div>
     <div class="cs-card">
-      <h3>This one is still being built</h3>
+      <h3>Want this career added?</h3>
       <p>
-        I am adding new careers every week. Drop your email and I will tell you when this one is ready. No spam, nothing else.
+        Leave your email and I will prioritise this one and let you know when it is ready. No spam, nothing else.
       </p>
+      <label for="csEmail" class="cs-label">Your email</label>
       <div class="cs-email-row">
-        <input type="email" id="csEmail" placeholder="your@email.com" aria-label="Email address">
-        <button onclick="submitCSEmail()">Notify me</button>
+        <input type="email" id="csEmail" placeholder="your@email.com" autocomplete="email">
+        <button onclick="submitCSEmail()">Request this</button>
       </div>
-      <div class="cs-confirmation" id="csConfirmation">Saved. I will email you the moment this one is live.</div>
+      <div class="cs-confirmation" id="csConfirmation">Got it. I will work on this one and email you when it is ready.</div>
     </div>
     <div style="text-align:center;">
       <a href="#" class="cs-back" onclick="event.preventDefault(); goHome();">See all careers</a>
@@ -7537,8 +7540,22 @@ nav{position:sticky;top:0;z-index:200;background:#0d1f11;padding:0 20px;display:
   function submitCSEmail() {
     const input = document.getElementById('csEmail');
     const email = input.value.trim();
-    if (!email || !email.includes('@')) { input.focus(); input.style.borderColor = '#ef4444'; setTimeout(() => { input.style.borderColor = ''; }, 1500); return; }
-    try { const existing = JSON.parse(localStorage.getItem(NOTIFY_KEY) || '[]'); existing.push({ email, career: currentCareer, at: new Date().toISOString() }); localStorage.setItem(NOTIFY_KEY, JSON.stringify(existing)); } catch { }
+    if (!email || !email.includes('@')) {
+      input.focus();
+      input.style.borderColor = '#ef4444';
+      setTimeout(() => { input.style.borderColor = ''; }, 1500);
+      return;
+    }
+    const careerName = document.getElementById('csCareerName').textContent;
+    // Submit to Supabase journey_career_requests
+    const _sb = supabase.createClient('https://ywvfvjvxwhcfprfrkgqm.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl3dmZ2anZ4d2hjZnByZnJrZ3FtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNTQ5MzEsImV4cCI6MjA5MDYzMDkzMX0.5EzrJuW1fdPca2ZEKGPXXgbd_XYDqKzzu6e-iRQT9po');
+    _sb.from('journey_career_requests').insert({
+      email,
+      career_id: currentCareer,
+      career_name: careerName
+    }).then({ error }) => {
+      if (error) console.warn('Supabase insert error:', error);
+    });
     track('coming_soon_notify', { career_id: currentCareer });
     document.getElementById('csConfirmation').classList.add('visible');
     input.value = '';
