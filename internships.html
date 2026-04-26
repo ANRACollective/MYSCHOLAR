@@ -504,13 +504,12 @@ nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:
 
 <!-- Our tools dropdown — MyIntern is current -->
 <div class="tools-dropdown" id="toolsDropdown" role="menu" aria-label="Our tools">
-  <a class="pd-item pd-dim" href="#" role="menuitem" aria-disabled="true" tabindex="-1">
+  <a class="pd-item" href="/journey" onclick="gtag('event','nav_myjourney_click')" role="menuitem">
     <div class="pd-dot teal" aria-hidden="true"></div>
     <div class="pd-text">
       <div class="pd-title-row"><span class="pd-phase teal">Plan</span><span class="pd-name">MyJourney</span></div>
       <div class="pd-sub">Map your career pathway</div>
     </div>
-    <span class="pd-soon">Coming soon</span>
   </a>
   <div class="pd-divider" role="separator"></div>
   <a class="pd-item" href="/scholarships" onclick="gtag('event','intern_nav_scholar_click')" role="menuitem">

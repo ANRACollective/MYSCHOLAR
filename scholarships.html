@@ -853,14 +853,13 @@ footer strong{color:rgba(255,255,255,.9)}footer a{color:rgba(255,255,255,.5);tex
 
 <!-- Our tools dropdown — position:fixed so it clears sticky nav -->
 <div class="tools-dropdown" id="toolsDropdown" role="menu" aria-label="Our tools">
-  <!-- PLAN: MyJourney — coming soon -->
-  <a class="pd-item pd-dim" href="#" role="menuitem" aria-disabled="true" tabindex="-1">
+  <!-- PLAN: MyJourney — live -->
+  <a class="pd-item" href="/journey" onclick="gtag('event','nav_myjourney_click')" role="menuitem">
     <div class="pd-dot teal" aria-hidden="true"></div>
     <div class="pd-text">
       <div class="pd-title-row"><span class="pd-phase teal">Plan</span><span class="pd-name">MyJourney</span></div>
       <div class="pd-sub">Map your career pathway</div>
     </div>
-    <span class="pd-soon">Coming soon</span>
   </a>
   <div class="pd-divider" role="separator"></div>
   <!-- FUND: MyScholar — current page -->

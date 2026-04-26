@@ -521,14 +521,7 @@ nav {
 }
 .prod-card:hover .prod-cta-launch { color: var(--sky); }
 
-/* MyJourney coming soon — muted teal, not clickable */
-.prod-cta-soon {
-  font-size: 11px;
-  font-weight: 500;
-  color: rgba(0,168,120,0.45);
-  cursor: default;
-  letter-spacing: .04em;
-}
+/* prod-cta-soon removed — MyJourney is now live */
 
 /* ─────────────────────────────────────────────
    ABOUT SECTION
@@ -987,7 +980,7 @@ footer {
 <!-- ── OUR TOOLS DROPDOWN ──────────────────────────────── -->
 <div class="tools-dropdown" id="toolsDropdown" role="menu">
 
-  <a href="#" class="pd-item" role="menuitem">
+  <a href="/journey" class="pd-item" onclick="gtag('event','nav_myjourney_click')" role="menuitem">
     <div class="pd-dot teal"></div>
     <div class="pd-text">
       <div class="pd-title-row">
@@ -996,7 +989,6 @@ footer {
       </div>
       <div class="pd-desc" data-i18n="planDesc">Map your career pathway</div>
     </div>
-    <div class="pd-badge soon" data-i18n="comingSoon">Coming soon</div>
   </a>
 
   <div class="pd-divider"></div>
@@ -1069,14 +1061,14 @@ footer {
 <section class="products">
   <div class="products-grid">
 
-    <!-- PLAN: MyJourney — not live yet -->
-    <a href="#" class="prod-card">
+    <!-- PLAN: MyJourney — live -->
+    <a href="journey" class="prod-card">
       <div class="prod-phase teal" data-i18n="phasePlan">Plan</div>
       <div class="prod-name">MyJourney</div>
       <p class="prod-desc">
         <span data-i18n="planCardDesc">Not sure what to do after SPM? Answer a few questions and find careers that fit you.</span>
       </p>
-      <div class="prod-cta prod-cta-soon" data-i18n="comingSoon">Coming soon</div>
+      <div class="prod-cta" data-i18n="planCta">Explore careers →</div>
     </a>
 
     <!-- FUND: MyScholar (current — active state) -->
@@ -1232,6 +1224,7 @@ const TRANSLATIONS = {
     fundDesc:      'Find scholarships for your studies',
     launchDesc:    'Discover internship opportunities',
     comingSoon:    'Coming soon',
+    planCta:       'Explore careers →',
     hereLabel:     'Here',
     phasePlan:     'Plan',
     phaseFund:     'Fund',
