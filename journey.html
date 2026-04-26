@@ -7950,22 +7950,6 @@ nav{position:sticky;top:0;z-index:200;background:#0d1f11;padding:0 20px;display:
     document.querySelectorAll('.lt-opt').forEach(b => b.classList.remove('active'));
     document.getElementById('lt-' + lang).classList.add('active');
   }
-
-  function track(event, params) {
-    // Map internal event names to GA4 event names
-    const GA4_MAP = {
-      career_view:        'career_viewed',
-      career_search:      'journey_search',
-      coming_soon_view:   'journey_coming_soon_view',
-      coming_soon_notify: 'journey_notify_signup',
-      page_view:          null  // skip — GA4 handles page_view automatically
-    };
-    const ga4Event = GA4_MAP.hasOwnProperty(event) ? GA4_MAP[event] : event;
-    if (ga4Event && typeof gtag !== 'undefined') gtag('event', ga4Event, params || {});
-  }
-
-  document.addEventListener('DOMContentLoaded', () => { renderCareerList(); renderBookmarkStrip(); });
 </script>
-
 </body>
 </html>

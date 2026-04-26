@@ -152,6 +152,8 @@ nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:
 .d-teal{background:#00a878}.d-coral{background:#e8551e}.d-sky{background:#38bdf8}
 .tools-btn{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:6px 12px;font-size:12px;font-weight:600;color:rgba(255,255,255,.75);font-family:var(--sans);cursor:pointer;transition:background .18s,border-color .18s,color .18s;position:relative;flex-shrink:0;min-height:36px}
 .tools-btn:hover{background:rgba(255,255,255,.1);color:#fff}
+.nav-active-indicator{position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);width:20px;height:2px;background:#e8551e;border-radius:2px;opacity:0}
+.tools-btn.active-product .nav-active-indicator{opacity:1}
 .chevron{color:rgba(255,255,255,.5);transition:transform .2s;flex-shrink:0}
 .tools-btn.open .chevron{transform:rotate(180deg)}
 .tools-dropdown{position:fixed;top:56px;left:20px;background:#0f1f3d;border:1px solid rgba(255,255,255,.12);border-radius:14px;width:280px;padding:10px;box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.04);z-index:300;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s}
