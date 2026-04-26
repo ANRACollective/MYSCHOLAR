@@ -7950,6 +7950,8 @@ nav{position:sticky;top:0;z-index:200;background:#0d1f11;padding:0 20px;display:
     document.querySelectorAll('.lt-opt').forEach(b => b.classList.remove('active'));
     document.getElementById('lt-' + lang).classList.add('active');
   }
+
+  document.addEventListener('DOMContentLoaded', () => { renderCareerList(); renderBookmarkStrip(); });
 </script>
 </body>
 </html>
