@@ -1159,25 +1159,25 @@ nav{position:sticky;top:0;z-index:200;background:#0d1f11;padding:0 20px;display:
     { id: 'physiotherapist',   name: 'Physiotherapist',     hook: 'Help people move and recover',        cat: 'health', built: true  },
 
     /* Health */
-    { id: 'radiographer',       name: 'Radiographer',          hook: 'Read the body from the inside',       cat: 'health',   built: true  },
-    { id: 'dietitian',          name: 'Dietitian',             hook: 'Food as medicine',                    cat: 'health',   built: true  },
+    { id: 'radiographer',       name: 'Radiographer',          hook: 'Read the body from the inside',       cat: 'health',   built: false  },
+    { id: 'dietitian',          name: 'Dietitian',             hook: 'Food as medicine',                    cat: 'health',   built: false  },
     { id: 'optometrist',        name: 'Optometrist',           hook: 'Sight, precision, primary care',      cat: 'health',   built: true  },
     { id: 'biomedical-sci',     name: 'Biomedical Scientist',  hook: 'Lab work that saves lives',           cat: 'health',   built: true  },
-    { id: 'occ-therapist',      name: 'Occupational Therapist',hook: 'Help people live independently',      cat: 'health',   built: true  },
+    { id: 'occ-therapist',      name: 'Occupational Therapist',hook: 'Help people live independently',      cat: 'health',   built: false  },
 
     /* Creative */
     { id: 'animator',           name: 'Animator',              hook: 'Make things move and feel alive',     cat: 'creative', built: true  },
     { id: 'pilot',              name: 'Pilot',                 hook: 'Fly for a living',                    cat: 'creative', built: true  },
-    { id: 'barista',            name: 'Barista',               hook: 'Craft in a cup',                      cat: 'creative', built: true  },
+    { id: 'barista',            name: 'Barista',               hook: 'Craft in a cup',                      cat: 'creative', built: false  },
     { id: 'baker',              name: 'Baker',                 hook: 'Build a business from scratch',       cat: 'creative', built: true  },
-    { id: 'tattoo-artist',      name: 'Tattoo Artist',         hook: 'Art that lasts a lifetime',           cat: 'creative', built: true  },
+    { id: 'tattoo-artist',      name: 'Tattoo Artist',         hook: 'Art that lasts a lifetime',           cat: 'creative', built: false  },
     { id: 'photographer',       name: 'Photographer',          hook: 'Capture what others walk past',       cat: 'creative', built: true  },
 
     /* Engineering */
     { id: 'engineer-petro',     name: 'Petroleum Engineer',    hook: 'Oil, gas, and high stakes',           cat: 'eng',      built: true  },
     { id: 'engineer-struct',    name: 'Structural Engineer',   hook: 'Make buildings stand',                cat: 'eng',      built: true  },
-    { id: 'engineer-environ',   name: 'Environmental Engineer',hook: 'Clean water, clean air',              cat: 'eng',      built: true  },
-    { id: 'engineer-electronic',name: 'Electronics Engineer',  hook: 'Circuits, chips, and systems',        cat: 'eng',      built: true  },
+    { id: 'engineer-environ',   name: 'Environmental Engineer',hook: 'Clean water, clean air',              cat: 'eng',      built: false  },
+    { id: 'engineer-electronic',name: 'Electronics Engineer',  hook: 'Circuits, chips, and systems',        cat: 'eng',      built: false  },
 
     /* Tech */
     { id: 'cybersecurity',      name: 'Cybersecurity Analyst', hook: 'Defend systems, find weaknesses',     cat: 'tech',     built: true  },
@@ -1185,17 +1185,17 @@ nav{position:sticky;top:0;z-index:200;background:#0d1f11;padding:0 20px;display:
     { id: 'cloud-engineer',     name: 'Cloud Engineer',        hook: 'Build the infrastructure of now',     cat: 'tech',     built: true  },
 
     /* Business */
-    { id: 'property-agent',     name: 'Property Agent',        hook: 'Commission, hustle, big deals',       cat: 'biz',      built: true  },
+    { id: 'property-agent',     name: 'Property Agent',        hook: 'Commission, hustle, big deals',       cat: 'biz',      built: false  },
     { id: 'hr-manager',         name: 'HR Manager',            hook: 'People are the business',             cat: 'biz',      built: true  },
     { id: 'entrepreneur',       name: 'Entrepreneur',          hook: 'Build something from nothing',        cat: 'biz',      built: true  },
     { id: 'financial-planner',  name: 'Financial Planner',     hook: 'Help people keep what they earn',     cat: 'biz',      built: true  },
-    { id: 'logistics-manager',  name: 'Logistics Manager',     hook: 'Move everything on time',             cat: 'biz',      built: true  },
+    { id: 'logistics-manager',  name: 'Logistics Manager',     hook: 'Move everything on time',             cat: 'biz',      built: false  },
 
     /* Law & Society */
     { id: 'social-worker',      name: 'Social Worker',         hook: 'Stand between people and crisis',     cat: 'law',      built: true  },
     { id: 'counsellor',         name: 'Counsellor',            hook: 'Registered therapy that changes lives',cat: 'law',     built: true  },
-    { id: 'legal-executive',    name: 'Legal Executive',       hook: 'Law without the courtroom',           cat: 'law',      built: true  },
-    { id: 'probation-officer',  name: 'Probation Officer',     hook: 'Rehabilitation over punishment',      cat: 'law',      built: true  },
+    { id: 'legal-executive',    name: 'Legal Executive',       hook: 'Law without the courtroom',           cat: 'law',      built: false  },
+    { id: 'probation-officer',  name: 'Probation Officer',     hook: 'Rehabilitation over punishment',      cat: 'law',      built: false  },
 
     /* TVET */
     { id: 'plumber',            name: 'Plumber',               hook: 'Essential, skilled, always needed',   cat: 'tvet',     built: true  },
@@ -1204,8 +1204,8 @@ nav{position:sticky;top:0;z-index:200;background:#0d1f11;padding:0 20px;display:
     { id: 'welder',             name: 'Welder',                hook: 'Fuse steel, build the world',         cat: 'tvet',     built: true  },
     { id: 'it-support',         name: 'IT Support Technician', hook: 'Fix it fast',                         cat: 'tvet',     built: true  },
     { id: 'beautician',         name: 'Beautician',            hook: 'Skills that go anywhere',             cat: 'tvet',     built: true  },
-    { id: 'drone-pilot',        name: 'Drone Pilot',           hook: 'A new kind of licence to fly',        cat: 'tvet',     built: true  },
-    { id: 'carpenter',          name: 'Carpenter',             hook: 'Wood, craft, and your own hands',     cat: 'tvet',     built: true  },
+    { id: 'drone-pilot',        name: 'Drone Pilot',           hook: 'A new kind of licence to fly',        cat: 'tvet',     built: false  },
+    { id: 'carpenter',          name: 'Carpenter',             hook: 'Wood, craft, and your own hands',     cat: 'tvet',     built: false  },
 
     /* Government */
     { id: 'ptd-officer',        name: 'PTD Officer',           hook: 'Run the machinery of government',     cat: 'gov',      built: true  },
