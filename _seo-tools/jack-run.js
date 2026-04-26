@@ -166,6 +166,15 @@ try {
   console.log('  Wave 14: not found, skipping');
 }
 
+// Wave 15: from wave15.js (PTD/drone/trades/F&B careers, scholarship comparisons, internship gaps)
+try {
+  const w15 = require('./wave15.js');
+  KEYWORDS.push(...w15);
+  console.log('  Wave 15: ' + w15.length + ' keywords');
+} catch(e) {
+  console.log('  Wave 15: not found, skipping');
+}
+
 
 console.log('  Total: ' + KEYWORDS.length + ' keywords');
 console.log('');

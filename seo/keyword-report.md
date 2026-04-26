@@ -1,6 +1,6 @@
 # JACK SEO Keyword Report -- MyScholar.my
-Generated: 2026-04-26T18:10:47.169Z
-Total landing pages: 459
+Generated: 2026-04-26T18:43:29.481Z
+Total landing pages: 488
 
 ## biasiswa-malaysia-2026
 Type: scholarship
@@ -3214,4 +3214,207 @@ Primary EN: cara nak jadi pengurus logistik Malaysia
 Primary BM: cara jadi logistics manager Malaysia 2026
 Long-tail EN: how to become a logistics manager in Malaysia | supply chain career Malaysia 2026 | logistics degree Malaysia | freight forwarding career Malaysia | logistics manager salary Malaysia 2026
 Long-tail BM: syarat jadi pengurus logistik Malaysia | kerjaya rantaian bekalan Malaysia 2026 | ijazah logistik Malaysia | kerjaya penghantaran barang Malaysia | gaji pengurus logistik Malaysia
+
+## cara-jadi-pegawai-tadbir-diplomatik-malaysia
+Type: journey
+Primary EN: how to become PTD officer Malaysia
+Primary BM: cara jadi pegawai tadbir diplomatik malaysia
+Long-tail EN: PTD officer requirements Malaysia 2026 | PTD exam Malaysia | Pegawai Tadbir Diplomatik salary | civil service Malaysia career | how to join PTD
+Long-tail BM: syarat jadi pegawai tadbir diplomatik | peperiksaan PTD malaysia | gaji PTD 2026 | kerjaya perkhidmatan awam malaysia | cara masuk PTD
+
+## cara-jadi-juruterbang-dron-malaysia
+Type: journey
+Primary EN: how to become drone pilot Malaysia
+Primary BM: cara jadi juruterbang dron malaysia
+Long-tail EN: drone pilot license Malaysia 2026 | CAAM drone certification | UAV operator Malaysia | drone pilot salary Malaysia | commercial drone Malaysia career
+Long-tail BM: lesen juruterbang dron malaysia | sijil UAV malaysia | gaji pilot dron 2026 | kerjaya dron di malaysia | cara dapat lesen dron
+
+## cara-jadi-jurutera-elektronik-malaysia
+Type: journey
+Primary EN: how to become electronics engineer Malaysia
+Primary BM: cara jadi jurutera elektronik malaysia
+Long-tail EN: electronics engineering degree Malaysia 2026 | semiconductor engineer Malaysia | Penang electronics career | electronics engineer salary Malaysia | BEng electronics Malaysia
+Long-tail BM: ijazah jurutera elektronik malaysia | jurutera semikonduktor malaysia | kerjaya elektronik pulau pinang | gaji jurutera elektronik 2026 | universiti terbaik elektronik malaysia
+
+## cara-jadi-jurutera-struktur-malaysia
+Type: journey
+Primary EN: how to become structural engineer Malaysia
+Primary BM: cara jadi jurutera struktur malaysia
+Long-tail EN: structural engineering degree Malaysia 2026 | structural engineer salary Malaysia | IEM Malaysia structural | PE structural engineer Malaysia | structural vs civil engineer Malaysia
+Long-tail BM: ijazah jurutera struktur malaysia | gaji jurutera struktur 2026 | perbezaan jurutera sivil dan struktur | pendaftaran IEM malaysia | kerjaya jurutera bangunan malaysia
+
+## cara-jadi-jurutera-alam-sekitar-malaysia
+Type: journey
+Primary EN: how to become environmental engineer Malaysia
+Primary BM: cara jadi jurutera alam sekitar malaysia
+Long-tail EN: environmental engineering degree Malaysia 2026 | DOE Malaysia engineer | environmental engineer salary Malaysia | sustainability engineer Malaysia | EIA specialist Malaysia
+Long-tail BM: ijazah jurutera alam sekitar malaysia | kerjaya alam sekitar malaysia | gaji jurutera alam sekitar 2026 | pakar EIA malaysia | kerjaya kelestarian alam malaysia
+
+## cara-jadi-anggota-bomba-malaysia
+Type: journey
+Primary EN: how to become firefighter Malaysia
+Primary BM: cara jadi anggota bomba malaysia
+Long-tail EN: JBPM Malaysia requirements 2026 | Jabatan Bomba firefighter application | firefighter salary Malaysia | bomba exam Malaysia | fire rescue officer Malaysia
+Long-tail BM: syarat masuk bomba malaysia 2026 | cara mohon jawatan bomba | gaji anggota bomba 2026 | peperiksaan JBPM malaysia | kerjaya bomba dan penyelamat malaysia
+
+## cara-jadi-pegawai-probasi-malaysia
+Type: journey
+Primary EN: how to become probation officer Malaysia
+Primary BM: cara jadi pegawai akhlak malaysia
+Long-tail EN: probation officer Malaysia JKM 2026 | pegawai akhlak requirements | social rehabilitation Malaysia career | probation officer salary Malaysia | Jabatan Kebajikan Masyarakat officer
+Long-tail BM: syarat pegawai akhlak malaysia 2026 | kerjaya pemulihan sosial malaysia | gaji pegawai akhlak 2026 | JKM pegawai malaysia | cara masuk jabatan penjara malaysia
+
+## cara-jadi-sokongan-it-malaysia
+Type: journey
+Primary EN: how to become IT support technician Malaysia
+Primary BM: cara jadi sokongan IT malaysia
+Long-tail EN: IT support career Malaysia 2026 | helpdesk technician Malaysia | IT support salary Malaysia | CompTIA A+ Malaysia | entry level IT job Malaysia
+Long-tail BM: kerjaya sokongan IT malaysia | technician IT gaji 2026 | CompTIA Malaysia | kerja IT tanpa ijazah malaysia | sokongan teknikal IT malaysia
+
+## cara-jadi-tukang-paip-malaysia
+Type: journey
+Primary EN: how to become plumber Malaysia
+Primary BM: cara jadi tukang paip malaysia
+Long-tail EN: plumber license Malaysia 2026 | CIDB plumber certification | plumber salary Malaysia | plumbing trade Malaysia career | gas pipe license Malaysia
+Long-tail BM: lesen tukang paip malaysia 2026 | sijil CIDB paip | gaji tukang paip malaysia | kerjaya paip malaysia | cara dapat lesen gas malaysia
+
+## cara-jadi-tukang-kayu-malaysia
+Type: journey
+Primary EN: how to become carpenter Malaysia
+Primary BM: cara jadi tukang kayu malaysia
+Long-tail EN: carpenter training Malaysia 2026 | CIDB woodwork certification | carpenter salary Malaysia | furniture making career Malaysia | interior fit-out carpenter Malaysia
+Long-tail BM: latihan tukang kayu malaysia | sijil pertukangan kayu CIDB | gaji tukang kayu 2026 | kerjaya perabot malaysia | tukang kayu dalaman malaysia
+
+## cara-jadi-tukang-kimpalan-malaysia
+Type: journey
+Primary EN: how to become welder Malaysia
+Primary BM: cara jadi tukang kimpalan malaysia
+Long-tail EN: welder certification Malaysia 2026 | CIDB welding SKM | welder salary Malaysia | offshore welder Malaysia | welding career oil gas Malaysia
+Long-tail BM: sijil kimpalan CIDB malaysia | gaji tukang kimpalan 2026 | kimpalan offshore malaysia | kerjaya kimpalan minyak gas | latihan kimpalan ILP malaysia
+
+## cara-jadi-baker-pastri-malaysia
+Type: journey
+Primary EN: how to become baker pastry chef Malaysia
+Primary BM: cara jadi baker pastri malaysia
+Long-tail EN: bakery career Malaysia 2026 | pastry chef training Malaysia | baker salary Malaysia | artisan bakery Malaysia | baking diploma Malaysia
+Long-tail BM: kerjaya baker malaysia | kursus pastri malaysia | gaji baker 2026 | bakeri artisan malaysia | diploma bakeri dan pastri malaysia
+
+## cara-jadi-barista-malaysia
+Type: journey
+Primary EN: how to become barista Malaysia
+Primary BM: cara jadi barista malaysia
+Long-tail EN: barista training Malaysia 2026 | SCA barista certification Malaysia | barista salary Malaysia | specialty coffee career Malaysia | barista competition Malaysia
+Long-tail BM: kursus barista malaysia | sijil SCA malaysia | gaji barista 2026 | kerjaya kopi malaysia | latihan barista KL
+
+## cara-jadi-pakar-kecantikan-malaysia
+Type: journey
+Primary EN: how to become beautician Malaysia
+Primary BM: cara jadi pakar kecantikan malaysia
+Long-tail EN: beautician license Malaysia 2026 | beauty therapy course Malaysia | nail technician Malaysia | makeup artist career Malaysia | lash technician Malaysia
+Long-tail BM: kursus kecantikan malaysia | lesen pakar kecantikan 2026 | gaji beauty therapist malaysia | kerjaya makeup artis malaysia | kursus nail art malaysia
+
+## biasiswa-vs-ptptn-2026
+Type: scholarship
+Primary EN: scholarship vs PTPTN Malaysia 2026
+Primary BM: biasiswa vs ptptn malaysia 2026
+Long-tail EN: PTPTN loan vs scholarship difference Malaysia | should I apply biasiswa or PTPTN | PTPTN repayment 2026 | scholarship no loan Malaysia | biasiswa tanpa bayar balik vs ptptn
+Long-tail BM: perbezaan biasiswa dan ptptn | ptptn vs biasiswa mana lebih baik | bayar balik ptptn 2026 | biasiswa tanpa ptptn malaysia | cara elak ptptn malaysia
+
+## jpa-vs-mara-biasiswa-2026
+Type: scholarship
+Primary EN: JPA vs MARA scholarship Malaysia 2026
+Primary BM: biasiswa jpa vs mara 2026
+Long-tail EN: difference JPA and MARA scholarship Malaysia | JPA scholarship requirements 2026 | MARA scholarship eligibility | which is better JPA or MARA | government scholarship Malaysia comparison
+Long-tail BM: perbezaan biasiswa jpa dan mara | kelayakan biasiswa jpa 2026 | biasiswa mara syarat 2026 | jpa atau mara mana lebih baik | biasiswa kerajaan terbaik malaysia
+
+## biasiswa-mei-jun-2026
+Type: scholarship
+Primary EN: scholarship open May June 2026 Malaysia
+Primary BM: biasiswa buka mei jun 2026
+Long-tail EN: scholarships closing May 2026 Malaysia | June 2026 scholarship deadline Malaysia | SPM results scholarship 2026 | new scholarship opening 2026 | biasiswa lepasan SPM 2026 result
+Long-tail BM: biasiswa tutup mei 2026 | tarikh tutup biasiswa jun 2026 | biasiswa lepasan spm result baru 2026 | biasiswa buka selepas spm 2026 | biasiswa open may june malaysia
+
+## biasiswa-spm-result-rendah-2026
+Type: scholarship
+Primary EN: scholarship for low SPM results Malaysia 2026
+Primary BM: biasiswa result spm rendah 2026
+Long-tail EN: scholarship with bad SPM results Malaysia | scholarship without straight A's Malaysia 2026 | biasiswa SPM 5A ke bawah | scholarship despite poor grades Malaysia | can I get scholarship with 3A Malaysia
+Long-tail BM: biasiswa walaupun result spm teruk | biasiswa tanpa 10A malaysia 2026 | biasiswa dengan 5a sahaja | boleh dapat biasiswa dengan result biasa | biasiswa tidak perlu result cemerlang
+
+## biasiswa-tanpa-syarat-cgpa-malaysia-2026
+Type: scholarship
+Primary EN: scholarship without CGPA requirement Malaysia 2026
+Primary BM: biasiswa tanpa syarat cgpa malaysia 2026
+Long-tail EN: scholarship no minimum CGPA Malaysia | scholarship for diploma students low CGPA | biasiswa CGPA 2.0 ke bawah Malaysia | scholarship regardless of grades Malaysia | scholarship for average students Malaysia 2026
+Long-tail BM: biasiswa tak perlu cgpa tinggi | biasiswa cgpa 2.0 malaysia | biasiswa untuk pelajar sederhana | biasiswa tanpa syarat akademik ketat | biasiswa tanpa cgpa minimum 2026
+
+## biasiswa-amanah-raya-malaysia-2026
+Type: scholarship
+Primary EN: Amanah Raya scholarship Malaysia 2026
+Primary BM: biasiswa amanah raya malaysia 2026
+Long-tail EN: ARB scholarship 2026 Malaysia | Amanah Raya Berhad education fund | wakaf scholarship Malaysia | trust fund scholarship Malaysia 2026 | biasiswa wakaf pendidikan malaysia
+Long-tail BM: biasiswa ARB 2026 | dana pendidikan amanah raya | biasiswa wakaf malaysia | tabung amanah pendidikan malaysia 2026 | permohonan biasiswa amanah raya
+
+## biasiswa-untuk-pelajar-luar-bandar-2026
+Type: scholarship
+Primary EN: scholarship for rural students Malaysia 2026
+Primary BM: biasiswa pelajar luar bandar malaysia 2026
+Long-tail EN: scholarship kampung students Malaysia 2026 | rural scholarship Malaysia | biasiswa untuk anak kampung | MARA rural student scholarship | scholarship Sabah Sarawak rural 2026
+Long-tail BM: biasiswa anak kampung malaysia 2026 | biasiswa luar bandar sabah sarawak | bantuan pendidikan pelajar desa | biasiswa untuk kawasan pedalaman malaysia | skim bantuan pelajar luar bandar
+
+## startup-internship-malaysia-2026
+Type: internship
+Primary EN: startup internship Malaysia 2026
+Primary BM: internship startup malaysia 2026
+Long-tail EN: tech startup internship Kuala Lumpur 2026 | fintech startup internship Malaysia | startup jobs Malaysia students | Cradle MBAN startup internship | early stage startup internship KL
+Long-tail BM: latihan industri startup malaysia | internship syarikat permulaan kl 2026 | peluang intern startup teknologi malaysia | startup fintech intern malaysia | internship di startup malaysia
+
+## it-support-internship-malaysia-2026
+Type: internship
+Primary EN: IT support internship Malaysia 2026
+Primary BM: internship sokongan it malaysia 2026
+Long-tail EN: helpdesk internship Malaysia 2026 | IT technician internship Malaysia | entry level IT internship KL | technical support intern Malaysia | diploma IT internship Malaysia
+Long-tail BM: internship IT diploma malaysia | latihan industri IT support 2026 | internship juruteknik IT malaysia | intern helpdesk KL 2026 | peluang internship IT tanpa ijazah
+
+## game-development-internship-malaysia-2026
+Type: internship
+Primary EN: game development internship Malaysia 2026
+Primary BM: internship pembangunan permainan malaysia 2026
+Long-tail EN: game dev intern Malaysia 2026 | Unity developer internship Malaysia | mobile game internship KL | gaming company internship Malaysia | game designer intern Malaysia
+Long-tail BM: intern game developer malaysia | internship syarikat permainan malaysia | latihan industri game dev 2026 | intern unity malaysia | peluang internship gaming KL
+
+## e-commerce-internship-malaysia-2026
+Type: internship
+Primary EN: e-commerce internship Malaysia 2026
+Primary BM: internship e-dagang malaysia 2026
+Long-tail EN: Shopee internship Malaysia 2026 | Lazada internship Malaysia 2026 | e-commerce operations intern KL | marketplace internship Malaysia | digital commerce intern Malaysia
+Long-tail BM: intern Shopee malaysia 2026 | intern Lazada malaysia 2026 | internship operasi e-dagang KL | intern marketplace malaysia | latihan industri e-dagang 2026
+
+## pharmaceutical-internship-malaysia-2026
+Type: internship
+Primary EN: pharmaceutical internship Malaysia 2026
+Primary BM: internship farmasi malaysia 2026
+Long-tail EN: pharma intern Malaysia 2026 | pharmacy industry internship Malaysia | clinical research internship Malaysia | Pharmaniaga internship | Duopharma internship Malaysia
+Long-tail BM: intern farmasi industri malaysia | latihan industri farmasi 2026 | internship penyelidikan klinikal malaysia | intern pharmaniaga malaysia | internship kilang ubat malaysia
+
+## broadcast-media-internship-malaysia-2026
+Type: internship
+Primary EN: broadcast media internship Malaysia 2026
+Primary BM: internship media penyiaran malaysia 2026
+Long-tail EN: RTM internship Malaysia 2026 | Astro internship Malaysia | media intern KL 2026 | journalism internship Malaysia | TV production internship Malaysia
+Long-tail BM: intern RTM malaysia 2026 | internship Astro malaysia | latihan industri media penyiaran | intern kewartawanan malaysia | internship produksi TV malaysia
+
+## kerjaya-bidang-undang-undang-malaysia
+Type: journey
+Primary EN: law career paths Malaysia 2026
+Primary BM: kerjaya bidang undang-undang malaysia
+Long-tail EN: what can you do with law degree Malaysia | LLB career options Malaysia | legal career Malaysia 2026 | lawyer vs legal executive Malaysia | law courses Malaysia 2026
+Long-tail BM: kerjaya dengan ijazah undang-undang | pilihan kerjaya LLB malaysia | kerjaya guaman malaysia 2026 | undang-undang apa boleh buat kerja | bidang undang-undang malaysia
+
+## kerjaya-bidang-teknologi-maklumat-malaysia
+Type: journey
+Primary EN: IT career paths Malaysia 2026
+Primary BM: kerjaya bidang teknologi maklumat malaysia
+Long-tail EN: what IT jobs are in demand Malaysia 2026 | tech career options Malaysia | computer science career Malaysia | IT degree career Malaysia | highest paying IT jobs Malaysia 2026
+Long-tail BM: kerjaya IT yang diperlukan malaysia 2026 | pilihan kerjaya teknologi maklumat | ijazah sains komputer boleh jadi apa | kerja IT gaji tinggi malaysia 2026 | bidang IT terbaik malaysia
 
