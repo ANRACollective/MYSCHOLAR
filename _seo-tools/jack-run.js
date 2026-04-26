@@ -17,7 +17,7 @@ const path = require('path');
 
 const BASEDIR = path.resolve(__dirname);
 // Use a temp output dir if the target dir has filesystem limits, then copy
-const OUT = process.env.JACK_OUT || path.join(BASEDIR, 'seo');
+const OUT = process.env.JACK_OUT || path.join(BASEDIR, '../seo');
 try { fs.mkdirSync(OUT, { recursive: true }); } catch(e) {}
 console.log('  Base dir: ' + BASEDIR);
 console.log('  Output dir: ' + OUT);
@@ -152,6 +152,20 @@ try {
   console.log('  Wave 13: not found, skipping');
 }
 
+// Wave 14: from wave14.js (MyJourney career expansion — remaining journey.html career IDs)
+// Created: 2026-04-27 — 5 pillars: high-demand professional (pilot/cybersecurity/cloud/financial planner/HR/property agent/dietitian/UX/petro engineer/entrepreneur),
+// government & uniformed (police/military/customs/diplomat/social worker),
+// creative & trades (animator/photographer/auto mechanic/HVAC),
+// allied health (OT/biomedical/counsellor/legal executive),
+// journey discovery (government careers/TVET/no-degree/science students/logistics manager)
+try {
+  const w14 = require('./wave14.js');
+  KEYWORDS.push(...w14);
+  console.log('  Wave 14: ' + w14.length + ' keywords');
+} catch(e) {
+  console.log('  Wave 14: not found, skipping');
+}
+
 
 console.log('  Total: ' + KEYWORDS.length + ' keywords');
 console.log('');
@@ -192,7 +206,7 @@ function buildHTML(entry, relatedPages) {
   const isTuition = entry.type === 'tuition';
   // Color per type: scholarship=coral, internship=amber, tuition=terracotta
   const mainColor = isInternship ? '#ffb347' : isTuition ? '#b85c3a' : '#e8551e';
-  const canonicalUrl = 'https://myscholar.my/' + entry.slug;
+  const canonicalUrl = 'https://myscholar.my/seo/' + entry.slug;
   const kw = entry.keywords;
   const m = entry.meta;
   const l = entry.landing;
@@ -458,7 +472,7 @@ KEYWORDS.forEach(function(entry) {
     primary_en: entry.keywords.primary,
     primary_bm: entry.keywords.primary_bm,
     title: entry.meta.title,
-    canonical: 'https://myscholar.my/' + entry.slug,
+    canonical: 'https://myscholar.my/seo/' + entry.slug,
     dateGenerated: new Date().toISOString().split('T')[0]
   });
 });
@@ -466,11 +480,10 @@ KEYWORDS.forEach(function(entry) {
 // Sitemap
 let sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
 sitemap += '  <url><loc>https://myscholar.my</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>\n';
-manifest.forEach(function(m) {
-  // Tuition pages get weekly changefreq — new product, needs fast indexing
-  var freq = m.type === 'tuition' ? 'weekly' : 'monthly';
-  var priority = m.type === 'tuition' ? '0.9' : '0.8';
-  sitemap += '  <url><loc>' + m.canonical + '</loc><changefreq>' + freq + '</changefreq><priority>' + priority + '</priority></url>\n';
+sitemap += '  <url><loc>https://myscholar.my/internships</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>\n';
+sitemap += '  <url><loc>https://myscholar.my/journey</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>\n';
+KEYWORDS.forEach(function(entry) {
+  sitemap += '  <url><loc>https://myscholar.my/seo/' + entry.slug + '</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>\n';
 });
 sitemap += '</urlset>';
 fs.writeFileSync(path.join(OUT, 'sitemap-seo.xml'), sitemap, 'utf8');
