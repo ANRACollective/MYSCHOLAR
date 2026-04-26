@@ -7553,7 +7553,7 @@ nav{position:sticky;top:0;z-index:200;background:#0d1f11;padding:0 20px;display:
       email,
       career_id: currentCareer,
       career_name: careerName
-    }).then({ error }) => {
+    }).then(({ error }) => {
       if (error) console.warn('Supabase insert error:', error);
     });
     track('coming_soon_notify', { career_id: currentCareer });
