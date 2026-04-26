@@ -102,6 +102,7 @@ button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 nav{position:sticky;top:0;z-index:200;background:#0d1f11;padding:0 20px;display:flex;align-items:center;gap:10px;height:52px;border-bottom:2px solid var(--coral);width:100%;max-width:100%;overflow:hidden}
 .nav-brand{font-family:var(--serif);font-size:24px;letter-spacing:-.4px;text-decoration:none;color:#fff;font-weight:900;transition:opacity .2s;flex-shrink:0}
 .nav-brand .coral{color:var(--coral)}
+.nav-brand .teal{color:var(--teal)}
 .nav-divider{width:1px;height:20px;background:rgba(255,255,255,.15);flex-shrink:0;margin:0 4px}
 .tools-btn{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:6px 12px;font-size:12px;font-weight:600;color:rgba(255,255,255,.75);font-family:var(--sans);cursor:pointer;transition:background .18s,border-color .18s,color .18s;position:relative;flex-shrink:0;min-height:36px}
 .tools-btn:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.22);color:#fff}
@@ -1005,7 +1006,7 @@ nav{position:sticky;top:0;z-index:200;background:#0d1f11;padding:0 20px;display:
 
 <a class="skip-nav" href="#mainContent">Skip to content</a>
 <nav>
-  <a class="nav-brand" href="/">My<span class="coral">Scholar</span></a>
+  <a class="nav-brand" href="/">My<span class="teal">Journey</span></a>
   <div class="nav-divider" aria-hidden="true"></div>
   <button class="tools-btn active-product" id="toolsBtn" onclick="toggleDropdown()" aria-haspopup="true" aria-expanded="false" aria-controls="toolsDropdown">
     <div class="dot-trio" aria-hidden="true">
