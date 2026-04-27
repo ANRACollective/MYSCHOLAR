@@ -188,14 +188,17 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
     repeating-linear-gradient(90deg, rgba(255,255,255,.012) 0, rgba(255,255,255,.012) 1px, transparent 1px, transparent 80px),
     repeating-linear-gradient(0deg,  rgba(255,255,255,.012) 0, rgba(255,255,255,.012) 1px, transparent 1px, transparent 80px);
 }
+.home-hero {
+  text-align: center;
+}
 .home-hero h1 {
   font-family: var(--serif);
-  font-size: 28px;
+  font-size: clamp(32px, 5vw, 56px);
   font-weight: 900;
   color: #fff;
   letter-spacing: -.4px;
-  line-height: 1.2;
-  margin-bottom: 4px;
+  line-height: 1.1;
+  margin-bottom: 10px;
 }
 .home-hero h1 .gold { color: var(--gold); }
 .home-hero p { font-size: 14px; color: rgba(255,255,255,.5); font-weight: 300; }
@@ -847,7 +850,7 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
   .app { max-width: 960px; padding: 0 40px 80px; }
   #careerList { display: grid; grid-template-columns: 1fr 1fr; gap: 0 36px; align-items: start; }
   .home-hero { padding: 32px 40px 24px; margin: 0 -40px 20px; }
-  .home-hero h1 { font-size: 34px; }
+  .home-hero h1 { font-size: 30px; }
   .search-wrap, .quiz-nudge, #bookmarkStrip, .note-banner { grid-column: 1 / -1; }
   #page-career, #page-quiz, #page-results, #page-coming-soon { max-width: 640px; margin: 0 auto; }
   .sheet { max-width: 600px; }
@@ -1064,8 +1067,8 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
     <div class="topbar"></div>
 
     <div class="home-hero">
-      <h1>What do you want to <span class="gold">do?</span></h1>
-      <p>Pick a career and see the real routes Malaysian students take.</p>
+      <h1>Find Your <span class="gold">Path.</span></h1>
+      <p>See the real routes Malaysian students take, from SPM to first job.</p>
     </div>
 
     <div class="search-wrap">
