@@ -989,6 +989,18 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
   margin-top: 10px;
   opacity: 0.7;
 }
+/* Journey subscribe strip — career-specific email capture in career detail view */
+.journey-sub { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.09); border-radius: 10px; padding: 24px 20px; margin: 0 16px 16px; text-align: center; }
+.journey-sub p { font-size: 13px; color: rgba(255,255,255,.65); margin-bottom: 12px; line-height: 1.5; }
+.journey-sub-label { font-size: 15px !important; color: var(--t1) !important; font-weight: 600; }
+.journey-sub-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.journey-sub-row input { flex: 1; min-width: 0; max-width: 240px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.15); color: #fff; padding: 9px 12px; border-radius: 6px; font-size: 13px; outline: none; font-family: inherit; }
+.journey-sub-row input::placeholder { color: rgba(255,255,255,.3); }
+.journey-sub-row input:focus { border-color: var(--gold); }
+.journey-sub-row button { background: var(--gold); color: #0f1117; border: none; padding: 9px 18px; border-radius: 6px; font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+.journey-sub-row button:hover { opacity: .88; }
+.journey-sub-fine { font-size: 11px !important; color: rgba(255,255,255,.3) !important; margin-top: 10px; margin-bottom: 0 !important; }
+.journey-sub-ok { font-size: 13px !important; color: var(--gold) !important; margin-top: 8px; margin-bottom: 0 !important; display: none; }
 </style>
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZETBRDDMTV"></script>
@@ -1172,6 +1184,19 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
       <h3>If this half-fits, try these</h3>
       <div class="related-careers" id="relatedCareers"></div>
     </div>
+
+    <!-- Subscribe strip — updated by renderCareerDetail() with career-specific copy -->
+    <div class="journey-sub" id="journeySub">
+      <p class="journey-sub-label" id="journeySubLabel">Get scholarships for this career path.</p>
+      <p>We track what is open and what is closing. One email a month, free.</p>
+      <div class="journey-sub-row">
+        <input type="email" id="journeySubEmail" placeholder="your@email.com" autocomplete="email">
+        <button onclick="submitJourneySub()">Get updates</button>
+      </div>
+      <p class="journey-sub-fine">No spam. Unsubscribe anytime.</p>
+      <p class="journey-sub-ok" id="journeySubOk">Done. We will send you relevant scholarships.</p>
+    </div>
+
     <div class="source-banner">
       <strong>Data sources:</strong> Registration requirements from
       <a href="https://bem.org.my" target="_blank" rel="noopener">BEM</a>,
@@ -7712,6 +7737,32 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
     showPage('page-career');
   }
 
+  // submitJourneySub — subscribe from career detail page.
+  // Writes to Supabase subscribers table with source='journey_<career_id>'.
+  // GA4 event: subscribe_journey_page with career_id for segmentation.
+  function submitJourneySub() {
+    const input = document.getElementById('journeySubEmail');
+    const email = input.value.trim();
+    if (!email || !email.includes('@')) {
+      input.focus();
+      input.style.borderColor = '#ef4444';
+      setTimeout(() => { input.style.borderColor = ''; }, 1500);
+      return;
+    }
+    input.disabled = true;
+    document.querySelector('.journey-sub-row button').disabled = true;
+    const _sb = supabase.createClient('https://ywvfvjvxwhcfprfrkgqm.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl3dmZ2anZ4d2hjZnByZnJrZ3FtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNTQ5MzEsImV4cCI6MjA5MDYzMDkzMX0.5EzrJuW1fdPca2ZEKGPXXgbd_XYDqKzzu6e-iRQT9po');
+    _sb.from('subscribers').insert({
+      email,
+      source: 'journey_' + currentCareer,
+      internship_interest: false
+    }).then(({ error }) => {
+      if (error) console.warn('Supabase insert error:', error);
+      document.getElementById('journeySubOk').style.display = 'block';
+      track('subscribe_journey_page', { career_id: currentCareer });
+    });
+  }
+
   function submitCSEmail() {
     const input = document.getElementById('csEmail');
     const email = input.value.trim();
@@ -7779,6 +7830,14 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
     document.getElementById('careerTitle').textContent = data.title;
     document.getElementById('careerSub').textContent = data.subtitle;
     document.getElementById('careerDescription').textContent = data.description;
+    // Update subscribe strip label to match the current career
+    const subLabelEl = document.getElementById('journeySubLabel');
+    if (subLabelEl) subLabelEl.textContent = 'Get scholarships relevant to ' + data.title.toLowerCase() + '.';
+    // Reset subscribe strip state when switching careers
+    const subEmailEl = document.getElementById('journeySubEmail');
+    const subOkEl = document.getElementById('journeySubOk');
+    if (subEmailEl) { subEmailEl.disabled = false; subEmailEl.value = ''; }
+    if (subOkEl) subOkEl.style.display = 'none';
     const qf = data.quickFacts;
     document.getElementById('quickFacts').innerHTML = `
       <div class="fact"><div class="label">Start pay</div><div class="value salary">${qf.startPay.value}</div><div class="fact-sub">${qf.startPay.sub}</div><span class="salary-est-note">est.</span></div>
@@ -7800,7 +7859,7 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
       <button class="route-chip ${r.id === currentRoute ? 'active' : ''}" data-r="${r.id}" onclick="selectRoute('${r.id}')" aria-label="Route ${r.id}: ${r.word} — ${r.title}">
         <span class="rc-letter">${r.id}</span>
         <span class="rc-word">${r.word}</span>
-        <span class="rc-time">${r.time.split(' ')[0]+'–'+r.time.split(' ').slice(-1)[0]}y</span>
+        <span class="rc-time">${(t => { const n = t.match(/\d+/g)||['']; return t.includes('year') ? (n.length>1?n[0]+'–'+n[1]:n[0])+'y' : t.includes('month') ? (n.length>1?n[0]+'–'+n[1]:n[0])+'m' : t.includes('week') ? n[0]+'w' : t; })(r.time)}</span>
       </button>`).join('');
     document.getElementById('routesSub').textContent = routes.length === 1 ? 'Here is how most students go.' : `Pick one of ${routes.length} routes to see the stages.`;
     const route = routes.find(r => r.id === currentRoute) || routes[0];
