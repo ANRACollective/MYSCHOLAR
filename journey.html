@@ -16,10 +16,10 @@
    ========================================================= */
 :root {
   /* Backgrounds */
-  --bg:        #090f0b;
-  --bg2:       #0f1a11;
-  --bg-card:   #152019;
-  --bg-card-h: #1a2b1d;
+  --bg:        #090d17;
+  --bg2:       #0d1525;
+  --bg-card:   #111d2e;
+  --bg-card-h: #162338;
   --bg-input:  rgba(255,255,255,.06);
 
   /* Text */
@@ -99,7 +99,7 @@ button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 .skip-nav:focus { top: 0; }
 
 /* ── STANDARD NAV ── */
-nav{position:sticky;top:0;z-index:200;background:#0d1f11;padding:0 20px;display:flex;align-items:center;gap:10px;height:52px;border-bottom:2px solid var(--coral);width:100%;max-width:100%;overflow:hidden}
+nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:flex;align-items:center;gap:10px;height:52px;border-bottom:2px solid var(--coral);width:100%;max-width:100%;overflow:hidden}
 .nav-brand{font-family:var(--serif);font-size:24px;letter-spacing:-.4px;text-decoration:none;color:#fff;font-weight:900;transition:opacity .2s;flex-shrink:0}
 .nav-brand .coral{color:var(--coral)}
 .nav-brand .teal{color:var(--teal)}
@@ -115,11 +115,11 @@ nav{position:sticky;top:0;z-index:200;background:#0d1f11;padding:0 20px;display:
 .d-teal{background:var(--teal)}.d-coral{background:var(--coral)}.d-sky{background:var(--sky)}
 .chevron{transition:transform .2s}.tools-btn.open .chevron{transform:rotate(180deg)}
 .lang-toggle{display:flex;align-items:center;gap:0;flex-shrink:0}
-.lt-opt{font-size:11px;font-weight:600;padding:4px 7px;border-radius:4px;cursor:pointer;color:rgba(255,255,255,.32);background:none;border:none;transition:color .15s;letter-spacing:.05em;font-family:var(--sans)}
+.lt-opt{font-size:11px;font-weight:600;min-height:44px;min-width:44px;padding:4px 10px;border-radius:4px;cursor:pointer;color:rgba(255,255,255,.32);background:none;border:none;transition:color .15s;letter-spacing:.05em;font-family:var(--sans);display:inline-flex;align-items:center;justify-content:center}
 .lt-opt.active{color:rgba(255,255,255,.85)}
 .lang-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(12px);background:rgba(20,20,20,.92);color:rgba(255,255,255,.85);font-size:13px;padding:9px 16px;border-radius:20px;pointer-events:none;opacity:0;transition:opacity .2s,transform .2s;z-index:999;white-space:nowrap;backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.1)}
 .lang-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-.tools-dropdown{position:fixed;top:56px;left:20px;background:#0d1f11;border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:10px;width:280px;box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.04);z-index:300;opacity:0;pointer-events:none;transition:opacity .15s}
+.tools-dropdown{position:fixed;top:56px;left:20px;background:#0a1628;border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:10px;width:280px;box-shadow:0 20px 60px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.04);z-index:300;opacity:0;pointer-events:none;transition:opacity .15s}
 .tools-dropdown.open{opacity:1;pointer-events:auto}
 .pd-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:9px;text-decoration:none;transition:background .15s}
 .pd-item:hover{background:rgba(255,255,255,.07)}
@@ -129,7 +129,7 @@ nav{position:sticky;top:0;z-index:200;background:#0d1f11;padding:0 20px;display:
 .pd-phase{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;flex-shrink:0}
 .pd-name{font-size:13px;font-weight:500;color:rgba(255,255,255,.8)}
 .pd-sub{font-size:11px;color:rgba(255,255,255,.38);margin-top:2px}
-.pd-current{font-size:9px;font-weight:700;color:var(--coral);background:rgba(232,85,30,.1);border-radius:4px;padding:2px 6px;flex-shrink:0}
+.pd-current{font-size:11px;font-weight:700;color:var(--coral);background:rgba(232,85,30,.1);border-radius:4px;padding:2px 6px;flex-shrink:0}
 .pd-divider{height:1px;background:rgba(255,255,255,.07);margin:4px 12px}
 .phase-teal{color:var(--teal)}.phase-coral{color:var(--coral)}.phase-sky{color:var(--sky)}
 @media(max-width:680px){.nav-brand{font-size:20px}.tools-btn{font-size:10.5px;padding:3px 9px}.tools-text{display:none}}
@@ -178,7 +178,7 @@ nav{position:sticky;top:0;z-index:200;background:#0d1f11;padding:0 20px;display:
 
 /* ── HOME HERO ── */
 .home-hero {
-  background: #0d1f11;
+  background: #0a1628;
   margin: 0 -16px;
   padding: 28px 16px 22px;
   border-bottom: 1px solid rgba(255,255,255,.08);
@@ -410,7 +410,7 @@ nav{position:sticky;top:0;z-index:200;background:#0d1f11;padding:0 20px;display:
 
 /* ── CAREER HERO ── */
 .career-hero {
-  background: #0d1f11;
+  background: #0a1628;
   margin: 0 -16px;
   padding: 22px 16px 20px;
   border-bottom: 1px solid rgba(255,255,255,.08);
@@ -677,7 +677,7 @@ nav{position:sticky;top:0;z-index:200;background:#0d1f11;padding:0 20px;display:
   bottom: 0; left: 50%;
   transform: translateX(-50%) translateY(100%);
   width: 100%; max-width: 440px;
-  background: #0f1a11;
+  background: #0d1525;
   border: 1px solid rgba(255,255,255,.12);
   border-radius: 20px 20px 0 0;
   padding: 16px 20px 32px;
@@ -980,7 +980,7 @@ nav{position:sticky;top:0;z-index:200;background:#0d1f11;padding:0 20px;display:
 }
 .jfb-ecosystem a:hover { text-decoration: underline; }
 .jfb-disclosure {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--t3);
   line-height: 1.6;
   margin-top: 10px;
@@ -7949,6 +7949,21 @@ nav{position:sticky;top:0;z-index:200;background:#0d1f11;padding:0 20px;display:
     }
   });
   // — Lang toggle — BM not yet available, show toast —
+  let langToastTimer;
+  function setLang(lang) {
+    if (lang === 'bm') {
+      const toast = document.getElementById('langToast');
+      toast.classList.add('show');
+      clearTimeout(langToastTimer);
+      langToastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
+      return;
+    }
+    document.querySelectorAll('.lt-opt').forEach(b => b.classList.remove('active'));
+    document.getElementById('lt-en').classList.add('active');
+  }
+
+  document.addEventListener('DOMContentLoaded', () => { renderCareerList(); renderBookmarkStrip(); });
+gle — BM not yet available, show toast —
   let langToastTimer;
   function setLang(lang) {
     if (lang === 'bm') {
