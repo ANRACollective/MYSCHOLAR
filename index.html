@@ -526,6 +526,15 @@ nav {
   transition: color .15s;
 }
 
+/* MyJourney — teal, bold */
+.prod-cta-plan {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(0,168,120,0.75);
+  transition: color .15s;
+}
+.prod-card:hover .prod-cta-plan { color: var(--teal); }
+
 /* MyScholar — coral, bold */
 .prod-cta-primary {
   font-size: 13px;
@@ -1099,7 +1108,7 @@ footer {
       <p class="prod-desc">
         <span data-i18n="planCardDesc">Not sure what to do after SPM? Answer a few questions and find careers that fit you.</span>
       </p>
-      <div class="prod-cta" data-i18n="planCta">Explore careers →</div>
+      <div class="prod-cta prod-cta-plan" data-i18n="planCta">Explore careers →</div>
     </a>
 
     <!-- FUND: MyScholar (current — active state) -->
@@ -1143,13 +1152,13 @@ footer {
   <div class="popup-box">
     <button class="popup-close" id="popupClose" aria-label="Close">×</button>
     <div id="popupContent">
-      <p class="popup-eyebrow">Stay ahead</p>
-      <h3 id="popupTitle">Don't miss a deadline.</h3>
-      <p>Get the monthly update — new scholarships, what's closing soon, nothing else.</p>
+      <p class="popup-eyebrow">Free. Once a month.</p>
+      <h3 id="popupTitle">Scholarships close fast.</h3>
+      <p>New scholarships, what is closing soon. One email a month, that is it.</p>
       <form class="popup-form" id="popupForm" novalidate>
         <label for="popupEmail" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Your email address</label>
         <input type="email" id="popupEmail" placeholder="Your email address" autocomplete="email" required>
-        <button type="submit">Get updates</button>
+        <button type="submit">Subscribe</button>
       </form>
       <p class="popup-fine">No spam. Unsubscribe anytime.</p>
     </div>
