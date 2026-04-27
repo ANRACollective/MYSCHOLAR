@@ -7966,21 +7966,6 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
   }
 
   document.addEventListener('DOMContentLoaded', () => { renderCareerList(); renderBookmarkStrip(); });
-  // Toggle — BM not yet available, show toast —
-  let langToastTimer;
-  function setLang(lang) {
-    if (lang === 'bm') {
-      const toast = document.getElementById('langToast');
-      toast.classList.add('show');
-      clearTimeout(langToastTimer);
-      langToastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
-      return;
-    }
-    document.querySelectorAll('.lt-opt').forEach(b => b.classList.remove('active'));
-    document.getElementById('lt-en').classList.add('active');
-  }
-
-  document.addEventListener('DOMContentLoaded', () => { renderCareerList(); renderBookmarkStrip(); });
 </script>
 <div class="lang-toast" id="langToast">BM version coming soon</div>
 </body>
