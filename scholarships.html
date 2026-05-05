@@ -1628,16 +1628,6 @@ document.addEventListener('keydown', function(e) {
           <span class="esm-interest-desc">Free. Curated. No login. Notify me when it's live.</span>
         </div>
       </div>
-      <div class="esm-interest-row unchecked" id="esmTuitionRow" onclick="toggleTuitionInterest()" style="margin-top:8px">
-        <div class="esm-interest-check unchecked" id="esmTuitionCheck">
-          <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg>
-        </div>
-        <div class="esm-interest-text">
-          <span class="esm-interest-title">Tuition centre recommendations</span>
-          <span class="esm-interest-desc">Tips on finding the right tuition for your level and subjects.</span>
-        </div>
-      </div>
-
       <p class="esm-privacy">We don't share your email. Unsubscribe anytime.</p>
     </div>
 
@@ -3684,11 +3674,9 @@ function openEmailModalFromFooter() {
   document.getElementById("esmSubmitBtn").disabled    = false;
   document.getElementById("esmSubmitBtn").textContent = "Notify me →";
   document.getElementById("esmEmailInput").value      = "";
-  // Reset both interest checkboxes to unchecked default
+  // Reset internship interest checkbox to unchecked default
   document.getElementById("esmInternshipCheck").classList.add("unchecked");
   document.getElementById("esmInternshipRow").classList.add("unchecked");
-  document.getElementById("esmTuitionCheck").classList.add("unchecked");
-  document.getElementById("esmTuitionRow").classList.add("unchecked");
   document.getElementById("esmOverlay").classList.add("visible");
   if(typeof gtag !== "undefined") {
     gtag("event", "email_modal_shown", { event_category: "engagement", event_label: "footer" });
@@ -3699,12 +3687,6 @@ function openEmailModalFromFooter() {
 function toggleInternshipInterest() {
   document.getElementById('esmInternshipCheck').classList.toggle('unchecked');
   document.getElementById('esmInternshipRow').classList.toggle('unchecked');
-}
-
-// Toggle tuition interest checkbox on/off
-function toggleTuitionInterest() {
-  document.getElementById('esmTuitionCheck').classList.toggle('unchecked');
-  document.getElementById('esmTuitionRow').classList.toggle('unchecked');
 }
 
 // ── SUBMIT LOGIC ───────────────────────────────────────────────────────────
@@ -3755,8 +3737,7 @@ async function submitEmailSignup() {
       body: JSON.stringify({
         email: email,
         source: 'modal',
-        internship_interest: !document.getElementById('esmInternshipCheck').classList.contains('unchecked'),
-        tuition_interest: !document.getElementById('esmTuitionCheck').classList.contains('unchecked')
+        internship_interest: !document.getElementById('esmInternshipCheck').classList.contains('unchecked')
       })
     });
   }
@@ -3802,8 +3783,7 @@ function showEmailSuccess(email) {
     gtag('event', 'email_signup', {
       event_category: 'conversion',
       event_label: 'modal',
-      internship_interest: !document.getElementById('esmInternshipCheck').classList.contains('unchecked'),
-      tuition_interest: !document.getElementById('esmTuitionCheck').classList.contains('unchecked')
+      internship_interest: !document.getElementById('esmInternshipCheck').classList.contains('unchecked')
     });
   }
 }
