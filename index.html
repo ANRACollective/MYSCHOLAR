@@ -1513,7 +1513,7 @@ function fillSearch(chipEl) {
     try {
       const encoded = encodeURIComponent(q);
       const url = `${SB_URL}/rest/v1/scholarships_full?select=id,name,provider,amt,url` +
-                  `&or=(name.ilike.*${encoded}*,provider.ilike.*${encoded}*)&limit=6`;
+                  `&or=(name.ilike.*${encoded}*,provider.ilike.*${encoded}*,notes.ilike.*${encoded}*)&limit=6`;
       const res = await fetch(url, {
         headers: { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}` }
       });
