@@ -2227,19 +2227,19 @@ ${eligBadge}
 <div class="card-deadline${urgentCard?' urgent-dl':''}">Deadline: <strong>${escapeHtml(s.dl)}</strong></div>
 <div class="card-foot-right">
 <span class="cmp-tip-wrap">
-  <button class="bookmark-btn${isSaved?' saved':''}" onclick="toggleBookmark(${s.id},event)">
+  <button class="bookmark-btn${isSaved?' saved':''}" onclick="toggleBookmark(${s.id},event)" aria-label="${isSaved?'Remove bookmark':'Save this scholarship'}">
     <svg width="15" height="15" fill="${isSaved?'currentColor':'none'}" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
   </button>
   <span class="cmp-tip-text">${isSaved?'Remove bookmark':'Save this scholarship'}</span>
 </span>
 <span class="cmp-tip-wrap">
-  <button class="share-btn" onclick="shareScholarship(${s.id},event)">
+  <button class="share-btn" onclick="shareScholarship(${s.id},event)" aria-label="Copy link to this scholarship">
     <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/></svg>
   </button>
   <span class="cmp-tip-text">Copy link to this scholarship</span>
 </span>
 <span class="cmp-tip-wrap">
-  <button class="compare-btn${compareSet.has(s.id)?' in-compare':''}" onclick="toggleCompare(${s.id},event)">
+  <button class="compare-btn${compareSet.has(s.id)?' in-compare':''}" onclick="toggleCompare(${s.id},event)" aria-label="${compareSet.has(s.id)?'Remove from comparison':'Compare side by side'}">
     <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="8" height="18" rx="1"/><rect x="14" y="3" width="8" height="18" rx="1"/></svg>
   </button>
   <span class="cmp-tip-text">${compareSet.has(s.id)?'Remove from comparison':'Compare side by side — select up to 3'}</span>
