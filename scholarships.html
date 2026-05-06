@@ -3624,14 +3624,11 @@ function initEmailModal() {
   // Don't show if student has already seen it (signed up OR dismissed)
   if(localStorage.getItem(ESM_KEY)) return;
 
-  // TRIGGER A: Show after 10 seconds
-  _esmTimer = setTimeout(() => {
-    showEmailModal('timer');
-  }, 10000);
-
-  // TRIGGER B: Show when student scrolls 300px down (past the first card row)
+  // TRIGGER: Show when student scrolls 1500px down — past roughly 6-8 cards.
+  // This ensures they have had a real browse session before we ask for their email.
+  // The 10-second timer was removed — it fired before students had seen any content.
   _esmScrollHandler = () => {
-    if(window.scrollY > 500) {
+    if(window.scrollY > 1500) {
       showEmailModal('scroll');
     }
   };
