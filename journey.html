@@ -1594,7 +1594,25 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
     });
   }
 
-  function submitCSEmail() {
+  function submitFooterRequest() {
+    const careerInput = document.getElementById('jfcCareer');
+    const emailInput  = document.getElementById('jfcEmail');
+    const career = careerInput.value.trim();
+    const email  = emailInput.value.trim();
+
+    if (!career) { careerInput.focus(); careerInput.style.borderColor = '#ef4444'; setTimeout(() => { careerInput.style.borderColor = ''; }, 1500); return; }
+    if (!email || !email.includes('@')) { emailInput.focus(); emailInput.style.borderColor = '#ef4444'; setTimeout(() => { emailInput.style.borderColor = ''; }, 1500); return; }
+
+    _sb.from('journey_career_requests').insert({ email, career_name: career }).then(({ error }) => {
+      if (error) console.warn('Supabase insert error:', error);
+    });
+    track('footer_career_request', { career_name: career });
+    document.getElementById('jfcConfirmation').classList.add('visible');
+    careerInput.value = '';
+    emailInput.value = '';
+  }
+
+    function submitCSEmail() {
     const input = document.getElementById('csEmail');
     const email = input.value.trim();
     if (!email || !email.includes('@')) {
