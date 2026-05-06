@@ -113,7 +113,7 @@
 ]
 </script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZETBRDDMTV"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-ZETBRDDMTV');</script>
+<script>if(!location.search.includes('notrack')){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-ZETBRDDMTV');}else{function gtag(){}}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://ywvfvjvxwhcfprfrkgqm.supabase.co">
@@ -457,18 +457,6 @@ nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:
 @media(max-width:400px){.iss-row{flex-direction:column}.iss-btn{width:100%}}
 
 /* ── CV NUDGE STRIP — surfaces CV Builder between hero and listings ──────── */
-.cv-nudge-wrap{max-width:720px;margin:20px auto 0;padding:0 20px}
-@media(min-width:768px){.cv-nudge-wrap{max-width:1100px}}
-.cv-nudge{display:flex;align-items:center;gap:16px;background:rgba(59,130,246,.07);border:1.5px solid rgba(59,130,246,.22);border-radius:14px;padding:16px 18px;position:relative}
-.cv-nudge-icon{width:36px;height:36px;background:rgba(59,130,246,.12);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.cv-nudge-copy{flex:1;min-width:0}
-.cv-nudge-copy strong{font-size:13px;font-weight:600;color:var(--t1);display:block;margin-bottom:2px}
-.cv-nudge-copy span{font-size:12px;color:var(--t2);line-height:1.5}
-.cv-nudge-cta{display:inline-flex;align-items:center;gap:5px;background:rgba(59,130,246,.15);border:1.5px solid rgba(59,130,246,.38);border-radius:9px;padding:9px 16px;font-size:12.5px;font-weight:600;color:#93c5fd;text-decoration:none;white-space:nowrap;transition:all .2s;flex-shrink:0}
-.cv-nudge-cta:hover{background:rgba(59,130,246,.26);border-color:rgba(59,130,246,.6);color:#bfdbfe}
-.cv-nudge-close{position:absolute;top:8px;right:10px;background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;padding:4px;line-height:1;font-family:var(--sans);transition:color .15s}
-.cv-nudge-close:hover{color:var(--t1)}
-@media(max-width:560px){.cv-nudge{flex-wrap:wrap;gap:10px}.cv-nudge-cta{width:100%;justify-content:center}}
 /* ── Skip to main content (WCAG 2.4.1) ── */
 .skip-link{position:absolute;top:-100px;left:16px;background:#e8551e;color:#fff;padding:8px 18px;border-radius:0 0 8px 8px;font-size:14px;font-weight:700;text-decoration:none;z-index:9999;transition:top .15s}.skip-link:focus{top:0}
 </style>
@@ -565,29 +553,6 @@ document.addEventListener('keydown', function(e) {
   }
 });
 </script>
-<script>
-// ── CV Nudge: hide on load if already dismissed, fade out on dismiss ────────
-(function() {
-  // If the student already dismissed it, don't show it again
-  if (localStorage.getItem('cvNudgeDismissed') === '1') {
-    const w = document.getElementById('cvNudgeWrap');
-    if (w) w.style.display = 'none';
-  }
-})();
-function dismissCvNudge() {
-  localStorage.setItem('cvNudgeDismissed', '1');
-  const w = document.getElementById('cvNudgeWrap');
-  if (w) {
-    w.style.transition = 'opacity .25s, max-height .3s, margin .3s';
-    w.style.opacity = '0';
-    w.style.overflow = 'hidden';
-    // Collapse height after fade so the layout doesn't jump
-    setTimeout(() => { w.style.maxHeight = '0'; w.style.margin = '0'; }, 250);
-    setTimeout(() => { w.style.display = 'none'; }, 580);
-  }
-  gtag('event', 'cv_nudge_dismissed');
-}
-</script>
 
 <!-- ── DARK GLASS HERO — mirrors MyScholar hero structure, dark glass colours ── -->
 <div class="hero-intern" id="main-content">
@@ -624,24 +589,6 @@ function dismissCvNudge() {
   </div>
 </div>
 
-<!-- ── CV NUDGE STRIP — contextual prompt between hero and listings ─────────
-     Shown to students who are browsing internships but haven't started a CV.
-     Dismissed state persists via localStorage so it doesn't re-appear.        -->
-<div class="cv-nudge-wrap" id="cvNudgeWrap">
-  <div class="cv-nudge">
-    <div class="cv-nudge-icon">
-      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-    </div>
-    <div class="cv-nudge-copy">
-      <strong>Found a programme you want to apply for?</strong>
-      <span>A strong CV is what gets you shortlisted. Build yours free — takes about 10 minutes.</span>
-    </div>
-    <a class="cv-nudge-cta" href="/myintern/cv-builder.html" onclick="gtag('event','cv_nudge_click',{location:'between_hero_search'})">
-      Build my CV →
-    </a>
-    <button class="cv-nudge-close" onclick="dismissCvNudge()" aria-label="Dismiss CV nudge">&times;</button>
-  </div>
-</div>
 
 <div class="search-w">
   <label for="search" class="sr-only">Search internships</label>
