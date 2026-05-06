@@ -384,6 +384,13 @@ nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:
 .hero-tool-label{font-size:11px;font-weight:600;color:rgba(255,255,255,.6);text-align:center;white-space:nowrap;letter-spacing:.02em}
 .hero-tool:hover .hero-tool-label{color:#fff}
 @media(max-width:680px){.hero-tools{justify-content:flex-start;padding:0 20px}}
+.hero-cta-wrap{display:flex;gap:10px;justify-content:center;margin-top:28px;padding:0 16px;flex-wrap:wrap}
+.btn-fit{font-family:var(--sans);font-size:15px;font-weight:600;background:#38bdf8;color:#0f172a;border:none;border-radius:8px;padding:14px 28px;cursor:pointer;transition:opacity .18s,transform .12s;display:inline-flex;align-items:center;gap:8px;letter-spacing:.01em}
+.btn-fit:hover{opacity:.9;transform:translateY(-1px)}
+.btn-fit:active{transform:scale(.98)}
+.btn-cv{font-family:var(--sans);font-size:14px;font-weight:500;background:rgba(255,255,255,.1);color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:14px 24px;cursor:pointer;transition:all .18s;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+.btn-cv:hover{background:rgba(255,255,255,.18);color:#fff}
+@media(max-width:680px){.btn-fit,.btn-cv{width:100%;justify-content:center}}
 /* Quiz overlay — same pattern as internship detail modal */
 .qz-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:1000;justify-content:center;align-items:flex-end}
 .qz-ov.open{display:flex}
@@ -564,15 +571,15 @@ document.addEventListener('keydown', function(e) {
     <div class="hs-item"><span class="hs-num">12</span><span class="hs-lbl" data-i18n="heroStatInd">Industries</span></div>
     <div class="hs-item"><span class="hs-num">100%</span><span class="hs-lbl" data-i18n="heroStatFree">Free</span></div>
   </div>
-  <!-- Feature bubbles -->
-  <div class="hero-tools">
-    <div class="hero-tool" onclick="qzOpen()" style="border-color:rgba(56,189,248,.25)">
-      <div class="hero-tool-icon" style="background:rgba(56,189,248,.12)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
-      <span class="hero-tool-label">Find My Fit</span>
-    </div>
-    <a class="hero-tool" href="/myintern/cv-builder.html" onclick="gtag('event','hero_tool_cv')">
-      <div class="hero-tool-icon" style="background:rgba(59,130,246,.12)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
-      <span class="hero-tool-label">CV Builder</span>
+  <!-- Hero CTAs -->
+  <div class="hero-cta-wrap">
+    <button class="btn-fit" onclick="qzOpen()" aria-label="Find your best fit internship">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2.2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      Find My Fit
+    </button>
+    <a class="btn-cv" href="/myintern/cv-builder.html" onclick="gtag('event','hero_tool_cv')" aria-label="Build your CV">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      CV Builder →
     </a>
   </div>
 </div>
