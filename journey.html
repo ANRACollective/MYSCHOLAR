@@ -1351,6 +1351,32 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
   let CAREER_DATA = {};
   let CAREER_TAGS = {};
 
+  const CATEGORIES = [
+    { id: 'health',    label: 'Healthcare' },
+    { id: 'biz',       label: 'Business & Finance' },
+    { id: 'eng',       label: 'Engineering' },
+    { id: 'tech',      label: 'Tech' },
+    { id: 'creative',  label: 'Creative' },
+    { id: 'law',       label: 'Law & Society' },
+    { id: 'tvet',      label: 'Trades & Vocational' },
+    { id: 'gov',       label: 'Government & Services' }
+  ];
+
+  const STATUS_OPTIONS = [
+    { id: 'spm',     label: 'SPM',        level: 0 },
+    { id: 'found',   label: 'Foundation', level: 1 },
+    { id: 'alevel',  label: 'A-Levels',   level: 1 },
+    { id: 'diploma', label: 'Diploma',    level: 2 },
+    { id: 'degree',  label: 'Degree',     level: 3 }
+  ];
+
+  const SPM_STAGE = (note) => ({
+    name: 'SPM', formal: 'Malaysian Certificate of Education',
+    sub: 'Starting point', byYear: 0,
+    what: note || 'Your starting point. Most pathways need 5 credits minimum.',
+    entry: 'Credits in Maths and English', institutions: []
+  });
+
   // Top-level Supabase client for career data fetching
   const _sb = supabase.createClient(
     'https://ywvfvjvxwhcfprfrkgqm.supabase.co',
@@ -1426,7 +1452,31 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
   let currentCareer = 'accountant';
   let currentRoute = 'A';
   let currentStatus = 'spm';
-  const BOOKMARK_KEY = 'myjourney_bookmarks';
+  /* =========================================================
+     QUIZ
+     ========================================================= */
+  const QUIZ = [
+    {
+      q: 'Which subjects do you actually enjoy?',
+      hint: 'Pick up to 3. No wrong answers.',
+      type: 'multi', max: 3,
+      options: ['Maths', 'English', 'BM', 'Science', 'Biology', 'Physics', 'Chemistry', 'Accounts', 'Economics', 'History', 'ICT', 'Art']
+    },
+    {
+      q: 'How do you prefer to work?',
+      hint: 'Pick the one that feels most like you.',
+      type: 'single',
+      options: ['Alone and focused', 'With a small team', 'With lots of people', 'With my hands', 'Making creative things']
+    },
+    {
+      q: 'What matters most to you right now?',
+      hint: 'Pick one. This changes, and that is fine.',
+      type: 'single',
+      options: ['Earning well', 'Job security', 'Helping people', 'Freedom and flexibility', 'Respect and prestige']
+    }
+  ];
+
+    const BOOKMARK_KEY = 'myjourney_bookmarks';
   const NOTIFY_KEY = 'myjourney_notify';
 
   /* =========================================================
