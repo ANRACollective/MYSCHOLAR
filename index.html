@@ -1575,47 +1575,68 @@ function fillSearch(chipEl) {
   });
 })();
 
-// ── Closing soon strip ──────────────────────────────────────
+// ── Closing soon strip (with fallback to recently added) ────
 (async function loadClosingSoon() {
-  const grid = document.getElementById('csGrid');
+  const grid    = document.getElementById('csGrid');
+  const eyebrow = document.querySelector('.cs-eyebrow');
   const section = document.getElementById('closingSoon');
   if (!grid) return;
 
+  const headers = { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}` };
+
+  function escape(str) {
+    return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/'/g,'&#39;');
+  }
+
+  function daysUntil(dateStr) {
+    const diff = Math.ceil((new Date(dateStr) - new Date()) / 86400000);
+    return diff <= 0 ? 'Today' : diff === 1 ? 'Tomorrow' : `${diff} days left`;
+  }
+
+  function renderCards(data, mode) {
+    // mode: 'deadline' shows days-left label, 'recent' shows deadline_text or 'Rolling'
+    if (eyebrow) eyebrow.textContent = mode === 'deadline' ? 'Closing soon' : 'Recently added';
+    if (section) section.style.display = '';
+    grid.innerHTML = data.map(s => {
+      const href   = s.url ? s.url : `scholarships?q=${encodeURIComponent(s.name)}`;
+      const target = s.url ? ' target="_blank" rel="noopener"' : '';
+      const label  = mode === 'deadline'
+        ? daysUntil(s.deadline_date)
+        : (s.deadline_text || 'Rolling');
+      return `<a class="cs-card" href="${href}"${target} data-id="${s.id}">
+        <div class="cs-deadline">${escape(label)}</div>
+        <div class="cs-name">${escape(s.name)}</div>
+        <div class="cs-provider">${escape(s.provider)}</div>
+      </a>`;
+    }).join('');
+  }
+
   try {
-    // Fetch next 6 scholarships closing soonest from today
+    // First try: scholarships with a known future deadline
     const today = new Date().toISOString().split('T')[0];
-    
-    const url   = `${SB_URL}/rest/v1/scholarships?select=id,name,provider,deadline_date,deadline_text,url` +
-                  `&deadline_date=gte.${today}&is_active=eq.true&order=deadline_date.asc&limit=6`;
+    const urlDeadline = `${SB_URL}/rest/v1/scholarships?select=id,name,provider,deadline_date,deadline_text,url` +
+                        `&deadline_date=gte.${today}&is_active=eq.true&order=deadline_date.asc&limit=6`;
+    const res1 = await fetch(urlDeadline, { headers });
+    if (!res1.ok) throw new Error('fetch failed');
+    const deadlineData = await res1.json();
 
-    const res  = await fetch(url, { headers: { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}` } });
-    if (!res.ok) throw new Error('fetch failed');
-    const data = await res.json();
-
-    if (!data.length) {
-      // No scholarships closing soon — hide the section entirely
-      if (section) section.style.display = 'none';
+    if (deadlineData.length) {
+      renderCards(deadlineData, 'deadline');
       return;
     }
 
-    function daysUntil(dateStr) {
-      const diff = Math.ceil((new Date(dateStr) - new Date()) / 86400000);
-      return diff <= 0 ? 'Today' : diff === 1 ? 'Tomorrow' : `${diff} days left`;
-    }
+    // Fallback: most recently added scholarships
+    const urlRecent = `${SB_URL}/rest/v1/scholarships?select=id,name,provider,deadline_date,deadline_text,url` +
+                      `&is_active=eq.true&order=created_at.desc&limit=6`;
+    const res2 = await fetch(urlRecent, { headers });
+    if (!res2.ok) throw new Error('fetch failed');
+    const recentData = await res2.json();
 
-    if (section) section.style.display = '';
-    grid.innerHTML = data.map(s => {
-      const label  = daysUntil(s.deadline_date);
-      const href   = s.url ? s.url : `/scholarships?q=${encodeURIComponent(s.name)}`;
-      const target = s.url ? ' target="_blank" rel="noopener"' : '';
-      const name   = String(s.name || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/'/g,'&#39;');
-      const prov   = String(s.provider || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-      return `<a class="cs-card" href="${href}"${target} data-id="${s.id}">
-        <div class="cs-deadline"><span class="sr-only">Deadline: </span>${label}</div>
-        <div class="cs-name">${name}</div>
-        <div class="cs-provider">${prov}</div>
-      </a>`;
-    }).join('');
+    if (recentData.length) {
+      renderCards(recentData, 'recent');
+    } else {
+      if (section) section.style.display = 'none';
+    }
 
   } catch(e) {
     // Silently hide the section if fetch fails — never break the page
