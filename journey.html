@@ -408,6 +408,34 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
   margin-top: 8px;
 }
 .note-banner strong { color: var(--t2); }
+
+/* ── Category jump strip ── */
+.cat-jump-strip {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 0 0 12px;
+  margin-bottom: 4px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.cat-jump-strip::-webkit-scrollbar { display: none; }
+.cat-jump-chip {
+  flex-shrink: 0;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: var(--sans);
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,.15);
+  background: rgba(255,255,255,.05);
+  color: var(--t2);
+  cursor: pointer;
+  transition: background .15s, color .15s, border-color .15s;
+  white-space: nowrap;
+}
+.cat-jump-chip:hover { background: rgba(255,255,255,.1); color: var(--t1); }
+.cat-jump-chip.active { background: rgba(201,169,106,.15); border-color: var(--gold); color: var(--gold); }
 .source-banner {
   background: rgba(255,255,255,.04);
   border: 1px solid var(--border);
@@ -1114,6 +1142,9 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
       <div id="bookmarkList"></div>
     </div>
 
+    <!-- Category jump strip — populated by buildJumpStrip() after careers load -->
+    <nav class="cat-jump-strip" id="catJumpStrip" aria-label="Jump to category"></nav>
+
     <div id="careerList"></div>
 
     <div class="journey-footer-card">
@@ -1653,7 +1684,7 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
     }
     let rowIndex = 0;
     list.innerHTML = grouped.map(g => `
-      <div class="category-group">
+      <div class="category-group" id="cat-group-${g.id}">
         <div class="cat-header">
           <span class="cat-dot" style="background: var(--cat-${g.id});"></span>
           <span class="cat-name">${g.label}</span>
@@ -1665,10 +1696,77 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
             <div class="career-hook">${c.hook}</div>
           </button>`; }).join('')}
       </div>`).join('');
+
+    // Build the category jump strip now that all groups are in the DOM
+    buildJumpStrip(grouped);
   }
 
-  function filterCareers(v) { track('career_search', { query: v }); renderCareerList(v); document.getElementById('searchClear').classList.toggle('visible', v.length > 0); }
-  function clearSearch() { const input = document.getElementById('careerSearch'); input.value = ''; renderCareerList(''); document.getElementById('searchClear').classList.remove('visible'); input.focus(); }
+  /* ── Jump strip helpers ── */
+  let _catObserver = null;
+
+  function buildJumpStrip(groups) {
+    const strip = document.getElementById('catJumpStrip');
+    if (!strip) return;
+    strip.innerHTML = groups.map((g, i) =>
+      `<button class="cat-jump-chip${i === 0 ? ' active' : ''}" data-cat="${g.id}" onclick="jumpToCategory('${g.id}')" aria-label="Jump to ${g.label}">${g.label}</button>`
+    ).join('');
+    observeCategories(groups);
+  }
+
+  function jumpToCategory(catId) {
+    const el = document.getElementById('cat-group-' + catId);
+    if (!el) return;
+    // Account for sticky nav height (52px) + small breathing room
+    const top = el.getBoundingClientRect().top + window.scrollY - 68;
+    window.scrollTo({ top, behavior: 'smooth' });
+    setActiveChip(catId);
+  }
+
+  function setActiveChip(catId) {
+    const strip = document.getElementById('catJumpStrip');
+    if (!strip) return;
+    strip.querySelectorAll('.cat-jump-chip').forEach(c => {
+      c.classList.toggle('active', c.dataset.cat === catId);
+    });
+    // Scroll the active chip into view within the strip
+    const active = strip.querySelector('.cat-jump-chip.active');
+    if (active) active.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+  }
+
+  function observeCategories(groups) {
+    if (_catObserver) _catObserver.disconnect();
+    // Fire when a category header crosses roughly the top third of the viewport
+    _catObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const catId = e.target.id.replace('cat-group-', '');
+          setActiveChip(catId);
+        }
+      });
+    }, { rootMargin: '-10% 0px -75% 0px', threshold: 0 });
+    groups.forEach(g => {
+      const el = document.getElementById('cat-group-' + g.id);
+      if (el) _catObserver.observe(el);
+    });
+  }
+
+  function filterCareers(v) {
+    track('career_search', { query: v });
+    renderCareerList(v);
+    document.getElementById('searchClear').classList.toggle('visible', v.length > 0);
+    // Hide jump strip during search — filtered results may not include all categories
+    const strip = document.getElementById('catJumpStrip');
+    if (strip) strip.style.display = v.trim() ? 'none' : '';
+  }
+  function clearSearch() {
+    const input = document.getElementById('careerSearch');
+    input.value = '';
+    renderCareerList('');
+    document.getElementById('searchClear').classList.remove('visible');
+    const strip = document.getElementById('catJumpStrip');
+    if (strip) strip.style.display = '';
+    input.focus();
+  }
 
   /* =========================================================
      Career detail — data-driven render
