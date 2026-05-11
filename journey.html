@@ -422,6 +422,25 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
 }
 .cmp-icon-btn:hover { color: rgba(255,255,255,.45); background: rgba(255,255,255,.06); }
 .cmp-icon-btn.cmp-active { color: #2dd4a0; }
+
+/* ── LIGHT MODE CARD GRID ─────────────────────────────────────────── */
+#careerList { background: #f2f7f3; border-radius: 14px; padding: 12px 10px 4px; margin-top: 8px; }
+.career-row { background: #ffffff !important; border: 0.5px solid rgba(0,0,0,.09) !important; }
+.career-row:hover { background: #f4faf6 !important; border-color: rgba(0,0,0,.16) !important; }
+.career-name { color: #0d2010 !important; }
+.career-hook { color: #527a62 !important; }
+.cat-header .cat-name { color: #3a6e50 !important; }
+.cat-header .cat-count { color: #8aaa96 !important; }
+.cat-jump-chip { background: #ffffff !important; border: 1px solid rgba(0,0,0,.12) !important; color: #3a6e50 !important; }
+.cat-jump-chip:hover { background: #eef7f1 !important; color: #0f6e56 !important; }
+.cat-jump-chip.active { background: #0f6e56 !important; color: #fff !important; border-color: #0f6e56 !important; }
+.cmp-icon-btn { color: rgba(0,0,0,.18) !important; }
+.cmp-icon-btn.cmp-active { color: #0f6e56 !important; }
+.career-stats { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 6px; }
+.cstat { font-size: 10px; font-weight: 500; padding: 2px 7px; border-radius: 4px; background: #eaf3ee; color: #3a6e50; }
+.cstat.dem-hi { background: #d1f0e4; color: #0f6e56; }
+.cstat.dem-mod { background: #fff3d6; color: #92600a; }
+/* ──────────────────────────────────────────────────────────────────── */
 .compare-sticky {
   position: fixed;
   bottom: 0; left: 0; right: 0;
@@ -1523,7 +1542,11 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
       CAREERS = data.map(r => ({
         id: r.id, name: r.name, hook: r.hook, cat: r.category, built: r.is_built,
         isNew: Array.isArray(r.meta_ext?.badge) && r.meta_ext.badge.includes('new'),
-        isHot: Array.isArray(r.meta_ext?.badge) && r.meta_ext.badge.includes('hot')
+        isHot: Array.isArray(r.meta_ext?.badge) && r.meta_ext.badge.includes('hot'),
+        pay: r.start_pay || null,
+        demand: r.demand || null,
+        demandTone: r.demand_tone || null,
+        years: r.years_range || null
       }));
 
       data.forEach(r => {
@@ -1791,6 +1814,7 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
           <button class="career-row ${c.built ? '' : 'soon'}" data-cat="${g.id}" onclick="openCareer('${c.id}')" ${delay}>
             <div class="career-top"><span class="career-name">${c.name}</span>${c.isHot ? '<span class="hot-tag">hot</span>' : ''}${c.isNew ? '<span class="new-tag">new</span>' : ''}<span class="cmp-icon-btn" id="cmp-${c.id}" onclick="toggleCompare('${c.id}',event)" role="button" tabindex="0" aria-label="Compare ${c.name}" title="Compare">⧉</span></div>
             <div class="career-hook">${c.hook}</div>
+          ${(c.demand||c.years||c.pay) ? `<div class="career-stats">${c.demand ? `<span class="cstat${c.demandTone==='high'?' dem-hi':c.demandTone==='moderate'?' dem-mod':''}">${c.demand}</span>` : ''}${c.years ? `<span class="cstat">${c.years}</span>` : ''}${c.pay ? `<span class="cstat">${c.pay}</span>` : ''}</div>` : ''}
           </button>`; }).join('')}
       </div>`).join('');
 
