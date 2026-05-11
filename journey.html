@@ -423,24 +423,18 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
 .cmp-icon-btn:hover { color: rgba(255,255,255,.45); background: rgba(255,255,255,.06); }
 .cmp-icon-btn.cmp-active { color: #2dd4a0; }
 
-/* ── LIGHT MODE CARD GRID ─────────────────────────────────────────── */
-#careerList { background: #f2f7f3; border-radius: 14px; padding: 12px 10px 4px; margin-top: 8px; }
-.career-row { background: #ffffff !important; border: 0.5px solid rgba(0,0,0,.09) !important; }
-.career-row:hover { background: #f4faf6 !important; border-color: rgba(0,0,0,.16) !important; }
-.career-name { color: #0d2010 !important; }
-.career-hook { color: #527a62 !important; }
-.cat-header .cat-name { color: #3a6e50 !important; }
-.cat-header .cat-count { color: #8aaa96 !important; }
-.cat-jump-chip { background: #ffffff !important; border: 1px solid rgba(0,0,0,.12) !important; color: #3a6e50 !important; }
-.cat-jump-chip:hover { background: #eef7f1 !important; color: #0f6e56 !important; }
-.cat-jump-chip.active { background: #0f6e56 !important; color: #fff !important; border-color: #0f6e56 !important; }
-.cmp-icon-btn { color: rgba(0,0,0,.18) !important; }
-.cmp-icon-btn.cmp-active { color: #0f6e56 !important; }
+/* ── STAT CHIPS (career cards) ───────────────────────────────────── */
 .career-stats { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 6px; }
-.cstat { font-size: 10px; font-weight: 500; padding: 2px 7px; border-radius: 4px; background: #eaf3ee; color: #3a6e50; }
-.cstat.dem-hi { background: #d1f0e4; color: #0f6e56; }
-.cstat.dem-mod { background: #fff3d6; color: #92600a; }
-/* ──────────────────────────────────────────────────────────────────── */
+.cstat { font-size: 10px; font-weight: 500; padding: 2px 7px; border-radius: 4px; background: rgba(255,255,255,.08); color: rgba(255,255,255,.6); }
+.cstat.dem-hi { background: rgba(45,212,160,.15); color: #2dd4a0; }
+.cstat.dem-mod { background: rgba(240,204,108,.12); color: var(--gold); }
+/* ── STREAM FILTER STRIP ─────────────────────────────────────────── */
+.stream-strip { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; padding: 0 0 2px; margin-bottom: 10px; }
+.stream-strip::-webkit-scrollbar { display: none; }
+.stream-chip { flex-shrink: 0; font-size: 12.5px; font-weight: 600; font-family: var(--sans); padding: 7px 16px; border-radius: 20px; border: 1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.05); color: var(--t2); cursor: pointer; white-space: nowrap; transition: background .15s, color .15s, border-color .15s; }
+.stream-chip:hover { background: rgba(255,255,255,.1); color: var(--t1); }
+.stream-chip.active { background: rgba(201,169,106,.14); border-color: var(--gold); color: var(--gold); }
+/* ── CAT JUMP STRIP — sticky below nav ───────────────────────────── */
 .compare-sticky {
   position: fixed;
   bottom: 0; left: 0; right: 0;
@@ -528,10 +522,14 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
   display: flex;
   gap: 8px;
   overflow-x: auto;
-  padding: 0 0 12px;
+  padding: 8px 0 10px;
   margin-bottom: 4px;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  position: sticky;
+  top: 52px;
+  z-index: 50;
+  background: var(--bg);
 }
 .cat-jump-strip::-webkit-scrollbar { display: none; }
 .cat-jump-chip {
@@ -1242,6 +1240,14 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
       <button class="search-clear" id="searchClear" onclick="clearSearch()" aria-label="Clear search">&times;</button>
     </div>
 
+    <div class="stream-strip" id="streamStrip" role="group" aria-label="Filter by stream">
+      <button class="stream-chip active" data-stream="all" onclick="setStream('all')">All streams</button>
+      <button class="stream-chip" data-stream="science" onclick="setStream('science')">Science</button>
+      <button class="stream-chip" data-stream="arts" onclick="setStream('arts')">Arts &amp; Social</button>
+      <button class="stream-chip" data-stream="commerce" onclick="setStream('commerce')">Commerce</button>
+      <button class="stream-chip" data-stream="tvet" onclick="setStream('tvet')">TVET</button>
+    </div>
+
     <div class="quiz-nudge" onclick="startQuiz()" role="button" tabindex="0" aria-label="Take the career quiz" onkeydown="if(event.key==='Enter'||event.key===' ')startQuiz()">
       <span class="quiz-nudge-icon">&#10022;</span>
       <div class="quiz-nudge-body">
@@ -1790,11 +1796,29 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
   /* =========================================================
      Home — render grouped list
      ========================================================= */
+  // Stream filter state
+  const STREAM_MAP = {
+    science: ['health', 'eng', 'tech'],
+    arts: ['creative', 'law', 'gov'],
+    commerce: ['biz'],
+    tvet: ['tvet'],
+    all: null
+  };
+  let activeStream = 'all';
+
+  function setStream(stream) {
+    activeStream = stream;
+    document.querySelectorAll('.stream-chip').forEach(c => c.classList.toggle('active', c.dataset.stream === stream));
+    filterCareers(document.getElementById('careerSearch') ? document.getElementById('careerSearch').value : '');
+    if (typeof gtag !== 'undefined') gtag('event', 'filter_applied', { filter_type: 'stream', filter_value: stream });
+  }
+
   function renderCareerList(filter = '') {
     const list = document.getElementById('careerList');
     const f = filter.trim().toLowerCase();
     const grouped = CATEGORIES.map(cat => {
-      const matches = CAREERS.filter(c => c.cat === cat.id && (!f || c.name.toLowerCase().includes(f) || c.hook.toLowerCase().includes(f)));
+      const streamCats = STREAM_MAP[activeStream];
+      const matches = CAREERS.filter(c => c.cat === cat.id && (!f || c.name.toLowerCase().includes(f) || c.hook.toLowerCase().includes(f)) && (!streamCats || streamCats.includes(c.cat)));
       return { ...cat, careers: matches };
     }).filter(g => g.careers.length > 0);
 
