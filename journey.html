@@ -407,8 +407,8 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
   flex-shrink: 0;
 }
 .cmp-icon-btn {
-  background: none;
-  border: none;
+  display: inline-flex;
+  align-items: center;
   padding: 3px 5px;
   cursor: pointer;
   color: rgba(255,255,255,.2);
@@ -418,6 +418,7 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
   line-height: 1;
   font-size: 14px;
   margin-left: auto;
+  user-select: none;
 }
 .cmp-icon-btn:hover { color: rgba(255,255,255,.45); background: rgba(255,255,255,.06); }
 .cmp-icon-btn.cmp-active { color: #2dd4a0; }
@@ -1788,7 +1789,7 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
         </div>
         ${g.careers.map(c => { const delay = `style="animation-delay:${rowIndex++ * 30}ms"`; return `
           <button class="career-row ${c.built ? '' : 'soon'}" data-cat="${g.id}" onclick="openCareer('${c.id}')" ${delay}>
-            <div class="career-top"><span class="career-name">${c.name}</span>${c.isHot ? '<span class="hot-tag">hot</span>' : ''}${c.isNew ? '<span class="new-tag">new</span>' : ''}<button class="cmp-icon-btn" id="cmp-${c.id}" onclick="toggleCompare('${c.id}',event)" aria-label="Compare ${c.name}" title="Compare">⧉</button></div>
+            <div class="career-top"><span class="career-name">${c.name}</span>${c.isHot ? '<span class="hot-tag">hot</span>' : ''}${c.isNew ? '<span class="new-tag">new</span>' : ''}<span class="cmp-icon-btn" id="cmp-${c.id}" onclick="toggleCompare('${c.id}',event)" role="button" tabindex="0" aria-label="Compare ${c.name}" title="Compare">⧉</span></div>
             <div class="career-hook">${c.hook}</div>
           </button>`; }).join('')}
       </div>`).join('');
