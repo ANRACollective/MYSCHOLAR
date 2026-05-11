@@ -371,6 +371,8 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
 }
 .career-row.soon { opacity: .5; pointer-events: none; cursor: default; }
 .career-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2px; }
+.career-name { flex: 1; min-width: 0; }
+.career-top-right { display: inline-flex; align-items: center; gap: 5px; flex-shrink: 0; margin-left: 8px; }
 .career-name { font-size: 15px; font-weight: 600; color: var(--t1); }
 .career-hook { font-size: 13px; color: var(--t3); }
 .soon-tag {
@@ -409,18 +411,19 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
 .cmp-icon-btn {
   display: inline-flex;
   align-items: center;
-  padding: 3px 5px;
+  padding: 3px 6px;
   cursor: pointer;
-  color: rgba(255,255,255,.2);
+  color: rgba(255,255,255,.65);
   flex-shrink: 0;
-  border-radius: 4px;
-  transition: color .15s, background .15s;
+  border-radius: 5px;
+  border: 1px solid rgba(255,255,255,.2);
+  background: rgba(255,255,255,.05);
+  transition: color .15s, background .15s, border-color .15s;
   line-height: 1;
-  font-size: 14px;
-  margin-left: auto;
+  font-size: 13px;
   user-select: none;
 }
-.cmp-icon-btn:hover { color: rgba(255,255,255,.45); background: rgba(255,255,255,.06); }
+.cmp-icon-btn:hover { color: #fff; background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.35); }
 .cmp-icon-btn.cmp-active { color: #2dd4a0; }
 
 /* ── STAT CHIPS (career cards) ───────────────────────────────────── */
@@ -512,6 +515,8 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
 .cmp-val.hi { background: rgba(45,212,160,.08); border: 1px solid rgba(45,212,160,.2); color: #2dd4a0; }
 
 /* ── NOTE / SOURCE BANNERS ── */
+.hero-tip { margin: 6px 0 10px; font-size: 11.5px; color: rgba(255,255,255,.5); display: flex; align-items: center; justify-content: flex-start; gap: 5px; flex-wrap: wrap; }
+.hero-tip-kbd { display: inline-flex; align-items: center; justify-content: center; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.22); border-radius: 5px; padding: 2px 6px; color: rgba(255,255,255,.75); vertical-align: middle; }
 .note-banner {
   padding: 12px 14px;
   background: rgba(255,255,255,.04);
@@ -1247,6 +1252,8 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
       <button class="search-clear" id="searchClear" onclick="clearSearch()" aria-label="Clear search">&times;</button>
     </div>
 
+    <p class="hero-tip">Tip: tap <span class="hero-tip-kbd"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="8" height="18" rx="1"/><rect x="14" y="3" width="8" height="18" rx="1"/></svg></span> on any card to compare careers side by side</p>
+
     <div class="stream-strip" id="streamStrip" role="group" aria-label="Filter by stream">
       <button class="stream-chip active" data-stream="all" onclick="setStream('all')">All streams</button>
       <button class="stream-chip" data-stream="science" onclick="setStream('science')">Science</button>
@@ -1881,7 +1888,7 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
         </div>
         ${g.careers.map(c => { const delay = `style="animation-delay:${rowIndex++ * 30}ms"`; return `
           <button class="career-row ${c.built ? '' : 'soon'}" data-cat="${g.id}" onclick="openCareer('${c.id}')" ${delay}>
-            <div class="career-top"><span class="career-name">${c.name}</span>${c.isHot ? '<span class="hot-tag">hot</span>' : ''}${c.isNew ? '<span class="new-tag">new</span>' : ''}<span class="cmp-icon-btn" id="cmp-${c.id}" onclick="toggleCompare('${c.id}',event)" role="button" tabindex="0" aria-label="Compare ${c.name}" title="Compare">⧉</span></div>
+            <div class="career-top"><span class="career-name">${c.name}</span><span class="career-top-right">${c.isHot ? '<span class="hot-tag">hot</span>' : ''}${c.isNew ? '<span class="new-tag">new</span>' : ''}<span class="cmp-icon-btn" id="cmp-${c.id}" onclick="toggleCompare('${c.id}',event)" role="button" tabindex="0" aria-label="Compare ${c.name}" title="Compare"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="8" height="18" rx="1"/><rect x="14" y="3" width="8" height="18" rx="1"/></svg></span></span></div>
             <div class="career-hook">${c.hook}</div>
           ${(c.demand||c.years||c.pay) ? `<div class="career-stats">${c.demand ? `<span class="cstat${(c.demandTone==='high'?' dem-hi':(c.demandTone==='moderate'||c.demandTone==='medium')?' dem-mod':'')}">${c.demand}</span>` : ''}${c.years ? `<span class="cstat">${c.years}</span>` : ''}${c.pay ? `<span class="cstat">${c.pay}</span>` : ''}</div>` : ''}
           </button>`; }).join('')}
