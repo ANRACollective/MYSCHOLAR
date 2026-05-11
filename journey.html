@@ -395,6 +395,17 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
   border-radius: 5px;
   flex-shrink: 0;
 }
+.hot-tag {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  color: #fff;
+  background: #ef4444;
+  padding: 2px 7px;
+  border-radius: 5px;
+  flex-shrink: 0;
+}
 
 /* ── NOTE / SOURCE BANNERS ── */
 .note-banner {
@@ -1426,7 +1437,9 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
       if (error) throw error;
 
       CAREERS = data.map(r => ({
-        id: r.id, name: r.name, hook: r.hook, cat: r.category, built: r.is_built
+        id: r.id, name: r.name, hook: r.hook, cat: r.category, built: r.is_built,
+        isNew: Array.isArray(r.meta_ext?.badge) && r.meta_ext.badge.includes('new'),
+        isHot: Array.isArray(r.meta_ext?.badge) && r.meta_ext.badge.includes('hot')
       }));
 
       data.forEach(r => {
@@ -1692,7 +1705,7 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
         </div>
         ${g.careers.map(c => { const delay = `style="animation-delay:${rowIndex++ * 30}ms"`; return `
           <button class="career-row ${c.built ? '' : 'soon'}" data-cat="${g.id}" onclick="openCareer('${c.id}')" ${delay}>
-            <div class="career-top"><span class="career-name">${c.name}</span>${c.isNew ? '<span class="new-tag">new</span>' : ''}</div>
+            <div class="career-top"><span class="career-name">${c.name}</span>${c.isHot ? '<span class="hot-tag">hot</span>' : ''}${c.isNew ? '<span class="new-tag">new</span>' : ''}</div>
             <div class="career-hook">${c.hook}</div>
           </button>`; }).join('')}
       </div>`).join('');
