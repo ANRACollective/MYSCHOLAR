@@ -406,6 +406,89 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
   border-radius: 5px;
   flex-shrink: 0;
 }
+.cmp-icon-btn {
+  background: none;
+  border: none;
+  padding: 3px 5px;
+  cursor: pointer;
+  color: rgba(255,255,255,.2);
+  flex-shrink: 0;
+  border-radius: 4px;
+  transition: color .15s, background .15s;
+  line-height: 1;
+  font-size: 14px;
+  margin-left: auto;
+}
+.cmp-icon-btn:hover { color: rgba(255,255,255,.45); background: rgba(255,255,255,.06); }
+.cmp-icon-btn.cmp-active { color: #2dd4a0; }
+.compare-sticky {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: #0f2a1e;
+  border-top: 1px solid #1e4a32;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transform: translateY(100%);
+  transition: transform .25s;
+  z-index: 200;
+}
+.compare-sticky.visible { transform: translateY(0); }
+.cmp-sticky-label { font-size: 13px; color: #8ab0a0; }
+.cmp-sticky-label strong { color: #e8f5f0; }
+.cmp-go-btn {
+  background: #2dd4a0;
+  color: #052e16;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 7px 18px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+.cmp-go-btn:disabled { opacity: .4; cursor: default; }
+.cmp-clear-btn {
+  background: none;
+  border: 1px solid rgba(255,255,255,.15);
+  color: rgba(255,255,255,.45);
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-right: 8px;
+}
+.cmp-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.72);
+  z-index: 300;
+  display: flex;
+  align-items: flex-end;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s;
+}
+.cmp-overlay.visible { opacity: 1; pointer-events: all; }
+.cmp-panel {
+  background: #0d1f18;
+  border-radius: 20px 20px 0 0;
+  border: 1px solid #1e3328;
+  border-bottom: none;
+  width: 100%;
+  padding: 14px 0 90px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+.cmp-handle { width: 36px; height: 3px; background: #2a4a3a; border-radius: 2px; margin: 0 auto 14px; }
+.cmp-title { font-size: 11px; font-weight: 700; color: #4a7a60; text-transform: uppercase; letter-spacing: .8px; padding: 0 16px 12px; border-bottom: 1px solid #1e3328; }
+.cmp-cols { display: grid; gap: 8px; padding: 12px 16px 4px; }
+.cmp-col-head { background: #0f2a1e; border-radius: 8px; padding: 9px 10px; text-align: center; }
+.cmp-col-name { font-size: 12px; font-weight: 600; color: #e8f5f0; line-height: 1.35; }
+.cmp-col-cat { font-size: 10px; color: #4a7a60; margin-top: 2px; text-transform: uppercase; letter-spacing: .5px; }
+.cmp-row-label { font-size: 10px; font-weight: 700; color: #4a7a60; text-transform: uppercase; letter-spacing: .7px; padding: 8px 16px 4px; border-top: 1px solid #1e3328; margin-top: 2px; }
+.cmp-vals { display: grid; gap: 8px; padding: 0 16px; }
+.cmp-val { background: #0f2a1e; border-radius: 6px; padding: 7px 10px; font-size: 12px; color: #c8e8da; text-align: center; line-height: 1.4; }
+.cmp-val.hi { background: rgba(45,212,160,.08); border: 1px solid rgba(45,212,160,.2); color: #2dd4a0; }
 
 /* ── NOTE / SOURCE BANNERS ── */
 .note-banner {
@@ -1705,7 +1788,7 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
         </div>
         ${g.careers.map(c => { const delay = `style="animation-delay:${rowIndex++ * 30}ms"`; return `
           <button class="career-row ${c.built ? '' : 'soon'}" data-cat="${g.id}" onclick="openCareer('${c.id}')" ${delay}>
-            <div class="career-top"><span class="career-name">${c.name}</span>${c.isHot ? '<span class="hot-tag">hot</span>' : ''}${c.isNew ? '<span class="new-tag">new</span>' : ''}</div>
+            <div class="career-top"><span class="career-name">${c.name}</span>${c.isHot ? '<span class="hot-tag">hot</span>' : ''}${c.isNew ? '<span class="new-tag">new</span>' : ''}<button class="cmp-icon-btn" id="cmp-${c.id}" onclick="toggleCompare('${c.id}',event)" aria-label="Compare ${c.name}" title="Compare">⧉</button></div>
             <div class="career-hook">${c.hook}</div>
           </button>`; }).join('')}
       </div>`).join('');
@@ -1984,8 +2067,99 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
     document.getElementById('lt-en').classList.add('active');
   }
 
+
+  /* ── Compare feature ── */
+  let _cmpSel = [];
+
+  function toggleCompare(id, e) {
+    e.stopPropagation();
+    const idx = _cmpSel.indexOf(id);
+    const btn = document.getElementById('cmp-' + id);
+    if (idx > -1) {
+      _cmpSel.splice(idx, 1);
+      if (btn) btn.classList.remove('cmp-active');
+    } else if (_cmpSel.length < 3) {
+      _cmpSel.push(id);
+      if (btn) btn.classList.add('cmp-active');
+    }
+    _updateCmpBar();
+  }
+
+  function _updateCmpBar() {
+    const bar = document.getElementById('cmpSticky');
+    const goBtn = document.getElementById('cmpGoBtn');
+    const lbl = document.getElementById('cmpCount');
+    if (_cmpSel.length > 0) {
+      bar.classList.add('visible');
+      lbl.textContent = _cmpSel.length + ' selected';
+      goBtn.disabled = _cmpSel.length < 2;
+    } else {
+      bar.classList.remove('visible');
+    }
+  }
+
+  function clearCompare() {
+    _cmpSel.forEach(id => {
+      const btn = document.getElementById('cmp-' + id);
+      if (btn) btn.classList.remove('cmp-active');
+    });
+    _cmpSel = [];
+    _updateCmpBar();
+  }
+
+  function openCmpModal() {
+    const cols = _cmpSel.map(id => {
+      const c = CAREERS.find(x => x.id === id) || {};
+      const d = CAREER_DATA[id] || {};
+      const qf = d.quickFacts || {};
+      return {
+        name: c.name || id,
+        cat:  c.cat  || '',
+        pay:     qf.startPay?.value || '—',
+        years:   qf.years?.value    || '—',
+        demand:  qf.demand?.value   || '—',
+        subjects: d.subjects        || '—'
+      };
+    });
+    const gc = cols.map(() => '1fr').join(' ');
+    let out = `<div class="cmp-cols" style="grid-template-columns:${gc}">`;
+    cols.forEach(c => {
+      out += `<div class="cmp-col-head"><div class="cmp-col-name">${c.name}</div><div class="cmp-col-cat">${c.cat}</div></div>`;
+    });
+    out += '</div>';
+    [['Starting pay','pay'],['Time to qualify','years'],['Demand','demand'],['SPM subjects','subjects']].forEach(([label, key]) => {
+      out += `<div class="cmp-row-label">${label}</div><div class="cmp-vals" style="grid-template-columns:${gc}">`;
+      cols.forEach(c => {
+        const hi = key === 'demand' && (c[key] === 'Very High' || c[key] === 'High');
+        out += `<div class="cmp-val${hi ? ' hi' : ''}">${c[key]}</div>`;
+      });
+      out += '</div>';
+    });
+    document.getElementById('cmpContent').innerHTML = out;
+    document.getElementById('cmpTitle').textContent = 'Comparing ' + cols.length + ' career' + (cols.length > 1 ? 's' : '');
+    document.getElementById('cmpOverlay').classList.add('visible');
+  }
+
+  function closeCmpModal() {
+    document.getElementById('cmpOverlay').classList.remove('visible');
+  }
+
   document.addEventListener('DOMContentLoaded', async () => { await loadCareersFromDB(); renderCareerList(); renderBookmarkStrip(); });
 </script>
 <div class="lang-toast" id="langToast">BM version coming soon</div>
+<div class="compare-sticky" id="cmpSticky">
+  <div class="cmp-sticky-label"><strong id="cmpCount">0 selected</strong><br><span style="font-size:11px">select up to 3 careers</span></div>
+  <div>
+    <button class="cmp-clear-btn" onclick="clearCompare()">Clear</button>
+    <button class="cmp-go-btn" id="cmpGoBtn" onclick="openCmpModal()" disabled>Compare</button>
+  </div>
+</div>
+<div class="cmp-overlay" id="cmpOverlay" onclick="closeCmpModal()">
+  <div class="cmp-panel" onclick="event.stopPropagation()">
+    <div class="cmp-handle"></div>
+    <div class="cmp-title" id="cmpTitle">Comparing careers</div>
+    <div id="cmpContent"></div>
+  </div>
+</div>
 </body>
 </html>
