@@ -1255,13 +1255,13 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
 
     <div class="hero-stat">
       <div class="hero-stat-num" id="heroStatNum">103</div>
-      <div class="hero-stat-label">careers to explore</div>
+      <div class="hero-stat-label" id="heroStatLabel">careers to explore</div>
     </div>
 
     <div class="match-cta">
       <button class="btn-match" onclick="startQuiz()" aria-label="Match me to a career">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-        Match me
+        <span id="matchBtnText">Match me</span>
       </button>
     </div>
 
@@ -1571,6 +1571,7 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
 
       CAREERS = data.map(r => ({
         id: r.id, name: r.name, hook: r.hook, cat: r.category, built: r.is_built,
+        name_bm: r.name_bm || r.name, hook_bm: r.hook_bm || r.hook,
         isNew: Array.isArray(r.meta_ext?.badge) && r.meta_ext.badge.includes('new'),
         isHot: Array.isArray(r.meta_ext?.badge) && r.meta_ext.badge.includes('hot'),
         pay: r.start_pay || null,
@@ -1582,6 +1583,7 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
       data.forEach(r => {
         CAREER_DATA[r.id] = {
           title: r.name,
+          title_bm: r.name_bm || r.name,
           subtitle: r.subtitle,
           quickFacts: {
             startPay: { value: r.start_pay,    sub: r.start_pay_sub },
@@ -1589,8 +1591,11 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
             demand:   { value: r.demand,       sub: r.demand_sub, tone: r.demand_tone }
           },
           description: r.description,
+          description_bm: r.description_bm || r.description,
           subjects:    r.spm_subjects,
+          subjects_bm: r.spm_subjects_bm || r.spm_subjects,
           realTalk:    r.real_talk,
+          realTalk_bm: r.real_talk_bm || r.real_talk,
           routes:      r.routes  || [],
           related:     r.related || []
         };
@@ -1651,7 +1656,59 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
     }
   ];
 
-    const BOOKMARK_KEY = 'myjourney_bookmarks';
+    let LANG = localStorage.getItem('mjLang') || 'en';
+
+  const TRANSLATIONS = {
+    en: {
+      hero_label: 'careers to explore',
+      match_btn: 'Match me',
+      search_placeholder: 'Search e.g. accountant, doctor',
+      cat_ready: 'ready', cat_coming_soon: 'coming soon',
+      career_word: 'career', careers_word: 'careers',
+      soon_tag: 'Soon',
+      start_pay: 'Start pay', years_label: 'Years', demand_label: 'Demand',
+      no_careers_here: 'No careers here yet.',
+      no_results_prefix: 'No careers match', no_results_sub: 'Try a different word, or pick from these:',
+      routes_sub_one: 'Here is how most students go.',
+      routes_sub_many_pre: 'Pick one of', routes_sub_many_suf: 'routes to see the stages.',
+      sub_label_pre: 'Get scholarships relevant to',
+      quiz_step_pre: 'Question', quiz_step_of: 'of',
+      quiz_next_final: 'See my matches', quiz_next: 'Next',
+      see_routes: 'See the routes',
+      cats: { health:'Healthcare', biz:'Business & Finance', eng:'Engineering', tech:'Tech', creative:'Creative', law:'Law & Society', tvet:'Trades & Vocational', gov:'Government & Services' },
+      quiz: [
+        { q:'Which subjects do you actually enjoy?', hint:'Pick up to 3. No wrong answers.', options:['Maths','English','BM','Science','Biology','Physics','Chemistry','Accounts','Economics','History','ICT','Art'] },
+        { q:'How do you prefer to work?', hint:'Pick up to 2.', options:['Alone and focused','With a small team','With lots of people','With my hands','Making creative things'] }
+      ]
+    },
+    bm: {
+      hero_label: 'kerjaya untuk diterokai',
+      match_btn: 'Padankan saya',
+      search_placeholder: 'Cari kerjaya e.g. akauntan, doktor',
+      cat_ready: 'tersedia', cat_coming_soon: 'akan datang',
+      career_word: 'kerjaya', careers_word: 'kerjaya',
+      soon_tag: 'Segera',
+      start_pay: 'Gaji mula', years_label: 'Tahun', demand_label: 'Permintaan',
+      no_careers_here: 'Tiada kerjaya di sini lagi.',
+      no_results_prefix: 'Tiada kerjaya padanan untuk', no_results_sub: 'Cuba perkataan lain, atau pilih daripada senarai ini:',
+      routes_sub_one: 'Ini cara kebanyakan pelajar lalui.',
+      routes_sub_many_pre: 'Pilih satu daripada', routes_sub_many_suf: 'laluan untuk lihat peringkat.',
+      sub_label_pre: 'Dapatkan biasiswa berkaitan',
+      quiz_step_pre: 'Soalan', quiz_step_of: 'daripada',
+      quiz_next_final: 'Lihat padanan saya', quiz_next: 'Seterusnya',
+      see_routes: 'Lihat laluan',
+      cats: { health:'Penjagaan Kesihatan', biz:'Perniagaan & Kewangan', eng:'Kejuruteraan', tech:'Teknologi', creative:'Kreatif', law:'Undang-undang & Masyarakat', tvet:'Kemahiran & Vokasional', gov:'Kerajaan & Perkhidmatan' },
+      quiz: [
+        { q:'Mata pelajaran mana yang anda suka?', hint:'Pilih sehingga 3. Tiada jawapan salah.', options:['Matematik','Bahasa Inggeris','Bahasa Melayu','Sains','Biologi','Fizik','Kimia','Perakaunan','Ekonomi','Sejarah','TMK','Seni'] },
+        { q:'Bagaimana anda suka bekerja?', hint:'Pilih sehingga 2.', options:['Bersendirian dan fokus','Dalam kumpulan kecil','Bersama ramai orang','Menggunakan tangan','Membuat perkara kreatif'] }
+      ]
+    }
+  };
+
+  function t(key) { return (TRANSLATIONS[LANG] && TRANSLATIONS[LANG][key]) || TRANSLATIONS.en[key] || key; }
+  function tCat(id) { return (TRANSLATIONS[LANG].cats && TRANSLATIONS[LANG].cats[id]) || (TRANSLATIONS.en.cats[id]) || id; }
+
+  const BOOKMARK_KEY = 'myjourney_bookmarks';
   const NOTIFY_KEY = 'myjourney_notify';
 
   /* =========================================================
@@ -1860,7 +1917,8 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
       const streamCats = STREAM_MAP[activeStream];
       const matches = CAREERS.filter(c => {
         if (c.cat !== cat.id) return false;
-        if (f && !c.name.toLowerCase().includes(f) && !c.hook.toLowerCase().includes(f)) return false;
+        const _n = LANG === 'bm' ? (c.name_bm||c.name) : c.name; const _h = LANG === 'bm' ? (c.hook_bm||c.hook) : c.hook;
+        if (f && !_n.toLowerCase().includes(f) && !_h.toLowerCase().includes(f) && !c.name.toLowerCase().includes(f)) return false;
         if (streamCats && !streamCats.includes(c.cat)) return false;
         if (activeQF.has('demand') && c.demandTone !== 'high') return false;
         if (activeQF.has('fast') && parseYearsMin(c.years) > 3) return false;
@@ -1872,7 +1930,7 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
     }).filter(g => g.careers.length > 0);
 
     if (grouped.length === 0) {
-      list.innerHTML = `<div class="empty-results"><div class="empty-icon">&#128270;</div><div class="empty-title">No careers match "${filter}"</div><div class="empty-sub">Try a different word, or pick from these:</div><div class="empty-suggestions">${['Doctor','Accountant','Teacher','Lawyer','Nurse','Developer','Architect','Dentist','Physiotherapist'].map(s => `<button class="empty-suggestion-chip" onclick="document.getElementById('careerSearch').value='${s}'; filterCareers('${s}')">${s}</button>`).join('')}</div></div>`;
+      list.innerHTML = `<div class="empty-results"><div class="empty-icon">&#128270;</div><div class="empty-title">${t('no_results_prefix')} &ldquo;${filter}&rdquo;</div><div class="empty-sub">${t('no_results_sub')}</div><div class="empty-suggestions">${['Doctor','Accountant','Teacher','Lawyer','Nurse','Developer','Architect','Dentist','Physiotherapist'].map(s => `<button class="empty-suggestion-chip" onclick="document.getElementById('careerSearch').value='${s}'; filterCareers('${s}')">${s}</button>`).join('')}</div></div>`;
       return;
     }
     let rowIndex = 0;
@@ -1880,13 +1938,13 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
       <div class="category-group" id="cat-group-${g.id}">
         <div class="cat-header">
           <span class="cat-dot" style="background: var(--cat-${g.id});"></span>
-          <span class="cat-name">${g.label}</span>
+          <span class="cat-name">${tCat(g.id)}</span>
           <span class="cat-count">${g.careers.length}</span>
         </div>
         ${g.careers.map(c => { const delay = `style="animation-delay:${rowIndex++ * 30}ms"`; return `
           <button class="career-row ${c.built ? '' : 'soon'}" data-cat="${g.id}" onclick="openCareer('${c.id}')" ${delay}>
-            <div class="career-top"><span class="career-name">${c.name}</span><span class="career-top-right">${c.isHot ? '<span class="hot-tag">hot</span>' : ''}${c.isNew ? '<span class="new-tag">new</span>' : ''}${!c.built ? '<span class="soon-tag">Soon</span>' : ''}<span class="cmp-icon-btn" id="cmp-${c.id}" onclick="toggleCompare('${c.id}',event)" role="button" tabindex="0" aria-label="Compare ${c.name}" title="Compare"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="8" height="18" rx="1"/><rect x="14" y="3" width="8" height="18" rx="1"/></svg></span></span></div>
-            <div class="career-hook">${c.hook}</div>
+            <div class="career-top"><span class="career-name">${LANG === 'bm' ? (c.name_bm||c.name) : c.name}</span><span class="career-top-right">${c.isHot ? '<span class="hot-tag">hot</span>' : ''}${c.isNew ? '<span class="new-tag">new</span>' : ''}${!c.built ? '<span class="soon-tag">' + t('soon_tag') + '</span>' : ''}<span class="cmp-icon-btn" id="cmp-${c.id}" onclick="toggleCompare('${c.id}',event)" role="button" tabindex="0" aria-label="Compare ${c.name}" title="Compare"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="8" height="18" rx="1"/><rect x="14" y="3" width="8" height="18" rx="1"/></svg></span></span></div>
+            <div class="career-hook">${LANG === 'bm' ? (c.hook_bm||c.hook) : c.hook}</div>
           ${(c.demand||c.years||c.pay) ? `<div class="career-stats">${c.demand ? `<span class="cstat${(c.demandTone==='high'?' dem-hi':(c.demandTone==='moderate'||c.demandTone==='medium')?' dem-mod':'')}">${c.demand}</span>` : ''}${c.years ? `<span class="cstat">${c.years}</span>` : ''}${c.pay ? `<span class="cstat">${c.pay}</span>` : ''}</div>` : ''}
           </button>`; }).join('')}
       </div>`).join('');
@@ -1927,12 +1985,12 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
   function renderCareerDetail() {
     const data = CAREER_DATA[currentCareer];
     if (!data) return;
-    document.getElementById('careerTitle').textContent = data.title;
+    document.getElementById('careerTitle').textContent = LANG === 'bm' ? (data.title_bm||data.title) : data.title;
     document.getElementById('careerSub').textContent = data.subtitle;
-    document.getElementById('careerDescription').textContent = data.description;
+    document.getElementById('careerDescription').textContent = LANG === 'bm' ? (data.description_bm||data.description) : data.description;
     // Update subscribe strip label to match the current career
     const subLabelEl = document.getElementById('journeySubLabel');
-    if (subLabelEl) subLabelEl.textContent = 'Get scholarships relevant to ' + data.title.toLowerCase() + '.';
+    const _dt = LANG === 'bm' ? (data.title_bm||data.title) : data.title; if (subLabelEl) subLabelEl.textContent = t('sub_label_pre') + ' ' + _dt.toLowerCase() + '.';
     // Reset subscribe strip state when switching careers
     const subEmailEl = document.getElementById('journeySubEmail');
     const subOkEl = document.getElementById('journeySubOk');
@@ -1940,16 +1998,16 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
     if (subOkEl) subOkEl.style.display = 'none';
     const qf = data.quickFacts;
     document.getElementById('quickFacts').innerHTML = `
-      <div class="fact"><div class="label">Start pay</div><div class="value salary">${qf.startPay.value}</div><div class="fact-sub">${qf.startPay.sub}</div><span class="salary-est-note">est.</span></div>
-      <div class="fact"><div class="label">Years</div><div class="value">${qf.years.value}</div><div class="fact-sub">${qf.years.sub}</div></div>
-      <div class="fact"><div class="label">Demand</div><div class="value demand-${qf.demand.tone}">${qf.demand.value}</div><div class="fact-sub">${qf.demand.sub}</div></div>`;
-    document.getElementById('careerSubjects').textContent = data.subjects;
-    document.getElementById('careerRealTalk').textContent = data.realTalk;
+      <div class="fact"><div class="label">${t('start_pay')}</div><div class="value salary">${qf.startPay.value}</div><div class="fact-sub">${qf.startPay.sub}</div><span class="salary-est-note">est.</span></div>
+      <div class="fact"><div class="label">${t('years_label')}</div><div class="value">${qf.years.value}</div><div class="fact-sub">${qf.years.sub}</div></div>
+      <div class="fact"><div class="label">${t('demand_label')}</div><div class="value demand-${qf.demand.tone}">${qf.demand.value}</div><div class="fact-sub">${qf.demand.sub}</div></div>`;
+    document.getElementById('careerSubjects').textContent = LANG === 'bm' ? (data.subjects_bm||data.subjects) : data.subjects;
+    document.getElementById('careerRealTalk').textContent = LANG === 'bm' ? (data.realTalk_bm||data.realTalk) : data.realTalk;
     document.getElementById('relatedCareers').innerHTML = data.related.map(r => {
       const rc = CAREERS.find(c => c.id === r.id);
       const isBuilt = rc && rc.built;
       const cls = isBuilt ? 'related-card' : 'related-card disabled';
-      const right = isBuilt ? '<span class="arrow">&rsaquo;</span>' : '<span class="soon-pill">Soon</span>';
+      const right = isBuilt ? '<span class="arrow">&rsaquo;</span>' : '<span class="soon-pill">' + t('soon_tag') + '</span>';
       const click = isBuilt ? `onclick="openCareer('${r.id}')"` : '';
       return `<button class="${cls}" ${click}><div><div class="name">${r.name}</div><div class="why">${r.why}</div></div>${right}</button>`;
     }).join('');
@@ -1961,7 +2019,7 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
         <span class="rc-word">${r.word}</span>
         <span class="rc-time">${(t => { const n = t.match(/\d+/g)||['']; return t.includes('year') ? (n.length>1?n[0]+'–'+n[1]:n[0])+'y' : t.includes('month') ? (n.length>1?n[0]+'–'+n[1]:n[0])+'m' : t.includes('week') ? n[0]+'w' : t; })(r.time)}</span>
       </button>`).join('');
-    document.getElementById('routesSub').textContent = routes.length === 1 ? 'Here is how most students go.' : `Pick one of ${routes.length} routes to see the stages.`;
+    document.getElementById('routesSub').textContent = routes.length === 1 ? t('routes_sub_one') : t('routes_sub_many_pre') + ' ' + routes.length + ' ' + t('routes_sub_many_suf');
     const route = routes.find(r => r.id === currentRoute) || routes[0];
     currentRoute = route.id;
     document.getElementById('routeSummary').setAttribute('data-r', route.id);
@@ -2030,21 +2088,22 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
   function startQuiz() { track('quiz_start'); quizStep = 0; quizAnswers = [[], []]; renderQuizStep(); showPage('page-quiz'); }
 
   function renderQuizStep() {
-    const q = QUIZ[quizStep];
-    document.getElementById('quizStep').textContent = `Question ${quizStep + 1} of ${QUIZ.length}`;
-    document.getElementById('quizQuestion').textContent = q.q;
-    document.getElementById('quizHint').textContent = q.hint;
+    const qData = TRANSLATIONS[LANG].quiz[quizStep];
+    const qBase = QUIZ[quizStep];
+    document.getElementById('quizStep').textContent = t('quiz_step_pre') + ' ' + (quizStep + 1) + ' ' + t('quiz_step_of') + ' ' + QUIZ.length;
+    document.getElementById('quizQuestion').textContent = qData.q;
+    document.getElementById('quizHint').textContent = qData.hint;
     const optionsEl = document.getElementById('quizOptions');
     const current = quizAnswers[quizStep];
-    if (q.type === 'multi') {
+    if (qBase.type === 'multi') {
       optionsEl.className = 'chip-group';
-      optionsEl.innerHTML = q.options.map(opt => `<button class="chip ${current.includes(opt) ? 'selected' : ''}" onclick="toggleMulti('${opt.replace(/'/g, "\'")}')">${opt}</button>`).join('');
+      optionsEl.innerHTML = qData.options.map(opt => `<button class="chip ${current.includes(opt) ? 'selected' : ''}" onclick="toggleMulti('${opt.replace(/'/g, "\'")}')">${opt}</button>`).join('');
     } else {
       optionsEl.className = 'card-options';
-      optionsEl.innerHTML = q.options.map(opt => `<button class="card-option ${current === opt ? 'selected' : ''}" onclick="selectSingle('${opt.replace(/'/g, "\'")}')">${opt}</button>`).join('');
+      optionsEl.innerHTML = qData.options.map(opt => `<button class="card-option ${current === opt ? 'selected' : ''}" onclick="selectSingle('${opt.replace(/'/g, "\'")}')">${opt}</button>`).join('');
     }
     updateNextBtn();
-    document.getElementById('quizNext').textContent = quizStep === QUIZ.length - 1 ? 'See my matches' : 'Next';
+    document.getElementById('quizNext').textContent = quizStep === QUIZ.length - 1 ? t('quiz_next_final') : t('quiz_next');
   }
 
   function toggleMulti(opt) { const current = quizAnswers[quizStep]; const idx = current.indexOf(opt); if (idx > -1) current.splice(idx, 1); else { if (current.length >= QUIZ[quizStep].max) return; current.push(opt); } renderQuizStep(); }
@@ -2057,7 +2116,10 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
   }
 
   function scoreAndShowResults() {
-    const [subjects, workstyle] = quizAnswers;
+    const _QNORM = {'Matematik':'Maths','Bahasa Inggeris':'English','Bahasa Melayu':'BM','Sains':'Science','Biologi':'Biology','Fizik':'Physics','Kimia':'Chemistry','Perakaunan':'Accounts','Ekonomi':'Economics','Sejarah':'History','TMK':'ICT','Seni':'Art','Bersendirian dan fokus':'Alone and focused','Dalam kumpulan kecil':'With a small team','Bersama ramai orang':'With lots of people','Menggunakan tangan':'With my hands','Membuat perkara kreatif':'Making creative things'};
+    const [_subj_raw, _ws_raw] = quizAnswers;
+    const subjects = _subj_raw.map(s => _QNORM[s] || s);
+    const workstyle = _ws_raw.map(w => _QNORM[w] || w);
     const scored = Object.entries(CAREER_TAGS).map(([id, tags]) => {
       let score = 0;
       // Each matching subject: +2 (max 6 for 3 picks)
@@ -2075,17 +2137,17 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
     if (top.length === 0) {
       list.innerHTML = `<div class="info-block"><p>No strong matches yet. Try the career list and see what catches your eye.</p></div>`;
     } else {
-      list.innerHTML = top.map(t => {
+      list.innerHTML = top.map(match => {
         // Build a natural-language signals line from their actual answers
-        const signals = [...t.matchedSubjects, ...t.matchedWorkstyle];
+        const signals = [...match.matchedSubjects, ...match.matchedWorkstyle];
         const signalText = signals.length > 0
           ? `<div class="match-signals">${signals.join(' &middot; ')}</div>`
           : '';
-        return `<button class="match-card" onclick="openCareer('${t.id}')">
-          <div class="match-name">${t.name}</div>
-          <div class="match-why">${t.why}</div>
+        return `<button class="match-card" onclick="openCareer('${match.id}')">
+          <div class="match-name">${match.name}</div>
+          <div class="match-why">${match.why}</div>
           ${signalText}
-          <span class="match-cta">See the routes</span>
+          <span class="match-cta">${t('see_routes')}</span>
         </button>`;
       }).join('');
     }
@@ -2125,18 +2187,47 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
       }
     }
   });
-  // — Lang toggle — BM not yet available, show toast —
-  let langToastTimer;
   function setLang(lang) {
-    if (lang === 'bm') {
-      const toast = document.getElementById('langToast');
-      toast.classList.add('show');
-      clearTimeout(langToastTimer);
-      langToastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
-      return;
+    if (LANG === lang) return;
+    LANG = lang;
+    localStorage.setItem('mjLang', lang);
+    document.querySelectorAll('.lt-opt').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed','false'); });
+    const ab = document.getElementById('lt-' + lang);
+    if (ab) { ab.classList.add('active'); ab.setAttribute('aria-pressed','true'); }
+    applyLangToPage();
+    track('lang_toggle', { lang });
+  }
+
+  function applyLangToPage() {
+    const label = document.getElementById('heroStatLabel');
+    if (label) label.textContent = t('hero_label');
+    const matchText = document.getElementById('matchBtnText');
+    if (matchText) matchText.textContent = t('match_btn');
+    const search = document.getElementById('careerSearch');
+    if (search) search.placeholder = t('search_placeholder');
+    // Re-render visible sections
+    const catGrid = document.getElementById('catGrid');
+    if (catGrid && catGrid.style.display !== 'none') renderCategoryGrid();
+    const careerList = document.getElementById('careerList');
+    const searchVal = search ? search.value : '';
+    if (careerList && careerList.style.display !== 'none' && searchVal) renderCareerList(searchVal);
+    if (document.getElementById('page-quiz') && document.getElementById('page-quiz').classList.contains('active')) {
+      quizAnswers = [[], []]; renderQuizStep();
     }
-    document.querySelectorAll('.lt-opt').forEach(b => b.classList.remove('active'));
-    document.getElementById('lt-en').classList.add('active');
+    if (document.getElementById('page-career') && document.getElementById('page-career').classList.contains('active')) renderCareerDetail();
+    // Re-render open category drawer
+    const drawer = document.getElementById('catDrawer');
+    if (drawer && drawer.classList.contains('open')) {
+      const catId = drawer.getAttribute('data-open-cat');
+      if (catId) openCategoryDrawer(catId);
+    }
+  }
+
+  function initLangState() {
+    document.querySelectorAll('.lt-opt').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed','false'); });
+    const ab = document.getElementById('lt-' + LANG);
+    if (ab) { ab.classList.add('active'); ab.setAttribute('aria-pressed','true'); }
+    if (LANG !== 'en') applyLangToPage();
   }
 
 
@@ -2231,10 +2322,10 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
       const builtCount = careers.filter(function(c) { return c.built; }).length;
       const total = careers.length;
       const sub = builtCount < total
-        ? builtCount + ' ready &middot; ' + (total - builtCount) + ' coming soon'
-        : total + ' career' + (total !== 1 ? 's' : '');
-      return '<button class="cat-tile" data-catid="' + cat.id + '" onclick="openCategoryDrawer(this.dataset.catid)" aria-label="' + cat.label + ', ' + total + ' careers">'
-        + '<div class="cat-tile-top"><span class="cat-tile-dot" style="background:var(--cat-' + cat.id + ')"></span><span class="cat-tile-name">' + cat.label + '</span></div>'
+        ? builtCount + ' ' + t('cat_ready') + ' &middot; ' + (total - builtCount) + ' ' + t('cat_coming_soon')
+        : total + ' ' + (total !== 1 ? t('careers_word') : t('career_word'));
+      return '<button class="cat-tile" data-catid="' + cat.id + '" onclick="openCategoryDrawer(this.dataset.catid)" aria-label="' + tCat(cat.id) + ', ' + total + ' ' + t('careers_word') + '">'
+        + '<div class="cat-tile-top"><span class="cat-tile-dot" style="background:var(--cat-' + cat.id + ')"></span><span class="cat-tile-name">' + tCat(cat.id) + '</span></div>'
         + '<div class="cat-tile-count">' + total + '</div>'
         + '<div class="cat-tile-sub">' + sub + '</div>'
         + '</button>';
@@ -2245,17 +2336,18 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
     const cat = CATEGORIES.find(function(c) { return c.id === catId; });
     if (!cat) return;
     document.getElementById('drawerDot').style.background = 'var(--cat-' + catId + ')';
-    document.getElementById('drawerTitleText').textContent = cat.label;
+    document.getElementById('catDrawer').setAttribute('data-open-cat', catId);
+    document.getElementById('drawerTitleText').textContent = tCat(catId);
 
     const careers = CAREERS.filter(function(c) { return c.cat === catId; });
     let rowIndex = 0;
     document.getElementById('drawerBody').innerHTML = careers.length === 0
-      ? '<div style="padding:24px;text-align:center;color:var(--t3)">No careers here yet.</div>'
+      ? '<div style="padding:24px;text-align:center;color:var(--t3)">' + t('no_careers_here') + '</div>'
       : careers.map(function(c) {
           const delay = 'style="animation-delay:' + (rowIndex++ * 20) + 'ms"';
           const tags = (c.isHot ? '<span class="hot-tag">hot</span>' : '')
             + (c.isNew ? '<span class="new-tag">new</span>' : '')
-            + (!c.built ? '<span class="soon-tag">Soon</span>' : '');
+            + (!c.built ? '<span class="soon-tag">' + t('soon_tag') + '</span>' : '');
           const hi = c.demandTone === 'high' ? ' dem-hi' : '';
           const stats = (c.demand || c.years || c.pay)
             ? '<div class="career-stats">'
@@ -2265,9 +2357,9 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
               + '</div>'
             : '';
           return '<button class="career-row ' + (c.built ? '' : 'soon') + '" data-carid="' + c.id + '" onclick="openCareer(this.dataset.carid)" ' + delay + '>'
-            + '<div class="career-top"><span class="career-name">' + c.name + '</span>'
+            + '<div class="career-top"><span class="career-name">' + (LANG === 'bm' ? (c.name_bm||c.name) : c.name) + '</span>'
             + '<span class="career-top-right">' + tags + '</span></div>'
-            + '<div class="career-hook">' + c.hook + '</div>'
+            + '<div class="career-hook">' + (LANG === 'bm' ? (c.hook_bm||c.hook) : c.hook) + '</div>'
             + stats
             + '</button>';
         }).join('');
@@ -2284,9 +2376,9 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
     document.body.style.overflow = '';
   }
 
-    document.addEventListener('DOMContentLoaded', async () => { await loadCareersFromDB(); renderCategoryGrid(); renderBookmarkStrip(); });
+    document.addEventListener('DOMContentLoaded', async () => { await loadCareersFromDB(); renderCategoryGrid(); renderBookmarkStrip(); initLangState(); });
 </script>
-<div class="lang-toast" id="langToast">BM version coming soon</div>
+
 <div class="compare-sticky" id="cmpSticky">
   <div class="cmp-sticky-label"><strong id="cmpCount">0 selected</strong><br><span style="font-size:11px">select up to 3 careers</span></div>
   <div>
