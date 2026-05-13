@@ -366,7 +366,7 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
   border-color: var(--border-h);
   transform: translateY(-1px);
 }
-.career-row.soon { opacity: .5; pointer-events: none; cursor: default; }
+.career-row.soon { opacity: .6; cursor: pointer; }
 .career-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2px; }
 .career-name { flex: 1; min-width: 0; }
 .career-top-right { display: inline-flex; align-items: center; gap: 5px; flex-shrink: 0; margin-left: 8px; }
@@ -1846,7 +1846,7 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
         </div>
         ${g.careers.map(c => { const delay = `style="animation-delay:${rowIndex++ * 30}ms"`; return `
           <button class="career-row ${c.built ? '' : 'soon'}" data-cat="${g.id}" onclick="openCareer('${c.id}')" ${delay}>
-            <div class="career-top"><span class="career-name">${c.name}</span><span class="career-top-right">${c.isHot ? '<span class="hot-tag">hot</span>' : ''}${c.isNew ? '<span class="new-tag">new</span>' : ''}<span class="cmp-icon-btn" id="cmp-${c.id}" onclick="toggleCompare('${c.id}',event)" role="button" tabindex="0" aria-label="Compare ${c.name}" title="Compare"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="8" height="18" rx="1"/><rect x="14" y="3" width="8" height="18" rx="1"/></svg></span></span></div>
+            <div class="career-top"><span class="career-name">${c.name}</span><span class="career-top-right">${c.isHot ? '<span class="hot-tag">hot</span>' : ''}${c.isNew ? '<span class="new-tag">new</span>' : ''}${!c.built ? '<span class="soon-tag">Soon</span>' : ''}<span class="cmp-icon-btn" id="cmp-${c.id}" onclick="toggleCompare('${c.id}',event)" role="button" tabindex="0" aria-label="Compare ${c.name}" title="Compare"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="8" height="18" rx="1"/><rect x="14" y="3" width="8" height="18" rx="1"/></svg></span></span></div>
             <div class="career-hook">${c.hook}</div>
           ${(c.demand||c.years||c.pay) ? `<div class="career-stats">${c.demand ? `<span class="cstat${(c.demandTone==='high'?' dem-hi':(c.demandTone==='moderate'||c.demandTone==='medium')?' dem-mod':'')}">${c.demand}</span>` : ''}${c.years ? `<span class="cstat">${c.years}</span>` : ''}${c.pay ? `<span class="cstat">${c.pay}</span>` : ''}</div>` : ''}
           </button>`; }).join('')}
