@@ -434,13 +434,13 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
 /* ── STREAM FILTER STRIP ─────────────────────────────────────────── */
 .stream-strip { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; padding: 0 0 2px; margin-bottom: 10px; }
 .stream-strip::-webkit-scrollbar { display: none; }
-.stream-chip { flex-shrink: 0; font-size: 12.5px; font-weight: 600; font-family: var(--sans); padding: 7px 16px; border-radius: 20px; border: 1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.05); color: var(--t2); cursor: pointer; white-space: nowrap; transition: background .15s, color .15s, border-color .15s; }
+.stream-chip { flex-shrink: 0; font-size: 12.5px; font-weight: 600; font-family: var(--sans); padding: 11px 16px; border-radius: 20px; border: 1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.05); color: var(--t2); cursor: pointer; white-space: nowrap; transition: background .15s, color .15s, border-color .15s; }
 .stream-chip:hover { background: rgba(255,255,255,.1); color: var(--t1); }
 .stream-chip.active { background: rgba(201,169,106,.14); border-color: var(--gold); color: var(--gold); }
 /* ── QUICK FILTERS ───────────────────────────────────────────────── */
 .qf-strip { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; padding: 0 0 2px; margin-bottom: 12px; flex-wrap: wrap; }
 .qf-strip::-webkit-scrollbar { display: none; }
-.qf-chip { flex-shrink: 0; font-size: 11.5px; font-weight: 600; font-family: var(--sans); padding: 5px 13px; border-radius: 20px; border: 1px solid rgba(255,255,255,.13); background: transparent; color: var(--t3); cursor: pointer; white-space: nowrap; transition: background .15s, color .15s, border-color .15s; display: flex; align-items: center; gap: 5px; }
+.qf-chip { flex-shrink: 0; font-size: 11.5px; font-weight: 600; font-family: var(--sans); padding: 10px 13px; border-radius: 20px; border: 1px solid rgba(255,255,255,.13); background: transparent; color: var(--t3); cursor: pointer; white-space: nowrap; transition: background .15s, color .15s, border-color .15s; display: flex; align-items: center; gap: 5px; }
 .qf-chip:hover { background: rgba(255,255,255,.07); color: var(--t2); border-color: rgba(255,255,255,.22); }
 .qf-chip.active { background: rgba(45,212,160,.12); border-color: rgba(45,212,160,.5); color: #2dd4a0; }
 .qf-chip .qf-icon { font-size: 10px; opacity: .7; }
@@ -978,7 +978,8 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
 .match-card .match-name { font-size: 16px; font-weight: 700; color: var(--t1); margin-bottom: 4px; }
 .match-card .match-why { font-size: 13px; color: var(--t2); line-height: 1.5; margin-bottom: 10px; }
 .match-card .match-cta { font-size: 13px; color: var(--gold); font-weight: 600; display: inline-block; }
-.match-card .match-cta::after { content: " 92"; }
+.match-card .match-signals { font-size: 13px; color: var(--t2); margin-bottom: 8px; letter-spacing: .2px; }
+.match-card .match-cta::after { content: " →"; }
 
 
 /* ── Salary estimate badge ── */
@@ -1273,7 +1274,7 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
       <span class="quiz-nudge-icon">&#10022;</span>
       <div class="quiz-nudge-body">
         <div class="quiz-nudge-title">Find careers that fit you.</div>
-        <div class="quiz-nudge-sub">3 questions &mdash; matched to your strengths and interests.</div>
+        <div class="quiz-nudge-sub">2 questions &mdash; matched to your subjects and how you work.</div>
       </div>
       <span class="quiz-nudge-cta">Take the quiz &rarr;</span>
     </div>
@@ -1447,7 +1448,7 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
       <button class="back-btn" onclick="goHome()">&larr; Back</button>
     </div>
     <div class="quiz-wrap">
-      <div class="quiz-step" id="quizStep">Question 1 of 3</div>
+      <div class="quiz-step" id="quizStep">Question 1 of 2</div>
       <h1 class="quiz-q" id="quizQuestion">Which subjects do you actually enjoy?</h1>
       <p class="quiz-hint" id="quizHint">Pick up to 3. No wrong answers.</p>
       <div id="quizOptions"></div>
@@ -1642,15 +1643,9 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
     },
     {
       q: 'How do you prefer to work?',
-      hint: 'Pick the one that feels most like you.',
-      type: 'single',
+      hint: 'Pick up to 2.',
+      type: 'multi', max: 2,
       options: ['Alone and focused', 'With a small team', 'With lots of people', 'With my hands', 'Making creative things']
-    },
-    {
-      q: 'What matters most to you right now?',
-      hint: 'Pick one. This changes, and that is fine.',
-      type: 'single',
-      options: ['Earning well', 'Job security', 'Helping people', 'Freedom and flexibility', 'Respect and prestige']
     }
   ];
 
@@ -2069,9 +2064,9 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
      Quiz
      ========================================================= */
   let quizStep = 0;
-  let quizAnswers = [[], null, null];
+  let quizAnswers = [[], []];
 
-  function startQuiz() { track('quiz_start'); quizStep = 0; quizAnswers = [[], null, null]; renderQuizStep(); showPage('page-quiz'); }
+  function startQuiz() { track('quiz_start'); quizStep = 0; quizAnswers = [[], []]; renderQuizStep(); showPage('page-quiz'); }
 
   function renderQuizStep() {
     const q = QUIZ[quizStep];
@@ -2101,13 +2096,16 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
   }
 
   function scoreAndShowResults() {
-    const [subjects, workstyle, priority] = quizAnswers;
+    const [subjects, workstyle] = quizAnswers;
     const scored = Object.entries(CAREER_TAGS).map(([id, tags]) => {
       let score = 0;
-      subjects.forEach(s => { if (tags.subjects.includes(s)) score += 2; });
-      if (tags.workstyle.includes(workstyle)) score += 3;
-      if (tags.priority.includes(priority)) score += 3;
-      return { id, score, ...tags, name: CAREERS.find(c => c.id === id)?.name };
+      // Each matching subject: +2 (max 6 for 3 picks)
+      const matchedSubjects = subjects.filter(s => tags.subjects && tags.subjects.includes(s));
+      matchedSubjects.forEach(() => score += 2);
+      // Each matching workstyle: +3 (max 6 for 2 picks)
+      const matchedWorkstyle = workstyle.filter(w => tags.workstyle && tags.workstyle.includes(w));
+      matchedWorkstyle.forEach(() => score += 3);
+      return { id, score, matchedSubjects, matchedWorkstyle, ...tags, name: CAREERS.find(c => c.id === id)?.name };
     });
     scored.sort((a, b) => b.score - a.score);
     const top = scored.slice(0, 5).filter(s => s.score > 0);
@@ -2116,7 +2114,19 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
     if (top.length === 0) {
       list.innerHTML = `<div class="info-block"><p>No strong matches yet. Try the career list and see what catches your eye.</p></div>`;
     } else {
-      list.innerHTML = top.map(t => `<button class="match-card" onclick="openCareer('${t.id}')"><div class="match-name">${t.name}</div><div class="match-why">${t.why}</div><span class="match-cta">See the routes</span></button>`).join('');
+      list.innerHTML = top.map(t => {
+        // Build a natural-language signals line from their actual answers
+        const signals = [...t.matchedSubjects, ...t.matchedWorkstyle];
+        const signalText = signals.length > 0
+          ? `<div class="match-signals">${signals.join(' &middot; ')}</div>`
+          : '';
+        return `<button class="match-card" onclick="openCareer('${t.id}')">
+          <div class="match-name">${t.name}</div>
+          <div class="match-why">${t.why}</div>
+          ${signalText}
+          <span class="match-cta">See the routes</span>
+        </button>`;
+      }).join('');
     }
     showPage('page-results');
   }
