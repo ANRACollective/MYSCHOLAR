@@ -2226,15 +2226,15 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
     const grid = document.getElementById('catGrid');
     if (!grid) return;
 
-    grid.innerHTML = '<div class="cat-grid">' + CATEGORIES.map(cat => {
-      const careers = CAREERS.filter(c => c.cat === cat.id);
-      const builtCount = careers.filter(c => c.built).length;
+    grid.innerHTML = '<div class="cat-grid">' + CATEGORIES.map(function(cat) {
+      const careers = CAREERS.filter(function(c) { return c.cat === cat.id; });
+      const builtCount = careers.filter(function(c) { return c.built; }).length;
       const total = careers.length;
       const sub = builtCount < total
         ? builtCount + ' ready &middot; ' + (total - builtCount) + ' coming soon'
         : total + ' career' + (total !== 1 ? 's' : '');
-      return '<button class="cat-tile" onclick="openCategoryDrawer('' + cat.id + '')" aria-label="' + cat.label + ', ' + total + ' careers">'
-        + '<div class="cat-tile-top"><span class="cat-tile-dot" style="background: var(--cat-' + cat.id + ')"></span><span class="cat-tile-name">' + cat.label + '</span></div>'
+      return '<button class="cat-tile" data-catid="' + cat.id + '" onclick="openCategoryDrawer(this.dataset.catid)" aria-label="' + cat.label + ', ' + total + ' careers">'
+        + '<div class="cat-tile-top"><span class="cat-tile-dot" style="background:var(--cat-' + cat.id + ')"></span><span class="cat-tile-name">' + cat.label + '</span></div>'
         + '<div class="cat-tile-count">' + total + '</div>'
         + '<div class="cat-tile-sub">' + sub + '</div>'
         + '</button>';
@@ -2242,29 +2242,31 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
   }
 
   function openCategoryDrawer(catId) {
-    const cat = CATEGORIES.find(c => c.id === catId);
+    const cat = CATEGORIES.find(function(c) { return c.id === catId; });
     if (!cat) return;
     document.getElementById('drawerDot').style.background = 'var(--cat-' + catId + ')';
     document.getElementById('drawerTitleText').textContent = cat.label;
 
-    const careers = CAREERS.filter(c => c.cat === catId);
+    const careers = CAREERS.filter(function(c) { return c.cat === catId; });
     let rowIndex = 0;
     document.getElementById('drawerBody').innerHTML = careers.length === 0
-      ? '<div style="padding:24px;text-align:center;color:var(--t3)">No careers in this category yet.</div>'
-      : careers.map(c => {
+      ? '<div style="padding:24px;text-align:center;color:var(--t3)">No careers here yet.</div>'
+      : careers.map(function(c) {
           const delay = 'style="animation-delay:' + (rowIndex++ * 20) + 'ms"';
-          const tags = (c.isHot ? '<span class="hot-tag">hot</span>' : '') + (c.isNew ? '<span class="new-tag">new</span>' : '') + (!c.built ? '<span class="soon-tag">Soon</span>' : '');
+          const tags = (c.isHot ? '<span class="hot-tag">hot</span>' : '')
+            + (c.isNew ? '<span class="new-tag">new</span>' : '')
+            + (!c.built ? '<span class="soon-tag">Soon</span>' : '');
+          const hi = c.demandTone === 'high' ? ' dem-hi' : '';
           const stats = (c.demand || c.years || c.pay)
             ? '<div class="career-stats">'
-              + (c.demand ? '<span class="cstat' + (c.demandTone === 'high' ? ' dem-hi' : '') + '">' + c.demand + '</span>' : '')
-              + (c.years ? '<span class="cstat">' + c.years + '</span>' : '')
-              + (c.pay ? '<span class="cstat">' + c.pay + '</span>' : '')
+              + (c.demand ? '<span class="cstat' + hi + '">' + c.demand + '</span>' : '')
+              + (c.years  ? '<span class="cstat">' + c.years  + '</span>' : '')
+              + (c.pay    ? '<span class="cstat">' + c.pay    + '</span>' : '')
               + '</div>'
             : '';
-          return '<button class="career-row ' + (c.built ? '' : 'soon') + '" data-cat="' + catId + '" onclick="openCareer('' + c.id + '')" ' + delay + '>'
+          return '<button class="career-row ' + (c.built ? '' : 'soon') + '" data-carid="' + c.id + '" onclick="openCareer(this.dataset.carid)" ' + delay + '>'
             + '<div class="career-top"><span class="career-name">' + c.name + '</span>'
-            + '<span class="career-top-right">' + tags
-            + '<span class="cmp-icon-btn" id="cmpd-' + c.id + '" onclick="toggleCompare('' + c.id + '',event)" role="button" tabindex="0" aria-label="Compare ' + c.name + '" title="Compare"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="8" height="18" rx="1"/><rect x="14" y="3" width="8" height="18" rx="1"/></svg></span></span></div>'
+            + '<span class="career-top-right">' + tags + '</span></div>'
             + '<div class="career-hook">' + c.hook + '</div>'
             + stats
             + '</button>';
