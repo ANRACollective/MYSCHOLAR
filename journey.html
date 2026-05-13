@@ -1782,6 +1782,7 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
   function goHome() { showPage('page-home'); closeSheet(); renderBookmarkStrip(); }
 
   function openCareer(careerId, keepRoute) {
+    closeCategoryDrawer(); // always clear drawer + restore body scroll
     const career = CAREERS.find(c => c.id === careerId);
     if (!career) return;
     currentCareer = careerId;
