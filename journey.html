@@ -1675,6 +1675,7 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
       quiz_step_pre: 'Question', quiz_step_of: 'of',
       quiz_next_final: 'See my matches', quiz_next: 'Next',
       see_routes: 'See the routes',
+      back_all: '\u2190 All careers', back_back: '\u2190 Back', back_start: '\u2190 Start over',
       cats: { health:'Healthcare', biz:'Business & Finance', eng:'Engineering', tech:'Tech', creative:'Creative', law:'Law & Society', tvet:'Trades & Vocational', gov:'Government & Services' },
       quiz: [
         { q:'Which subjects do you actually enjoy?', hint:'Pick up to 3. No wrong answers.', options:['Maths','English','BM','Science','Biology','Physics','Chemistry','Accounts','Economics','History','ICT','Art'] },
@@ -1697,6 +1698,7 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
       quiz_step_pre: 'Soalan', quiz_step_of: 'daripada',
       quiz_next_final: 'Lihat padanan saya', quiz_next: 'Seterusnya',
       see_routes: 'Lihat laluan',
+      back_all: '\u2190 Semua kerjaya', back_back: '\u2190 Kembali', back_start: '\u2190 Cuba semula',
       cats: { health:'Penjagaan Kesihatan', biz:'Perniagaan & Kewangan', eng:'Kejuruteraan', tech:'Teknologi', creative:'Kreatif', law:'Undang-undang & Masyarakat', tvet:'Kemahiran & Vokasional', gov:'Kerajaan & Perkhidmatan' },
       quiz: [
         { q:'Mata pelajaran mana yang anda suka?', hint:'Pilih sehingga 3. Tiada jawapan salah.', options:['Matematik','Bahasa Inggeris','Bahasa Melayu','Sains','Biologi','Fizik','Kimia','Perakaunan','Ekonomi','Sejarah','TMK','Seni'] },
@@ -1788,8 +1790,8 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
     currentCareer = careerId;
     if (!career.built || !CAREER_DATA[careerId]) {
       track('coming_soon_view', { career_id: careerId });
-      document.getElementById('csCareerName').textContent = career.name;
-      document.getElementById('csCareerHook').textContent = career.hook;
+      document.getElementById('csCareerName').textContent = LANG === 'bm' ? (career.name_bm||career.name) : career.name;
+      document.getElementById('csCareerHook').textContent = LANG === 'bm' ? (career.hook_bm||career.hook) : career.hook;
       document.getElementById('csEmail').value = '';
       document.getElementById('csConfirmation').classList.remove('visible');
       showPage('page-coming-soon'); return;
@@ -2129,14 +2131,14 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
       // Each matching workstyle: +3 (max 6 for 2 picks)
       const matchedWorkstyle = workstyle.filter(w => tags.workstyle && tags.workstyle.includes(w));
       matchedWorkstyle.forEach(() => score += 3);
-      return { id, score, matchedSubjects, matchedWorkstyle, ...tags, name: CAREERS.find(c => c.id === id)?.name };
+      const _mc = CAREERS.find(c => c.id === id); return { id, score, matchedSubjects, matchedWorkstyle, ...tags, name: LANG === 'bm' ? (_mc?.name_bm||_mc?.name) : _mc?.name };
     });
     scored.sort((a, b) => b.score - a.score);
     const top = scored.slice(0, 5).filter(s => s.score > 0);
     track('quiz_complete', { top_match: top[0]?.id });
     const list = document.getElementById('resultsList');
     if (top.length === 0) {
-      list.innerHTML = `<div class="info-block"><p>No strong matches yet. Try the career list and see what catches your eye.</p></div>`;
+      list.innerHTML = `<div class="info-block"><p>${LANG === 'bm' ? 'Tiada padanan kuat lagi. Cuba lihat senarai kerjaya dan pilih yang menarik minat anda.' : 'No strong matches yet. Try the career list and see what catches your eye.'}</p></div>`;
     } else {
       list.innerHTML = top.map(match => {
         // Build a natural-language signals line from their actual answers
@@ -2206,6 +2208,14 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
     if (matchText) matchText.textContent = t('match_btn');
     const search = document.getElementById('careerSearch');
     if (search) search.placeholder = t('search_placeholder');
+    // Update back buttons
+    const backBtns = document.querySelectorAll('.back-btn');
+    backBtns.forEach(b => {
+      const txt = b.innerHTML;
+      if (txt.includes('All careers') || txt.includes('Semua kerjaya')) b.innerHTML = t('back_all');
+      else if (txt.includes('Start over') || txt.includes('Cuba semula')) b.innerHTML = t('back_start');
+      else if (txt.includes('Back') || txt.includes('Kembali')) b.innerHTML = t('back_back');
+    });
     // Re-render visible sections
     const catGrid = document.getElementById('catGrid');
     if (catGrid && catGrid.style.display !== 'none') renderCategoryGrid();
