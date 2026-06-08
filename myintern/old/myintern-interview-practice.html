@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyIntern — Interview Practice</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background:#0a0f1e;
+  font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  display:flex; justify-content:center; padding:24px 16px 40px;
+  color:#fff; min-height:100vh;
+}
+.phone {
+  width:390px; height:820px;
+  background:#0d1426; border-radius:40px; overflow:hidden;
+  position:relative;
+  border:1.5px solid rgba(255,255,255,0.08);
+  box-shadow:0 40px 80px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+.status-bar {
+  height:44px; padding:12px 24px 0;
+  display:flex; justify-content:space-between; align-items:center;
+  font-size:12px; color:rgba(255,255,255,0.4);
+  flex-shrink:0;
+  position:relative; z-index:10;
+}
+
+/* screens */
+.screen {
+  position:absolute; inset:44px 0 0 0;
+  display:flex; flex-direction:column;
+  transform:translateX(100%);
+  transition:transform 0.32s cubic-bezier(0.4,0,0.2,1);
+  background:#0d1426;
+}
+.screen.active { transform:translateX(0); }
+.screen.gone { transform:translateX(-100%); }
+
+/* scroll body */
+.sbody {
+  flex:1; overflow-y:auto; padding:20px; scrollbar-width:none;
+}
+.sbody::-webkit-scrollbar { display:none; }
+
+/* footer */
+.sfoot { padding:12px 20px 20px; flex-shrink:0; }
+
+/* top nav */
+.topnav {
+  display:flex; align-items:center; gap:10px;
+  padding:14px 20px 10px; flex-shrink:0;
+}
+.back-btn {
+  width:32px; height:32px; border-radius:50%;
+  background:rgba(255,255,255,0.06); border:none; cursor:pointer;
+  color:rgba(255,255,255,0.6); font-size:16px;
+  display:flex; align-items:center; justify-content:center;
+}
+.nav-title { font-size:13px; color:rgba(255,255,255,0.5); font-weight:500; }
+
+/* primary button */
+.btn-primary {
+  width:100%; padding:16px; border-radius:16px; border:none;
+  background:linear-gradient(135deg,#3b82f6,#6366f1);
+  color:#fff; font-size:15px; font-weight:600; cursor:pointer;
+  transition:opacity 0.15s;
+}
+.btn-primary:disabled { opacity:0.35; cursor:default; }
+.btn-primary:not(:disabled):active { opacity:0.85; }
+
+/* secondary button */
+.btn-secondary {
+  width:100%; padding:14px; border-radius:16px; border:none;
+  background:rgba(255,255,255,0.06);
+  color:rgba(255,255,255,0.7); font-size:14px; font-weight:500; cursor:pointer;
+  margin-top:10px;
+}
+.btn-secondary:active { opacity:0.7; }
+
+/* section header */
+.section-label {
+  font-size:11px; font-weight:700; letter-spacing:0.08em;
+  color:rgba(255,255,255,0.3); text-transform:uppercase;
+  margin:20px 0 10px;
+}
+.section-label:first-child { margin-top:0; }
+
+/* ============ LIST SCREEN ============ */
+.list-header {
+  padding:16px 20px 0; flex-shrink:0;
+}
+.list-header h2 {
+  font-size:20px; font-weight:700; color:#fff;
+  line-height:1.3; margin-bottom:4px;
+}
+.list-header p {
+  font-size:13px; color:rgba(255,255,255,0.4); line-height:1.5;
+}
+.progress-summary {
+  margin:16px 20px 0;
+  padding:14px 16px; border-radius:14px;
+  background:rgba(99,102,241,0.1); border:1px solid rgba(99,102,241,0.2);
+  display:flex; align-items:center; gap:14px; flex-shrink:0;
+}
+.progress-summary .dots {
+  display:flex; gap:5px; flex-wrap:wrap;
+}
+.qdot {
+  width:10px; height:10px; border-radius:50%;
+  background:rgba(255,255,255,0.15);
+  transition:background 0.3s;
+}
+.qdot.done { background:#10b981; }
+.qdot.active-dot { background:#3b82f6; }
+.progress-summary .prog-label {
+  font-size:13px; color:rgba(255,255,255,0.5);
+}
+.progress-summary .prog-label span {
+  color:#fff; font-weight:700;
+}
+
+/* question row */
+.q-row {
+  display:flex; align-items:flex-start; gap:14px;
+  padding:14px 16px; border-radius:16px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.07);
+  margin-bottom:10px; cursor:pointer;
+  transition:background 0.15s, border-color 0.15s;
+}
+.q-row:active { background:rgba(255,255,255,0.08); }
+.q-row.done-row { opacity:0.6; }
+.q-num {
+  width:28px; height:28px; border-radius:50%;
+  background:rgba(255,255,255,0.08);
+  border:1.5px solid rgba(255,255,255,0.12);
+  display:flex; align-items:center; justify-content:center;
+  font-size:12px; font-weight:700; color:rgba(255,255,255,0.5);
+  flex-shrink:0; margin-top:1px;
+}
+.q-num.done-num {
+  background:rgba(16,185,129,0.15);
+  border-color:rgba(16,185,129,0.4);
+  color:#10b981;
+}
+.q-num.next-num {
+  background:rgba(59,130,246,0.15);
+  border-color:rgba(59,130,246,0.5);
+  color:#3b82f6;
+}
+.q-content { flex:1; min-width:0; }
+.q-preview {
+  font-size:14px; color:rgba(255,255,255,0.8);
+  line-height:1.45; margin-bottom:6px;
+  display:-webkit-box; -webkit-line-clamp:2;
+  -webkit-box-orient:vertical; overflow:hidden;
+}
+.q-row.done-row .q-preview { color:rgba(255,255,255,0.45); }
+.q-tag {
+  display:inline-block; padding:2px 8px; border-radius:6px;
+  font-size:11px; font-weight:600; letter-spacing:0.03em;
+}
+.tag-project { background:rgba(99,102,241,0.2); color:#818cf8; }
+.tag-skills  { background:rgba(59,130,246,0.2); color:#60a5fa; }
+.tag-activity{ background:rgba(16,185,129,0.15); color:#6ee7b7; }
+.tag-motivation{ background:rgba(245,158,11,0.15); color:#fbbf24; }
+.tag-problem { background:rgba(239,68,68,0.15); color:#fca5a5; }
+.tag-reflection{ background:rgba(168,85,247,0.15); color:#c084fc; }
+.tag-goals   { background:rgba(20,184,166,0.15); color:#5eead4; }
+.q-arrow {
+  color:rgba(255,255,255,0.2); font-size:16px; margin-top:4px; flex-shrink:0;
+}
+
+/* ============ ANSWER SCREEN ============ */
+.q-context-card {
+  padding:14px 16px; border-radius:14px;
+  background:rgba(99,102,241,0.08);
+  border:1px solid rgba(99,102,241,0.2);
+  margin-bottom:16px;
+}
+.q-context-label {
+  font-size:10px; font-weight:700; letter-spacing:0.1em;
+  color:rgba(99,102,241,0.8); text-transform:uppercase; margin-bottom:5px;
+}
+.q-full-text {
+  font-size:16px; font-weight:600; color:#fff; line-height:1.5;
+}
+.q-why {
+  font-size:12px; color:rgba(255,255,255,0.35); margin-top:6px; line-height:1.4;
+}
+
+.answer-area-wrap { position:relative; margin-bottom:10px; }
+.answer-area {
+  width:100%; min-height:160px; padding:14px;
+  background:rgba(255,255,255,0.05);
+  border:1.5px solid rgba(255,255,255,0.1); border-radius:14px;
+  color:#fff; font-size:14px; line-height:1.6;
+  font-family:inherit; resize:none; outline:none;
+  transition:border-color 0.2s;
+}
+.answer-area:focus { border-color:rgba(99,102,241,0.5); }
+.answer-area::placeholder { color:rgba(255,255,255,0.25); }
+.word-count {
+  text-align:right; font-size:11px; color:rgba(255,255,255,0.3);
+  margin-top:5px;
+}
+.word-count span { color:rgba(255,255,255,0.6); font-weight:600; }
+
+/* STAR hint */
+.hint-toggle {
+  display:flex; align-items:center; gap:8px; padding:10px 14px;
+  border-radius:12px; border:1px dashed rgba(255,255,255,0.12);
+  background:transparent; cursor:pointer; width:100%;
+  margin-bottom:12px; transition:border-color 0.2s;
+}
+.hint-toggle:active { background:rgba(255,255,255,0.03); }
+.hint-label {
+  font-size:12px; color:rgba(255,255,255,0.4); flex:1; text-align:left;
+}
+.hint-arrow {
+  font-size:11px; color:rgba(255,255,255,0.25);
+  transition:transform 0.25s;
+}
+.hint-arrow.open { transform:rotate(180deg); }
+
+.hint-panel {
+  display:none; padding:12px 14px; border-radius:12px;
+  background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07);
+  margin-bottom:12px;
+}
+.hint-panel.visible { display:block; }
+.hint-row { display:flex; gap:10px; margin-bottom:10px; }
+.hint-row:last-child { margin-bottom:0; }
+.hint-letter {
+  width:20px; height:20px; border-radius:6px;
+  background:rgba(99,102,241,0.2); color:#818cf8;
+  font-size:11px; font-weight:700; display:flex;
+  align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;
+}
+.hint-text { font-size:12px; color:rgba(255,255,255,0.45); line-height:1.5; }
+.hint-text strong { color:rgba(255,255,255,0.65); font-weight:600; }
+
+/* ============ FEEDBACK SCREEN ============ */
+.score-ring-wrap {
+  display:flex; flex-direction:column; align-items:center;
+  padding:20px 0 16px;
+}
+.score-ring-wrap svg { overflow:visible; }
+.score-main {
+  font-size:36px; font-weight:800; color:#fff;
+  margin-top:10px; line-height:1;
+}
+.score-sub { font-size:13px; color:rgba(255,255,255,0.35); margin-top:4px; }
+
+.fb-card {
+  padding:14px 16px; border-radius:14px; margin-bottom:10px;
+}
+.fb-card-green {
+  background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.2);
+}
+.fb-card-orange {
+  background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.2);
+}
+.fb-card-label {
+  font-size:10px; font-weight:700; letter-spacing:0.1em;
+  text-transform:uppercase; margin-bottom:6px;
+}
+.fb-card-green .fb-card-label { color:rgba(16,185,129,0.8); }
+.fb-card-orange .fb-card-label { color:rgba(245,158,11,0.8); }
+.fb-card-text { font-size:13px; color:rgba(255,255,255,0.7); line-height:1.5; }
+
+.sample-toggle {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 16px; border-radius:12px;
+  background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  cursor:pointer; margin-top:4px;
+}
+.sample-toggle-label { font-size:13px; color:rgba(255,255,255,0.5); }
+.sample-toggle-arrow {
+  font-size:11px; color:rgba(255,255,255,0.25);
+  transition:transform 0.25s;
+}
+.sample-toggle-arrow.open { transform:rotate(180deg); }
+.sample-panel {
+  display:none; padding:14px 16px; margin-top:2px;
+  border-radius:12px; background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.07);
+}
+.sample-panel.visible { display:block; }
+.sample-text {
+  font-size:13px; color:rgba(255,255,255,0.55); line-height:1.7;
+}
+.sample-text em { color:#63b3ed; font-style:normal; }
+
+/* ============ COMPLETE SCREEN ============ */
+.complete-center {
+  display:flex; flex-direction:column; align-items:center;
+  padding:24px 0 20px; text-align:center;
+}
+.complete-badge {
+  width:72px; height:72px; border-radius:24px;
+  background:linear-gradient(135deg,rgba(59,130,246,0.2),rgba(99,102,241,0.2));
+  border:1.5px solid rgba(99,102,241,0.4);
+  display:flex; align-items:center; justify-content:center;
+  font-size:32px; margin-bottom:16px;
+}
+.complete-title {
+  font-size:22px; font-weight:800; color:#fff; margin-bottom:8px;
+}
+.complete-sub {
+  font-size:14px; color:rgba(255,255,255,0.45); line-height:1.6; max-width:280px;
+}
+.readiness-update {
+  margin:20px 20px 0;
+  padding:16px; border-radius:16px;
+  background:rgba(16,185,129,0.08); border:1px solid rgba(16,185,129,0.2);
+}
+.readiness-row {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:10px;
+}
+.readiness-label { font-size:13px; color:rgba(255,255,255,0.5); }
+.readiness-scores {
+  display:flex; align-items:center; gap:8px;
+}
+.score-old {
+  font-size:14px; color:rgba(255,255,255,0.3); text-decoration:line-through;
+}
+.score-arrow { font-size:12px; color:rgba(255,255,255,0.2); }
+.score-new { font-size:18px; font-weight:800; color:#10b981; }
+.readiness-bar-wrap {
+  height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden;
+}
+.readiness-bar-fill {
+  height:100%; border-radius:3px;
+  background:linear-gradient(90deg,#10b981,#3b82f6);
+  width:78%; transition:width 0.8s cubic-bezier(0.4,0,0.2,1);
+}
+</style>
+</head>
+<body>
+
+<div class="phone">
+  <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+
+  <!-- ====== S-LIST: Question List ====== -->
+  <div id="s-list" class="screen active">
+    <div class="list-header">
+      <h2>Interview Practice</h2>
+      <p>7 questions personalised to your CV and this role.</p>
+    </div>
+
+    <div class="progress-summary">
+      <div class="dots" id="dot-row">
+        <div class="qdot active-dot" id="dot-0"></div>
+        <div class="qdot" id="dot-1"></div>
+        <div class="qdot" id="dot-2"></div>
+        <div class="qdot" id="dot-3"></div>
+        <div class="qdot" id="dot-4"></div>
+        <div class="qdot" id="dot-5"></div>
+        <div class="qdot" id="dot-6"></div>
+      </div>
+      <div class="prog-label"><span id="done-count">0</span>/7 answered</div>
+    </div>
+
+    <div class="sbody">
+      <div id="q-list-items"></div>
+    </div>
+  </div>
+
+  <!-- ====== S-ANSWER: Answer Input ====== -->
+  <div id="s-answer" class="screen">
+    <div class="topnav">
+      <button class="back-btn" onclick="backTo('s-list')">&#8592;</button>
+      <span class="nav-title" id="answer-step-label">QUESTION 1 OF 7</span>
+    </div>
+
+    <div class="sbody">
+      <div class="q-context-card">
+        <div class="q-context-label">Interview Question</div>
+        <div class="q-full-text" id="active-q-text">—</div>
+        <div class="q-why" id="active-q-why">—</div>
+      </div>
+
+      <button class="hint-toggle" onclick="toggleHint()">
+        <span class="hint-label">Not sure where to start? Use the STAR guide</span>
+        <span class="hint-arrow" id="hint-arrow">&#9660;</span>
+      </button>
+
+      <div class="hint-panel" id="hint-panel">
+        <div class="hint-row">
+          <div class="hint-letter">S</div>
+          <div class="hint-text"><strong>Situation</strong> — Set the scene briefly. What was the context?</div>
+        </div>
+        <div class="hint-row">
+          <div class="hint-letter">T</div>
+          <div class="hint-text"><strong>Task</strong> — What were you trying to do or solve?</div>
+        </div>
+        <div class="hint-row">
+          <div class="hint-letter">A</div>
+          <div class="hint-text"><strong>Action</strong> — What did you actually do? Be specific.</div>
+        </div>
+        <div class="hint-row">
+          <div class="hint-letter">R</div>
+          <div class="hint-text"><strong>Result</strong> — What happened? Even a small win counts.</div>
+        </div>
+      </div>
+
+      <div class="answer-area-wrap">
+        <textarea
+          class="answer-area"
+          id="answer-input"
+          placeholder="Type your answer here..."
+          oninput="updateWordCount()"
+        ></textarea>
+      </div>
+      <div class="word-count"><span id="wc">0</span> words</div>
+    </div>
+
+    <div class="sfoot">
+      <button class="btn-primary" id="submit-btn" onclick="submitAnswer()" disabled>Submit answer</button>
+    </div>
+  </div>
+
+  <!-- ====== S-FEEDBACK: AI Feedback ====== -->
+  <div id="s-feedback" class="screen">
+    <div class="topnav">
+      <button class="back-btn" onclick="backTo('s-answer')">&#8592;</button>
+      <span class="nav-title" id="fb-step-label">FEEDBACK — Q1</span>
+    </div>
+
+    <div class="sbody">
+      <div class="score-ring-wrap">
+        <svg width="120" height="120" viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="8"/>
+          <circle cx="60" cy="60" r="50" fill="none"
+            stroke="url(#scoreGrad)" stroke-width="8"
+            stroke-linecap="round" stroke-dasharray="314"
+            stroke-dashoffset="94"
+            transform="rotate(-90 60 60)"
+            id="score-arc"/>
+          <defs>
+            <linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#3b82f6"/>
+              <stop offset="100%" stop-color="#6366f1"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <div class="score-main" id="fb-score">7</div>
+        <div class="score-sub" id="fb-score-label">out of 10 — good answer</div>
+      </div>
+
+      <div class="fb-card fb-card-green">
+        <div class="fb-card-label">What worked</div>
+        <div class="fb-card-text" id="fb-good">—</div>
+      </div>
+
+      <div class="fb-card fb-card-orange">
+        <div class="fb-card-label">What to improve</div>
+        <div class="fb-card-text" id="fb-improve">—</div>
+      </div>
+
+      <div class="sample-toggle" onclick="toggleSample()">
+        <span class="sample-toggle-label">See a stronger answer</span>
+        <span class="sample-toggle-arrow" id="sample-arrow">&#9660;</span>
+      </div>
+      <div class="sample-panel" id="sample-panel">
+        <div class="sample-text" id="fb-sample">—</div>
+      </div>
+    </div>
+
+    <div class="sfoot">
+      <button class="btn-primary" id="next-q-btn" onclick="nextQuestion()">Next question</button>
+      <button class="btn-secondary" onclick="retryAnswer()">Try this one again</button>
+    </div>
+  </div>
+
+  <!-- ====== S-COMPLETE: All Done ====== -->
+  <div id="s-complete" class="screen">
+    <div class="sbody">
+      <div class="complete-center">
+        <div class="complete-badge">&#10003;</div>
+        <div class="complete-title">Practice complete</div>
+        <div class="complete-sub">You've gone through all 7 questions. Your readiness score has been updated.</div>
+      </div>
+
+      <div class="readiness-update">
+        <div class="readiness-row">
+          <div class="readiness-label">Interview readiness</div>
+          <div class="readiness-scores">
+            <span class="score-old">35</span>
+            <span class="score-arrow">&#8594;</span>
+            <span class="score-new">78</span>
+          </div>
+        </div>
+        <div class="readiness-bar-wrap">
+          <div class="readiness-bar-fill"></div>
+        </div>
+      </div>
+
+      <div class="sbody" style="flex:none; padding:16px 20px 0;">
+        <div class="section-label">What you showed</div>
+        <div class="q-row" style="cursor:default; margin-bottom:10px;">
+          <div class="q-num done-num">&#10003;</div>
+          <div class="q-content">
+            <div class="q-preview" style="font-size:13px;">Specific project context with clear problem statement</div>
+          </div>
+        </div>
+        <div class="q-row" style="cursor:default; margin-bottom:10px;">
+          <div class="q-num done-num">&#10003;</div>
+          <div class="q-content">
+            <div class="q-preview" style="font-size:13px;">Genuine motivation — not just "I want experience"</div>
+          </div>
+        </div>
+        <div class="q-row" style="cursor:default; margin-bottom:10px;">
+          <div class="q-num done-num">&#10003;</div>
+          <div class="q-content">
+            <div class="q-preview" style="font-size:13px;">Self-awareness about gaps and what you want to learn</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sfoot">
+      <button class="btn-primary" onclick="alert('Apply flow coming next')">Apply for this role</button>
+      <button class="btn-secondary" onclick="goTo('s-complete','s-list')">Practice again</button>
+    </div>
+  </div>
+
+</div><!-- /phone -->
+
+<script>
+// ===== DATA =====
+
+var questions = [
+  {
+    q: "Walk me through your Attendance System project — what problem were you solving?",
+    tag: "project",
+    tagLabel: "Project",
+    why: "From your CV: Attendance System listed under projects",
+    score: 7,
+    scoreLabel: "out of 10 — good answer",
+    scoreOffset: 94,
+    good: "Clear context. You explained what the system did without over-explaining the tech stack.",
+    improve: "Missing the outcome. What happened after you built it? Was it actually used by anyone? Even 'my lecturer gave us a B+ and said it was the most complete submission' is a real result.",
+    sample: "In my second year, our faculty still tracked attendance on paper — lecturers would pass around a sheet each class and manually count at the end of semester. For my system development subject, I built a <em>web-based attendance system</em> using PHP and MySQL. Students log in with their matric number, check in via a QR code the lecturer generates each class, and the system auto-calculates attendance percentage. <em>The lecturer adopted it for two classes the following semester</em>. I learned that database structure decisions made early are hard to undo — I had to refactor my tables halfway through because I hadn't planned for multiple sessions per day."
+  },
+  {
+    q: "You listed Python and SQL. Have you used both on the same project?",
+    tag: "skills",
+    tagLabel: "Skills",
+    why: "From your CV: Python and SQL both listed under technical skills",
+    score: 6,
+    scoreLabel: "out of 10 — decent, can be stronger",
+    scoreOffset: 125,
+    good: "You gave a concrete example rather than just saying yes. That's exactly what interviewers want.",
+    improve: "Go further on the SQL side — what kind of queries? Joins? Aggregations? Specificity builds credibility even if the project was small.",
+    sample: "In my final year project, I used Python to process the raw data and SQL to store and query it. I wrote a script that parsed CSV exports from the university portal into a MySQL database, then used Python again to run analysis on the query results. Nothing production-scale, but I got comfortable writing <em>multi-table JOINs and GROUP BY queries</em> to answer questions like 'which students are at risk based on attendance and assignment scores combined.' The integration between the two tools was where I learned the most."
+  },
+  {
+    q: "You were in PALAPES. Tell me about a moment that required real discipline.",
+    tag: "activity",
+    tagLabel: "Activity",
+    why: "From your CV: PALAPES listed under co-curricular activities",
+    score: 8,
+    scoreLabel: "out of 10 — strong answer",
+    scoreOffset: 63,
+    good: "Strong specific detail — time, place, stakes. This is exactly how you should answer behavioural questions.",
+    improve: "Connect it back to the workplace — 'this is why I don't complain when debugging at 11pm' makes interviewers remember you.",
+    sample: "During the annual PALAPES assessment camp, we had a 36-hour field exercise with minimal sleep. Around hour 28, we had to navigate a night course and my team was behind schedule. The easiest thing would've been to cut corners on the final checkpoint. <em>I pushed us to complete every checkpoint fully</em> — we finished last but complete. That experience taught me that discipline isn't about performing well when you're fresh. It's about not cutting corners when you're exhausted. I think about that when I'm debugging a feature at midnight before a submission deadline."
+  },
+  {
+    q: "What drew you to Computer Science specifically?",
+    tag: "motivation",
+    tagLabel: "Motivation",
+    why: "Field of study from your CV",
+    score: 7,
+    scoreLabel: "out of 10 — good answer",
+    scoreOffset: 94,
+    good: "Personal origin story gives it authenticity. Far better than generic 'I like technology' answers.",
+    improve: "Bring it forward in time — what does that original spark look like now, as a final year student? Has it evolved?",
+    sample: "When I was 16, my uncle's small restaurant was losing money because he had no way to track which dishes were actually profitable — he was just guessing. I built him a basic Excel tracker and realised data could make real decisions clearer for people who aren't numbers-oriented. That sent me toward CS. Now in final year, it's less about the aha moment and more about the fact that <em>I can build things that didn't exist before</em>. That's still what gets me."
+  },
+  {
+    q: "Tell me about a time you had to figure something out with no one to help you.",
+    tag: "problem",
+    tagLabel: "Problem Solving",
+    why: "Standard internship readiness question",
+    score: 7,
+    scoreLabel: "out of 10 — good answer",
+    scoreOffset: 94,
+    good: "Good structure. You showed process, not just outcome — that's what separates a real answer from a rehearsed one.",
+    improve: "Name the actual resource you used. 'I found a Stack Overflow thread' or 'I read the official PHP docs' is more credible than 'I searched online.'",
+    sample: "During my e-commerce project, I needed to implement a payment gateway but our supervisor was on leave and none of my group members had done it before. I spent two days reading the <em>Billplz API documentation</em> end to end, set up a sandbox environment, and tested each endpoint individually. I got it working, but more importantly — I now know I can read documentation and build from it without needing someone to walk me through it."
+  },
+  {
+    q: "You're in final year. What's one thing you'd do differently if you started over?",
+    tag: "reflection",
+    tagLabel: "Reflection",
+    why: "Standard self-awareness question for final year students",
+    score: 8,
+    scoreLabel: "out of 10 — strong answer",
+    scoreOffset: 63,
+    good: "Honest and specific. You didn't give a 'weakness that's secretly a strength' answer — that honesty reads well.",
+    improve: "Show you've already started correcting it. 'I wish I'd done X earlier, so now I'm doing Y' closes the loop.",
+    sample: "I'd start building things outside of class assignments earlier. All my projects so far have been for marks. I only started a personal project — a simple scholarship finder for Malaysian students — in my final semester. I've learned more from it in three months than from two years of coursework because <em>there are no marks, just users</em>. If I started over, I'd do one real side project per year."
+  },
+  {
+    q: "If you got this internship, what would you want to have learned by the end of it?",
+    tag: "goals",
+    tagLabel: "Goals",
+    why: "Role-specific closing question",
+    score: 8,
+    scoreLabel: "out of 10 — strong answer",
+    scoreOffset: 63,
+    good: "Specific, role-relevant, and shows you've thought about it beyond just 'experience'. Interviewers remember this.",
+    improve: "Add a secondary goal that's people-focused — what do you want to learn from the team, not just the tech?",
+    sample: "Three things. First, I want to see what production-level code looks like — how it's structured, reviewed, and deployed — because my projects only have me as the audience. Second, I want to understand how product decisions actually get made. In university it's just 'the spec says so.' Third, I want to see <em>how good developers approach problems they've never seen before</em> — that process is what I can't learn from YouTube."
+  }
+];
+
+// ===== STATE =====
+var histStack = [];
+var currentQ = 0;
+var answered = [false, false, false, false, false, false, false];
+var hintOpen = false;
+var sampleOpen = false;
+
+// ===== INIT =====
+renderQuestionList();
+
+function renderQuestionList() {
+  var container = document.getElementById('q-list-items');
+  var html = '';
+  var firstUnanswered = -1;
+  for (var i = 0; i < questions.length; i++) {
+    if (!answered[i] && firstUnanswered === -1) firstUnanswered = i;
+  }
+  for (var i = 0; i < questions.length; i++) {
+    var q = questions[i];
+    var isDone = answered[i];
+    var isNext = (i === firstUnanswered);
+    var numClass = isDone ? 'done-num' : (isNext ? 'next-num' : '');
+    var numContent = isDone ? '&#10003;' : (i + 1);
+    var rowClass = isDone ? 'done-row' : '';
+    html += '<div class="q-row ' + rowClass + '" onclick="openQuestion(' + i + ')">';
+    html += '<div class="q-num ' + numClass + '">' + numContent + '</div>';
+    html += '<div class="q-content">';
+    html += '<div class="q-preview">' + q.q + '</div>';
+    html += '<span class="q-tag tag-' + q.tag + '">' + q.tagLabel + '</span>';
+    html += '</div>';
+    html += '<div class="q-arrow">&#8250;</div>';
+    html += '</div>';
+  }
+  container.innerHTML = html;
+  // update done count and dots
+  var doneCount = 0;
+  for (var i = 0; i < answered.length; i++) {
+    if (answered[i]) doneCount++;
+    var dot = document.getElementById('dot-' + i);
+    if (dot) {
+      dot.className = 'qdot' + (answered[i] ? ' done' : (i === firstUnanswered ? ' active-dot' : ''));
+    }
+  }
+  document.getElementById('done-count').textContent = doneCount;
+}
+
+// ===== NAVIGATION =====
+function goTo(fromId, toId) {
+  var from = document.getElementById(fromId);
+  var to = document.getElementById(toId);
+  if (!from || !to) return;
+  from.classList.remove('active');
+  from.classList.add('gone');
+  setTimeout(function(f) { f.classList.remove('gone'); }, 350, from);
+  to.classList.add('active');
+  histStack.push(fromId);
+}
+
+function backTo(id) {
+  var cur = histStack.length > 0 ? histStack[histStack.length - 1] : null;
+  if (cur) {
+    var el = document.getElementById(cur);
+    if (el) {
+      el.classList.remove('active');
+      el.classList.add('gone');
+      setTimeout(function(e) { e.classList.remove('gone'); }, 350, el);
+    }
+    histStack.pop();
+  }
+  var target = document.getElementById(id);
+  if (target) target.classList.add('active');
+}
+
+// ===== QUESTION ACTIONS =====
+function openQuestion(idx) {
+  currentQ = idx;
+  var q = questions[idx];
+  document.getElementById('answer-step-label').textContent = 'QUESTION ' + (idx + 1) + ' OF 7';
+  document.getElementById('active-q-text').textContent = q.q;
+  document.getElementById('active-q-why').textContent = q.why;
+  // reset answer area
+  var ta = document.getElementById('answer-input');
+  ta.value = '';
+  document.getElementById('wc').textContent = '0';
+  document.getElementById('submit-btn').disabled = true;
+  // reset hint
+  hintOpen = false;
+  document.getElementById('hint-panel').classList.remove('visible');
+  document.getElementById('hint-arrow').classList.remove('open');
+  goTo('s-list', 's-answer');
+}
+
+function toggleHint() {
+  hintOpen = !hintOpen;
+  var panel = document.getElementById('hint-panel');
+  var arrow = document.getElementById('hint-arrow');
+  if (hintOpen) {
+    panel.classList.add('visible');
+    arrow.classList.add('open');
+  } else {
+    panel.classList.remove('visible');
+    arrow.classList.remove('open');
+  }
+}
+
+function updateWordCount() {
+  var ta = document.getElementById('answer-input');
+  var val = ta.value.trim();
+  var words = val === '' ? 0 : val.split(/\s+/).length;
+  document.getElementById('wc').textContent = words;
+  document.getElementById('submit-btn').disabled = (words < 5);
+}
+
+function computeScore(wordCount) {
+  // Score is based on answer length — proxy for effort and detail
+  // In the real build, Claude Haiku scores this properly against the question
+  if (wordCount < 10) return {
+    score: 2, offset: 251, label: "out of 10 — too short to evaluate",
+    good: "Nothing to work with yet.",
+    improve: "An answer this short would last about 5 seconds out loud. Interviewers expect 30-60 seconds minimum. Try again with at least 3-4 real sentences."
+  };
+  if (wordCount < 30) return {
+    score: 4, offset: 188, label: "out of 10 — needs more detail",
+    good: "You gave a response — that's the starting point.",
+    improve: "Too brief. You've made a statement but not backed it up. Add a specific example: what exactly did you do, when, and what happened as a result?"
+  };
+  if (wordCount < 60) return {
+    score: 6, offset: 126, label: "out of 10 — decent start",
+    good: "Enough here to evaluate — you've got the basic shape of an answer.",
+    improve: "Missing a concrete outcome. What specifically happened at the end? Even a small, real detail ('the lecturer used it the following semester', 'we submitted on time') is what makes answers stick."
+  };
+  // 60+ words: answer is substantial — use question-specific feedback
+  return null;
+}
+
+function submitAnswer() {
+  var ta = document.getElementById('answer-input');
+  var text = ta.value.trim();
+  var wordCount = text === '' ? 0 : text.split(/\s+/).length;
+  var q = questions[currentQ];
+
+  // Try to compute a length-based score first
+  var computed = computeScore(wordCount);
+
+  // set feedback content
+  document.getElementById('fb-step-label').textContent = 'FEEDBACK — Q' + (currentQ + 1);
+
+  if (computed) {
+    // Short/low-quality answer — use generic scored feedback
+    document.getElementById('fb-score').textContent = computed.score;
+    document.getElementById('fb-score-label').textContent = computed.label;
+    document.getElementById('score-arc').setAttribute('stroke-dashoffset', computed.offset);
+    document.getElementById('fb-good').textContent = computed.good;
+    document.getElementById('fb-improve').textContent = computed.improve;
+  } else {
+    // Substantial answer — use question-specific feedback
+    document.getElementById('fb-score').textContent = q.score;
+    document.getElementById('fb-score-label').textContent = q.scoreLabel;
+    document.getElementById('score-arc').setAttribute('stroke-dashoffset', q.scoreOffset);
+    document.getElementById('fb-good').textContent = q.good;
+    document.getElementById('fb-improve').textContent = q.improve;
+  }
+
+  // Sample answer always shows regardless of score — it's educational
+  document.getElementById('fb-sample').innerHTML = q.sample;
+  // reset sample panel
+  sampleOpen = false;
+  document.getElementById('sample-panel').classList.remove('visible');
+  document.getElementById('sample-arrow').classList.remove('open');
+  // update next button label
+  var allDoneAfter = true;
+  for (var i = 0; i < answered.length; i++) {
+    if (i !== currentQ && !answered[i]) { allDoneAfter = false; break; }
+  }
+  document.getElementById('next-q-btn').textContent = allDoneAfter ? 'See your results' : 'Next question';
+  goTo('s-answer', 's-feedback');
+}
+
+function retryAnswer() {
+  // reset answer
+  var ta = document.getElementById('answer-input');
+  ta.value = '';
+  document.getElementById('wc').textContent = '0';
+  document.getElementById('submit-btn').disabled = true;
+  hintOpen = false;
+  document.getElementById('hint-panel').classList.remove('visible');
+  document.getElementById('hint-arrow').classList.remove('open');
+  goTo('s-feedback', 's-answer');
+  histStack.pop(); histStack.pop(); // clean up double push
+}
+
+function nextQuestion() {
+  // mark current as answered
+  answered[currentQ] = true;
+  // check if all done
+  var allDone = true;
+  for (var i = 0; i < answered.length; i++) {
+    if (!answered[i]) { allDone = false; break; }
+  }
+  if (allDone) {
+    renderQuestionList();
+    goTo('s-feedback', 's-complete');
+  } else {
+    renderQuestionList();
+    goTo('s-feedback', 's-list');
+  }
+}
+
+function toggleSample() {
+  sampleOpen = !sampleOpen;
+  var panel = document.getElementById('sample-panel');
+  var arrow = document.getElementById('sample-arrow');
+  if (sampleOpen) {
+    panel.classList.add('visible');
+    arrow.classList.add('open');
+  } else {
+    panel.classList.remove('visible');
+    arrow.classList.remove('open');
+  }
+}
+</script>
+</body>
+</html>

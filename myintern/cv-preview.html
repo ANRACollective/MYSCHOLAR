@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<!--
+  MyIntern CV Preview — Print-optimised CV page
+  Reads CV data from localStorage (set by cv-builder.html).
+  Works on iOS Safari: opens print dialog via window.print()
+  on a real page load, not a blob URL.
+  Part of the MyIntern ecosystem · myscholar.my · 2026
+-->
+<html lang="en-MY">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My CV — MyIntern</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZETBRDDMTV"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-ZETBRDDMTV');</script>
+<style>
+/* ── Screen chrome (hidden on print) ── */
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0f4f8;min-height:100vh;padding:24px 16px 40px;-webkit-font-smoothing:antialiased}
+
+.toolbar{max-width:720px;margin:0 auto 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.toolbar-back{display:inline-flex;align-items:center;gap:6px;padding:10px 16px;border-radius:10px;border:1.5px solid #e2e8f0;background:#fff;color:#475569;font-size:13px;font-weight:600;cursor:pointer;text-decoration:none;transition:all .2s}
+.toolbar-back:hover{background:#f8fafc;border-color:#cbd5e1;color:#1e293b}
+.toolbar-save{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:10px;background:#1e3a6e;color:#fff;font-size:13px;font-weight:700;cursor:pointer;border:none;transition:background .2s}
+.toolbar-save:hover{background:#1e40af}
+.toolbar-hint{font-size:11px;color:#94a3b8;flex:1;min-width:160px}
+
+/* ── CV Paper ── */
+.cv-paper{max-width:720px;margin:0 auto;background:#fff;border-radius:12px;padding:48px 52px;box-shadow:0 4px 24px rgba(0,0,0,.08);line-height:1.6;color:#1a1a1a;font-size:13px}
+
+/* Header */
+.cv-name{font-size:26px;font-weight:700;color:#0a0f1e;margin-bottom:4px;letter-spacing:-.3px}
+.cv-contact{font-size:12px;color:#555;margin-bottom:20px;padding-bottom:16px;border-bottom:2.5px solid #1e3a6e;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:center}
+.cv-contact a{color:#1e3a6e;text-decoration:none}
+.cv-contact a:hover{text-decoration:underline}
+.cv-sep{color:#cbd5e1}
+
+/* Sections */
+.cv-section{margin-bottom:22px}
+.cv-section-title{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:#1e3a6e;border-bottom:1.5px solid #e2e8f0;padding-bottom:5px;margin-bottom:10px}
+.cv-item{margin-bottom:7px;font-size:13px;color:#333;line-height:1.65}
+.cv-item strong{color:#0a0f1e}
+.cv-item.cgpa{color:#475569;font-size:12px}
+.cv-tip{font-size:10px;color:#94a3b8;font-style:italic;margin-top:2px}
+
+/* Empty state */
+.cv-empty{text-align:center;padding:60px 20px;color:#94a3b8}
+.cv-empty h3{font-size:18px;font-weight:600;color:#475569;margin-bottom:8px}
+.cv-empty p{font-size:13px;line-height:1.6}
+
+/* Footer note (screen only) */
+.cv-footer-note{max-width:720px;margin:16px auto 0;font-size:11px;color:#94a3b8;text-align:center;line-height:1.6}
+
+/* ── Print styles ── */
+@media print{
+  body{background:#fff;padding:0}
+  .toolbar,.cv-footer-note{display:none!important}
+  .cv-paper{box-shadow:none;border-radius:0;padding:18mm 16mm;max-width:none;margin:0}
+  .cv-name{font-size:22px}
+  .cv-section{page-break-inside:avoid}
+  @page{size:A4;margin:12mm 10mm}
+}
+@media(max-width:600px){
+  .cv-paper{padding:28px 22px;border-radius:8px}
+  .cv-name{font-size:20px}
+  .toolbar-hint{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <a class="toolbar-back" href="cv-builder.html">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+    Back to builder
+  </a>
+  <button class="toolbar-save" onclick="printCV()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+    Save as PDF
+  </button>
+  <span class="toolbar-hint">Tap Save as PDF &rarr; choose Save to Files or a PDF app</span>
+</div>
+
+<div class="cv-paper" id="cvPaper">
+  <div class="cv-empty">
+    <h3>No CV data found</h3>
+    <p>Go back to the CV builder and complete the steps first.</p>
+  </div>
+</div>
+
+<div class="cv-footer-note">
+  Your CV is private — it is only stored on this device.<br>
+  Built with <a href="/internships" style="color:#1e3a6e">MyIntern</a> · myscholar.my
+</div>
+
+<script src="shared/myintern-data.js"></script>
+<script src="shared/myintern-shared.js"></script>
+<script>
+/* ── Helpers ── */
+function esc(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):''}
+
+function printCV(){
+  gtag('event','cv_download_success',{cv_score:cvState.strength||0});
+  window.print();
+}
+
+/* ── Rebuild project items list from saved course ── */
+var currentProjItems=[];
+function rebuildProjItems(){
+  var cat=getCourseCategory()||'general';
+  var specific=PROJ_DB[cat]||PROJ_DB.general;
+  currentProjItems=[];
+  specific.items.forEach(function(p){currentProjItems.push(p)});
+  PROJ_DB.general.items.forEach(function(p){
+    if(!currentProjItems.some(function(x){return x.name===p.name}))currentProjItems.push(p);
+  });
+}
+
+/* ── Render the CV ── */
+function renderCV(){
+  var paper=document.getElementById('cvPaper');
+  if(!cvState.name){return;} // leave empty state
+
+  var cat=getCourseCategory();
+  var arch=cat?CV_ARCHETYPES[cat]:null;
+
+  // ── Header ──
+  var h='<div class="cv-name">'+esc(cvState.name)+'</div>';
+  var contactParts=[];
+  if(cvState.city)contactParts.push(esc(cvState.city));
+  if(cvState.email)contactParts.push('<a href="mailto:'+esc(cvState.email)+'">'+esc(cvState.email)+'</a>');
+  if(cvState.phone)contactParts.push(esc(cvState.phone));
+  if(cvState.portfolioUrl){
+    var displayUrl=cvState.portfolioUrl.replace(/^https?:\/\//,'');
+    var href=cvState.portfolioUrl.indexOf('://')>-1?cvState.portfolioUrl:'https://'+cvState.portfolioUrl;
+    contactParts.push('<a href="'+esc(href)+'" target="_blank">'+esc(displayUrl)+'</a>');
+  }
+  // Join with separator dots
+  h+='<div class="cv-contact">'+contactParts.join('<span class="cv-sep"> · </span>')+'</div>';
+
+  // ── Section renderers ──
+  var sectionFns={};
+
+  // Personal Statement
+  sectionFns['Personal Statement']=function(){
+    var motMap={
+      'real-exp':'Seeking hands-on industry experience to complement academic learning and develop practical skills in a professional environment.',
+      'li-req':'Completing mandatory industrial training (LI/Praktikal) as required by university programme, eager to contribute to a structured team environment.',
+      'learn':'Eager to learn directly from industry professionals and gain practical workplace skills that cannot be taught in a classroom.',
+      'cv':'Building a professional portfolio and real-world experience ahead of graduation to strengthen career readiness.',
+      'career':'Exploring career paths within the industry to determine the right long-term fit before graduating.',
+      'network':'Looking to build professional connections, contribute to real projects, and work towards a potential return offer.'
+    };
+    var text=cvState.motivationText||(cvState.motivation?motMap[cvState.motivation]:'')||'';
+    if(!text)return'';
+    return'<div class="cv-section"><div class="cv-section-title">Personal Statement</div>'
+      +'<div class="cv-item">'+esc(text)+'</div></div>';
+  };
+
+  // Education
+  sectionFns['Education']=function(){
+    if(!cvState.university&&!cvState.course&&!cvState.level&&!cvState.cgpa)return'';
+    var lvlMap={'cert':'Certificate Programme','dip-early':'Diploma (Year 1–2)','dip-final':'Diploma (Final Year)','deg-1':'Degree – Year 1','deg-2':'Degree – Year 2','deg-3':'Degree – Year 3','deg-final':'Degree – Final Year','masters':'Master\'s / MBA','phd':'PhD / Doctoral','grad':'Graduate'};
+    var s='<div class="cv-section"><div class="cv-section-title">Education</div>';
+    if(cvState.course)s+='<div class="cv-item"><strong>'+esc(cvState.course)+'</strong></div>';
+    if(cvState.university)s+='<div class="cv-item">'+esc(cvState.university)+'</div>';
+    var meta=[];
+    if(cvState.level)meta.push(lvlMap[cvState.level]||cvState.level);
+    if(cvState.cgpa)meta.push('CGPA: <strong>'+esc(cvState.cgpa)+'</strong>');
+    if(meta.length)s+='<div class="cv-item cgpa">'+meta.join('&nbsp;&nbsp;|&nbsp;&nbsp;')+'</div>';
+    return s+'</div>';
+  };
+  sectionFns['Academic History']=sectionFns['Education'];
+  sectionFns['Education (incl. relevant coursework)']=sectionFns['Education'];
+  sectionFns['Education (incl. professional qualifications)']=sectionFns['Education'];
+
+  // Projects
+  sectionFns['Projects']=function(){
+    if(!cvState.projects.length)return'';
+    var s='<div class="cv-section"><div class="cv-section-title">Projects</div>';
+    for(var pi=0;pi<currentProjItems.length;pi++){
+      if(cvState.projects.indexOf(currentProjItems[pi].name)===-1)continue;
+      var pDesc=cvState.projectDescs[pi]||'';
+      s+='<div class="cv-item">';
+      if(pDesc)s+='<strong>'+esc(currentProjItems[pi].name)+':</strong> '+esc(pDesc);
+      else s+='<strong>'+esc(currentProjItems[pi].name)+'</strong>';
+      s+='</div>';
+    }
+    return s+'</div>';
+  };
+  sectionFns['Projects / FYP']=sectionFns['Projects'];
+  sectionFns['Design Studio Projects']=sectionFns['Projects'];
+  sectionFns['Research & Lab Experience']=sectionFns['Projects'];
+  sectionFns['Research & Publications']=sectionFns['Projects'];
+  sectionFns['Clinical / Hospital Postings']=sectionFns['Projects'];
+
+  // Skills
+  sectionFns['Technical Skills']=function(){
+    if(!cvState.skills.length)return'';
+    var s='<div class="cv-section"><div class="cv-section-title">Core Competencies</div>';
+    var technical=cvState.skills.filter(function(sk){return['Python','Java','HTML / CSS','JavaScript','SQL','C / C++','PHP','R / SPSS / MATLAB','AutoCAD','SolidWorks'].indexOf(sk)>-1});
+    var tools=cvState.skills.filter(function(sk){return['Microsoft Word','Excel / Spreadsheets','PowerPoint','Google Workspace','Canva','Figma','Photoshop','Video Editing'].indexOf(sk)>-1});
+    var langs=cvState.skills.filter(function(sk){return['Bahasa Malaysia','English','Mandarin','Tamil','Arabic'].indexOf(sk)>-1});
+    var certs=cvState.skills.filter(function(sk){return['MUET','IELTS / TOEFL','Google Analytics','First Aid / CPR','UBS / SQL Accounting','AWS / Cloud Cert'].indexOf(sk)>-1});
+    var other=cvState.skills.filter(function(sk){return technical.indexOf(sk)===-1&&tools.indexOf(sk)===-1&&langs.indexOf(sk)===-1&&certs.indexOf(sk)===-1});
+    if(technical.length)s+='<div class="cv-item"><strong>Technical:</strong> '+technical.map(esc).join(' &nbsp;|&nbsp; ')+'</div>';
+    if(tools.length)s+='<div class="cv-item"><strong>Tools:</strong> '+tools.map(esc).join(' &nbsp;|&nbsp; ')+'</div>';
+    if(langs.length)s+='<div class="cv-item"><strong>Languages:</strong> '+langs.map(esc).join(' &nbsp;|&nbsp; ')+'</div>';
+    if(certs.length)s+='<div class="cv-item"><strong>Certifications:</strong> '+certs.map(esc).join(' &nbsp;|&nbsp; ')+'</div>';
+    if(other.length)s+='<div class="cv-item"><strong>Other:</strong> '+other.map(esc).join(' &nbsp;|&nbsp; ')+'</div>';
+    return s+'</div>';
+  };
+  sectionFns['Skills']=sectionFns['Technical Skills'];
+  sectionFns['Software Proficiency']=sectionFns['Technical Skills'];
+  sectionFns['Software Skills']=sectionFns['Technical Skills'];
+  sectionFns['Skills & Certifications']=sectionFns['Technical Skills'];
+
+  // Activities
+  sectionFns['Extracurriculars']=function(){
+    if(!cvState.activities.length&&!cvState.activityDetail)return'';
+    var s='<div class="cv-section"><div class="cv-section-title">Leadership &amp; Activities</div>';
+    cvState.activities.forEach(function(a){s+='<div class="cv-item">'+esc(a)+'</div>';});
+    if(cvState.activityDetail)s+='<div class="cv-item" style="margin-top:4px">'+esc(cvState.activityDetail)+'</div>';
+    return s+'</div>';
+  };
+  sectionFns['Extracurriculars & Volunteering']=sectionFns['Extracurriculars'];
+  sectionFns['Mooting & Legal Activities']=sectionFns['Extracurriculars'];
+  sectionFns['Teaching Practicum']=sectionFns['Extracurriculars'];
+
+  // Experience (placeholder — future step)
+  sectionFns['Experience']=function(){return''};
+  sectionFns['Internships / Attachments']=sectionFns['Experience'];
+  sectionFns['Industrial Training / Placement']=sectionFns['Experience'];
+  sectionFns['Freelance']=sectionFns['Experience'];
+  sectionFns['Writing / Media Portfolio Link']=sectionFns['Experience'];
+
+  // Certifications from skills
+  sectionFns['Certifications']=function(){
+    if(!arch||!arch.certifications)return'';
+    var matched=cvState.skills.filter(function(sk){
+      return arch.certifications.some(function(c){return sk.toLowerCase().indexOf(c.toLowerCase().substring(0,8))>-1});
+    });
+    if(!matched.length)return'';
+    return'<div class="cv-section"><div class="cv-section-title">Certifications</div>'
+      +matched.map(function(c){return'<div class="cv-item">'+esc(c)+'</div>';}).join('')+'</div>';
+  };
+
+  // Ignored section keys
+  ['Header','Portfolio Link','References','Languages'].forEach(function(k){sectionFns[k]=function(){return''};});
+
+  // ── Build section order ──
+  var order;
+  if(arch){
+    order=arch.sectionOrder.slice();
+    if(order.indexOf('Personal Statement')===-1)order.splice(1,0,'Personal Statement');
+  } else {
+    order=['Personal Statement','Technical Skills','Projects','Education','Extracurriculars'];
+  }
+
+  var rendered=[];
+  order.forEach(function(section){
+    var fn=sectionFns[section];
+    if(fn){var html=fn();if(html)rendered.push(html);}
+  });
+  // Append any sections not in the archetype order
+  ['Personal Statement','Education','Projects','Technical Skills','Extracurriculars','Certifications'].forEach(function(s){
+    if(order.indexOf(s)===-1){
+      var fn=sectionFns[s];
+      if(fn){var html=fn();if(html&&rendered.indexOf(html)===-1)rendered.push(html);}
+    }
+  });
+
+  h+=rendered.join('');
+
+  // Format note — screen only. The cv-footer-note class is hidden by the
+  // @media print block above, so this coaching hint never appears on the
+  // PDF a student actually sends to employers.
+  if(arch){
+    h+='<div class="cv-footer-note" style="margin-top:20px;padding-top:12px;border-top:1px solid #e2e8f0;font-size:10px;color:#94a3b8;line-height:1.5">';
+    h+=esc(arch.displayName)+' format: '+esc(arch.lengthGuidance);
+    if(arch.notes)h+=' &nbsp;·&nbsp; '+esc(arch.notes);
+    h+='</div>';
+  }
+
+  paper.innerHTML=h;
+}
+
+/* ── Init ── */
+rebuildProjItems();
+renderCV();
+
+// Track the view
+gtag('event','cv_preview_view',{cv_score:cvState.strength||0,has_cgpa:!!(cvState.cgpa),has_portfolio:!!(cvState.portfolioUrl)});
+</script>
+</body>
+</html>

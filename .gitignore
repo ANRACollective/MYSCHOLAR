@@ -1,0 +1,22 @@
+# ============================================================
+# .gitignore — keeps internal docs OUT of the public site.
+# These folders stay on your computer; they just stop being
+# committed and served by GitHub Pages.
+# Added June 2026 during security cleanup (P0).
+# ============================================================
+
+# Internal strategy, planning, and agent docs
+_dev/
+_reports/
+_archive/
+_database/
+_myjourney/
+myintern/briefs/
+manamana_tickets_v2.md
+
+# Backup files
+*.bak
+
+# OS / editor noise
+.DS_Store
+Thumbs.db

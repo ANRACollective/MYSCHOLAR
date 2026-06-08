@@ -1,0 +1,17 @@
+# ============================================================
+# .gitattributes
+# Tells GitHub's language detector (Linguist) which files are
+# auto-generated content rather than hand-written code, so they
+# don't dominate the repo's "Languages" bar.
+# Added June 2026.
+# ============================================================
+
+# Auto-generated SEO landing pages — content, not app code
+seo/**            linguist-generated=true
+
+# Auto-generated individual scholarship pages
+scholarships/**   linguist-generated=true
+
+# Generated sitemaps
+sitemap*.xml      linguist-generated=true
+seo/sitemap*.xml  linguist-generated=true

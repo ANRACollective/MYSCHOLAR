@@ -1,0 +1,1802 @@
+<!DOCTYPE html>
+<!--
+  MyScholar — Landing Page
+  myscholar.my
+  Updated: Apr 2026
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyScholar — Find Your Scholarship</title>
+
+<!-- Open Graph / WhatsApp / social preview -->
+<meta property="og:type"        content="website" />
+<meta property="og:url"         content="https://myscholar.my" />
+<meta property="og:title"       content="MyScholar — Find Your Scholarship" />
+<meta property="og:description" content="200+ scholarships for Malaysian students. Free to search, no sign-up needed." />
+<meta property="og:image"       content="https://anracollective.github.io/MYSCHOLAR/myscholar-og.png" />
+<meta property="og:image:width"  content="1280" />
+<meta property="og:image:height" content="640" />
+
+<!-- Twitter / X card -->
+<meta name="twitter:card"        content="summary_large_image" />
+<meta name="twitter:title"       content="MyScholar — Find Your Scholarship" />
+<meta name="twitter:description" content="200+ scholarships for Malaysian students. Free to search, no sign-up needed." />
+<meta name="twitter:image"       content="https://anracollective.github.io/MYSCHOLAR/myscholar-og.png" />
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZETBRDDMTV"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-ZETBRDDMTV");
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+
+/* ─────────────────────────────────────────────
+   DESIGN TOKENS
+   ───────────────────────────────────────────── */
+:root {
+  --midnight: #0d1b2e;      /* main dark bg */
+  --navy:     #0f1f3d;      /* slightly lighter dark */
+  --panel:    #111d30;      /* card bg */
+  --border:   rgba(255,255,255,.1);
+  --coral:    #e8551e;
+  --teal:     #00a878;
+  --sky:      #38bdf8;
+  --white:    #ffffff;
+  --muted:    rgba(255,255,255,.45);
+  --serif:    'Playfair Display', Georgia, serif;
+  --sans:     'DM Sans', system-ui, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+/* ── Skip to main content (WCAG 2.4.1) ─────────────────────── */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 16px;
+  background: var(--coral);
+  color: var(--white);
+  padding: 8px 18px;
+  border-radius: 0 0 8px 8px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  z-index: 9999;
+  transition: top .15s;
+}
+.skip-link:focus { top: 0; }
+
+body {
+  font-family: var(--sans);
+  background: var(--midnight);
+  color: var(--white);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ─────────────────────────────────────────────
+   ANNOUNCEMENT BAR
+   ───────────────────────────────────────────── */
+.ann-bar {
+  background: var(--navy);
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+  padding: 8px 20px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .18em;
+  color: rgba(255,255,255,0.55); /* was coral — failed AA contrast */
+  text-transform: uppercase;
+}
+
+/* ─────────────────────────────────────────────
+   NAV
+   ───────────────────────────────────────────── */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  background: var(--midnight);
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.nav-brand {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--white);
+  text-decoration: none;
+  letter-spacing: -.3px;
+  flex-shrink: 0;
+}
+.nav-brand .coral { color: var(--coral); }
+
+/* divider */
+.nav-sep {
+  width: 1px;
+  height: 18px;
+  background: var(--border);
+  flex-shrink: 0;
+}
+
+/* Our tools dropdown button */
+.tools-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 8px;
+  padding: 7px 13px;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255,255,255,.75);
+  font-family: var(--sans);
+  cursor: pointer;
+  transition: background .15s, border-color .15s, color .15s;
+  /* coral underline = active product indicator */
+  border-bottom: 2px solid var(--coral);
+  border-radius: 8px 8px 0 0;
+  padding-bottom: 6px;
+}
+.tools-btn:hover {
+  background: rgba(255,255,255,.1);
+  color: var(--white);
+}
+.dot-trio {
+  display: flex;
+  align-items: center;
+  gap: 3.5px;
+}
+.dot-trio span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+.d-teal  { background: var(--teal); }
+.d-coral { background: var(--coral); }
+.d-sky   { background: var(--sky); }
+
+.chevron {
+  width: 14px;
+  height: 14px;
+  color: rgba(255,255,255,.5);
+  transition: transform .2s;
+  flex-shrink: 0;
+}
+.tools-btn.open .chevron { transform: rotate(180deg); }
+
+/* spacer */
+.nav-spacer { flex: 1; }
+
+/* EN / BM toggle */
+.lang-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex-shrink: 0;
+}
+.lt-opt {
+  font-size: 11px;
+  font-weight: 600;
+  /* WCAG 2.5.5: min 44×44px touch target */
+  min-height: 44px;
+  min-width: 44px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  border: none;
+  background: none;
+  color: rgba(255,255,255,.32);
+  cursor: pointer;
+  font-family: var(--sans);
+  transition: color .15s;
+  letter-spacing: .05em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.lt-opt.active {
+  color: rgba(255,255,255,.85);
+}
+
+/* ─────────────────────────────────────────────
+   TOOLS DROPDOWN PANEL
+   ───────────────────────────────────────────── */
+.tools-dropdown {
+  position: fixed;
+  top: calc(56px + 33px); /* nav height + ann bar */
+  left: 32px;
+  background: #0a1626;
+  border: 1px solid rgba(255,255,255,.13);
+  border-top: none;
+  border-radius: 0 10px 10px 10px; /* square top-left = sits flush under button */
+  width: 320px;
+  padding: 8px;
+  box-shadow: 0 24px 60px rgba(0,0,0,.6);
+  z-index: 300;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-6px);
+  transition: opacity .18s, transform .18s;
+}
+.tools-dropdown.open {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.pd-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 12px 14px;
+  border-radius: 9px;
+  text-decoration: none;
+  transition: background .15s;
+  cursor: pointer;
+}
+.pd-item:hover { background: rgba(255,255,255,.06); }
+.pd-item.current { background: rgba(255,255,255,.04); }
+
+.pd-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+.pd-dot.coral { background: var(--coral); }
+.pd-dot.teal  { background: var(--teal); }
+.pd-dot.sky   { background: var(--sky); }
+.pd-dot.dim   { background: rgba(255,255,255,.2); }
+
+.pd-text { flex: 1; }
+
+/* Phase + name on ONE line: "PLAN  MyJourney" */
+.pd-title-row {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  margin-bottom: 3px;
+}
+.pd-phase {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+.pd-phase.coral { color: var(--coral); }
+.pd-phase.teal  { color: var(--teal); }
+.pd-phase.sky   { color: var(--sky); }
+
+.pd-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,.8);
+}
+.pd-desc {
+  font-size: 11.5px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.pd-badge {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  align-self: flex-start;
+  margin-top: 2px;
+}
+.pd-badge.here { background: rgba(232,85,30,.18); color: var(--coral); }
+.pd-badge.soon { background: rgba(255,255,255,.07); color: rgba(255,255,255,.35); }
+
+.pd-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 4px 14px;
+}
+
+/* ─────────────────────────────────────────────
+   HERO
+   ───────────────────────────────────────────── */
+.hero {
+  background: var(--midnight);
+  padding: 80px 32px 64px;
+  text-align: center;
+  position: relative;
+  /* subtle grid texture */
+  background-image:
+    repeating-linear-gradient(90deg, rgba(255,255,255,.015) 0, rgba(255,255,255,.015) 1px, transparent 1px, transparent 80px),
+    repeating-linear-gradient(0deg, rgba(255,255,255,.015) 0, rgba(255,255,255,.015) 1px, transparent 1px, transparent 80px);
+}
+
+.hero-eyebrow {
+  font-size: 12px;
+  letter-spacing: .18em;
+  color: rgba(255,255,255,.4);
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.hero h1 {
+  font-family: var(--serif);
+  font-size: clamp(52px, 8vw, 88px);
+  line-height: 1.05;
+  font-weight: 900;
+  color: var(--white);
+  margin-bottom: 20px;
+}
+.hero h1 .coral { color: var(--coral); }
+
+.hero-eyebrow { font-size: 12px; font-weight: 600; letter-spacing: .18em; color: var(--coral); text-transform: uppercase; margin-bottom: 18px; }
+.hero-sub {
+  font-size: 16px;
+  color: var(--muted);
+  max-width: 520px;
+  margin: 0 auto 44px;
+  font-weight: 300;
+  line-height: 1.75;
+}
+
+/* Search bar — dark/glass style */
+.search-wrap {
+  max-width: 600px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.search-icon {
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255,255,255,.3);
+  pointer-events: none;
+}
+
+#si {
+  width: 100%;
+  padding: 16px 52px 16px 22px;
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 12px;
+  font-family: var(--sans);
+  font-size: 15px;
+  color: var(--white);
+  outline: none;
+  transition: border-color .2s, background .2s;
+  -webkit-appearance: none;
+}
+#si::placeholder { color: rgba(255,255,255,.35); }
+#si:focus {
+  border-color: rgba(255,255,255,.3);
+  background: rgba(255,255,255,.1);
+}
+
+/* Try: chips */
+.try-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 4px;
+  justify-content: center;
+}
+.try-row::-webkit-scrollbar { display: none; }
+@media (max-width: 680px) {
+  .try-row { justify-content: flex-start; padding: 0 20px 4px; margin-left: -20px; width: calc(100% + 40px); }
+}
+.try-label {
+  display: none;
+}
+.try-chip {
+  font-size: 13px;
+  padding: 5px 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,.18);
+  background: transparent;
+  color: rgba(255,255,255,.7);
+  cursor: pointer;
+  font-family: var(--sans);
+  font-weight: 500;
+  transition: border-color .15s, color .15s, background .15s;
+  white-space: nowrap;
+}
+.try-chip:hover {
+  border-color: rgba(255,255,255,.4);
+  color: var(--white);
+  background: rgba(255,255,255,.06);
+}
+
+/* ─────────────────────────────────────────────
+   PRODUCT CARDS SECTION
+   ───────────────────────────────────────────── */
+.products {
+  background: var(--midnight);
+  padding: 0 32px 80px;
+}
+
+.products-grid {
+  max-width: 1020px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.prod-card {
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 14px;
+  padding: 30px 26px 26px;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  transition: background .18s, border-color .18s, transform .18s;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.prod-card:hover {
+  background: rgba(255,255,255,.07);
+  border-color: rgba(255,255,255,.16);
+  transform: translateY(-2px);
+}
+/* active product (MyScholar = current) gets a subtle top glow */
+.prod-card.active {
+  border-color: rgba(232,85,30,.35);
+  background: rgba(232,85,30,.05);
+}
+/* Every card gets a colour line on top matching its product colour */
+.prod-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  border-radius: 16px 16px 0 0;
+}
+.prod-card:first-child::before  { background: var(--teal); }   /* PLAN */
+.prod-card.active::before       { background: var(--coral); }  /* FUND */
+.prod-card:last-child::before   { background: var(--sky); }    /* LAUNCH */
+
+.prod-phase {
+  font-family: var(--sans);
+  font-size: 32px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  line-height: 1;
+  /* stroke trick: adds ~1.5px outline in same colour = visually heavier than weight 900 alone */
+  -webkit-text-stroke: 1.5px currentColor;
+  paint-order: stroke fill;
+}
+.prod-phase.teal  { color: #00a878; }
+.prod-phase.coral { color: #e8551e; }
+.prod-phase.sky   { color: #38bdf8; }
+
+.prod-name {
+  font-family: var(--sans);
+  font-size: 19px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 12px;
+  letter-spacing: -0.2px;
+}
+
+.prod-desc {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 400;
+  color: rgba(255,255,255,0.62);
+  line-height: 1.5;
+  flex: 1;
+  margin-bottom: 24px;
+}
+
+.prod-cta {
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 400;
+  color: rgba(255,255,255,0.5);
+  transition: color .15s;
+}
+
+/* MyJourney — teal, bold */
+.prod-cta-plan {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(0,168,120,0.75);
+  transition: color .15s;
+}
+.prod-card:hover .prod-cta-plan { color: var(--teal); }
+
+/* MyScholar — coral, bold */
+.prod-cta-primary {
+  font-size: 13px;
+  font-weight: 600;
+  color: #e8551e;
+}
+.prod-card.active:hover .prod-cta-primary { color: #ff6b35; }
+
+/* MyIntern — sky blue, bold */
+.prod-cta-launch {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(56,189,248,0.75);
+  transition: color .15s;
+}
+.prod-card:hover .prod-cta-launch { color: var(--sky); }
+
+/* prod-cta-soon removed — MyJourney is now live */
+
+/* ─────────────────────────────────────────────
+   ABOUT SECTION
+   ───────────────────────────────────────────── */
+.about {
+  background: #090f1c;
+  padding: 72px 32px;
+  text-align: center;
+  border-top: 1px solid var(--border);
+}
+
+.about-inner {
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.about-eyebrow {
+  font-size: 12px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.55); /* was .3 — failed WCAG 1.4.3 contrast */
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.about h2 {
+  font-family: var(--serif);
+  font-size: clamp(26px, 4vw, 34px);
+  font-weight: 900;
+  color: var(--white);
+  margin-bottom: 18px;
+  line-height: 1.1;
+}
+
+/* Trust signal lines — match PDF exactly */
+.about-trust {
+  font-size: 13.5px;
+  color: rgba(255,255,255,.55); /* was .45 — raised to clear WCAG 1.4.3 */
+  line-height: 1.7;
+  font-weight: 400;
+  margin-bottom: 6px;
+}
+.about-trust strong { color: rgba(255,255,255,.75); font-weight: 700; }
+
+.about-data {
+  font-size: 13px;
+  color: rgba(255,255,255,.55); /* was .3 — failed WCAG 1.4.3 contrast */
+  line-height: 1.6;
+  margin-bottom: 0;
+}
+
+.about-cta {
+  margin-top: 28px;
+}
+
+/* ─────────────────────────────────────────────
+   FOOTER
+   ───────────────────────────────────────────── */
+.updates-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--coral);
+  color: var(--white);
+  border: none;
+  border-radius: 8px;
+  padding: 13px 28px;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity .18s;
+  text-decoration: none;
+}
+.updates-btn:hover { opacity: .88; }
+
+/* Social icons row — sits between about and copyright bar */
+.footer-social-row {
+  background: #090f1c;
+  border-top: 1px solid rgba(255,255,255,.07);
+  padding: 24px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+.footer-social-row a {
+  color: rgba(255,255,255,.35);
+  text-decoration: none;
+  transition: color .2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* WCAG 2.5.5: minimum 44×44px touch target */
+  min-width: 44px;
+  min-height: 44px;
+}
+.footer-social-row a:hover { color: rgba(255,255,255,.8); }
+
+/* Copyright bar */
+footer {
+  background: #06090f;
+  border-top: 1px solid rgba(255,255,255,.06);
+  padding: 16px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.footer-copy {
+  font-size: 12px;
+  color: rgba(255,255,255,.55); /* was .28 — failed WCAG 1.4.3 contrast */
+}
+.footer-right {
+  font-size: 12px;
+  color: rgba(255,255,255,.45); /* was .2 — failed WCAG 1.4.3 contrast */
+}
+
+
+
+
+/* ─────────────────────────────────────────────
+   MOBILE
+   ───────────────────────────────────────────── */
+@media (max-width: 680px) {
+  nav { padding: 0 16px; gap: 10px; }
+  .tools-text { display: none; }
+  .hero { padding: 56px 20px 52px; }
+  .hero-eyebrow { font-size: 12px; font-weight: 600; letter-spacing: .18em; color: var(--coral); text-transform: uppercase; margin-bottom: 18px; }
+  .hero-sub { font-size: 14px; }
+  .products { padding: 0 16px 60px; }
+  .products-grid { grid-template-columns: 1fr; gap: 12px; }
+  /* On mobile: natural phase order — Plan → Fund → Launch */
+  .prod-card:first-child { order: 1; }  /* MyJourney (Plan) */
+  .prod-card.active      { order: 2; }  /* MyScholar (Fund) */
+  .prod-card:last-child  { order: 3; }  /* MyIntern (Launch) */
+  .about { padding: 56px 20px; }
+  .footer-social-row { padding: 20px 16px; }
+  footer { padding: 14px 16px; flex-direction: column; align-items: center; text-align: center; gap: 4px; }
+  .footer-right { display: none; }
+  .tools-dropdown { left: 16px; right: 16px; width: auto; }
+  .ann-bar { font-size: 11px; letter-spacing: .12em; }
+  /* Closing soon — single column on mobile */
+  .cs-grid { grid-template-columns: 1fr !important; }
+  /* Popup — full screen on mobile */
+  .popup-box { padding: 32px 24px; margin: 16px; border-radius: 16px; }
+}
+
+@media (max-width: 480px) {
+  .hero h1 { font-size: 44px; }
+  .prod-card { padding: 22px 18px 20px; }
+}
+
+
+/* ─────────────────────────────────────────────
+   CLOSING SOON STRIP
+   ───────────────────────────────────────────── */
+.closing-soon {
+  background: var(--midnight);
+  padding: 0 32px 64px;
+  border-top: 1px solid var(--border);
+}
+.cs-inner {
+  max-width: 1020px;
+  margin: 0 auto;
+}
+.cs-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 48px 0 24px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.cs-eyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--coral);
+}
+.cs-see-all-link {
+  font-size: 12px;
+  color: rgba(255,255,255,.4);
+  text-decoration: none;
+  transition: color .15s;
+}
+.cs-see-all-link:hover { color: rgba(255,255,255,.8); }
+.cs-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.cs-card {
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 12px;
+  padding: 18px 20px;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: background .15s, border-color .15s;
+  position: relative;
+  overflow: hidden;
+}
+.cs-card::before {
+  /* coral left accent */
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--coral);
+  opacity: .5;
+}
+.cs-card:hover {
+  background: rgba(255,255,255,.07);
+  border-color: rgba(255,255,255,.14);
+}
+.cs-card:hover::before { opacity: 1; }
+.cs-deadline {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--coral);
+}
+.cs-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--white);
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.cs-provider {
+  font-size: 11px;
+  color: rgba(255,255,255,.38);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ─────────────────────────────────────────────
+   SIGNUP POPUP
+   ───────────────────────────────────────────── */
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.65);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s;
+}
+.popup-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.popup-box {
+  background: #0e1e33;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 20px;
+  padding: 44px 40px;
+  max-width: 440px;
+  width: 100%;
+  position: relative;
+  box-shadow: 0 32px 80px rgba(0,0,0,.7);
+  transform: translateY(12px);
+  transition: transform .25s;
+}
+.popup-overlay.open .popup-box { transform: translateY(0); }
+.popup-close {
+  position: absolute;
+  top: 16px; right: 16px;
+  background: rgba(255,255,255,.07);
+  border: none;
+  border-radius: 50%;
+  width: 44px; height: 44px; /* WCAG 2.5.5: min 44×44px */
+  color: rgba(255,255,255,.5);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s, color .15s;
+}
+.popup-close:hover { background: rgba(255,255,255,.13); color: var(--white); }
+.popup-eyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--coral);
+  margin-bottom: 12px;
+}
+.popup-box h3 {
+  font-family: var(--serif);
+  font-size: 26px;
+  font-weight: 900;
+  color: var(--white);
+  line-height: 1.15;
+  margin-bottom: 10px;
+}
+.popup-box p {
+  font-size: 14px;
+  color: rgba(255,255,255,.5);
+  line-height: 1.65;
+  margin-bottom: 24px;
+}
+.popup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.popup-form input[type="email"] {
+  width: 100%;
+  padding: 13px 18px;
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 10px;
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--white);
+  outline: none;
+  transition: border-color .2s;
+}
+.popup-form input[type="email"]::placeholder { color: rgba(255,255,255,.3); }
+.popup-form input[type="email"]:focus { border-color: rgba(255,255,255,.35); }
+.popup-form button[type="submit"] {
+  width: 100%;
+  padding: 13px;
+  background: var(--coral);
+  border: none;
+  border-radius: 10px;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--white);
+  cursor: pointer;
+  transition: opacity .18s;
+}
+.popup-form button[type="submit"]:hover { opacity: .88; }
+.popup-fine {
+  font-size: 11px !important;
+  color: rgba(255,255,255,.25) !important;
+  text-align: center;
+  margin-top: 10px !important;
+  margin-bottom: 0 !important;
+}
+.popup-success {
+  text-align: center;
+  padding: 12px 0;
+}
+.popup-success .ps-tick {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+.popup-success h4 {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--white);
+  margin-bottom: 6px;
+}
+.popup-success p {
+  font-size: 13px;
+  color: rgba(255,255,255,.45);
+  margin-bottom: 0;
+}
+
+/* ── Live search dropdown ──────────────────────────────────── */
+.search-icon { pointer-events: auto; cursor: pointer; }
+.search-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0; right: 0;
+  background: #0a1626;
+  border: 1px solid rgba(255,255,255,.13);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.04);
+  z-index: 500;
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+  transition: opacity .15s, transform .15s;
+}
+.search-dropdown.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.sd-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 18px; cursor: pointer; text-decoration: none;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  transition: background .12s; min-height: 0; overflow: hidden; text-align: left;
+}
+.sd-item:last-of-type { border-bottom: none; }
+.sd-item:hover, .sd-item.sd-focused { background: rgba(255,255,255,.07); }
+.sd-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--coral); flex-shrink: 0; }
+.sd-text { flex: 1; min-width: 0; text-align: left; }
+.sd-name { font-size: 14px; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: left; }
+.sd-prov { font-size: 11px; color: rgba(255,255,255,.55); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 260px; } /* was .38 — failed contrast */
+.sd-amt  { font-size: 11px; font-weight: 600; color: var(--coral); white-space: nowrap; flex-shrink: 0; opacity: .9; max-width: 220px; overflow: hidden; text-overflow: ellipsis; }
+.sd-see-all {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 11px 18px; font-family: var(--sans);
+  font-size: 13px; color: rgba(255,255,255,.45);
+  background: rgba(255,255,255,.03); border: none; width: 100%;
+  cursor: pointer; text-decoration: none; text-align: left;
+  transition: background .12s, color .12s;
+}
+.sd-see-all:hover, .sd-see-all.sd-focused { background: rgba(255,255,255,.08); color: rgba(255,255,255,.85); }
+.sd-see-all strong { color: rgba(255,255,255,.7); font-weight: 600; }
+.sd-msg { padding: 16px 18px; font-size: 13px; color: rgba(255,255,255,.3); text-align: center; }
+</style>
+</head>
+<body>
+
+<!-- ── SKIP NAVIGATION (WCAG 2.4.1) ──────────────────── -->
+<a class="skip-link" href="#main-content">Skip to main content</a>
+
+<!-- ── ANNOUNCEMENT BAR ──────────────────────────────── -->
+
+<!-- ── NAV ─────────────────────────────────────────────── -->
+<nav>
+  <a href="/" class="nav-brand">My<span class="coral">Scholar</span></a>
+
+  <div class="nav-sep"></div>
+
+  <!-- Our tools dropdown trigger -->
+  <button class="tools-btn" id="toolsBtn" onclick="toggleDropdown()" aria-expanded="false" aria-haspopup="true">
+    <div class="dot-trio">
+      <span class="d-teal" aria-hidden="true"></span>
+      <span class="d-coral" aria-hidden="true"></span>
+      <span class="d-sky" aria-hidden="true"></span>
+    </div>
+    <span class="tools-text">Explore</span>
+    <svg class="chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="4 6 8 10 12 6"></polyline>
+    </svg>
+  </button>
+
+  <div class="nav-spacer"></div>
+
+  <!-- Language toggle -->
+  <div class="lang-toggle" role="group" aria-label="Language">
+    <button class="lt-opt active" id="lt-en" onclick="setLang('en')" aria-pressed="true">EN</button>
+    <button class="lt-opt" id="lt-bm" onclick="setLang('bm')" aria-pressed="false">BM</button>
+  </div>
+</nav>
+
+<!-- ── OUR TOOLS DROPDOWN ──────────────────────────────── -->
+<div class="tools-dropdown" id="toolsDropdown" role="menu">
+
+  <a href="/journey" class="pd-item" onclick="gtag('event','nav_myjourney_click')" role="menuitem">
+    <div class="pd-dot teal" aria-hidden="true"></div>
+    <div class="pd-text">
+      <div class="pd-title-row">
+        <span class="pd-phase teal">Plan</span>
+        <span class="pd-name">MyJourney</span>
+      </div>
+      <div class="pd-desc" data-i18n="planDesc">Map your career pathway</div>
+    </div>
+  </a>
+
+  <div class="pd-divider"></div>
+
+  <a href="scholarships" class="pd-item current" role="menuitem">
+    <div class="pd-dot coral" aria-hidden="true"></div>
+    <div class="pd-text">
+      <div class="pd-title-row">
+        <span class="pd-phase coral">Fund</span>
+        <span class="pd-name">MyScholar</span>
+      </div>
+      <div class="pd-desc" data-i18n="fundDesc">Find scholarships for your studies</div>
+    </div>
+    <div class="pd-badge here" data-i18n="hereLabel">Here</div>
+  </a>
+
+  <div class="pd-divider"></div>
+
+  <a href="internships" class="pd-item" role="menuitem">
+    <div class="pd-dot sky" aria-hidden="true"></div>
+    <div class="pd-text">
+      <div class="pd-title-row">
+        <span class="pd-phase sky">Launch</span>
+        <span class="pd-name">MyIntern</span>
+      </div>
+      <div class="pd-desc" data-i18n="launchDesc">Discover internship opportunities</div>
+    </div>
+  </a>
+
+</div>
+
+<!-- ── HERO ─────────────────────────────────────────────── -->
+<section class="hero" id="main-content">
+
+  <p class="hero-eyebrow" data-i18n="heroEyebrow">MALAYSIA · 2025 / 2026 ACADEMIC YEAR</p>
+  <h1 data-i18n="heroH1">Find Your<br><span class="coral">Scholarship.</span></h1>
+
+  <p class="hero-sub" data-i18n="heroSub">A free directory of scholarships, financial aid, and study loans for Malaysian students — SPM to postgraduate.</p>
+
+  <!-- Search -->
+  <div class="search-wrap">
+    <input
+      type="search"
+      id="si"
+      placeholder="Search by name, field, or provider…"
+      data-i18n-placeholder="searchPlaceholder"
+      autocomplete="off"
+      role="combobox"
+      aria-expanded="false"
+      aria-controls="searchDropdown"
+      aria-autocomplete="list"
+      aria-haspopup="listbox"
+      aria-activedescendant=""
+      aria-label="Search scholarships"
+    >
+    <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
+  </div>
+
+  <!-- Try: chips -->
+  <div class="try-row" aria-label="Top searches">
+    <button class="try-chip" onclick="fillSearch(this)" aria-label="Search for JPA scholarships">JPA</button>
+    <button class="try-chip" onclick="fillSearch(this)" aria-label="Search for Petronas scholarships">Petronas</button>
+    <button class="try-chip" onclick="fillSearch(this)" aria-label="Search for MARA scholarships">MARA</button>
+    <button class="try-chip" onclick="fillSearch(this)" aria-label="Search for Khazanah scholarships">Khazanah</button>
+    <button class="try-chip" onclick="fillSearch(this)" aria-label="Search for Lepasan SPM scholarships">Lepasan SPM</button>
+    <button class="try-chip" onclick="fillSearch(this)" aria-label="Search for UK scholarships">UK</button>
+    <button class="try-chip" onclick="fillSearch(this)" aria-label="Search for USA scholarships">USA</button>
+    <button class="try-chip" onclick="fillSearch(this)" aria-label="Search for Postgraduate scholarships">Postgraduate</button>
+  </div>
+
+</section>
+
+<!-- ── CLOSING SOON STRIP ─────────────────────────────────── -->
+<section class="closing-soon" id="closingSoon">
+  <div class="cs-inner">
+    <div class="cs-header">
+      <p class="cs-eyebrow">Closing soon</p>
+      <a href="scholarships" class="cs-see-all-link">See all scholarships →</a>
+    </div>
+    <div class="cs-grid" id="csGrid">
+      <!-- Populated by JS from Supabase -->
+    </div>
+  </div>
+</section>
+
+<!-- ── PRODUCT CARDS ─────────────────────────────────────── -->
+<section class="products">
+  <div class="products-grid">
+
+    <!-- PLAN: MyJourney — live -->
+    <a href="journey" class="prod-card" aria-label="MyJourney — explore careers and find your path">
+      <div class="prod-phase teal" data-i18n="phasePlan">Plan</div>
+      <div class="prod-name">MyJourney</div>
+      <p class="prod-desc">
+        <span data-i18n="planCardDesc">Not sure what to do after SPM? Answer a few questions and find careers that fit you.</span>
+      </p>
+      <div class="prod-cta prod-cta-plan" data-i18n="planCta">Explore careers →</div>
+    </a>
+
+    <!-- FUND: MyScholar (current — active state) -->
+    <a href="scholarships" class="prod-card active" aria-label="MyScholar — browse 200+ scholarships">
+      <div class="prod-phase coral" data-i18n="phaseFund">Fund</div>
+      <div class="prod-name">MyScholar</div>
+      <p class="prod-desc">
+        <span data-i18n="scholarCardDesc">200+ scholarships filtered by field, eligibility, and deadline — all free.</span>
+      </p>
+      <div class="prod-cta prod-cta-primary" data-i18n="scholarCardCta">Browse scholarships →</div>
+    </a>
+
+    <!-- LAUNCH: MyIntern -->
+    <a href="internships" class="prod-card" aria-label="MyIntern — browse verified internships">
+      <div class="prod-phase sky" data-i18n="phaseLaunch">Launch</div>
+      <div class="prod-name">MyIntern</div>
+      <p class="prod-desc">
+        <span data-i18n="internCardDesc">Verified internships. Free CV builder. Start your career here.</span>
+      </p>
+      <div class="prod-cta-launch" data-i18n="internCardCta">Browse internships →</div>
+    </a>
+
+  </div>
+</section>
+
+<!-- ── SIGNUP POPUP ───────────────────────────────────────── -->
+<div class="popup-overlay" id="popupOverlay" role="dialog" aria-modal="true" aria-labelledby="popupTitle">
+  <div class="popup-box">
+    <button class="popup-close" id="popupClose" aria-label="Close">×</button>
+    <div id="popupContent">
+      <p class="popup-eyebrow">Free. Once a month.</p>
+      <h3 id="popupTitle">Scholarships close fast.</h3>
+      <p>New scholarships, what is closing soon. One email a month, that is it.</p>
+      <form class="popup-form" id="popupForm" novalidate>
+        <label for="popupEmail" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Your email address</label>
+        <input type="email" id="popupEmail" placeholder="Your email address" autocomplete="email" required>
+        <button type="submit">Subscribe</button>
+      </form>
+      <p class="popup-fine">No spam. Unsubscribe anytime.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ── ABOUT + GET UPDATES ────────────────────────────────── -->
+<section class="about">
+  <div class="about-inner">
+    <p class="about-eyebrow" data-i18n="aboutEyebrow">About this project</p>
+    <h2 data-i18n="aboutH2">Built for Malaysian students.</h2>
+    <p class="about-trust">
+      <span data-i18n="aboutTrust">Built by <strong>ANRA</strong> · Free, no ads, no login · Not affiliated with any scholarship body or government agency</span>
+    </p>
+    <p class="about-data">
+      <span data-i18n="aboutData">Data last reviewed: 20 Apr 2026 · Sourced from official portals</span>
+    </p>
+    <div class="about-cta">
+      <button class="updates-btn" onclick="openPopup()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,14 22,4"/>
+        </svg>
+        <span data-i18n="aboutCta">Get updates</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER: SOCIAL ICONS ───────────────────────────────── -->
+<div class="footer-social-row">
+  <!-- TikTok -->
+  <a href="https://www.tiktok.com/@myscholar.my" target="_blank" rel="noopener" aria-label="Follow MyScholar on TikTok">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.95a8.28 8.28 0 004.84 1.54V7.04a4.85 4.85 0 01-1.07-.35z"/>
+    </svg>
+  </a>
+  <!-- Facebook -->
+  <a href="https://www.facebook.com/profile.php?id=61575743415254" target="_blank" rel="noopener" aria-label="Follow MyScholar on Facebook">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/>
+    </svg>
+  </a>
+  <!-- LinkedIn -->
+  <a href="https://www.linkedin.com/company/myscholar-my/" target="_blank" rel="noopener" aria-label="Follow MyScholar on LinkedIn">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/>
+      <circle cx="4" cy="4" r="2"/>
+    </svg>
+  </a>
+</div>
+
+<!-- ── FOOTER: COPYRIGHT BAR ──────────────────────────────── -->
+<footer>
+  <p class="footer-copy" data-i18n="footerCopy">© 2026 MyScholar. Free, independent, built for Malaysian students. &nbsp;·&nbsp; <a href="/privacy.html" style="color:inherit;opacity:.7;text-decoration:underline;">Privacy Policy</a></p>
+  <p class="footer-right" data-i18n="footerRight">No ads. No paywalls.</p>
+</footer>
+
+
+<!-- ── SCRIPTS ─────────────────────────────────────────────── -->
+<script>
+
+// ── Our tools dropdown ──────────────────────────────────────
+function toggleDropdown() {
+  const dropdown = document.getElementById('toolsDropdown');
+  const btn      = document.getElementById('toolsBtn');
+  const isOpen   = dropdown.classList.toggle('open');
+  btn.classList.toggle('open', isOpen);
+  btn.setAttribute('aria-expanded', isOpen);
+}
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('#toolsBtn') && !e.target.closest('#toolsDropdown')) {
+    const dropdown = document.getElementById('toolsDropdown');
+    if (dropdown && dropdown.classList.contains('open')) {
+      dropdown.classList.remove('open');
+      document.getElementById('toolsBtn').classList.remove('open');
+      document.getElementById('toolsBtn').setAttribute('aria-expanded', 'false');
+    }
+  }
+});
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    const dropdown = document.getElementById('toolsDropdown');
+    if (dropdown && dropdown.classList.contains('open')) {
+      dropdown.classList.remove('open');
+      const btn = document.getElementById('toolsBtn');
+      btn.classList.remove('open');
+      btn.setAttribute('aria-expanded', 'false');
+      btn.focus();
+    }
+  }
+});
+
+// ── i18n translations ───────────────────────────────────────
+const TRANSLATIONS = {
+  en: {
+    heroEyebrow:   'MALAYSIA · TAHUN AKADEMIK 2025 / 2026',
+    heroH1:        'Find Your<br><span class=\'coral\'>Scholarship.</span>',
+    heroSub:       'A free directory of scholarships, financial aid, and study loans for Malaysian students — SPM to postgraduate.',
+    searchPlaceholder: 'Search by name, field, or provider…',
+    tryLabel:      'TRY:',
+    toolsBtn:      'Explore',
+    planDesc:      'Map your career pathway',
+    fundDesc:      'Find scholarships for your studies',
+    launchDesc:    'Discover internship opportunities',
+    comingSoon:    'Coming soon',
+    planCta:       'Explore careers →',
+    hereLabel:     'Here',
+    phasePlan:     'Plan',
+    phaseFund:     'Fund',
+    phaseLaunch:   'Launch',
+    planCardDesc:  'Not sure what to do after SPM? Answer a few questions and find careers that fit you.',
+    scholarCardDesc: '200+ scholarships filtered by field, eligibility, and deadline — all free.',
+    scholarCardCta: 'Browse scholarships →',
+    internCardDesc: 'Verified internships. Free CV builder. Start your career here.',
+    internCardCta: 'Browse internships →',
+    aboutEyebrow:  'About this project',
+    aboutH2:       'Built for Malaysian students.',
+    aboutTrust:    'Built by <strong>ANRA</strong> · Free, no ads, no login · Not affiliated with any scholarship body or government agency',
+    aboutData:     'Data last reviewed: 20 Apr 2026 · Sourced from official portals',
+    aboutCta:      'Get updates',
+    footerCopy:    '© 2026 MyScholar. Free, independent, built for Malaysian students. &nbsp;·&nbsp; <a href="/privacy.html" style="color:inherit;opacity:.7;text-decoration:underline;">Privacy Policy</a>',
+    footerRight:   'No ads. No paywalls.',
+  },
+  bm: {
+    heroEyebrow:   'MALAYSIA · TAHUN AKADEMIK 2025 / 2026',
+    heroH1:        'Cari<br><span class=\'coral\'>Biasiswa Anda.</span>',
+    heroSub:       'Direktori percuma biasiswa, bantuan kewangan, dan pinjaman pengajian untuk pelajar Malaysia — SPM hingga pascasiswazah.',
+    searchPlaceholder: 'Cari mengikut nama, bidang, atau pemberi…',
+    tryLabel:      'CUBA:',
+    toolsBtn:      'Terokai',
+    planDesc:      'Petakan laluan kerjaya anda',
+    fundDesc:      'Cari biasiswa untuk pengajian anda',
+    launchDesc:    'Terokai peluang latihan industri',
+    comingSoon:    'Akan datang',
+    hereLabel:     'Di sini',
+    phasePlan:     'Rancang',
+    phaseFund:     'Biayai',
+    phaseLaunch:   'Mulakan',
+    planCardDesc:  'Kenalpasti kerjaya yang sesuai dan kelayakan yang diperlukan untuk sampai ke sana.',
+    scholarCardDesc: '200+ biasiswa ditapis mengikut bidang, kelayakan, dan tarikh tutup — semuanya percuma.',
+    scholarCardCta: 'Lihat biasiswa →',
+    internCardDesc: 'Cari peluang latihan industri yang sesuai dengan kursus dan waktu anda.',
+    internCardCta: 'Cari latihan industri →',
+    aboutEyebrow:  'Tentang projek ini',
+    aboutH2:       'Dibina untuk pelajar Malaysia.',
+    aboutTrust:    'Dibina oleh <strong>ANRA</strong> · Percuma, tanpa iklan, tanpa log masuk · Tidak berafiliasi dengan mana-mana badan biasiswa atau agensi kerajaan',
+    aboutData:     'Data dikemaskini: 20 Apr 2026 · Bersumber dari portal rasmi',
+    aboutCta:      'Dapatkan kemaskini',
+    footerCopy:    '© 2026 MyScholar. Percuma, bebas, dibina untuk pelajar Malaysia. &nbsp;·&nbsp; <a href="/privacy.html" style="color:inherit;opacity:.7;text-decoration:underline;">Dasar Privasi</a>',
+    footerRight:   'Tiada iklan. Tiada bayaran.',
+  }
+};
+
+function applyLocale(lang) {
+  const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
+  // innerHTML elements
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    if (t[key] !== undefined) el.innerHTML = t[key];
+  });
+  // placeholder attributes
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.dataset.i18nPlaceholder;
+    if (t[key] !== undefined) el.placeholder = t[key];
+  });
+  document.documentElement.lang = lang === 'bm' ? 'ms' : 'en';
+  localStorage.setItem('scholar_lang', lang);
+}
+
+// ── Language toggle ─────────────────────────────────────────
+const btnEN = document.getElementById('lt-en');
+const btnBM = document.getElementById('lt-bm');
+
+function setLang(lang) {
+  btnEN.classList.toggle('active', lang === 'en');
+  btnBM.classList.toggle('active', lang === 'bm');
+  applyLocale(lang);
+}
+
+btnEN.addEventListener('click', () => setLang('en'));
+btnBM.addEventListener('click', () => setLang('bm'));
+
+// restore saved preference
+const savedLang = localStorage.getItem('scholar_lang');
+if (savedLang && savedLang !== 'en') setLang(savedLang);
+
+// ── Supabase config (read-only anon key — safe to expose) ──
+const SB_URL = 'https://ywvfvjvxwhcfprfrkgqm.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl3dmZ2anZ4d2hjZnByZnJrZ3FtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNTQ5MzEsImV4cCI6MjA5MDYzMDkzMX0.5EzrJuW1fdPca2ZEKGPXXgbd_XYDqKzzu6e-iRQT9po';
+
+// ── Session ID (persisted in localStorage, shared with scholarships) ──
+function getSessionId() {
+  let sid = localStorage.getItem('scholar_session');
+  if (!sid) {
+    sid = Math.random().toString(36).slice(2, 10);
+    localStorage.setItem('scholar_session', sid);
+  }
+  return sid;
+}
+
+// ── Log search query to Supabase search_logs ────────────────
+async function logSearch(term, count) {
+  try {
+    await fetch(`${SB_URL}/rest/v1/search_logs`, {
+      method: 'POST',
+      headers: {
+        'apikey': SB_KEY,
+        'Authorization': `Bearer ${SB_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({
+        search_term: term,
+        results_count: count,
+        filters_active: ['homepage'],   // tag so we can tell apart from /scholarships
+        session_id: getSessionId()
+      })
+    });
+  } catch(e) { /* silent — tracking must never break the UI */ }
+}
+
+// ── Log outbound click (user tapping through to a scholarship site) ──
+async function logClick(id, name, url) {
+  // GA4
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'outbound_click', {
+      event_label: name,
+      event_category: 'scholarship',
+      outbound_url: url
+    });
+  }
+  // Supabase
+  try {
+    await fetch(`${SB_URL}/rest/v1/outbound_clicks`, {
+      method: 'POST',
+      headers: {
+        'apikey': SB_KEY,
+        'Authorization': `Bearer ${SB_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({
+        scholarship_id: id || null,
+        scholarship_name: name,
+        url: url,
+        source: 'homepage',
+        session_id: getSessionId()
+      })
+    });
+  } catch(e) { /* silent */ }
+}
+
+// ── Search redirect ─────────────────────────────────────────
+function goToScholarships(query) {
+  const q = (query || '').trim();
+  // GA4 event for "see all" / Enter search from homepage
+  if (q && typeof gtag !== 'undefined') {
+    gtag('event', 'homepage_search_submit', { search_term: q });
+  }
+  window.location.href = q ? 'scholarships?q=' + encodeURIComponent(q) : 'scholarships';
+}
+function fillSearch(chipEl) {
+  const term = chipEl.textContent.trim();
+  // Track chip click in GA4
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'homepage_chip_click', { chip_label: term });
+  }
+  goToScholarships(term);
+}
+
+// ── Live search dropdown ────────────────────────────────────
+(function() {
+  const input = document.getElementById('si');
+  const wrap  = input ? input.closest('.search-wrap') : null;
+  if (!wrap) return;
+
+  // Inject dropdown container
+  const dd = document.createElement('div');
+  dd.className = 'search-dropdown';
+  dd.id = 'searchDropdown';
+  dd.setAttribute('role', 'listbox');
+  dd.setAttribute('aria-label', 'Scholarship search results');
+  wrap.appendChild(dd);
+
+  // Screen-reader live region announces result counts
+  const srStatus = document.createElement('div');
+  srStatus.setAttribute('aria-live', 'polite');
+  srStatus.setAttribute('aria-atomic', 'true');
+  srStatus.className = 'sr-only';
+  srStatus.id = 'sdStatus';
+  wrap.appendChild(srStatus);
+
+  let timer = null, currentQuery = '', focusIdx = -1, items = [];
+
+  function sdOpen()  { dd.classList.add('open'); input.setAttribute('aria-expanded', 'true'); }
+  function sdClose() { dd.classList.remove('open'); focusIdx = -1; items = []; input.setAttribute('aria-expanded', 'false'); input.setAttribute('aria-activedescendant', ''); }
+  function sdHighlight() {
+    dd.querySelectorAll('.sd-item, .sd-see-all').forEach((el, i) =>
+      el.classList.toggle('sd-focused', i === focusIdx)
+    );
+    // Keep aria-activedescendant in sync with keyboard focus
+    input.setAttribute('aria-activedescendant',
+      focusIdx >= 0 && items[focusIdx] ? items[focusIdx].id : '');
+  }
+
+  function esc(str) {
+    return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function render(results, q) {
+    focusIdx = -1;
+    if (!results.length) {
+      dd.innerHTML = `<div class="sd-msg">No results for "${esc(q)}"</div>`;
+      sdOpen();
+      var st = document.getElementById('sdStatus'); if (st) st.textContent = 'No results for ' + q;
+      return;
+    }
+    // Each result: links to the MyScholar detail modal (?id=) — external URL lives inside the modal
+    const rows = results.map((r, i) => {
+      const href = `scholarships?id=${r.id}`;
+      const amt = r.amt ? `<span class="sd-amt">${esc(r.amt)}</span>` : '';
+      // onclick: log to GA4 (internal navigation — no outbound click logged here)
+      const clickHandler = `onclick="if(typeof gtag!='undefined')gtag('event','homepage_result_click',{event_label:'${esc(r.name)}',scholarship_id:${r.id}})"`;
+      return `<a class="sd-item" id="sd-opt-${i}" role="option" href="${href}" ${clickHandler}>
+        <div class="sd-dot"></div>
+        <div class="sd-text">
+          <div class="sd-name">${esc(r.name)}</div>
+          <div class="sd-prov">${esc(r.provider || '')}</div>
+        </div>${amt}</a>`;
+    }).join('');
+    const seeAll = `<a class="sd-see-all" id="sd-opt-${results.length}" role="option" href="scholarships?q=${encodeURIComponent(q)}"
+      onclick="if(typeof gtag!='undefined')gtag('event','homepage_see_all',{search_term:'${esc(q)}'})">
+      See all results for <strong>"${esc(q)}"</strong> &nbsp;→</a>`;
+    dd.innerHTML = rows + seeAll;
+    // Track mouse hover for keyboard sync
+    dd.querySelectorAll('.sd-item, .sd-see-all').forEach((el, i) => {
+      el.addEventListener('mouseenter', () => { focusIdx = i; sdHighlight(); });
+    });
+    items = Array.from(dd.querySelectorAll('.sd-item, .sd-see-all'));
+    sdOpen();
+    // Announce result count to screen readers
+    var st = document.getElementById('sdStatus');
+    if (st) st.textContent = results.length + ' result' + (results.length !== 1 ? 's' : '') + ' found';
+  }
+
+  async function doFetch(q) {
+    dd.innerHTML = '<div class="sd-msg">Searching…</div>';
+    sdOpen();
+    try {
+      const encoded = encodeURIComponent(q);
+      const url = `${SB_URL}/rest/v1/scholarships_full?select=id,name,provider,amt,url` +
+                  `&or=(name.ilike.*${encoded}*,provider.ilike.*${encoded}*,notes.ilike.*${encoded}*)&limit=6`;
+      const res = await fetch(url, {
+        headers: { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}` }
+      });
+      if (!res.ok) throw new Error('fetch error');
+      const data = await res.json();
+      render(data, q);
+      // Log to Supabase search_logs + GA4 after a short debounce pause
+      // (we only log when results actually come back, not on every keystroke)
+      logSearch(q, data.length);
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'homepage_search', { search_term: q, result_count: data.length });
+      }
+    } catch(e) {
+      dd.innerHTML = '<div class="sd-msg">Could not load results — try searching on the next page.</div>';
+    }
+  }
+
+  // Input: debounce 300ms, min 2 chars
+  input.addEventListener('input', () => {
+    const q = input.value.trim();
+    currentQuery = q;
+    clearTimeout(timer);
+    if (q.length < 2) { sdClose(); return; }
+    timer = setTimeout(() => doFetch(q), 300);
+  });
+
+  // Keyboard navigation
+  input.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      focusIdx = Math.min(focusIdx + 1, items.length - 1);
+      sdHighlight();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      focusIdx = Math.max(focusIdx - 1, -1);
+      sdHighlight();
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      if (focusIdx >= 0 && items[focusIdx]) { items[focusIdx].click(); }
+      else { sdClose(); goToScholarships(input.value); }
+    } else if (e.key === 'Escape') {
+      sdClose();
+    }
+  });
+
+  // Search icon click
+  const icon = wrap.querySelector('.search-icon');
+  if (icon) icon.addEventListener('click', () => {
+    if (dd.classList.contains('open') && focusIdx >= 0 && items[focusIdx]) {
+      items[focusIdx].click();
+    } else {
+      sdClose(); goToScholarships(input.value);
+    }
+  });
+
+  // Click outside closes
+  document.addEventListener('click', e => {
+    if (!wrap.contains(e.target)) sdClose();
+  });
+})();
+
+// ── Closing soon strip (with fallback to recently added) ────
+(async function loadClosingSoon() {
+  const grid    = document.getElementById('csGrid');
+  const eyebrow = document.querySelector('.cs-eyebrow');
+  const section = document.getElementById('closingSoon');
+  if (!grid) return;
+
+  const headers = { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}` };
+
+  function escape(str) {
+    return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/'/g,'&#39;');
+  }
+
+  function daysUntil(dateStr) {
+    const diff = Math.ceil((new Date(dateStr) - new Date()) / 86400000);
+    return diff <= 0 ? 'Today' : diff === 1 ? 'Tomorrow' : `${diff} days left`;
+  }
+
+  function addedLabel(createdAt) {
+    // Returns "Added today", "Added yesterday", "Added 5 days ago"
+    const diff = Math.floor((new Date() - new Date(createdAt)) / 86400000);
+    if (diff <= 0) return 'Added today';
+    if (diff === 1) return 'Added yesterday';
+    return `Added ${diff} days ago`;
+  }
+
+  function renderCards(data, mode) {
+    if (eyebrow) eyebrow.textContent = mode === 'deadline' ? 'Closing soon' : 'Recently added';
+    if (section) section.style.display = '';
+    grid.innerHTML = data.map(s => {
+      const href   = s.url ? s.url : `scholarships?q=${encodeURIComponent(s.name)}`;
+      const target = s.url ? ' target="_blank" rel="noopener"' : '';
+      const label  = mode === 'deadline' ? daysUntil(s.deadline_date) : addedLabel(s.created_at);
+      // Coral label for deadline urgency; muted for recently added
+      const labelStyle = mode === 'deadline' ? '' : ' style="color:rgba(255,255,255,.45)"';
+      // Store name + url as data attrs so the delegated listener below can call logClick
+      // (avoids inline onclick and the apostrophe-escaping bug that broke tracking in Apr 2026)
+      return `<a class="cs-card" href="${href}"${target} data-id="${s.id}" data-name="${escape(s.name)}" data-url="${s.url ? escape(s.url) : ''}">
+        <div class="cs-deadline"${labelStyle}>${escape(label)}</div>
+        <div class="cs-name">${escape(s.name)}</div>
+        <div class="cs-provider">${escape(s.provider)}</div>
+      </a>`;
+    }).join('');
+    // Wire up outbound click tracking — only fires for cards with a real external URL
+    grid.querySelectorAll('.cs-card').forEach(card => {
+      if (!card.dataset.url) return;
+      card.addEventListener('click', () => {
+        logClick(
+          parseInt(card.dataset.id) || null,
+          card.dataset.name,
+          card.dataset.url
+        );
+      });
+    });
+  }
+
+  try {
+    // First try: scholarships with a known future deadline
+    const today = new Date().toISOString().split('T')[0];
+    const urlDeadline = `${SB_URL}/rest/v1/scholarships?select=id,name,provider,deadline_date,deadline_text,url` +
+                        `&deadline_date=gte.${today}&is_active=eq.true&order=deadline_date.asc&limit=6`;
+    const res1 = await fetch(urlDeadline, { headers });
+    if (!res1.ok) throw new Error('fetch failed');
+    const deadlineData = await res1.json();
+
+    if (deadlineData.length) {
+      renderCards(deadlineData, 'deadline');
+      return;
+    }
+
+    // Fallback: most recently added scholarships (include created_at for label)
+    const urlRecent = `${SB_URL}/rest/v1/scholarships?select=id,name,provider,created_at,url` +
+                      `&is_active=eq.true&order=created_at.desc&limit=6`;
+    const res2 = await fetch(urlRecent, { headers });
+    if (!res2.ok) throw new Error('fetch failed');
+    const recentData = await res2.json();
+
+    if (recentData.length) {
+      renderCards(recentData, 'recent');
+    } else {
+      if (section) section.style.display = 'none';
+    }
+
+  } catch(e) {
+    // Silently hide the section if fetch fails — never break the page
+    if (section) section.style.display = 'none';
+  }
+})();
+
+// ── Signup popup ────────────────────────────────────────────
+const POPUP_KEY = 'scholar_popup_seen';
+
+function openPopup() {
+  document.getElementById('popupOverlay').classList.add('open');
+  document.getElementById('popupEmail') && document.getElementById('popupEmail').focus();
+}
+function closePopup() {
+  document.getElementById('popupOverlay').classList.remove('open');
+}
+
+// Close on overlay click (outside the box)
+document.getElementById('popupOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closePopup();
+});
+// Close on X button
+document.getElementById('popupClose').addEventListener('click', function() {
+  localStorage.setItem(POPUP_KEY, '1'); // mark seen even on manual close
+  closePopup();
+});
+// Close on Escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closePopup();
+});
+
+// Trigger at 60% scroll depth — once per device
+if (!localStorage.getItem(POPUP_KEY)) {
+  let popupFired = false;
+  window.addEventListener('scroll', function onScroll() {
+    if (popupFired) return;
+    const scrolled  = window.scrollY + window.innerHeight;
+    const total     = document.documentElement.scrollHeight;
+    if (scrolled / total >= 0.6) {
+      popupFired = true;
+      window.removeEventListener('scroll', onScroll);
+      setTimeout(openPopup, 400); // small delay feels less jarring
+    }
+  }, { passive: true });
+}
+
+// Submit popup form
+document.getElementById('popupForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const emailInput = document.getElementById('popupEmail');
+  const email = (emailInput.value || '').trim().toLowerCase();
+  if (!email) return;
+
+  const btn = this.querySelector('button[type="submit"]');
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+
+  try {
+    const res = await fetch(`${SB_URL}/rest/v1/subscribers`, {
+      method: 'POST',
+      headers: {
+        'apikey': SB_KEY,
+        'Authorization': `Bearer ${SB_KEY}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({
+        email,
+        source: 'homepage_popup',
+        internship_interest: false,
+        tuition_interest: false
+      })
+    });
+    if (res.ok || res.status === 409) {
+      localStorage.setItem(POPUP_KEY, '1');
+      document.getElementById('popupContent').innerHTML =
+        '<div class="popup-success">' +
+        '<div class="ps-tick">✓</div>' +
+        '<h4>You\'re in.</h4>' +
+        '<p>We\'ll send updates when new scholarships open.</p>' +
+        '</div>';
+    } else {
+      btn.disabled = false;
+      btn.textContent = 'Get updates';
+    }
+  } catch(err) {
+    btn.disabled = false;
+    btn.textContent = 'Get updates';
+  }
+});
+
+// ── Focus trap for signup popup (WCAG 2.1.2) ──────────────────────────────────────────────
+// Uses MutationObserver to react to .open class changes, so it works
+// without patching openPopup/closePopup (which are called from onclicks
+// and a setTimeout, making direct patching fragile).
+(function() {
+  const overlay = document.getElementById('popupOverlay');
+  const box     = document.querySelector('.popup-box');
+  let   lastFocus = null;
+
+  // Returns visible, focusable elements inside the popup box
+  function getFocusable() {
+    return Array.from(box.querySelectorAll(
+      'a[href], button:not([disabled]), input:not([disabled]), ' +
+      'select:not([disabled]), textarea:not([disabled]), ' +
+      '[tabindex]:not([tabindex="-1"])'
+    )).filter(function(el) { return el.offsetParent !== null; });
+  }
+
+  // Tab key cycles focus within the popup only
+  overlay.addEventListener('keydown', function(e) {
+    if (!overlay.classList.contains('open') || e.key !== 'Tab') return;
+    var focusable = getFocusable();
+    if (!focusable.length) return;
+    var first = focusable[0];
+    var last  = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault(); last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault(); first.focus();
+    }
+  });
+
+  // Watch for .open class toggled on the overlay
+  new MutationObserver(function(mutations) {
+    for (var i = 0; i < mutations.length; i++) {
+      if (mutations[i].attributeName !== 'class') continue;
+      if (overlay.classList.contains('open')) {
+        lastFocus = document.activeElement;
+        setTimeout(function() {
+          var f = getFocusable();
+          if (f.length) f[0].focus();
+        }, 60);
+      } else {
+        if (lastFocus && typeof lastFocus.focus === 'function') {
+          lastFocus.focus();
+          lastFocus = null;
+        }
+      }
+    }
+  }).observe(overlay, { attributes: true });
+})();
+</script>
+</body>
+</html>

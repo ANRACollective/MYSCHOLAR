@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Update Your Profile — MyScholar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --midnight: #0d1b2e;
+      --navy:     #0f1f3d;
+      --panel:    #111d30;
+      --border:   rgba(255,255,255,.1);
+      --coral:    #e8551e;
+      --teal:     #00a878;
+      --sky:      #38bdf8;
+      --white:    #ffffff;
+      --muted:    rgba(255,255,255,.45);
+      --serif:    'Playfair Display', Georgia, serif;
+      --sans:     'DM Sans', system-ui, sans-serif;
+    }
+
+    body {
+      background: var(--midnight);
+      color: var(--white);
+      font-family: var(--sans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 36px 28px;
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .logo {
+      font-family: var(--serif);
+      font-size: 1.1rem;
+      color: var(--sky);
+      margin-bottom: 24px;
+      display: block;
+      text-decoration: none;
+    }
+
+    h1 {
+      font-family: var(--serif);
+      font-size: 1.5rem;
+      font-weight: 600;
+      line-height: 1.3;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+
+    .email-display {
+      background: rgba(255,255,255,.06);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 0.875rem;
+      color: var(--muted);
+      margin-bottom: 24px;
+      word-break: break-all;
+    }
+
+    .field {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 7px;
+    }
+
+    select {
+      width: 100%;
+      background: rgba(255,255,255,.06);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 11px 14px;
+      font-family: var(--sans);
+      font-size: 0.9rem;
+      color: var(--white);
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='rgba(255,255,255,0.4)' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: var(--sky);
+    }
+
+    select option {
+      background: var(--navy);
+      color: var(--white);
+    }
+
+    select option[value=""] {
+      color: var(--muted);
+    }
+
+    .btn {
+      width: 100%;
+      background: var(--coral);
+      color: var(--white);
+      border: none;
+      border-radius: 8px;
+      padding: 13px;
+      font-family: var(--sans);
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: opacity 0.15s;
+    }
+
+    .btn:hover { opacity: 0.88; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* States */
+    .state-success, .state-error, .state-missing {
+      display: none;
+      text-align: center;
+      padding: 12px 0 4px;
+    }
+
+    .state-success .icon { font-size: 2rem; margin-bottom: 12px; }
+
+    .state-success h2 {
+      font-family: var(--serif);
+      font-size: 1.3rem;
+      margin-bottom: 8px;
+    }
+
+    .state-success p, .state-error p, .state-missing p {
+      font-size: 0.875rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .state-error p { color: #f87171; }
+    .state-missing p { color: var(--muted); }
+
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .back-link:hover { color: var(--sky); }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <a href="https://myscholar.my" class="logo">MyScholar</a>
+
+  <!-- Missing email state -->
+  <div class="state-missing" id="stateMissing">
+    <p>Something went wrong with your link. Try clicking the link in your email again, or reply to us and we will sort it out.</p>
+  </div>
+
+  <!-- Main form -->
+  <div id="formWrap">
+    <h1>Help us show you what is relevant</h1>
+    <p class="subtitle">Three quick questions. We use this to send you scholarships that actually match your situation.</p>
+
+    <div class="email-display" id="emailDisplay"></div>
+
+    <form id="profileForm">
+
+      <div class="field">
+        <label for="studyLevel">Where are you right now?</label>
+        <select id="studyLevel" required>
+          <option value="">Select your stage</option>
+          <option value="spm">SPM / O-Levels</option>
+          <option value="foundation">A-Levels / Foundation / Matriculation</option>
+          <option value="diploma">Diploma</option>
+          <option value="degree">Degree (Bachelor's)</option>
+          <option value="postgrad">Postgraduate (Master's / PhD)</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="fieldOfStudy">What field are you in (or heading into)?</label>
+        <select id="fieldOfStudy" required>
+          <option value="">Select your field</option>
+          <option value="stem">STEM (Science, Technology, Engineering, Maths)</option>
+          <option value="business">Business and Economics</option>
+          <option value="medicine">Medicine and Health Sciences</option>
+          <option value="law">Law</option>
+          <option value="arts">Arts and Humanities</option>
+          <option value="education">Education</option>
+          <option value="undecided">Not sure yet</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="state">Which state are you in?</label>
+        <select id="state" required>
+          <option value="">Select your state</option>
+          <option value="johor">Johor</option>
+          <option value="kedah">Kedah</option>
+          <option value="kelantan">Kelantan</option>
+          <option value="melaka">Melaka</option>
+          <option value="negeri_sembilan">Negeri Sembilan</option>
+          <option value="pahang">Pahang</option>
+          <option value="perak">Perak</option>
+          <option value="perlis">Perlis</option>
+          <option value="pulau_pinang">Pulau Pinang</option>
+          <option value="sabah">Sabah</option>
+          <option value="sarawak">Sarawak</option>
+          <option value="selangor">Selangor</option>
+          <option value="terengganu">Terengganu</option>
+          <option value="kuala_lumpur">Kuala Lumpur</option>
+          <option value="labuan">Labuan</option>
+          <option value="putrajaya">Putrajaya</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn" id="submitBtn">Save my answers</button>
+
+    </form>
+
+    <!-- Error message (shown inline below button) -->
+    <div class="state-error" id="stateError">
+      <p id="errorMsg">Something went wrong. Please try again.</p>
+    </div>
+  </div>
+
+  <!-- Success state (replaces form) -->
+  <div class="state-success" id="stateSuccess">
+    <div class="icon">&#10003;</div>
+    <h2>Got it, thank you</h2>
+    <p>We will use this to make sure the scholarships we send you are actually relevant to where you are now.</p>
+  </div>
+
+  <a href="https://myscholar.my" class="back-link">Back to MyScholar</a>
+</div>
+
+<script>
+  const SB_URL = 'https://ywvfvjvxwhcfprfrkgqm.supabase.co';
+  const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl3dmZ2anZ4d2hjZnByZnJrZ3FtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNTQ5MzEsImV4cCI6MjA5MDYzMDkzMX0.5EzrJuW1fdPca2ZEKGPXXgbd_XYDqKzzu6e-iRQT9po';
+
+  // Get email from URL params
+  const params = new URLSearchParams(window.location.search);
+  const email = params.get('email') ? decodeURIComponent(params.get('email')) : null;
+
+  if (!email) {
+    // No email in URL — show missing state
+    document.getElementById('formWrap').style.display = 'none';
+    document.getElementById('stateMissing').style.display = 'block';
+  } else {
+    document.getElementById('emailDisplay').textContent = email;
+  }
+
+  document.getElementById('profileForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const studyLevel  = document.getElementById('studyLevel').value;
+    const fieldOfStudy = document.getElementById('fieldOfStudy').value;
+    const state       = document.getElementById('state').value;
+    const btn         = document.getElementById('submitBtn');
+    const errDiv      = document.getElementById('stateError');
+    const errMsg      = document.getElementById('errorMsg');
+
+    btn.disabled = true;
+    btn.textContent = 'Saving...';
+    errDiv.style.display = 'none';
+
+    try {
+      const res = await fetch(
+        `${SB_URL}/rest/v1/subscribers?email=eq.${encodeURIComponent(email)}`,
+        {
+          method: 'PATCH',
+          headers: {
+            'apikey': SB_KEY,
+            'Authorization': `Bearer ${SB_KEY}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify({
+            study_level:   studyLevel,
+            field_of_study: fieldOfStudy,
+            state:         state
+          })
+        }
+      );
+
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+      }
+
+      // Show success
+      document.getElementById('formWrap').style.display = 'none';
+      document.getElementById('stateSuccess').style.display = 'block';
+
+    } catch (err) {
+      console.error(err);
+      errMsg.textContent = 'Something went wrong. Please try again or reply to the email.';
+      errDiv.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Save my answers';
+    }
+  });
+</script>
+
+</body>
+</html>

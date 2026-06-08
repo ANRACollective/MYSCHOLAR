@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyScholar Internships — Mockup A: Card Grid</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --midnight:#0f1f3d;
+  --navy:#1e3a6e;
+  --coral:#e8551e;
+  --ice:#f0f4ff;
+  --ice-mid:#e4ebfa;
+  --white:#ffffff;
+  --teal:#00a878;
+  --border:#dde4f5;
+  --border-mid:#c8d3ee;
+  --muted:#3d4663;
+  --serif:'Playfair Display',Georgia,serif;
+  --sans:'DM Sans',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--ice);color:var(--midnight);min-height:100vh}
+
+/* ── HEADER ─────────────────────────────────────── */
+.header{background:var(--midnight);padding:20px 16px 16px;text-align:center}
+.header h1{font-family:var(--serif);color:var(--white);font-size:28px;font-weight:900;letter-spacing:-0.5px}
+.header nav{display:flex;justify-content:center;gap:24px;margin-top:12px}
+.header nav a{color:rgba(255,255,255,0.6);text-decoration:none;font-size:14px;font-weight:500;padding-bottom:6px;border-bottom:2px solid transparent;transition:all 0.2s}
+.header nav a.active{color:var(--white);border-bottom-color:var(--coral)}
+.header nav a:hover{color:var(--white)}
+.subtitle{text-align:center;padding:16px 16px 0;font-size:14px;color:var(--muted);font-weight:400}
+
+/* ── FILTERS ────────────────────────────────────── */
+.filters{padding:16px;max-width:720px;margin:0 auto}
+.filter-label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px}
+.chip-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.chip{padding:8px 16px;border-radius:20px;border:1.5px solid var(--border-mid);background:var(--white);font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;transition:all 0.2s;user-select:none}
+.chip:hover{border-color:var(--navy);color:var(--navy)}
+.chip.active{background:var(--navy);color:var(--white);border-color:var(--navy)}
+.toggle-row{display:flex;gap:8px;flex-wrap:wrap}
+.toggle{padding:8px 16px;border-radius:20px;border:1.5px solid var(--border-mid);background:var(--white);font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;transition:all 0.2s;user-select:none}
+.toggle.on{background:var(--teal);color:var(--white);border-color:var(--teal)}
+.results-count{font-size:13px;color:var(--muted);padding:4px 0 8px;text-align:center}
+
+/* ── CARD GRID ──────────────────────────────────── */
+.grid{display:grid;grid-template-columns:1fr;gap:16px;padding:0 16px 32px;max-width:720px;margin:0 auto}
+@media(min-width:600px){.grid{grid-template-columns:1fr 1fr}}
+
+.card{background:var(--white);border-radius:12px;padding:20px;box-shadow:0 1px 4px rgba(15,31,61,0.06);border:1px solid var(--border);transition:all 0.25s ease;display:flex;flex-direction:column}
+.card:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(15,31,61,0.1)}
+.card.hidden{display:none}
+
+.card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px}
+.company{font-size:18px;font-weight:600;color:var(--midnight);line-height:1.3}
+.sector-tag{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600;white-space:nowrap;flex-shrink:0;margin-left:8px}
+.sector-glc{background:#e6f7f1;color:var(--teal)}
+.sector-banking{background:#e4ebfa;color:var(--navy)}
+.sector-tech{background:#fde8e0;color:var(--coral)}
+.sector-government{background:#e8ecf3;color:var(--midnight)}
+.sector-corporate{background:#f0e8fa;color:#6b3fa0}
+
+.programme{font-size:13px;color:var(--muted);margin-bottom:14px;font-weight:400}
+
+.details{display:flex;flex-direction:column;gap:8px;flex:1}
+.detail{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+.detail .icon{width:16px;text-align:center;flex-shrink:0;font-size:14px}
+.detail .value{font-weight:500}
+.stipend-value{color:var(--teal);font-weight:600 !important}
+.stipend-unpaid{color:#c0392b;font-weight:600 !important}
+
+.deadline-row{display:flex;align-items:center;gap:8px}
+.urgent-badge{display:inline-block;background:#fde8e0;color:var(--coral);font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px;text-transform:uppercase;letter-spacing:0.3px}
+
+.apply-btn{display:block;width:100%;margin-top:16px;padding:12px;background:var(--coral);color:var(--white);border:none;border-radius:8px;font-family:var(--sans);font-size:14px;font-weight:600;cursor:pointer;text-align:center;text-decoration:none;transition:background 0.2s}
+.apply-btn:hover{background:#d04a15}
+
+/* ── ROLLING TAG ────────────────────────────────── */
+.rolling-tag{display:inline-block;background:#e6f7f1;color:var(--teal);font-size:11px;font-weight:600;padding:2px 8px;border-radius:8px}
+
+/* ── FOOTER ─────────────────────────────────────── */
+.footer{text-align:center;padding:24px 16px 32px;font-size:12px;color:var(--muted)}
+.footer a{color:var(--navy);text-decoration:none;font-weight:500}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>MyScholar</h1>
+  <nav>
+    <a href="https://myscholar.my">Scholarships</a>
+    <a href="#" class="active">Internships</a>
+  </nav>
+</div>
+
+<p class="subtitle">Curated internship programmes for Malaysian students</p>
+
+<div class="filters">
+  <div class="filter-label">Sector</div>
+  <div class="chip-row" id="sectorChips">
+    <div class="chip active" data-sector="all">All</div>
+    <div class="chip" data-sector="GLC">GLC</div>
+    <div class="chip" data-sector="Banking">Banking</div>
+    <div class="chip" data-sector="Tech">Tech</div>
+    <div class="chip" data-sector="Government">Government</div>
+  </div>
+  <div class="toggle-row">
+    <div class="toggle" id="paidToggle">Paid Only</div>
+    <div class="toggle" id="openToggle">Open Now</div>
+  </div>
+  <div class="results-count" id="resultsCount"></div>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<div class="footer">
+  <a href="https://myscholar.my">myscholar.my</a> — Free scholarship & internship finder for Malaysian students
+</div>
+
+<script>
+const TODAY = new Date(2026, 3, 12); // April 12, 2026
+const URGENT_DAYS = 14;
+
+const DATA = [
+  { company:"Khazanah Nasional", programme:"Khazanah Young Professionals Programme", sector:"GLC", location:"Kuala Lumpur", duration:"12 weeks", stipend:"RM2,500/month", paid:true, deadline:"2026-05-15", rolling:false, url:"#" },
+  { company:"Maybank", programme:"Maybank GO Internship", sector:"Banking", location:"Nationwide", duration:"10 weeks", stipend:"RM1,800/month", paid:true, deadline:null, rolling:true, url:"#" },
+  { company:"Petronas", programme:"PETRONAS Internship Programme", sector:"GLC", location:"KL / Kerteh", duration:"6 months", stipend:"RM2,000/month", paid:true, deadline:"2026-04-30", rolling:false, url:"#" },
+  { company:"Bank Negara Malaysia", programme:"BNM Internship Scheme", sector:"Government", location:"Kuala Lumpur", duration:"3 months", stipend:"RM1,500/month", paid:true, deadline:"2026-04-28", rolling:false, url:"#" },
+  { company:"Grab", programme:"GrabStar Internship", sector:"Tech", location:"Kuala Lumpur", duration:"12 weeks", stipend:"RM2,200/month", paid:true, deadline:"2026-05-31", rolling:false, url:"#" },
+  { company:"TNB", programme:"TNB Internship Programme", sector:"GLC", location:"Nationwide", duration:"3–6 months", stipend:"RM1,200/month", paid:true, deadline:null, rolling:true, url:"#" },
+  { company:"CIMB", programme:"CIMB Fusion Internship", sector:"Banking", location:"Kuala Lumpur", duration:"10 weeks", stipend:"RM1,500/month", paid:true, deadline:"2026-05-15", rolling:false, url:"#" },
+  { company:"MDEC", programme:"Malaysia Digital Internship", sector:"Government", location:"KL / Remote", duration:"6 months", stipend:"RM1,000/month", paid:true, deadline:"2026-05-20", rolling:false, url:"#" }
+];
+
+function isUrgent(deadlineStr) {
+  if (!deadlineStr) return false;
+  const dl = new Date(deadlineStr);
+  const diff = (dl - TODAY) / (1000*60*60*24);
+  return diff >= 0 && diff <= URGENT_DAYS;
+}
+
+function isOpen(item) {
+  if (item.rolling) return true;
+  if (!item.deadline) return true;
+  return new Date(item.deadline) >= TODAY;
+}
+
+function formatDeadline(item) {
+  if (item.rolling) return '<span class="rolling-tag">Rolling</span>';
+  if (!item.deadline) return '—';
+  const d = new Date(item.deadline);
+  const str = d.toLocaleDateString('en-MY', { day:'numeric', month:'short', year:'numeric' });
+  const urgent = isUrgent(item.deadline);
+  return (urgent ? '<span class="urgent-badge">Closing soon</span> ' : '') + str;
+}
+
+function sectorClass(s) {
+  return 'sector-' + s.toLowerCase();
+}
+
+function renderCards() {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  const sector = document.querySelector('#sectorChips .chip.active')?.dataset.sector || 'all';
+  const paidOnly = document.getElementById('paidToggle').classList.contains('on');
+  const openOnly = document.getElementById('openToggle').classList.contains('on');
+
+  let count = 0;
+  DATA.forEach(item => {
+    if (sector !== 'all' && item.sector !== sector) return;
+    if (paidOnly && !item.paid) return;
+    if (openOnly && !isOpen(item)) return;
+    count++;
+
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="card-top">
+        <div class="company">${item.company}</div>
+        <span class="sector-tag ${sectorClass(item.sector)}">${item.sector}</span>
+      </div>
+      <div class="programme">${item.programme}</div>
+      <div class="details">
+        <div class="detail"><span class="icon">&#x1F4CD;</span><span class="value">${item.location}</span></div>
+        <div class="detail"><span class="icon">&#x23F1;</span><span class="value">${item.duration}</span></div>
+        <div class="detail"><span class="icon">&#x1F4B0;</span><span class="value ${item.paid ? 'stipend-value' : 'stipend-unpaid'}">${item.stipend}</span></div>
+        <div class="detail deadline-row"><span class="icon">&#x1F4C5;</span><span class="value">${formatDeadline(item)}</span></div>
+      </div>
+      <a href="${item.url}" class="apply-btn">Apply &#x2192;</a>
+    `;
+    card.style.animation = 'fadeIn 0.3s ease forwards';
+    grid.appendChild(card);
+  });
+
+  document.getElementById('resultsCount').textContent = count + ' internship' + (count !== 1 ? 's' : '') + ' found';
+}
+
+// Sector chip clicks
+document.querySelectorAll('#sectorChips .chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('#sectorChips .chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    renderCards();
+  });
+});
+
+// Toggle clicks
+['paidToggle','openToggle'].forEach(id => {
+  document.getElementById(id).addEventListener('click', function() {
+    this.classList.toggle('on');
+    renderCards();
+  });
+});
+
+// Add fade-in animation
+const style = document.createElement('style');
+style.textContent = '@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}';
+document.head.appendChild(style);
+
+renderCards();
+</script>
+</body>
+</html>
