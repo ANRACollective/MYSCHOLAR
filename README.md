@@ -53,4 +53,4 @@ It is still early days and I am adding more regularly, but it is already helping
 
 ---
 
-*Free for every Malaysian student.*
+*Free for every student.*
