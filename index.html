@@ -496,11 +496,9 @@ nav {
   border-color: rgba(255,255,255,.16);
   transform: translateY(-2px);
 }
-/* active product (MyScholar = current) gets a subtle top glow */
-.prod-card.active {
-  border-color: rgba(232,85,30,.35);
-  background: rgba(232,85,30,.05);
-}
+/* Note: .active no longer changes border/background — all 3 cards carry
+   equal visual weight so PLAN and LAUNCH get discovered, not overshadowed.
+   The class still drives the coral top line, mobile ordering, and hover. */
 /* Every card gets a colour line on top matching its product colour */
 .prod-card::before {
   content: '';
