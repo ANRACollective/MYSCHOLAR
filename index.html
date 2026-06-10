@@ -431,6 +431,44 @@ nav {
   background: rgba(255,255,255,.06);
 }
 
+/* Scroll cue — nudges users to discover the 3 product cards below */
+.scroll-cue {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-top: 40px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--sans);
+  /* fades out permanently once the user starts scrolling */
+  transition: opacity .5s ease;
+}
+.scroll-cue.cue-hidden { opacity: 0; pointer-events: none; }
+.scroll-cue-label {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.45);
+  transition: color .2s;
+}
+.scroll-cue:hover .scroll-cue-label { color: rgba(255,255,255,.75); }
+.scroll-cue svg {
+  color: rgba(255,255,255,.4);
+  /* slow, subtle drift — not a carnival bounce */
+  animation: cueDrift 2.4s ease-in-out infinite;
+}
+@keyframes cueDrift {
+  0%, 100% { transform: translateY(0); opacity: .5; }
+  50%      { transform: translateY(6px); opacity: 1; }
+}
+/* Respect users who turn off animations */
+@media (prefers-reduced-motion: reduce) {
+  .scroll-cue svg { animation: none; }
+}
+
 /* ─────────────────────────────────────────────
    PRODUCT CARDS SECTION
    ───────────────────────────────────────────── */
@@ -1095,6 +1133,14 @@ footer {
     <button class="try-chip" onclick="fillSearch(this)" aria-label="Search for Postgraduate scholarships">Postgraduate</button>
   </div>
 
+  <!-- Scroll cue: tells first-time visitors there are 3 tools below the fold -->
+  <button class="scroll-cue" id="scrollCue" onclick="scrollCueClick()" aria-label="Scroll down to explore all three tools">
+    <span class="scroll-cue-label" data-i18n="scrollCueLabel">Plan, fund, and launch your future</span>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <polyline points="6 9 12 15 18 9"></polyline>
+    </svg>
+  </button>
+
 </section>
 
 <!-- ── CLOSING SOON STRIP ─────────────────────────────────── -->
@@ -1111,7 +1157,7 @@ footer {
 </section>
 
 <!-- ── PRODUCT CARDS ─────────────────────────────────────── -->
-<section class="products">
+<section class="products" id="products">
   <div class="products-grid">
 
     <!-- PLAN: MyJourney — live -->
@@ -1258,6 +1304,7 @@ const TRANSLATIONS = {
     heroH1:        'Find Your<br><span class=\'coral\'>Scholarship.</span>',
     heroSub:       'A free directory of scholarships, financial aid, and study loans for Malaysian students — SPM to postgraduate.',
     searchPlaceholder: 'Search by name, field, or provider…',
+    scrollCueLabel: 'Plan, fund, and launch your future',
     tryLabel:      'TRY:',
     toolsBtn:      'Explore',
     planDesc:      'Map your career pathway',
@@ -1287,6 +1334,7 @@ const TRANSLATIONS = {
     heroH1:        'Cari<br><span class=\'coral\'>Biasiswa Anda.</span>',
     heroSub:       'Direktori percuma biasiswa, bantuan kewangan, dan pinjaman pengajian untuk pelajar Malaysia — SPM hingga pascasiswazah.',
     searchPlaceholder: 'Cari mengikut nama, bidang, atau pemberi…',
+    scrollCueLabel: 'Rancang, biayai, dan mulakan masa depan anda',
     tryLabel:      'CUBA:',
     toolsBtn:      'Terokai',
     planDesc:      'Petakan laluan kerjaya anda',
@@ -1659,6 +1707,35 @@ function fillSearch(chipEl) {
     // Silently hide the section if fetch fails — never break the page
     if (section) section.style.display = 'none';
   }
+})();
+
+// ── Scroll cue ──────────────────────────────────────────────
+// Click: smooth-scroll to the 3 product cards and log it
+function scrollCueClick() {
+  if (typeof gtag !== 'undefined') gtag('event', 'scroll_hint_click', { target_section: 'products' });
+  document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+}
+
+// Fade the cue out permanently once the user starts scrolling on their own
+window.addEventListener('scroll', function hideCue() {
+  if (window.scrollY < 40) return; // ignore tiny scroll jitter
+  const cue = document.getElementById('scrollCue');
+  if (cue) cue.classList.add('cue-hidden');
+  window.removeEventListener('scroll', hideCue);
+}, { passive: true });
+
+// Measure discovery: fire once when the product cards actually enter the viewport.
+// This is the success metric for the cue — compare before/after in GA4.
+(function trackProductsView() {
+  const target = document.getElementById('products');
+  if (!target || !('IntersectionObserver' in window)) return;
+  const obs = new IntersectionObserver(function(entries) {
+    if (entries[0].isIntersecting) {
+      if (typeof gtag !== 'undefined') gtag('event', 'products_section_view');
+      obs.disconnect(); // fire once per page load only
+    }
+  }, { threshold: 0.3 }); // 30% of the section visible counts as "seen"
+  obs.observe(target);
 })();
 
 // ── Signup popup ────────────────────────────────────────────
