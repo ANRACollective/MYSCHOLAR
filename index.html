@@ -456,6 +456,11 @@ nav {
   .scroll-cue svg { animation: none; opacity: .85; filter: drop-shadow(0 0 6px rgba(232,85,30,.5)); }
 }
 
+/* When the cue scrolls to #products, stop 88px short of the top:
+   56px sticky nav + 32px breathing room, so the PLAN/FUND/LAUNCH
+   labels land fully visible instead of sliding under the nav */
+#products { scroll-margin-top: 88px; }
+
 /* ─────────────────────────────────────────────
    PRODUCT CARDS SECTION
    ───────────────────────────────────────────── */
