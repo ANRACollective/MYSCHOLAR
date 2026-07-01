@@ -20,3 +20,7 @@ manamana_tickets_v2.md
 # OS / editor noise
 .DS_Store
 Thumbs.db
+
+# Node tooling (e.g. local test deps — never part of the site)
+node_modules/
+package-lock.json
