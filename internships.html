@@ -133,6 +133,11 @@
   --c-fin:#60a5fa;--c-ene:#fbbf24;--c-tec:#f472b6;--c-gov:#34d399;
   --c-hea:#a78bfa;--c-eng:#fb923c;--c-med:#f43f5e;--c-con:#38bdf8;
   --c-fmc:#4ade80;--c-leg:#e879f9;--c-edu:#fcd34d;--c-ngo:#67e8f9;
+  /* Phase 3: shared card design tokens (dark-glass themed; same names as scholarships.html) */
+  --mcard-bg:var(--bg-card);--mcard-border:var(--border);--mcard-border-hover:var(--border-h);
+  --mcard-text:var(--t1);--mcard-muted:var(--t2);--mcard-foot-bg:transparent;
+  --mcard-radius:14px;--mcard-stripe-h:3px;
+  --mcard-fresh:#34d399;--mcard-aging:#fbbf24;--mcard-stale:#64748b;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
@@ -239,15 +244,30 @@ nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:
 /* ── FEED ──────────────────────────────── */
 .feed{max-width:720px;margin:12px auto 32px;padding:0 20px;display:flex;flex-direction:column;gap:12px}
 @media(min-width:768px){.feed{display:grid;grid-template-columns:1fr 1fr;max-width:1100px;gap:12px}.search-w{max-width:1100px}.filters{max-width:1100px}}
-.row{background:var(--bg-card);border-radius:14px;padding:18px;border:1px solid var(--border);border-left:4px solid var(--t3);transition:all .3s;cursor:pointer}
+.row{background:var(--mcard-bg);border-radius:var(--mcard-radius);padding:0;border:1px solid var(--mcard-border);overflow:hidden;transition:border-color .3s,background .3s,transform .18s;cursor:pointer}
+.row:hover{border-color:var(--mcard-border-hover)}
+.row-stripe{height:var(--mcard-stripe-h);background:var(--t3)}
+.row-body{padding:18px}
+.row.b-fin .row-stripe{background:var(--c-fin)}.row.b-ene .row-stripe{background:var(--c-ene)}
+.row.b-tec .row-stripe{background:var(--c-tec)}.row.b-gov .row-stripe{background:var(--c-gov)}
+.row.b-hea .row-stripe{background:var(--c-hea)}.row.b-eng .row-stripe{background:var(--c-eng)}
+.row.b-med .row-stripe{background:var(--c-med)}.row.b-con .row-stripe{background:var(--c-con)}
+.row.b-fmc .row-stripe{background:var(--c-fmc)}.row.b-leg .row-stripe{background:var(--c-leg)}
+.row.b-edu .row-stripe{background:var(--c-edu)}.row.b-ngo .row-stripe{background:var(--c-ngo)}
+.row-chips{display:flex;gap:5px;margin-bottom:10px;flex-wrap:wrap;align-items:center}
+.row-chip{font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px;text-transform:uppercase;letter-spacing:.05em;line-height:1.4}
+.row-chip.chip-paid{background:rgba(52,211,153,.15);color:var(--green);border:1px solid rgba(52,211,153,.3)}
+/* Freshness signal (mirrors scholarships.html classes) */
+.card-meta{display:flex;align-items:center;gap:10px;margin-top:10px;font-size:11.5px;line-height:1;min-height:14px}
+.card-fresh{display:inline-flex;align-items:center;gap:5px;font-weight:600;letter-spacing:.02em}
+.card-fresh-dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
+.card-fresh.fresh{color:var(--mcard-fresh)}.card-fresh.aging{color:var(--mcard-aging)}.card-fresh.stale{color:var(--mcard-stale)}
+/* Share button (paired with save-btn — makes the two products symmetrical) */
+.share-btn{background:transparent;border:1px solid var(--border);border-radius:8px;width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--t2);transition:border-color .12s,color .12s}
+.share-btn:hover{border-color:var(--accent);color:var(--accent)}
+.share-btn.copied{color:var(--green);border-color:var(--green)}
 .row:hover{background:var(--bg-card-h);border-color:var(--border-h);transform:translateY(-1px);box-shadow:0 8px 24px rgba(0,0,0,.2)}
 /* Industry left borders */
-.row.b-fin{border-left-color:var(--c-fin)}.row.b-ene{border-left-color:var(--c-ene)}
-.row.b-tec{border-left-color:var(--c-tec)}.row.b-gov{border-left-color:var(--c-gov)}
-.row.b-hea{border-left-color:var(--c-hea)}.row.b-eng{border-left-color:var(--c-eng)}
-.row.b-med{border-left-color:var(--c-med)}.row.b-con{border-left-color:var(--c-con)}
-.row.b-fmc{border-left-color:var(--c-fmc)}.row.b-leg{border-left-color:var(--c-leg)}
-.row.b-edu{border-left-color:var(--c-edu)}.row.b-ngo{border-left-color:var(--c-ngo)}
 
 .row-top{display:flex;align-items:center;gap:14px;margin-bottom:8px}
 /* Logo */
@@ -1032,6 +1052,29 @@ function logoHTML(item,sz){
 
 /* ── Helpers ────────────────────────────── */
 function pk(item){return item.industry&&item.industry.length?IM[item.industry[0]]||'con':'con'}
+/* Freshness signal — mirrors scholarships.html freshnessSignal for the shared
+   card spec. ≤30d fresh, ≤90d aging, older stale, unknown → omitted. */
+function freshnessSignal(iso){
+  if(!iso)return null;
+  const d=new Date(iso);
+  if(isNaN(d.getTime()))return null;
+  const days=Math.floor((Date.now()-d.getTime())/86400000);
+  if(days<0)return null;
+  const tone=days<=30?'fresh':days<=90?'aging':'stale';
+  const monthYear=d.toLocaleDateString('en-MY',{month:'short',year:'numeric'});
+  return {tone:tone,label:'Verified '+monthYear,absDate:iso.split('T')[0]};
+}
+/* Share button — copy internship URL to clipboard */
+function shareInternship(itemId,btn,ev){
+  if(ev)ev.stopPropagation();
+  const item=DATA.find(x=>x.id===itemId);
+  const url=item&&item.url?item.url:(location.origin+'/internships');
+  const done=()=>{btn.classList.add('copied');setTimeout(()=>btn.classList.remove('copied'),1500);gtag('event','intern_share',{co:(item&&item.company)||'',url_type:(item&&item.url_type)||''})};
+  try{
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(url).then(done).catch(()=>done())}
+    else{const ta=document.createElement('textarea');ta.value=url;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();done()}
+  }catch(_){done()}
+}
 function fmtDur(item){
   const a=item.duration_min_months,b=item.duration_max_months;
   if(!a&&!b) return 'Varies';
@@ -1348,18 +1391,36 @@ function render(){
     el.style.animation='fadeIn .25s ease '+Math.min(i,20)*.03+'s both';
     // dataIdx is the position in DATA — openModal() needs this, not the page position
     el.onclick=()=>openModal(dataIdx);
-    const stip=hasPay(item)?'<span class="mi paid">'+escapeHtml(item.allowance_text)+'</span>':'';
+    /* Phase 3: category chip (industry) + paid chip. Paid promoted from meta
+       row so it sits alongside the category — matches scholarship card cap. */
+    const catName=item.industry&&item.industry[0]?(IS[item.industry[0]]||item.industry[0]):'General';
+    const catChip='<span class="row-chip pill p-'+k+'">'+escapeHtml(catName)+'</span>';
+    const paidChip=hasPay(item)?'<span class="row-chip chip-paid" title="'+escapeHtml(item.allowance_text||'')+'">Paid</span>':'';
+    const chipsRow='<div class="row-chips">'+catChip+paidChip+'</div>';
+    /* Paid stipend text drops off the meta row since it's now a chip */
     const careersNote=item.url_type==='careers_page'?'<span class="mi careers-note">Check website — availability varies</span>':'';
     const quals=fmtQuals(item);
     const tipPrev=item.tips?'<span class="tip-prev">'+escapeHtml(item.tips.slice(0,80))+(item.tips.length>80?'&hellip;':'')+'</span>':'';
     const intake=fmtIntake(item);
-    const metaItems='<span class="mi">'+fmtDur(item)+'</span>'+(stip?stip:'')+(intake?'<span class="mi">'+intake+'</span>':'')+(careersNote?careersNote:'');
-    el.innerHTML='<div class="row-top"><div class="logo-w">'+logoHTML(item)+'</div><div class="row-hd"><div class="co-line"><span class="co">'+escapeHtml(item.company)+'</span></div><div class="prog">'+escapeHtml(item.programme_name)+'</div></div></div>'
+    const metaItems='<span class="mi">'+fmtDur(item)+'</span>'+(intake?'<span class="mi">'+intake+'</span>':'')+(careersNote?careersNote:'');
+    /* Freshness signal from last_verified — same fresh/aging/stale spec as scholarships */
+    const fresh=freshnessSignal(item.last_verified);
+    const freshHtml=fresh
+      ? '<div class="card-meta"><span class="card-fresh '+fresh.tone+'" title="Verified on '+fresh.absDate+'"><span class="card-fresh-dot"></span>'+fresh.label+'</span></div>'
+      : '';
+    const coSafe=escapeHtml((item.company||'').replace(/'/g,''));
+    el.innerHTML='<div class="row-stripe"></div>'
+      +'<div class="row-body">'
+      +'<div class="row-top"><div class="logo-w">'+logoHTML(item)+'</div><div class="row-hd"><div class="co-line"><span class="co">'+escapeHtml(item.company)+'</span></div><div class="prog">'+escapeHtml(item.programme_name)+'</div></div></div>'
+      +chipsRow
       +'<div class="meta">'+metaItems+'</div>'
       +quals
       +tipPrev
-      +'<div class="act-row"><a href="'+escapeHtml(item.url||'#')+'" target="_blank" rel="noopener" class="gbtn" onclick="event.stopPropagation();gtag(\'event\',\'intern_apply_click\',{co:\''+escapeHtml((item.company||'').replace(/'/g,''))+'\',url_type:\''+(item.url_type||'')+'\',source:\'card\'})">'+applyBtnLabel(item)+' <span class="arr">&rarr;</span></a>'
+      +freshHtml
+      +'<div class="act-row"><a href="'+escapeHtml(item.url||'#')+'" target="_blank" rel="noopener" class="gbtn" onclick="event.stopPropagation();gtag(\'event\',\'intern_apply_click\',{co:\''+coSafe+'\',url_type:\''+(item.url_type||'')+'\',source:\'card\'})">'+applyBtnLabel(item)+' <span class="arr">&rarr;</span></a>'
       +'<button class="save-btn'+(savedInternships.has(item.id)?' saved':'')+'" onclick="event.stopPropagation();toggleSaved('+item.id+',this)" aria-label="Save internship"><svg width="16" height="16" fill="'+(savedInternships.has(item.id)?'currentColor':'none')+'" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>'
+      +'<button class="share-btn" onclick="shareInternship('+item.id+',this,event)" aria-label="Copy link to this internship" title="Copy link"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/></svg></button>'
+      +'</div>'
       +'</div>';
     feed.appendChild(el);
   });
