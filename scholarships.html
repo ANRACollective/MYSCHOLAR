@@ -377,6 +377,13 @@ nav{position:sticky;top:0;z-index:200;background:var(--midnight);padding:0 20px;
 .modal-tag-wrap{display:flex;flex-wrap:wrap;gap:5px}
 .modal-tag{font-size:11px;padding:3px 9px;border-radius:4px;background:var(--ice-mid);color:var(--muted);border:1px solid var(--border)}
 .modal-notes{background:var(--ice);border-radius:6px;padding:14px 16px;font-size:13px;color:#4a5568;line-height:1.8;border-left:3px solid var(--border-mid)}
+/* Cross-app spine links — journey / intern from a scholarship modal */
+.modal-crosslinks{margin-top:20px;margin-bottom:16px;padding:14px 16px;background:var(--ice);border-radius:8px;border-left:3px solid var(--teal)}
+.modal-crosslinks .modal-section-label{margin-bottom:8px}
+.modal-crosslink-row{display:flex;flex-wrap:wrap;gap:6px}
+.modal-crosslink{display:inline-flex;align-items:center;gap:4px;font-size:12.5px;font-weight:600;color:var(--midnight);background:var(--white);border:1px solid var(--border);border-radius:6px;padding:6px 10px;text-decoration:none;transition:background .12s,border-color .12s,transform .08s}
+.modal-crosslink:hover{background:var(--ice-mid);border-color:var(--teal)}
+.modal-crosslink:active{transform:scale(.98)}
 .modal-actions{margin-top:20px}
 .modal-actions-row{display:flex;align-items:center;gap:8px}
 .btn-primary{display:block;flex:1;text-align:center;padding:11px 16px;border-radius:8px;font-size:13.5px;font-weight:600;text-decoration:none;transition:opacity .15s,transform .1s;cursor:pointer;border:none;font-family:var(--sans);background:var(--midnight);color:#fff}
@@ -2023,6 +2030,7 @@ async function initData() {
     checkDeepLink();
     checkSearchParam(); // pre-fill search if ?q= present
     checkFieldParam();  // pre-apply filter if ?field= canonical present
+    checkOpenQuizParam(); // open the match quiz if ?openquiz=1 (from carried-match "Change" links)
 
     // If student has a saved quiz profile, activate match mode immediately
     if(quizProfile){
@@ -2486,6 +2494,63 @@ ${eligBadge}
 }
 
 // ── OPEN MODAL ────────────────────────────────────────────────────────────
+// ── SCHOLARSHIP → CANONICAL FIELDS ────────────────────────────────────────
+// Maps a scholarship's fieldTags (legacy values like 'Engineering', 'IT',
+// 'STEM', 'Any') to a de-duplicated list of canonical field keys. Excludes
+// 'open' (from 'Any') so cross-app links only show up on field-specific
+// scholarships — an "Any-field" scholarship gets no crosslink block.
+function scholarshipToCanonFields(s){
+  const LEGACY_TO_CANON = {
+    'Engineering':'engineering',
+    'IT':'computing_it', 'Computer Science':'computing_it',
+    'Business':'business',
+    'Medicine':'medicine_health', 'Health':'medicine_health',
+    'Law':'law',
+    'STEM':'general_stem', 'Science':'general_stem',
+    'Vocational':'tvet'
+  };
+  const tags = Array.isArray(s.fieldTags) ? s.fieldTags : [];
+  const canons = [];
+  tags.forEach(t => {
+    const c = LEGACY_TO_CANON[t];
+    if (c && canons.indexOf(c) === -1) canons.push(c);
+  });
+  return canons;
+}
+
+// Builds the two cross-app sections (journey + intern) shown in the modal.
+// Returns '' when the scholarship has no field-specific canonical (only 'Any').
+// Labels resolve in the active language via TRANSLATIONS (this file's i18n
+// map) and MSMatch.FIELD_LABELS (canonical field display names).
+function renderModalCrosslinks(s){
+  const canons = scholarshipToCanonFields(s);
+  if (!canons.length) return '';
+  const lang = (typeof currentLang !== 'undefined' && currentLang) ? currentLang : 'en';
+  const t = (TRANSLATIONS && TRANSLATIONS[lang]) || {};
+  const labels = (window.MSMatch && window.MSMatch.FIELD_LABELS && window.MSMatch.FIELD_LABELS[lang]) || {};
+  const careersSuffix = (lang === 'bm') ? 'kerjaya' : 'careers';
+  const internsSuffix = (lang === 'bm') ? 'internship' : 'internships';
+  const journeyRow = canons.map(f => {
+    const l = escapeHtml(labels[f] || f);
+    return `<a class="modal-crosslink" href="/journey?field=${encodeURIComponent(f)}" onclick="gtag('event','scholarship_to_career_click',{scholarship_id:${s.id}, field:'${f}'})">${l} ${careersSuffix} →</a>`;
+  }).join('');
+  const internRow = canons.map(f => {
+    const l = escapeHtml(labels[f] || f);
+    return `<a class="modal-crosslink" href="/internships?field=${encodeURIComponent(f)}" onclick="gtag('event','scholarship_to_intern_click',{scholarship_id:${s.id}, field:'${f}'})">${l} ${internsSuffix} →</a>`;
+  }).join('');
+  const whereLabel = escapeHtml(t.modalWhereTakesYou || 'Where this can take you');
+  const internLabel = escapeHtml(t.modalInternsInField || 'Internships in this field');
+  return `
+<div class="modal-crosslinks">
+  <div class="modal-section-label">${whereLabel}</div>
+  <div class="modal-crosslink-row">${journeyRow}</div>
+</div>
+<div class="modal-crosslinks">
+  <div class="modal-section-label">${internLabel}</div>
+  <div class="modal-crosslink-row">${internRow}</div>
+</div>`;
+}
+
 function openModal(id){
   const s=DATA.find(x=>x.id===id);if(!s)return;
   const c=cc(s.cat),col=SC[s.cat]||'#1e3a6e';
@@ -2531,6 +2596,7 @@ ${rollingNote}
 <div class="modal-section"><div class="modal-section-label">Minimum Grade Requirement</div><div style="font-size:13px;line-height:1.6;color:var(--midnight)">${escapeHtml(s.grade)}</div></div>
 <div class="modal-section"><div class="modal-section-label">Eligibility</div><div class="modal-tag-wrap">${s.elig.map(e=>`<span class="modal-tag">${escapeHtml(e)}</span>`).join('')}</div></div>
 <div class="modal-section"><div class="modal-section-label">Notes & Tips</div><div class="modal-notes">${escapeHtml(s.notes)}</div></div>
+${renderModalCrosslinks(s)}
 <div class="modal-actions">
   <div class="modal-actions-row">
     <a id="modalVisitBtn" class="btn-primary" href="${s.url}" target="_blank" onclick="recordVisit(${id},'${s.name.replace(/'/g,"\\'").replace(/"/g,'\\"')}')">Visit Official Website ↗</a>
@@ -2984,6 +3050,17 @@ function checkSearchParam(){
     const tabsEl = document.querySelector('.tabs-wrap');
     if(tabsEl) setTimeout(()=>tabsEl.scrollIntoView({behavior:'smooth',block:'start'}),200);
   }
+}
+
+// ── OPEN QUIZ — invoked when a carried-match "Change" link sends the student
+// here to re-pick their fields. Fires on ?openquiz=1 after data load.
+function checkOpenQuizParam(){
+  try {
+    if (new URLSearchParams(location.search).get('openquiz') === '1'
+        && typeof openQuiz === 'function') {
+      openQuiz();
+    }
+  } catch(_){ /* URL param parse failed — no-op */ }
 }
 
 // ── FIELD DEEP LINK — pre-apply a filter chip from ?field=canonical ──────
@@ -4227,6 +4304,7 @@ const TRANSLATIONS = {
     quizL3h:'Education & Public Sector',     quizL3hSub:'Teaching, policy, government service',
     quizL3i:'Trades & Vocational',           quizL3iSub:'TVET, technical skills, hands-on trades',
     quizL3j:'STEM (general)',                quizL3jSub:'Science, math, research across disciplines',
+    modalWhereTakesYou:'Where this can take you', modalInternsInField:'Internships in this field',
     // Step 4 options
     quizL4a:'Malaysia only',                 quizL4aSub:'Public or private universities in Malaysia',
     quizL4b:'Overseas preferred',            quizL4bSub:'UK, US, Australia, and other countries',
@@ -4312,6 +4390,7 @@ const TRANSLATIONS = {
     quizL3h:'Pendidikan & Awam',           quizL3hSub:'Perguruan, dasar, perkhidmatan awam',
     quizL3i:'Kemahiran & Vokasional',      quizL3iSub:'TVET, kemahiran teknikal, kerja praktikal',
     quizL3j:'STEM (umum)',                 quizL3jSub:'Sains, matematik, penyelidikan merentas disiplin',
+    modalWhereTakesYou:'Ke mana ini boleh membawa anda', modalInternsInField:'Internship dalam bidang ini',
     quizL4a:'Malaysia sahaja',             quizL4aSub:'Universiti awam atau swasta di Malaysia',
     quizL4b:'Luar negara diutamakan',      quizL4bSub:'UK, AS, Australia, dan negara lain',
     quizL4c:'Terbuka kepada kedua-dua',    quizL4cSub:'Tunjukkan semua pilihan',
