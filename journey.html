@@ -1176,6 +1176,148 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </head>
 <body>
+<script>
+/* ─── MyScholar canonical field taxonomy · shared block v1 ─────────────────
+   Identical inline block in scholarships.html, journey.html, internships.html.
+   Do not modify one copy without updating the other two.
+   ------------------------------------------------------------------------ */
+(function () {
+  'use strict';
+  var FIELDS = [
+    'medicine_health', 'engineering', 'computing_it', 'business',
+    'law', 'creative', 'education_gov', 'tvet', 'general_stem', 'open'
+  ];
+  var FIELD_LABELS = {
+    en: {
+      medicine_health: 'Medicine & Health',
+      engineering: 'Engineering',
+      computing_it: 'Computing & IT',
+      business: 'Business',
+      law: 'Law',
+      creative: 'Creative & Media',
+      education_gov: 'Education & Public Sector',
+      tvet: 'Trades & Vocational',
+      general_stem: 'STEM (general)',
+      open: 'Open to anything'
+    },
+    bm: {
+      medicine_health: 'Perubatan & Kesihatan',
+      engineering: 'Kejuruteraan',
+      computing_it: 'Pengkomputeran & IT',
+      business: 'Perniagaan',
+      law: 'Undang-undang',
+      creative: 'Kreatif & Media',
+      education_gov: 'Pendidikan & Awam',
+      tvet: 'Kemahiran & Vokasional',
+      general_stem: 'STEM (umum)',
+      open: 'Terbuka kepada apa sahaja'
+    }
+  };
+  /* Scholarship quiz radios (scholarships.html:1390-1425) */
+  var QUIZ_TO_CANON = {
+    'Engineering': 'engineering',
+    'IT': 'computing_it',
+    'Business': 'business',
+    'Medicine': 'medicine_health',
+    'Law': 'law',
+    'Any': 'open'
+  };
+  /* Scholarship filter chips (scholarships.html:1039-1046 data-f values) */
+  var FILTER_TO_CANON = {
+    'fAny': 'open',
+    'fSTEM': 'general_stem',
+    'fEngineering': 'engineering',
+    'fMedicine': 'medicine_health',
+    'fBusiness': 'business',
+    'fIT': 'computing_it',
+    'fLaw': 'law',
+    'fVocational': 'tvet'
+  };
+  /* Journey category ids (journey.html:1694-1703) */
+  var JOURNEY_TO_CANON = {
+    'health': 'medicine_health',
+    'biz': 'business',
+    'eng': 'engineering',
+    'tech': 'computing_it',
+    'creative': 'creative',
+    'law': 'law',
+    'tvet': 'tvet',
+    'gov': 'education_gov'
+  };
+  /* Intern industry raw strings (internships.html:821-824) */
+  var INTERN_TO_CANON = {
+    'Finance & Banking': 'business',
+    'Energy & Utilities': 'engineering',
+    'Technology': 'computing_it',
+    'Government / GLC': 'education_gov',
+    'Healthcare': 'medicine_health',
+    'Engineering': 'engineering',
+    'Media & Comms': 'creative',
+    'Consulting': 'business',
+    'FMCG & Retail': 'business',
+    'Legal': 'law',
+    'Education': 'education_gov',
+    'Non-profit / NGO': 'education_gov'
+  };
+  function canonicalize(value, source) {
+    if (value == null) return null;
+    var map = source === 'quiz' ? QUIZ_TO_CANON
+            : source === 'filter' ? FILTER_TO_CANON
+            : source === 'journey' ? JOURNEY_TO_CANON
+            : source === 'intern' ? INTERN_TO_CANON
+            : null;
+    if (map && map[value]) return map[value];
+    if (FIELDS.indexOf(value) !== -1) return value;
+    return null;
+  }
+  var MATCH_KEY = 'ms_match_v1';
+  var LEGACY_QUIZ_KEY = 'myscholar_quiz_v1';
+  function readMatch() {
+    try {
+      var raw = localStorage.getItem(MATCH_KEY);
+      if (raw) {
+        var parsed = JSON.parse(raw);
+        if (parsed && Array.isArray(parsed.fields)) return parsed;
+      }
+      var legacy = localStorage.getItem(LEGACY_QUIZ_KEY);
+      if (legacy) {
+        var q = JSON.parse(legacy);
+        if (q && q.field) {
+          var canon = QUIZ_TO_CANON[q.field];
+          if (canon) return { fields: [canon], v: 1, ts: null, migrated: true };
+        }
+      }
+    } catch (_) { /* localStorage disabled or parse error */ }
+    return null;
+  }
+  function writeMatch(fields) {
+    var clean = Array.isArray(fields)
+      ? fields.filter(function (f) { return FIELDS.indexOf(f) !== -1; })
+      : [];
+    var payload = { fields: clean, v: 1, ts: new Date().toISOString() };
+    try { localStorage.setItem(MATCH_KEY, JSON.stringify(payload)); } catch (_) {}
+    return payload;
+  }
+  function clearMatch() {
+    try { localStorage.removeItem(MATCH_KEY); } catch (_) {}
+  }
+  window.MSMatch = {
+    FIELDS: FIELDS,
+    FIELD_LABELS: FIELD_LABELS,
+    QUIZ_TO_CANON: QUIZ_TO_CANON,
+    FILTER_TO_CANON: FILTER_TO_CANON,
+    JOURNEY_TO_CANON: JOURNEY_TO_CANON,
+    INTERN_TO_CANON: INTERN_TO_CANON,
+    canonicalize: canonicalize,
+    readMatch: readMatch,
+    writeMatch: writeMatch,
+    clearMatch: clearMatch,
+    MATCH_KEY: MATCH_KEY,
+    LEGACY_QUIZ_KEY: LEGACY_QUIZ_KEY
+  };
+})();
+/* ─── end shared block v1 ─────────────────────────────────────────────── */
+</script>
 
 <!-- ============================================================
      SHARED SITE NAV — same pattern as MyScholar and MyIntern.
