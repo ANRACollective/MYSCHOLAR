@@ -115,6 +115,8 @@
 <noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"></noscript>
 <style>
 :root{--midnight:#0f1f3d;--navy:#1e3a6e;--coral:#e8551e;--ice:#f0f4ff;--ice-mid:#e4ebfa;--white:#ffffff;--teal:#00a878;--border:#dde4f5;--border-mid:#c8d3ee;--muted:#3d4663;--c-gov:#1e3a6e;--c-glc:#00a878;--c-bank:#c07a00;--c-corp:#7c3aed;--c-loan:#0891b2;--c-state:#b45309;--c-media:#be185d;--c-intl:#0f766e;--c-uni:#374151;--c-tvet:#c2410c;--serif:'Playfair Display',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif;--sky:#38bdf8}
+/* Shared card design tokens — same names on scholarships / intern; values themed per file (ice/midnight here vs dark/sky on internships.html) */
+:root{--mcard-bg:var(--white);--mcard-border:var(--border);--mcard-border-hover:var(--border-mid);--mcard-text:var(--midnight);--mcard-muted:var(--muted);--mcard-foot-bg:var(--ice);--mcard-radius:10px;--mcard-stripe-h:3px;--mcard-fresh:#16a34a;--mcard-aging:#ea580c;--mcard-stale:#6b7280}
 *{box-sizing:border-box;margin:0;padding:0}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 html{scroll-behavior:smooth;overflow-x:hidden;max-width:100%}
@@ -345,9 +347,25 @@ nav{position:sticky;top:0;z-index:200;background:var(--midnight);padding:0 20px;
 .card-amount{font-size:14px;font-weight:500;color:var(--navy);background:var(--ice);border-radius:5px;padding:10px 12px;line-height:1.4;border-left:3px solid var(--border-mid);margin-bottom:13px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .card-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px}
 .tag{font-size:13px;padding:3px 9px;border-radius:4px;background:var(--ice-mid);color:var(--muted);border:1px solid var(--border);font-weight:500}
-.card-foot{padding:12px 20px;border-top:1px solid var(--border);background:var(--ice);display:flex;justify-content:space-between;align-items:center;gap:8px;flex-shrink:0;margin-top:auto}
+.card-foot{padding:12px 20px;border-top:1px solid var(--border);background:var(--mcard-foot-bg);display:flex;justify-content:space-between;align-items:center;gap:8px;flex-shrink:0;margin-top:auto}
 .card-deadline{font-size:13.5px;color:var(--muted)}.card-deadline strong{color:var(--coral);font-weight:600}
 .card-deadline.urgent-dl strong{color:#dc2626;font-weight:700}
+/* Phase 3: coloured status inline with the deadline (moved off chip row) */
+.card-status{font-size:11.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:0 2px}
+.card-status.status-rolling{color:#6b7899}
+.card-status.status-urgent{color:#dc2626}
+.card-status.status-soon{color:#ea580c}
+.card-status.status-open{color:#15803d}
+/* Freshness signal — verified-in-last-N-days signal below the amount */
+.card-meta{display:flex;align-items:center;gap:10px;margin-top:8px;font-size:11.5px;line-height:1;min-height:14px}
+.card-fresh{display:inline-flex;align-items:center;gap:5px;font-weight:600;letter-spacing:.02em}
+.card-fresh-dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
+.card-fresh.fresh{color:var(--mcard-fresh)}
+.card-fresh.aging{color:var(--mcard-aging)}
+.card-fresh.stale{color:var(--mcard-stale)}
+/* Coverage chip additions — Partial + Both scope */
+.bg-partial{background:#f0f4ff;color:#1e3a6e}
+.bg-both{background:#ede9fe;color:#5b21b6}
 .card-foot-right{display:flex;align-items:center;gap:8px}
 .card-cta{font-size:12px;font-weight:600;color:var(--navy);display:flex;align-items:center;gap:4px}
 .card-cta svg{transition:transform .15s}.card:hover .card-cta svg{transform:translateX(3px)}
@@ -2413,12 +2431,25 @@ function matches(s){
 }
 
 // ── BUILD CARD ────────────────────────────────────────────────────────────
+/* ── FRESHNESS SIGNAL ──────────────────────────────────────────────────────
+   Turns a last_verified ISO date into a fresh / aging / stale token for the
+   card. Thresholds: <=30d fresh, <=90d aging, older stale. Returns null when
+   no date is present so the card just omits the signal. Month-year format
+   (e.g. "Verified Jun 2026") — never an exact day. */
+function freshnessSignal(iso){
+  if (!iso) return null;
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return null;
+  const days = Math.floor((Date.now() - d.getTime()) / 86400000);
+  if (days < 0) return null;
+  const tone = days <= 30 ? 'fresh' : days <= 90 ? 'aging' : 'stale';
+  const monthYear = d.toLocaleDateString('en-MY',{month:'short', year:'numeric'});
+  const label = 'Verified ' + monthYear;
+  return { tone: tone, label: label, absDate: iso.split('T')[0] };
+}
+
 function buildCard(s,i){
   const c=cc(s.cat);
-  // Show max 2 quals, 1 field collapsed, then entry levels — all in one 3-col grid
-  const qt=s.quals.slice(0,2).map(q=>`<span class="tag">${escapeHtml(q)}</span>`).join('');
-  const qtExtra=s.quals.length>2?`<span class="tag">+${s.quals.length-2}</span>`:'';
-  const ft=s.fields[0]?`<span class="tag">${escapeHtml(s.fields[0])}${s.fields.length>1?` +${s.fields.length-1}`:''}</span>`:'';
   const ds=deadlineStatus(s);
   const urgentCard=ds==='urgent'||ds==='soon';
   const isSaved=bookmarks.has(s.id);
@@ -2429,45 +2460,53 @@ function buildCard(s,i){
     const dl=new Date(s.deadline_date); dl.setHours(0,0,0,0);
     daysLeft=Math.round((dl-today)/(1000*60*60*24));
   }
-  let statusBadge='';
-  if(ds==='rolling') statusBadge='<span class="badge" style="background:#f0f4ff;color:#6b7899;font-size:12px;padding:2px 7px;border-radius:6px;font-weight:700;text-transform:uppercase;letter-spacing:.05em" title="Applications are accepted year-round or on an ongoing basis — no fixed closing date.">Rolling</span>';
-  else if(ds==='urgent') statusBadge=daysLeft===0
-    ?'<span class="badge bg-urgent" style="font-size:12px;padding:2px 7px;border-radius:6px;font-weight:700;text-transform:uppercase;letter-spacing:.05em">Closes today</span>'
-    :`<span class="badge bg-urgent" style="font-size:12px;padding:2px 7px;border-radius:6px;font-weight:700;text-transform:uppercase;letter-spacing:.05em" title="Deadline in ${daysLeft} day${daysLeft===1?'':'s'}">${daysLeft}d left</span>`;
-  else if(ds==='soon') statusBadge=daysLeft!==null
-    ?`<span class="badge bg-soon" style="font-size:12px;padding:2px 7px;border-radius:6px;font-weight:700;text-transform:uppercase;letter-spacing:.05em">Closes ${new Date(s.deadline_date).toLocaleDateString('en-MY',{day:'numeric',month:'short'})}</span>`
-    :'<span class="badge bg-soon">Closing soon</span>';
-  else if(ds==='open') statusBadge='<span class="badge" style="background:#f0fdf4;color:#15803d;font-size:12px;padding:2px 7px;border-radius:6px;font-weight:700;text-transform:uppercase;letter-spacing:.05em">Open</span>';
-  const entryBadges=s.entry.map(e=>{
-    const labels={PostSPM:'Post-SPM',PreU:'Pre-U',Undergrad:'Undergrad',Postgrad:'Postgrad'};
-    return`<span class="tag">${labels[e]||e}</span>`;
-  }).join('');
-  const globalBadge=s.global?'<span class="badge" style="background:#e0f5ef;color:#0f766e;font-size:12px;padding:2px 7px;border-radius:6px;font-weight:700;text-transform:uppercase;letter-spacing:.05em">🌐 Global</span>':'';
-  // ── Eligibility badge — only shown when quiz profile is active
+  // Phase 3: status is coloured text inline with the deadline (moved off chip row)
+  let statusInline='';
+  if(ds==='rolling') statusInline=' · <span class="card-status status-rolling" title="Applications accepted year-round">Rolling</span>';
+  else if(ds==='urgent') statusInline=daysLeft===0
+    ?' · <span class="card-status status-urgent">Closes today</span>'
+    :` · <span class="card-status status-urgent" title="Deadline in ${daysLeft} day${daysLeft===1?'':'s'}">${daysLeft}d left</span>`;
+  else if(ds==='soon') statusInline=daysLeft!==null
+    ?` · <span class="card-status status-soon">Closes ${new Date(s.deadline_date).toLocaleDateString('en-MY',{day:'numeric',month:'short'})}</span>`
+    :' · <span class="card-status status-soon">Closing soon</span>';
+  else if(ds==='open') statusInline=' · <span class="card-status status-open">Open</span>';
+  // ── Eligibility badge — only shown when quiz profile is active (moved to card-meta line)
   const eligScore = eligibilityScore(s, quizProfile);
   const eligBadge = eligScore === 'yes'
     ? '<span class="elig-badge elig-yes"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg> Likely eligible</span>'
     : eligScore === 'maybe'
     ? '<span class="elig-badge elig-maybe">⚠ Check requirements</span>'
     : '';
+  // Phase 3: freshness token from last_verified (30/90-day thresholds, month-year format)
+  const fresh = freshnessSignal(s.last_verified);
+  const freshHtml = fresh
+    ? `<span class="card-fresh ${fresh.tone}" title="Verified on ${fresh.absDate}"><span class="card-fresh-dot"></span>${fresh.label}</span>`
+    : '';
+  const metaLine = (freshHtml || eligBadge) ? `<div class="card-meta">${freshHtml}${eligBadge}</div>` : '';
+  // 3-chip hard cap: Category + Coverage + Scope. No Bond and Global live in the modal.
+  const categoryLabel = s.cat || 'Other';
+  const coverageLabel = s.cov === 'Full' ? 'Full' : 'Partial';
+  const coverageBg = s.cov === 'Full' ? 'bg-full' : 'bg-partial';
+  const scopeLabel = s.dest || 'Local';
+  const scopeBg = s.dest === 'Overseas' ? 'bg-ov' : s.dest === 'Both' ? 'bg-both' : 'bg-lo';
   return`<div class="card${urgentCard?' urgent-card':''}" style="animation-delay:${Math.min(i*.04,.5)}s" onclick="openModal(${s.id})">
 <div class="card-stripe cs-${c}"></div>
 <div class="card-body">
 <div class="card-top">
 <div class="card-badges">
-${s.cov==='Full'?'<span class="badge bg-full" aria-label="Full scholarship">Full</span>':''}
-<span class="badge ${s.dest==='Overseas'?'bg-ov':'bg-lo'}" aria-label="${s.dest==='Overseas'?'Overseas study':'Local (Malaysia)'}">${s.dest}</span>
-${s.nb?'<span class="badge bg-nb" aria-label="No bond required">No Bond</span>':''}
-${eligBadge}
+<span class="badge bg-${c}" aria-label="Category: ${escapeHtml(categoryLabel)}">${escapeHtml(categoryLabel)}</span>
+<span class="badge ${coverageBg}" aria-label="${coverageLabel} scholarship">${coverageLabel}</span>
+<span class="badge ${scopeBg}" aria-label="${escapeHtml(scopeLabel)} study">${escapeHtml(scopeLabel)}</span>
 </div>
 <div class="card-name">${escapeHtml(s.name)}</div>
 <div class="card-provider">${escapeHtml(s.prov)}</div>
 </div>
 <div class="card-amount">${escapeHtml(s.amt)}</div>
 <div class="card-tags-spacer"></div>
+${metaLine}
 </div>
 <div class="card-foot">
-<div class="card-deadline${urgentCard?' urgent-dl':''}">Deadline: <strong>${escapeHtml(s.dl)}</strong></div>
+<div class="card-deadline${urgentCard?' urgent-dl':''}">Deadline: <strong>${escapeHtml(s.dl)}</strong>${statusInline}</div>
 <div class="card-foot-right">
 <span class="cmp-tip-wrap">
   <button class="bookmark-btn${isSaved?' saved':''}" onclick="toggleBookmark(${s.id},event)" aria-label="${isSaved?'Remove bookmark':'Save this scholarship'}">
