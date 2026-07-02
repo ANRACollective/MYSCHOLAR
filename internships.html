@@ -1552,10 +1552,52 @@ function injectJobSchema(data){
   });
 }
 
+/* ── Deep link — pre-apply industry chip or canonical field filter ───────
+   Supports ?industry=<full-name-or-IM-short-key> (wins if both present)
+   and ?field=<canonical>. Silent no-op on unknown values — feed stays open.
+   Called after buildChips() so the chip DOM exists to be marked active. */
+function checkInternDeepLink(){
+  try {
+    var params = new URLSearchParams(location.search);
+    var indRaw = params.get('industry');
+    if (indRaw) {
+      var indKey = indRaw.trim();
+      var full = null;
+      Object.keys(IM).forEach(function(name){ if (IM[name] === indKey || name === indKey) full = name; });
+      if (full) {
+        var chip = null;
+        document.querySelectorAll('#chips .chip').forEach(function(x){ if (x.dataset.ind === full) chip = x; });
+        if (chip) {
+          quizFilter = null;
+          document.querySelectorAll('#chips .chip').forEach(function(x){ x.classList.remove('active'); });
+          chip.classList.add('active');
+          resetPage(); render();
+          if (typeof gtag === 'function') gtag('event','deeplink_landed',{app:'intern', industry:full});
+          return;
+        }
+      }
+    }
+    var fieldRaw = params.get('field');
+    if (!fieldRaw) return;
+    var canon = window.MSMatch ? window.MSMatch.canonicalize(fieldRaw.trim().toLowerCase()) : null;
+    if (!canon || !window.MSMatch) return;
+    var matched = Object.keys(window.MSMatch.INTERN_TO_CANON).filter(function(k){
+      return window.MSMatch.INTERN_TO_CANON[k] === canon;
+    });
+    if (!matched.length) return;
+    quizFilter = matched;
+    document.querySelectorAll('#chips .chip').forEach(function(x){ x.classList.remove('active'); });
+    var allChip = document.querySelector('#chips .chip[data-ind="all"]');
+    if (allChip) allChip.classList.add('active');
+    resetPage(); render();
+    if (typeof gtag === 'function') gtag('event','deeplink_landed',{app:'intern', field:canon, matched:matched.length});
+  } catch(_){ /* URL param parse failed — leave feed as-is */ }
+}
+
 /* ── Init ──────────────────────────────── */
 fetch(SB+'/rest/v1/internships?is_visible=eq.true&order=company.asc',{headers:{apikey:SK,Authorization:'Bearer '+SK}})
   .then(r=>{if(!r.ok)throw new Error(r.status);return r.json()})
-  .then(d=>{DATA=d;document.querySelector('.hs-num').textContent=DATA.length;buildChips();render();injectJobSchema(DATA);gtag('event','intern_loaded',{count:DATA.length})})
+  .then(d=>{DATA=d;document.querySelector('.hs-num').textContent=DATA.length;buildChips();render();injectJobSchema(DATA);checkInternDeepLink();gtag('event','intern_loaded',{count:DATA.length})})
   .catch(e=>{console.error(e);document.getElementById('feed').innerHTML='<div class="empty">Failed to load. Please refresh.</div>'});
 
 /* ══════════════════════════════════════════════════════════════

@@ -2002,6 +2002,7 @@ async function initData() {
     render();
     checkDeepLink();
     checkSearchParam(); // pre-fill search if ?q= present
+    checkFieldParam();  // pre-apply filter if ?field= canonical present
 
     // If student has a saved quiz profile, activate match mode immediately
     if(quizProfile){
@@ -2963,6 +2964,34 @@ function checkSearchParam(){
     const tabsEl = document.querySelector('.tabs-wrap');
     if(tabsEl) setTimeout(()=>tabsEl.scrollIntoView({behavior:'smooth',block:'start'}),200);
   }
+}
+
+// ── FIELD DEEP LINK — pre-apply a filter chip from ?field=canonical ──────
+// Reverse-maps a canonical field key (e.g. ?field=engineering) to a filter
+// chip data-f (fEngineering) and applies it. Silent no-op on unknown or
+// on canonical fields with no scholarship chip (creative, education_gov).
+function checkFieldParam(){
+  try {
+    const raw = new URLSearchParams(location.search).get('field');
+    if(!raw) return;
+    const canon = window.MSMatch ? window.MSMatch.canonicalize(raw.trim().toLowerCase()) : null;
+    if(!canon) return;
+    const REVERSE_FILTER = {
+      open:'fAny', general_stem:'fSTEM', engineering:'fEngineering',
+      medicine_health:'fMedicine', business:'fBusiness', computing_it:'fIT',
+      law:'fLaw', tvet:'fVocational'
+    };
+    const chipKey = REVERSE_FILTER[canon];
+    if(!chipKey) return; // creative / education_gov — silent unfiltered
+    activeChips.add(chipKey);
+    document.querySelectorAll('[data-f="'+chipKey+'"]').forEach(c=>c.classList.add('on'));
+    if(typeof updateFilterUI === 'function') updateFilterUI();
+    if(typeof resetPage === 'function') resetPage();
+    render();
+    if(typeof gtag === 'function'){
+      gtag('event','deeplink_landed',{app:'scholarships', field:canon});
+    }
+  } catch(_){ /* URL param parse failed — leave feed unfiltered */ }
 }
 
 // ── FILTER FUNCTIONS (with resetPage + GA tracking) ──────────────────────

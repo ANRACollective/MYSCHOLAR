@@ -2722,7 +2722,39 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
     document.body.style.overflow = '';
   }
 
-    document.addEventListener('DOMContentLoaded', async () => { await loadCareersFromDB(); renderCategoryGrid(); renderBookmarkStrip(); initLangState(); });
+  // ── DEEP LINK — open a career or a category drawer from URL params ───────
+  // Supports ?career=<career-id> (wins if both present) and ?field=<canonical>.
+  // Silent no-op on unknown values or on canonicals with no journey category
+  // (general_stem, open) — leaves the full 8-tile grid visible.
+  function checkJourneyDeepLink(){
+    try {
+      var params = new URLSearchParams(location.search);
+      var careerRaw = params.get('career');
+      if (careerRaw) {
+        var id = careerRaw.trim().toLowerCase();
+        if (CAREERS.some(function(c){ return c.id === id; })) {
+          openCareer(id);
+          if (typeof gtag === 'function') gtag('event','deeplink_landed',{app:'journey', career:id});
+          return;
+        }
+      }
+      var fieldRaw = params.get('field');
+      if (!fieldRaw) return;
+      var canon = window.MSMatch ? window.MSMatch.canonicalize(fieldRaw.trim().toLowerCase()) : null;
+      if (!canon) return;
+      var REVERSE_JOURNEY = {
+        medicine_health:'health', business:'biz', engineering:'eng',
+        computing_it:'tech', creative:'creative', law:'law',
+        education_gov:'gov', tvet:'tvet'
+      };
+      var catId = REVERSE_JOURNEY[canon];
+      if (!catId) return;
+      openCategoryDrawer(catId);
+      if (typeof gtag === 'function') gtag('event','deeplink_landed',{app:'journey', field:canon});
+    } catch(_){ /* URL param parse failed — leave grid visible */ }
+  }
+
+    document.addEventListener('DOMContentLoaded', async () => { await loadCareersFromDB(); renderCategoryGrid(); renderBookmarkStrip(); initLangState(); checkJourneyDeepLink(); });
 </script>
 
 <div class="compare-sticky" id="cmpSticky">
