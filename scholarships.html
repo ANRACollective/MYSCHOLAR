@@ -1529,40 +1529,60 @@ document.addEventListener('keydown', function(e) {
         </div>
       </div>
 
-      <!-- Step 3: Field -->
+      <!-- Step 3: Field (multi-select, canonical taxonomy) -->
       <div class="quiz-step" id="qs2">
-        <div class="quiz-q" data-i18n="quizQ3">What field interests you?</div>
-        <div class="quiz-hint" data-i18n="quizH3">Pick the closest match — you can always browse all fields later.</div>
+        <div class="quiz-q" data-i18n="quizQ3">What fields interest you?</div>
+        <div class="quiz-hint" data-i18n="quizH3">Pick one or more — you can select multiple, and browse all fields later.</div>
         <div class="quiz-options">
-          <label class="quiz-option" data-val="Engineering">
-            <input type="radio" name="field" value="Engineering">
+          <label class="quiz-option" data-canon="engineering">
+            <input type="checkbox" name="field" value="engineering">
             <span class="quiz-option-icon">⚙️</span>
-            <span class="quiz-option-body"><span class="quiz-option-label" data-i18n="quizL3a">Engineering & Technology</span><span class="quiz-option-sub" data-i18n="quizL3aSub">Civil, mechanical, electrical, chemical</span></span>
+            <span class="quiz-option-body"><span class="quiz-option-label" data-i18n="quizL3a">Engineering</span><span class="quiz-option-sub" data-i18n="quizL3aSub">Civil, mechanical, electrical, chemical</span></span>
           </label>
-          <label class="quiz-option" data-val="IT">
-            <input type="radio" name="field" value="IT">
+          <label class="quiz-option" data-canon="computing_it">
+            <input type="checkbox" name="field" value="computing_it">
             <span class="quiz-option-icon">💻</span>
-            <span class="quiz-option-body"><span class="quiz-option-label" data-i18n="quizL3b">IT & Computer Science</span><span class="quiz-option-sub" data-i18n="quizL3bSub">Software, data science, AI, cybersecurity</span></span>
+            <span class="quiz-option-body"><span class="quiz-option-label" data-i18n="quizL3b">Computing & IT</span><span class="quiz-option-sub" data-i18n="quizL3bSub">Software, data science, AI, cybersecurity</span></span>
           </label>
-          <label class="quiz-option" data-val="Business">
-            <input type="radio" name="field" value="Business">
+          <label class="quiz-option" data-canon="business">
+            <input type="checkbox" name="field" value="business">
             <span class="quiz-option-icon">📈</span>
             <span class="quiz-option-body"><span class="quiz-option-label" data-i18n="quizL3c">Business, Finance & Accounting</span><span class="quiz-option-sub" data-i18n="quizL3cSub">Economics, management, actuarial</span></span>
           </label>
-          <label class="quiz-option" data-val="Medicine">
-            <input type="radio" name="field" value="Medicine">
+          <label class="quiz-option" data-canon="medicine_health">
+            <input type="checkbox" name="field" value="medicine_health">
             <span class="quiz-option-icon">🏥</span>
             <span class="quiz-option-body"><span class="quiz-option-label" data-i18n="quizL3d">Medicine & Health Sciences</span><span class="quiz-option-sub" data-i18n="quizL3dSub">Medicine, dentistry, pharmacy, nursing</span></span>
           </label>
-          <label class="quiz-option" data-val="Law">
-            <input type="radio" name="field" value="Law">
+          <label class="quiz-option" data-canon="law">
+            <input type="checkbox" name="field" value="law">
             <span class="quiz-option-icon">⚖️</span>
             <span class="quiz-option-body"><span class="quiz-option-label" data-i18n="quizL3e">Law</span><span class="quiz-option-sub" data-i18n="quizL3eSub">Legal studies and practice</span></span>
           </label>
-          <label class="quiz-option" data-val="Any">
-            <input type="radio" name="field" value="Any">
+          <label class="quiz-option" data-canon="creative">
+            <input type="checkbox" name="field" value="creative">
+            <span class="quiz-option-icon">🎨</span>
+            <span class="quiz-option-body"><span class="quiz-option-label" data-i18n="quizL3g">Creative & Media</span><span class="quiz-option-sub" data-i18n="quizL3gSub">Design, film, journalism, communications</span></span>
+          </label>
+          <label class="quiz-option" data-canon="education_gov">
+            <input type="checkbox" name="field" value="education_gov">
+            <span class="quiz-option-icon">🏛️</span>
+            <span class="quiz-option-body"><span class="quiz-option-label" data-i18n="quizL3h">Education & Public Sector</span><span class="quiz-option-sub" data-i18n="quizL3hSub">Teaching, policy, government service</span></span>
+          </label>
+          <label class="quiz-option" data-canon="tvet">
+            <input type="checkbox" name="field" value="tvet">
+            <span class="quiz-option-icon">🔧</span>
+            <span class="quiz-option-body"><span class="quiz-option-label" data-i18n="quizL3i">Trades & Vocational</span><span class="quiz-option-sub" data-i18n="quizL3iSub">TVET, technical skills, hands-on trades</span></span>
+          </label>
+          <label class="quiz-option" data-canon="general_stem">
+            <input type="checkbox" name="field" value="general_stem">
+            <span class="quiz-option-icon">🔬</span>
+            <span class="quiz-option-body"><span class="quiz-option-label" data-i18n="quizL3j">STEM (general)</span><span class="quiz-option-sub" data-i18n="quizL3jSub">Science, math, research across disciplines</span></span>
+          </label>
+          <label class="quiz-option" data-canon="open">
+            <input type="checkbox" name="field" value="open">
             <span class="quiz-option-icon">🌟</span>
-            <span class="quiz-option-body"><span class="quiz-option-label" data-i18n="quizL3f">Not sure / Open to anything</span><span class="quiz-option-sub" data-i18n="quizL3fSub">Show all fields</span></span>
+            <span class="quiz-option-body"><span class="quiz-option-label" data-i18n="quizL3f">Open to anything</span><span class="quiz-option-sub" data-i18n="quizL3fSub">Show all fields</span></span>
           </label>
         </div>
         <div class="quiz-nav">
@@ -3384,11 +3404,19 @@ async function runLinkCheck(){ openLinkChecker(); }
 let quizProfile = null;
 const QUIZ_KEY = 'myscholar_quiz_v1';
 
-// Load saved profile on startup
+// Load saved profile on startup. Backfills .fields[] from a legacy .field
+// string so a returning student with the pre-canonical shape still gets
+// scored correctly by eligibilityScore() while the mirror key is in effect.
 (function loadSavedQuiz(){
   try {
     const saved = localStorage.getItem(QUIZ_KEY);
-    if(saved) quizProfile = JSON.parse(saved);
+    if(!saved) return;
+    const parsed = JSON.parse(saved);
+    if (parsed && !Array.isArray(parsed.fields) && parsed.field) {
+      const canon = (window.MSMatch && window.MSMatch.QUIZ_TO_CANON[parsed.field]) || null;
+      parsed.fields = canon ? [canon] : [];
+    }
+    quizProfile = parsed;
   } catch(e){ quizProfile = null; }
 })();
 
@@ -3437,77 +3465,110 @@ function quizBack(step){
 }
 
 // ── QUIZ OPTION SELECTION ─────────────────────────────────────────────────
-// Wire up option clicks — runs after DOM is ready
+// Bind to input `change` (fires once whether the user clicks the input, the
+// wrapping label, or the icon inside it). Handles both radio (single-select)
+// and checkbox (multi-select, used for the field step).
 document.addEventListener('DOMContentLoaded', function(){
-  document.querySelectorAll('.quiz-option').forEach(opt => {
-    opt.addEventListener('click', function(){
-      const radio = this.querySelector('input[type=radio]');
-      if(!radio) return;
-      radio.checked = true;
-      // Deselect siblings
-      const name = radio.name;
-      document.querySelectorAll(`input[name="${name}"]`).forEach(r => {
-        r.closest('.quiz-option').classList.remove('selected');
-      });
-      this.classList.add('selected');
-      // Enable the Next button for this step
+  document.querySelectorAll('.quiz-option input').forEach(inp => {
+    inp.addEventListener('change', function(){
+      const opt = this.closest('.quiz-option');
+      const name = this.name;
+      if (this.type === 'checkbox') {
+        opt.classList.toggle('selected', this.checked);
+      } else {
+        document.querySelectorAll('input[name="'+name+'"]').forEach(r =>
+          r.closest('.quiz-option').classList.remove('selected'));
+        opt.classList.add('selected');
+      }
       const stepMap = {level:0, grade:1, field:2, dest:3, income:4};
       const stepIdx = stepMap[name];
       const nextBtn = document.getElementById('qn'+stepIdx);
-      if(nextBtn) nextBtn.disabled = false;
+      if(nextBtn){
+        const anyChecked = document.querySelectorAll('input[name="'+name+'"]:checked').length > 0;
+        nextBtn.disabled = !anyChecked;
+      }
     });
   });
 });
 
 // ── QUIZ FINISH ───────────────────────────────────────────────────────────
+// Field step is now multi-select against canonical keys. quizProfile carries
+// the new .fields[] array (canonical) AND a legacy .field string derived from
+// the first pick, so eligibilityScore's backward-compat path and any old
+// downstream reader keep working during the one-release mirror window.
 function quizFinish(){
-  // Collect answers
   const level  = document.querySelector('input[name="level"]:checked')?.value;
   const grade  = document.querySelector('input[name="grade"]:checked')?.value;
-  const field  = document.querySelector('input[name="field"]:checked')?.value;
   const dest   = document.querySelector('input[name="dest"]:checked')?.value;
   const income = document.querySelector('input[name="income"]:checked')?.value;
 
-  quizProfile = { level, grade, field, dest, income };
+  const FIELDS_ALL = (window.MSMatch && window.MSMatch.FIELDS) || [];
+  const fields = Array.from(document.querySelectorAll('input[name="field"]:checked'))
+    .map(cb => cb.value)
+    .filter(v => FIELDS_ALL.indexOf(v) !== -1);
 
-  // Save to localStorage so it persists across sessions
+  const CANON_TO_LEGACY = {
+    engineering:'Engineering', computing_it:'IT', business:'Business',
+    medicine_health:'Medicine', law:'Law', open:'Any'
+  };
+  const legacyField = fields.length ? (CANON_TO_LEGACY[fields[0]] || 'Any') : 'Any';
+
+  quizProfile = { level, grade, field: legacyField, fields, dest, income };
+
+  // Canonical shared identity — read by journey/intern in Phase 2
+  if (window.MSMatch) {
+    try { window.MSMatch.writeMatch(fields); } catch(e){}
+  }
+  // Mirror to legacy key for one release
   try { localStorage.setItem(QUIZ_KEY, JSON.stringify(quizProfile)); } catch(e){}
 
   renderQuizProfilePills();
   showQuizStep(5);
 
   if(typeof gtag !== 'undefined'){
-    // GA EVENT: quiz_completed — fires when student finishes the eligibility quiz.
-    // GA4: Events → quiz_completed → quiz_level / quiz_grade / quiz_field parameters.
-    // Reveals your actual audience profile — which level, grade, field, and income band.
     gtag('event', 'quiz_completed', {
       event_category: 'engagement',
-      event_label: `${level}|${grade}|${field}`,
+      event_label: `${level}|${grade}|${fields.join(',')}`,
       quiz_level: level,
       quiz_grade: grade,
-      quiz_field: field,
+      quiz_field: legacyField,
+      quiz_fields: fields.join(','),
       quiz_dest: dest || 'not_set',
       quiz_income: income || 'not_set'
     });
+    gtag('event', 'match_saved', { fields: fields.join(',') });
   }
 }
 
 // ── PROFILE PILLS DISPLAY ─────────────────────────────────────────────────
+// Renders one pill per non-field answer + one pill per selected canonical
+// field. Field labels come from MSMatch.FIELD_LABELS in the active language;
+// non-field labels stay hard-coded here to match the quiz option copy.
 function renderQuizProfilePills(){
   if(!quizProfile) return;
   const labels = {
     PostSPM:'Post-SPM', PreU:'Pre-U / Foundation', Diploma:'Diploma leaver',
     Undergrad:'Undergraduate', Postgrad:'Postgraduate',
     Straight:'Straight As', '7As':'7–8 As', '5As':'5–6 As', Any:'Any grade',
-    Engineering:'Engineering', IT:'IT / CS', Business:'Business',
-    Medicine:'Medicine', Law:'Law',
     Local:'Local study', Overseas:'Overseas', Both:'Local & overseas',
     B40:'B40 household', M40:'M40 household', T20:'T20 household', skip:'Not stated'
   };
-  const pills = [quizProfile.level, quizProfile.grade, quizProfile.field, quizProfile.dest, quizProfile.income]
-    .filter(Boolean)
-    .map(v => `<span class="quiz-pill">${labels[v]||v}</span>`)
-    .join('');
+  const parts = [];
+  if(quizProfile.level) parts.push(labels[quizProfile.level] || quizProfile.level);
+  if(quizProfile.grade) parts.push(labels[quizProfile.grade] || quizProfile.grade);
+
+  const fieldList = (Array.isArray(quizProfile.fields) && quizProfile.fields.length)
+    ? quizProfile.fields
+    : (quizProfile.field ? [quizProfile.field] : []);
+  const lang = (typeof currentLang !== 'undefined' && currentLang) ? currentLang : 'en';
+  const canonLabels = (window.MSMatch && window.MSMatch.FIELD_LABELS && window.MSMatch.FIELD_LABELS[lang]) || {};
+  const legacyLabels = { Engineering:'Engineering', IT:'IT / CS', Business:'Business', Medicine:'Medicine', Law:'Law', Any:'Any field' };
+  fieldList.forEach(f => parts.push(canonLabels[f] || legacyLabels[f] || f));
+
+  if(quizProfile.dest) parts.push(labels[quizProfile.dest] || quizProfile.dest);
+  if(quizProfile.income) parts.push(labels[quizProfile.income] || quizProfile.income);
+
+  const pills = parts.map(v => `<span class="quiz-pill">${v}</span>`).join('');
   const el = document.getElementById('quizProfilePills');
   if(el) el.innerHTML = pills;
 }
@@ -3526,8 +3587,10 @@ function applyMatchAndClose(){
 function clearMatch(){
   quizProfile = null;
   try { localStorage.removeItem(QUIZ_KEY); } catch(e){}
+  if (window.MSMatch) { try { window.MSMatch.clearMatch(); } catch(e){} }
   document.getElementById('matchStrip').classList.remove('active');
   render();
+  if (typeof gtag === 'function') gtag('event','match_cleared');
 }
 
 // ── MATCH STRIP ───────────────────────────────────────────────────────────
@@ -3554,7 +3617,8 @@ function updateMatchStrip(){
 function resetQuiz(){
   quizProfile = null;
   try { localStorage.removeItem(QUIZ_KEY); } catch(e){}
-  // Uncheck all radios and deselect options
+  if (window.MSMatch) { try { window.MSMatch.clearMatch(); } catch(e){} }
+  // Uncheck all inputs (radios + checkboxes) and deselect option cards
   document.querySelectorAll('.quiz-option').forEach(o => o.classList.remove('selected'));
   document.querySelectorAll('.quiz-option input').forEach(r => r.checked = false);
   document.querySelectorAll('.quiz-next').forEach(b => b.disabled = true);
@@ -3598,10 +3662,22 @@ function eligibilityScore(s, profile){
   // Grade: student must meet or exceed minimum
   const gradeOk = studentGrade >= requiredGrade;
 
-  // Field: any-field scholarships always pass
-  const fieldOk = profile.field === 'Any'
-    || s.fieldTags.includes('Any')
-    || s.fieldTags.includes(profile.field);
+  // Field: any-field scholarships always pass. For multi-select profiles,
+  // pass if ANY canonical pick maps to a legacy label in s.fieldTags, or the
+  // pick is 'open'/'Any'. Falls back to the legacy single-string .field when
+  // .fields[] is missing (returning session from before Phase 1b).
+  const CANON_TO_LEGACY_ELIG = {
+    engineering:'Engineering', computing_it:'IT', business:'Business',
+    medicine_health:'Medicine', law:'Law', open:'Any'
+  };
+  const picks = (Array.isArray(profile.fields) && profile.fields.length)
+    ? profile.fields
+    : (profile.field ? [profile.field] : []);
+  const fieldOk = s.fieldTags.includes('Any') || picks.some(p => {
+    if (p === 'Any' || p === 'open') return true;
+    const label = CANON_TO_LEGACY_ELIG[p] || p;
+    return s.fieldTags.includes(label);
+  });
 
   // Destination: Local-preference student + Overseas scholarship = soft miss
   // (they might still apply overseas — show as maybe, not hidden)
@@ -4123,8 +4199,8 @@ const TRANSLATIONS = {
     quizH1:'This helps us show scholarships at the right level for you.',
     quizQ2:'How were your exam results?',
     quizH2:'Be honest — this ensures we show realistic matches, not just the most competitive ones.',
-    quizQ3:'What field interests you?',
-    quizH3:'Pick the closest match — you can always browse all fields later.',
+    quizQ3:'What fields interest you?',
+    quizH3:'Pick one or more — you can select multiple, and browse all fields later.',
     quizQ4:'Where would you like to study?',
     quizH4:"This filters out scholarships that don't match your preference.",
     quizQ5:'What is your household income?',
@@ -4141,12 +4217,16 @@ const TRANSLATIONS = {
     quizL2c:'5–6 As (CGPA 3.0–3.49)',        quizL2cSub:'Good results',
     quizL2d:'Below 5 As or unsure',          quizL2dSub:'There are still options for you',
     // Step 3 options
-    quizL3a:'Engineering & Technology',      quizL3aSub:'Civil, mechanical, electrical, chemical',
-    quizL3b:'IT & Computer Science',         quizL3bSub:'Software, data science, AI, cybersecurity',
+    quizL3a:'Engineering',                   quizL3aSub:'Civil, mechanical, electrical, chemical',
+    quizL3b:'Computing & IT',                quizL3bSub:'Software, data science, AI, cybersecurity',
     quizL3c:'Business, Finance & Accounting',quizL3cSub:'Economics, management, actuarial',
     quizL3d:'Medicine & Health Sciences',    quizL3dSub:'Medicine, dentistry, pharmacy, nursing',
     quizL3e:'Law',                           quizL3eSub:'Legal studies and practice',
-    quizL3f:'Not sure / Open to anything',   quizL3fSub:'Show all fields',
+    quizL3f:'Open to anything',              quizL3fSub:'Show all fields',
+    quizL3g:'Creative & Media',              quizL3gSub:'Design, film, journalism, communications',
+    quizL3h:'Education & Public Sector',     quizL3hSub:'Teaching, policy, government service',
+    quizL3i:'Trades & Vocational',           quizL3iSub:'TVET, technical skills, hands-on trades',
+    quizL3j:'STEM (general)',                quizL3jSub:'Science, math, research across disciplines',
     // Step 4 options
     quizL4a:'Malaysia only',                 quizL4aSub:'Public or private universities in Malaysia',
     quizL4b:'Overseas preferred',            quizL4bSub:'UK, US, Australia, and other countries',
@@ -4207,8 +4287,8 @@ const TRANSLATIONS = {
     quizH1:'Ini membantu kami menunjukkan biasiswa yang sesuai dengan tahap anda.',
     quizQ2:'Bagaimana keputusan peperiksaan anda?',
     quizH2:'Jujurlah — ini memastikan kami menunjukkan padanan yang realistik, bukan hanya yang paling kompetitif.',
-    quizQ3:'Bidang apa yang menarik minat anda?',
-    quizH3:'Pilih yang paling hampir — anda boleh semak semua bidang kemudian.',
+    quizQ3:'Bidang apakah yang menarik minat anda?',
+    quizH3:'Pilih satu atau lebih — anda boleh pilih beberapa, dan lihat semua bidang kemudian.',
     quizQ4:'Di mana anda ingin belajar?',
     quizH4:"Ini menapis biasiswa yang tidak sepadan dengan pilihan anda.",
     quizQ5:'Berapakah pendapatan isi rumah anda?',
@@ -4222,12 +4302,16 @@ const TRANSLATIONS = {
     quizL2b:'7–8 A (CGPA 3.5–3.79)',       quizL2bSub:'Keputusan cemerlang',
     quizL2c:'5–6 A (CGPA 3.0–3.49)',       quizL2cSub:'Keputusan baik',
     quizL2d:'Kurang dari 5 A atau tidak pasti', quizL2dSub:'Masih ada pilihan untuk anda',
-    quizL3a:'Kejuruteraan & Teknologi',    quizL3aSub:'Awam, mekanikal, elektrik, kimia',
-    quizL3b:'IT & Sains Komputer',         quizL3bSub:'Perisian, sains data, AI, keselamatan siber',
+    quizL3a:'Kejuruteraan',                quizL3aSub:'Awam, mekanikal, elektrik, kimia',
+    quizL3b:'Pengkomputeran & IT',         quizL3bSub:'Perisian, sains data, AI, keselamatan siber',
     quizL3c:'Perniagaan, Kewangan & Perakaunan', quizL3cSub:'Ekonomi, pengurusan, aktuari',
     quizL3d:'Perubatan & Sains Kesihatan', quizL3dSub:'Perubatan, pergigian, farmasi, kejururawatan',
     quizL3e:'Undang-undang',               quizL3eSub:'Pengajian dan amalan undang-undang',
-    quizL3f:'Tidak pasti / Terbuka',       quizL3fSub:'Tunjukkan semua bidang',
+    quizL3f:'Terbuka kepada apa sahaja',   quizL3fSub:'Tunjukkan semua bidang',
+    quizL3g:'Kreatif & Media',             quizL3gSub:'Reka bentuk, filem, kewartawanan, komunikasi',
+    quizL3h:'Pendidikan & Awam',           quizL3hSub:'Perguruan, dasar, perkhidmatan awam',
+    quizL3i:'Kemahiran & Vokasional',      quizL3iSub:'TVET, kemahiran teknikal, kerja praktikal',
+    quizL3j:'STEM (umum)',                 quizL3jSub:'Sains, matematik, penyelidikan merentas disiplin',
     quizL4a:'Malaysia sahaja',             quizL4aSub:'Universiti awam atau swasta di Malaysia',
     quizL4b:'Luar negara diutamakan',      quizL4bSub:'UK, AS, Australia, dan negara lain',
     quizL4c:'Terbuka kepada kedua-dua',    quizL4cSub:'Tunjukkan semua pilihan',
