@@ -1131,6 +1131,21 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
 .journey-sub-row button:hover { opacity: .88; }
 .journey-sub-fine { font-size: 11px !important; color: rgba(255,255,255,.3) !important; margin-top: 10px; margin-bottom: 0 !important; }
 .journey-sub-ok { font-size: 13px !important; color: var(--gold) !important; margin-top: 8px; margin-bottom: 0 !important; display: none; }
+/* Phase 2 spine — journey → scholarships primary CTA + carried-match banner */
+.journey-sub-browse { display: inline-block; background: var(--gold); color: #0f1117; padding: 10px 22px; border-radius: 6px; font-size: 13px; font-weight: 700; text-decoration: none; margin-top: 4px; margin-bottom: 14px; transition: opacity .12s, transform .1s; }
+.journey-sub-browse:hover { opacity: .88; }
+.journey-sub-browse:active { transform: scale(.98); }
+.journey-sub-secondary { font-size: 12px !important; color: rgba(255,255,255,.45) !important; margin-bottom: 8px !important; }
+.match-banner { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 8px 12px 16px; padding: 10px 14px; background: rgba(212,181,120,.08); border: 1px solid rgba(212,181,120,.28); border-radius: 8px; font-size: 12.5px; color: var(--t2); }
+.match-banner-text { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; min-width: 0; }
+.match-banner-text strong { color: var(--gold); font-weight: 600; }
+.match-banner-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
+.match-banner-actions { display: flex; gap: 6px; flex-shrink: 0; }
+.match-banner-action { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.15); color: var(--t2); font-family: inherit; font-size: 12px; padding: 4px 10px; border-radius: 4px; cursor: pointer; text-decoration: none; transition: background .12s; }
+.match-banner-action:hover { background: rgba(255,255,255,.09); }
+.cat-tile.matched { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold) inset; background: rgba(212,181,120,.05); }
+.cat-tile.matched .cat-tile-name { color: var(--gold); }
+@media(max-width:480px) { .match-banner { flex-direction: column; align-items: flex-start; } }
 
 /* ── Hero stat ── */
 .hero-stat { text-align: center; padding: 4px 20px 14px; }
@@ -1409,6 +1424,18 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
 
 
 
+    <!-- Carried match banner — shown when the student has an ms_match_v1 identity -->
+    <div id="matchBanner" class="match-banner" style="display:none;" role="status" aria-live="polite">
+      <div class="match-banner-text">
+        <span class="match-banner-dot" aria-hidden="true"></span>
+        <span class="match-banner-lead" id="matchBannerLead">Matching for:</span>
+        <strong id="matchBannerFields">—</strong>
+      </div>
+      <div class="match-banner-actions">
+        <a class="match-banner-action" href="/scholarships?openquiz=1" onclick="gtag('event','match_change_click',{app:'journey'})" id="matchBannerChange">Change</a>
+        <button class="match-banner-action" onclick="clearJourneyMatch()" id="matchBannerClear">Clear</button>
+      </div>
+    </div>
     <div id="catGrid"></div>
 
     <div id="bookmarkStrip" class="bookmark-strip" style="display:none;">
@@ -1681,7 +1708,8 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
     <!-- Subscribe strip — updated by renderCareerDetail() with career-specific copy -->
     <div class="journey-sub" id="journeySub">
       <p class="journey-sub-label" id="journeySubLabel">Get scholarships for this career path.</p>
-      <p>We track what is open and what is closing. One email a month, free.</p>
+      <a class="journey-sub-browse" id="journeySubBrowseScholar" href="/scholarships">Browse scholarships →</a>
+      <p class="journey-sub-secondary" id="journeySubSecondary">Or get monthly updates by email:</p>
       <div class="journey-sub-row">
         <input type="email" id="journeySubEmail" placeholder="your@email.com" autocomplete="email">
         <button onclick="submitJourneySub()">Get updates</button>
@@ -1844,6 +1872,15 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
     { id: 'gov',       label: 'Government & Services' }
   ];
 
+  // canonical field key → journey category id (inverse of MSMatch.JOURNEY_TO_CANON)
+  const CANON_TO_JOURNEY_CAT = {
+    medicine_health:'health', business:'biz', engineering:'eng',
+    computing_it:'tech', creative:'creative', law:'law',
+    education_gov:'gov', tvet:'tvet'
+  };
+  const JOURNEY_CAT_TO_CANON = {};
+  Object.keys(CANON_TO_JOURNEY_CAT).forEach(k => { JOURNEY_CAT_TO_CANON[CANON_TO_JOURNEY_CAT[k]] = k; });
+
   const STATUS_OPTIONS = [
     { id: 'spm',     label: 'SPM',        level: 0 },
     { id: 'found',   label: 'Foundation', level: 1 },
@@ -1979,6 +2016,9 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
       routes_sub_one: 'Here is how most students go.',
       routes_sub_many_pre: 'Pick one of', routes_sub_many_suf: 'routes to see the stages.',
       sub_label_pre: 'Get scholarships relevant to',
+      sub_browse_pre: 'Browse scholarships for', sub_browse_default: 'Browse scholarships',
+      sub_secondary: 'Or get monthly updates by email:',
+      matching_for: 'Matching for:', match_change: 'Change', match_clear: 'Clear',
       quiz_step_pre: 'Question', quiz_step_of: 'of',
       quiz_next_final: 'See my matches', quiz_next: 'Next',
       see_routes: 'See the routes',
@@ -2002,6 +2042,9 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
       routes_sub_one: 'Ini cara kebanyakan pelajar lalui.',
       routes_sub_many_pre: 'Pilih satu daripada', routes_sub_many_suf: 'laluan untuk lihat peringkat.',
       sub_label_pre: 'Dapatkan biasiswa berkaitan',
+      sub_browse_pre: 'Cari biasiswa untuk', sub_browse_default: 'Cari biasiswa',
+      sub_secondary: 'Atau dapatkan kemas kini bulanan melalui e-mel:',
+      matching_for: 'Memadan untuk:', match_change: 'Tukar', match_clear: 'Padam',
       quiz_step_pre: 'Soalan', quiz_step_of: 'daripada',
       quiz_next_final: 'Lihat padanan saya', quiz_next: 'Seterusnya',
       see_routes: 'Lihat laluan',
@@ -2329,6 +2372,28 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
     // Update subscribe strip label to match the current career
     const subLabelEl = document.getElementById('journeySubLabel');
     const _dt = LANG === 'bm' ? (data.title_bm||data.title) : data.title; if (subLabelEl) subLabelEl.textContent = t('sub_label_pre') + ' ' + _dt.toLowerCase() + '.';
+    // Update the browse-scholarships primary CTA — deep-links into scholarships
+    // pre-filtered by this career's field (via CANON_TO_JOURNEY_CAT reverse).
+    const browseBtn = document.getElementById('journeySubBrowseScholar');
+    if (browseBtn) {
+      const career = CAREERS.find(c => c.id === currentCareer);
+      const catId = career ? career.cat : null;
+      const canon = catId ? JOURNEY_CAT_TO_CANON[catId] : null;
+      const catLabels = (window.MSMatch && window.MSMatch.FIELD_LABELS && window.MSMatch.FIELD_LABELS[LANG]) || {};
+      if (canon) {
+        browseBtn.href = '/scholarships?field=' + encodeURIComponent(canon);
+        const catLabel = (catLabels[canon] || tCat(catId) || '').toLowerCase();
+        browseBtn.textContent = t('sub_browse_pre') + ' ' + catLabel + ' →';
+      } else {
+        browseBtn.href = '/scholarships';
+        browseBtn.textContent = t('sub_browse_default') + ' →';
+      }
+      browseBtn.onclick = function(){
+        if (typeof gtag === 'function') gtag('event','career_to_scholarship_click',{career_id: currentCareer, field: canon || ''});
+      };
+    }
+    const subSecondaryEl = document.getElementById('journeySubSecondary');
+    if (subSecondaryEl) subSecondaryEl.textContent = t('sub_secondary');
     // Reset subscribe strip state when switching careers
     const subEmailEl = document.getElementById('journeySubEmail');
     const subOkEl = document.getElementById('journeySubOk');
@@ -2663,14 +2728,25 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
     const grid = document.getElementById('catGrid');
     if (!grid) return;
 
-    grid.innerHTML = '<div class="cat-grid">' + CATEGORIES.map(function(cat) {
+    // Carried match: reorder so matched categories come first + get a highlight
+    const matchFields = readCarriedMatchFields();
+    const matchedCatIds = matchFields.map(f => CANON_TO_JOURNEY_CAT[f]).filter(Boolean);
+    const isMatched = id => matchedCatIds.indexOf(id) !== -1;
+    const orderedCats = CATEGORIES.slice().sort((a, b) => {
+      const am = isMatched(a.id) ? 0 : 1;
+      const bm = isMatched(b.id) ? 0 : 1;
+      return am - bm;
+    });
+
+    grid.innerHTML = '<div class="cat-grid">' + orderedCats.map(function(cat) {
       const careers = CAREERS.filter(function(c) { return c.cat === cat.id; });
       const builtCount = careers.filter(function(c) { return c.built; }).length;
       const total = careers.length;
       const sub = builtCount < total
         ? builtCount + ' ' + t('cat_ready') + ' &middot; ' + (total - builtCount) + ' ' + t('cat_coming_soon')
         : total + ' ' + (total !== 1 ? t('careers_word') : t('career_word'));
-      return '<button class="cat-tile" data-catid="' + cat.id + '" onclick="openCategoryDrawer(this.dataset.catid)" aria-label="' + tCat(cat.id) + ', ' + total + ' ' + t('careers_word') + '">'
+      const matchClass = isMatched(cat.id) ? ' matched' : '';
+      return '<button class="cat-tile' + matchClass + '" data-catid="' + cat.id + '" onclick="openCategoryDrawer(this.dataset.catid)" aria-label="' + tCat(cat.id) + ', ' + total + ' ' + t('careers_word') + '">'
         + '<div class="cat-tile-top"><span class="cat-tile-dot" style="background:var(--cat-' + cat.id + ')"></span><span class="cat-tile-name">' + tCat(cat.id) + '</span></div>'
         + '<div class="cat-tile-count">' + total + '</div>'
         + '<div class="cat-tile-sub">' + sub + '</div>'
@@ -2722,6 +2798,45 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
     document.body.style.overflow = '';
   }
 
+  // ── CARRIED MATCH — read ms_match_v1 identity written by the scholarships
+  // quiz. Renders a dismissible banner and (via renderCategoryGrid) reorders
+  // the 8 category tiles so matching categories float to the top.
+  function readCarriedMatchFields(){
+    try {
+      const m = window.MSMatch && window.MSMatch.readMatch();
+      return (m && Array.isArray(m.fields)) ? m.fields.slice() : [];
+    } catch(_){ return []; }
+  }
+
+  function renderMatchBanner(){
+    const banner = document.getElementById('matchBanner');
+    if (!banner) return;
+    const fields = readCarriedMatchFields();
+    if (!fields.length) { banner.style.display = 'none'; return; }
+    const labels = (window.MSMatch && window.MSMatch.FIELD_LABELS && window.MSMatch.FIELD_LABELS[LANG]) || {};
+    const list = fields.map(f => labels[f] || f).join(', ');
+    const leadEl = document.getElementById('matchBannerLead');
+    const fieldsEl = document.getElementById('matchBannerFields');
+    const changeEl = document.getElementById('matchBannerChange');
+    const clearEl = document.getElementById('matchBannerClear');
+    if (leadEl) leadEl.textContent = t('matching_for');
+    if (fieldsEl) fieldsEl.textContent = list;
+    if (changeEl) changeEl.textContent = t('match_change');
+    if (clearEl) clearEl.textContent = t('match_clear');
+    banner.style.display = '';
+    if (typeof gtag === 'function') gtag('event','match_reused',{app:'journey', fields:fields.join(',')});
+  }
+
+  function clearJourneyMatch(){
+    if (window.MSMatch) { try { window.MSMatch.clearMatch(); } catch(e){} }
+    if (typeof gtag === 'function') gtag('event','match_cleared',{app:'journey'});
+    renderMatchBanner();
+    renderCategoryGrid();
+  }
+
+  // Expose for the inline onclick on the Clear button
+  window.clearJourneyMatch = clearJourneyMatch;
+
   // ── DEEP LINK — open a career or a category drawer from URL params ───────
   // Supports ?career=<career-id> (wins if both present) and ?field=<canonical>.
   // Silent no-op on unknown values or on canonicals with no journey category
@@ -2754,7 +2869,7 @@ nav{position:sticky;top:0;z-index:200;background:#0a1628;padding:0 20px;display:
     } catch(_){ /* URL param parse failed — leave grid visible */ }
   }
 
-    document.addEventListener('DOMContentLoaded', async () => { await loadCareersFromDB(); renderCategoryGrid(); renderBookmarkStrip(); initLangState(); checkJourneyDeepLink(); });
+    document.addEventListener('DOMContentLoaded', async () => { await loadCareersFromDB(); renderCategoryGrid(); renderMatchBanner(); renderBookmarkStrip(); initLangState(); checkJourneyDeepLink(); });
 </script>
 
 <div class="compare-sticky" id="cmpSticky">
