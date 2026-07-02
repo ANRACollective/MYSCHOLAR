@@ -647,6 +647,92 @@ document.addEventListener('keydown', function(e) {
   </div>
 </div>
 
+<!-- ── COMPANY: LIST YOUR INTERNSHIP ─────────────────────────────────────── -->
+<style>
+.ls-label{display:block;font-size:12px;color:rgba(255,255,255,.6);margin:10px 0 4px}
+.ls-full{width:100%;box-sizing:border-box}
+.ls-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:520px){.ls-grid{grid-template-columns:1fr}}
+</style>
+<div class="iss-wrap">
+  <div class="iss" style="max-width:640px">
+    <div class="iss-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7h-4V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><path d="M9 7V5h6v2"/></svg>
+    </div>
+    <div class="iss-title">Are you a company? List your internship</div>
+    <p class="iss-sub">Listing is free. Send us the details and we'll review and publish, usually within a few days. Every listing is checked by hand.</p>
+
+    <div id="lsForm" style="text-align:left;margin-top:6px">
+      <!-- honeypot: hidden from people, bots tend to fill it -->
+      <input type="text" id="lsHp" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;height:0;width:0">
+
+      <label class="ls-label" for="lsCompany">Company name *</label>
+      <input type="text" class="iss-input ls-full" id="lsCompany" placeholder="e.g. Next Prodigy Sdn Bhd">
+
+      <div class="ls-grid">
+        <div>
+          <label class="ls-label" for="lsContactName">Your name</label>
+          <input type="text" class="iss-input ls-full" id="lsContactName" placeholder="Contact person">
+        </div>
+        <div>
+          <label class="ls-label" for="lsContactEmail">Contact email *</label>
+          <input type="email" class="iss-input ls-full" id="lsContactEmail" placeholder="you@company.com" inputmode="email">
+        </div>
+      </div>
+
+      <label class="ls-label" for="lsRoles">Role / position</label>
+      <input type="text" class="iss-input ls-full" id="lsRoles" placeholder="e.g. Digital Operations & Community Intern">
+
+      <div class="ls-grid">
+        <div>
+          <label class="ls-label" for="lsIndustry">Industry</label>
+          <input type="text" class="iss-input ls-full" id="lsIndustry" placeholder="e.g. Technology / AI">
+        </div>
+        <div>
+          <label class="ls-label" for="lsStipend">Stipend</label>
+          <input type="text" class="iss-input ls-full" id="lsStipend" placeholder="e.g. RM800/month, or Unpaid">
+        </div>
+      </div>
+
+      <div class="ls-grid">
+        <div>
+          <label class="ls-label" for="lsDuration">Duration</label>
+          <input type="text" class="iss-input ls-full" id="lsDuration" placeholder="e.g. 3 months">
+        </div>
+        <div>
+          <label class="ls-label" for="lsDeadline">Application deadline</label>
+          <input type="text" class="iss-input ls-full" id="lsDeadline" placeholder="e.g. 31 Aug 2026, or Rolling">
+        </div>
+      </div>
+
+      <div class="ls-grid">
+        <div>
+          <label class="ls-label" for="lsLocation">Location & mode</label>
+          <input type="text" class="iss-input ls-full" id="lsLocation" placeholder="e.g. Selangor, Hybrid">
+        </div>
+        <div>
+          <label class="ls-label" for="lsApply">How to apply</label>
+          <input type="text" class="iss-input ls-full" id="lsApply" placeholder="Application link or email">
+        </div>
+      </div>
+
+      <label class="ls-label" for="lsLogo">Company logo URL (optional)</label>
+      <input type="text" class="iss-input ls-full" id="lsLogo" placeholder="Link to your logo image">
+
+      <label class="ls-label" for="lsNotes">Anything else? (optional)</label>
+      <textarea class="iss-input ls-full" id="lsNotes" rows="3" placeholder="Role description, requirements, or anything else we should know" style="resize:vertical"></textarea>
+
+      <button class="iss-btn ls-full" id="lsBtn" onclick="submitListing()" style="margin-top:12px">Submit listing &#8594;</button>
+      <p class="iss-privacy" style="margin-top:10px">We review every submission by hand. Listing is free.</p>
+    </div>
+
+    <div class="iss-success" id="lsSuccess">
+      <div class="iss-success-title">Got it, thanks.</div>
+      <p class="iss-success-sub">Your listing is in our review queue. We'll reach out at the email you gave us if we need anything.</p>
+    </div>
+  </div>
+</div>
+
 <div class="ft">
   <div class="ft-about">
     <div class="ft-about-title">MyIntern by MyScholar</div>
@@ -1632,6 +1718,63 @@ async function submitInternSignup() {
 <footer style="background:#06090f;border-top:1px solid rgba(255,255,255,.06);padding:16px 24px;text-align:center;font-size:12px;color:rgba(255,255,255,.45);">
   © 2026 MyIntern by MyScholar &nbsp;·&nbsp; <a href="/privacy.html" style="color:inherit;text-decoration:underline;">Privacy Policy</a>
 </footer>
+
+<script>
+/* ── Company listing submission ─────────────────────────────────────────── */
+function lsFlag(id){var el=document.getElementById(id);if(!el)return;el.style.borderColor='var(--red)';el.focus();setTimeout(function(){el.style.borderColor=''},1800);}
+async function submitListing(){
+  var hp=document.getElementById('lsHp');
+  var company=(document.getElementById('lsCompany').value||'').trim();
+  var email=(document.getElementById('lsContactEmail').value||'').trim();
+  var btn=document.getElementById('lsBtn');
+
+  // Honeypot: real people never see this field. If it's filled, treat as a bot and quietly stop.
+  if(hp&&hp.value){document.getElementById('lsForm').style.display='none';document.getElementById('lsSuccess').style.display='block';return;}
+
+  // Only company name and a valid contact email are required
+  var bad=false;
+  if(!company){lsFlag('lsCompany');bad=true;}
+  if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){lsFlag('lsContactEmail');bad=true;}
+  if(bad)return;
+
+  btn.disabled=true;btn.textContent='Sending…';
+
+  var payload={
+    company:company,
+    contact_name:(document.getElementById('lsContactName').value||'').trim()||null,
+    contact_email:email,
+    roles:(document.getElementById('lsRoles').value||'').trim()||null,
+    industry:(document.getElementById('lsIndustry').value||'').trim()||null,
+    stipend:(document.getElementById('lsStipend').value||'').trim()||null,
+    duration:(document.getElementById('lsDuration').value||'').trim()||null,
+    deadline:(document.getElementById('lsDeadline').value||'').trim()||null,
+    location_mode:(document.getElementById('lsLocation').value||'').trim()||null,
+    apply_link:(document.getElementById('lsApply').value||'').trim()||null,
+    logo_url:(document.getElementById('lsLogo').value||'').trim()||null,
+    notes:(document.getElementById('lsNotes').value||'').trim()||null
+  };
+
+  async function attempt(){
+    return fetch(SB+'/rest/v1/internship_submissions',{
+      method:'POST',
+      headers:{apikey:SK,Authorization:'Bearer '+SK,'Content-Type':'application/json',Prefer:'return=minimal'},
+      body:JSON.stringify(payload)
+    });
+  }
+  try{
+    var res=await attempt();
+    if(!res.ok){await new Promise(function(r){setTimeout(r,2000);});res=await attempt();} // one retry on transient failure
+    if(res.ok){
+      document.getElementById('lsForm').style.display='none';
+      document.getElementById('lsSuccess').style.display='block';
+      if(typeof gtag==='function')gtag('event','intern_listing_submitted',{event_category:'engagement',source:'myintern_company_form'});
+    }else{throw new Error('HTTP '+res.status);}
+  }catch(e){
+    btn.disabled=false;btn.textContent='Submit listing →';
+    alert('Something went wrong sending your listing. Please try again, or email us at hello@myscholar.my.');
+  }
+}
+</script>
 
 </body>
 </html>
