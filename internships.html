@@ -389,6 +389,26 @@ nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:
 .btn-fit{font-family:var(--sans);font-size:15px;font-weight:600;background:#38bdf8;color:#0f172a;border:none;border-radius:8px;padding:14px 28px;cursor:pointer;transition:opacity .18s,transform .12s;display:inline-flex;align-items:center;gap:8px;letter-spacing:.01em}
 .btn-fit:hover{opacity:.9;transform:translateY(-1px)}
 .btn-fit:active{transform:scale(.98)}
+/* Refine My Match — quiz demoted to secondary once shared match identity exists */
+.btn-fit-secondary{font-family:var(--sans);font-size:14px;font-weight:500;background:rgba(255,255,255,.06);color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:12px 22px;cursor:pointer;transition:background .15s,color .15s,transform .12s;display:inline-flex;align-items:center;gap:8px;letter-spacing:.01em}
+.btn-fit-secondary:hover{background:rgba(255,255,255,.12);color:#fff}
+.btn-fit-secondary:active{transform:scale(.98)}
+/* Carried-match banner (matches journey palette, dark-glass tuned) */
+.match-banner{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:14px 16px 8px;padding:10px 14px;background:rgba(56,189,248,.08);border:1px solid rgba(56,189,248,.28);border-radius:8px;font-size:12.5px;color:rgba(255,255,255,.85)}
+.match-banner-text{display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0}
+.match-banner-text strong{color:#38bdf8;font-weight:600}
+.match-banner-dot{width:6px;height:6px;border-radius:50%;background:#38bdf8;flex-shrink:0}
+.match-banner-actions{display:flex;gap:6px;flex-shrink:0}
+.match-banner-action{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.85);font-family:inherit;font-size:12px;padding:4px 10px;border-radius:4px;cursor:pointer;text-decoration:none;transition:background .12s}
+.match-banner-action:hover{background:rgba(255,255,255,.1)}
+@media(max-width:480px){.match-banner{flex-direction:column;align-items:flex-start;margin-left:12px;margin-right:12px}}
+/* Intern modal → scholarships back-link */
+.mcrosslinks{margin:14px 0 4px;padding:12px 14px;background:rgba(15,23,42,.05);border-radius:8px;border-left:3px solid #38bdf8}
+.mcrosslinks-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#64748b;margin-bottom:8px}
+.mcrosslinks-row{display:flex;flex-wrap:wrap;gap:6px}
+.mcrosslink{display:inline-flex;align-items:center;gap:4px;font-size:12.5px;font-weight:600;color:#0f172a;background:#fff;border:1px solid #e2e8f0;border-radius:6px;padding:6px 10px;text-decoration:none;transition:border-color .12s,background .12s,transform .08s}
+.mcrosslink:hover{border-color:#38bdf8;background:#f0f9ff}
+.mcrosslink:active{transform:scale(.98)}
 .btn-cv{font-family:var(--sans);font-size:14px;font-weight:500;background:rgba(255,255,255,.1);color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:14px 24px;cursor:pointer;transition:all .18s;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
 .btn-cv:hover{background:rgba(255,255,255,.18);color:#fff}
 @media(max-width:680px){.btn-fit,.btn-cv{width:100%;justify-content:center}}
@@ -716,9 +736,9 @@ document.addEventListener('keydown', function(e) {
   </div>
   <!-- Hero CTAs -->
   <div class="hero-cta-wrap">
-    <button class="btn-fit" onclick="qzOpen()" aria-label="Find your best fit internship">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2.2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-      Find My Fit
+    <button class="btn-fit-secondary" onclick="qzOpen()" aria-label="Refine your match" data-i18n="heroCtaRefine">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      Refine my match
     </button>
     <a class="btn-cv" href="/myintern/cv-builder.html" onclick="gtag('event','hero_tool_cv')" aria-label="Build your CV">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
@@ -752,6 +772,18 @@ document.addEventListener('keydown', function(e) {
 </div>
 
 
+<!-- Carried-match banner — shown when ms_match_v1 identity is present and no URL param override -->
+<div id="matchBanner" class="match-banner" style="display:none;" role="status" aria-live="polite">
+  <div class="match-banner-text">
+    <span class="match-banner-dot" aria-hidden="true"></span>
+    <span id="matchBannerLead">Matching for:</span>
+    <strong id="matchBannerFields">—</strong>
+  </div>
+  <div class="match-banner-actions">
+    <a class="match-banner-action" href="/scholarships?openquiz=1" onclick="gtag('event','match_change_click',{app:'intern'})" id="matchBannerChange">Change</a>
+    <button class="match-banner-action" type="button" onclick="clearInternMatch()" id="matchBannerClear">Clear</button>
+  </div>
+</div>
 <div class="feed" id="feed">
   <div class="loading"><span class="dot"></span><span class="dot"></span><span class="dot"></span><br><br><span data-i18n="loadingText">Loading internships...</span></div>
 </div>
@@ -1184,6 +1216,25 @@ function qzShowResults(){
     // Clear the industry chip selection so quiz filter takes over
     document.querySelectorAll('#chips .chip').forEach(c=>c.classList.remove('active'));
     document.querySelector('#chips .chip[data-ind="all"]').classList.add('active');
+    /* Phase 2c: write back to the shared ms_match_v1 identity so scholarships
+       and journey pick up the refined match on next visit. Maps the top
+       industries to canonical fields via MSMatch.INTERN_TO_CANON, deduped. */
+    if (window.MSMatch) {
+      try {
+        var canonSet = {};
+        topNames.forEach(function(name){
+          var c = window.MSMatch.INTERN_TO_CANON[name];
+          if (c) canonSet[c] = true;
+        });
+        var canonFields = Object.keys(canonSet);
+        if (canonFields.length) {
+          window.MSMatch.writeMatch(canonFields);
+          if (typeof gtag === 'function') gtag('event','match_saved',{app:'intern', fields:canonFields.join(',')});
+        }
+      } catch(e){}
+    }
+    /* Refresh the banner to reflect the just-written identity */
+    if (typeof renderInternMatchBanner === 'function') renderInternMatchBanner();
     qzClose();
     resetPage();render();
     // Scroll to listings
@@ -1349,6 +1400,35 @@ function goToPage(p){
   render();
 }
 
+/* ── Modal → scholarships back-link ────────────────────────────────────────
+   Turns item.industry (legacy full names like "Technology") into a de-duped
+   set of canonical field keys via MSMatch.INTERN_TO_CANON. Renders one
+   button per canonical (picker if multi), each deep-linking into
+   /scholarships?field=<canonical>. Returns '' if no industries map. */
+function renderInternCrosslinks(item){
+  if (!window.MSMatch) return '';
+  const inds = Array.isArray(item.industry) ? item.industry : [];
+  const canons = [];
+  inds.forEach(function(name){
+    var c = window.MSMatch.INTERN_TO_CANON[name];
+    if (c && canons.indexOf(c) === -1) canons.push(c);
+  });
+  if (!canons.length) return '';
+  const lang = (typeof LANG !== 'undefined' && LANG) ? LANG : 'en';
+  const t = (typeof INTERN_LANG !== 'undefined' && INTERN_LANG[lang]) || {};
+  const labels = (window.MSMatch.FIELD_LABELS && window.MSMatch.FIELD_LABELS[lang]) || {};
+  const suffix = (lang === 'bm') ? 'biasiswa' : 'scholarships';
+  const coSafe = escapeHtml((item.company || '').replace(/'/g, ''));
+  const btns = canons.map(function(f){
+    var l = escapeHtml(labels[f] || f);
+    return '<a class="mcrosslink" href="/scholarships?field=' + encodeURIComponent(f)
+      + '" onclick="gtag(\'event\',\'intern_to_scholarship_click\',{co:\'' + coSafe + '\', field:\'' + f + '\'})">'
+      + l + ' ' + suffix + ' →</a>';
+  }).join('');
+  const label = escapeHtml(t.scholarshipsInField || 'Scholarships in this field');
+  return '<div class="mcrosslinks"><div class="mcrosslinks-label">'+label+'</div><div class="mcrosslinks-row">'+btns+'</div></div>';
+}
+
 /* ── Modal ──────────────────────────────── */
 function openModal(idx){
   const item=DATA[idx],ov=document.getElementById('ov');
@@ -1363,6 +1443,7 @@ function openModal(idx){
   if(item.roles_available)h+='<div class="msec"><div class="msec-t">Roles Available</div><p>'+escapeHtml(item.roles_available)+'</p></div>';
   if(item.eligibility)h+='<div class="msec"><div class="msec-t">Eligibility</div><p>'+escapeHtml(item.eligibility)+'</p></div>';
   if(item.tips)h+='<div class="mtip"><strong>Tip:</strong> '+escapeHtml(item.tips)+'</div>';
+  h+=renderInternCrosslinks(item);
   // Modal apply button — honest label for careers_page (student lands on general careers page, not specific internship)
   const modalApplyLabel = item.url_type==='careers_page'
     ? 'Find on '+escapeHtml(item.company)+' careers page &rarr;'
@@ -1454,6 +1535,9 @@ const INTERN_LANG = {
     heroSub:'A free, curated directory of paid and unpaid internship programmes for Malaysian students — GLCs, banks, startups and more.',
     heroStatProg:'Programmes', heroStatInd:'Industries', heroStatFree:'Free',
     quizCta:'Find My Fit', quizCtaMeta:'6 quick questions',
+    heroCtaRefine:'Refine my match',
+    matchingFor:'Matching for:', matchChange:'Change', matchClear:'Clear',
+    scholarshipsInField:'Scholarships in this field',
     searchPlaceholder:'Search company or programme...',
     filterInd:'Industry', filterPref:'Preferences',
     chipAll:'All',
@@ -1470,6 +1554,9 @@ const INTERN_LANG = {
     heroSub:'Direktori percuma program internship berbayar dan tidak berbayar untuk pelajar Malaysia — GLC, bank, startup dan lebih lagi.',
     heroStatProg:'Program', heroStatInd:'Industri', heroStatFree:'Percuma',
     quizCta:'Cari Yang Sesuai', quizCtaMeta:'6 soalan ringkas',
+    heroCtaRefine:'Perhalusi padanan saya',
+    matchingFor:'Memadan untuk:', matchChange:'Tukar', matchClear:'Padam',
+    scholarshipsInField:'Biasiswa dalam bidang ini',
     searchPlaceholder:'Cari syarikat atau program...',
     filterInd:'Industri', filterPref:'Keutamaan',
     chipAll:'Semua',
@@ -1556,6 +1643,72 @@ function injectJobSchema(data){
    Supports ?industry=<full-name-or-IM-short-key> (wins if both present)
    and ?field=<canonical>. Silent no-op on unknown values — feed stays open.
    Called after buildChips() so the chip DOM exists to be marked active. */
+/* ── Carried match — read ms_match_v1 identity written by the scholarships
+   quiz (Phase 1b) and auto-apply the matched industries. Runs on load only
+   if no ?industry / ?field URL override is present. Banner and Clear give
+   the student a way to see or drop it. */
+function readCarriedMatchFields(){
+  try {
+    var m = window.MSMatch && window.MSMatch.readMatch();
+    return (m && Array.isArray(m.fields)) ? m.fields.slice() : [];
+  } catch(_){ return []; }
+}
+function computeMatchedIndustries(fields){
+  if (!fields || !fields.length || !window.MSMatch) return [];
+  var out = [];
+  Object.keys(window.MSMatch.INTERN_TO_CANON).forEach(function(indName){
+    var canon = window.MSMatch.INTERN_TO_CANON[indName];
+    if (fields.indexOf(canon) !== -1 && out.indexOf(indName) === -1) out.push(indName);
+  });
+  return out;
+}
+function applyCarriedMatch(){
+  var fields = readCarriedMatchFields();
+  var inds = computeMatchedIndustries(fields);
+  if (!inds.length) return false;
+  quizFilter = inds;
+  document.querySelectorAll('#chips .chip').forEach(function(x){ x.classList.remove('active'); });
+  var allChip = document.querySelector('#chips .chip[data-ind="all"]');
+  if (allChip) allChip.classList.add('active');
+  return true;
+}
+function renderInternMatchBanner(){
+  var banner = document.getElementById('matchBanner');
+  if (!banner) return;
+  var fields = readCarriedMatchFields();
+  if (!fields.length) { banner.style.display = 'none'; return; }
+  var lang = (typeof LANG !== 'undefined' && LANG) ? LANG : 'en';
+  var t = (typeof INTERN_LANG !== 'undefined' && INTERN_LANG[lang]) || {};
+  var canonLabels = (window.MSMatch && window.MSMatch.FIELD_LABELS && window.MSMatch.FIELD_LABELS[lang]) || {};
+  var list = fields.map(function(f){ return canonLabels[f] || f; }).join(', ');
+  var lead = document.getElementById('matchBannerLead');
+  var fieldsEl = document.getElementById('matchBannerFields');
+  var change = document.getElementById('matchBannerChange');
+  var clear = document.getElementById('matchBannerClear');
+  if (lead) lead.textContent = t.matchingFor || 'Matching for:';
+  if (fieldsEl) fieldsEl.textContent = list;
+  if (change) change.textContent = t.matchChange || 'Change';
+  if (clear) clear.textContent = t.matchClear || 'Clear';
+  banner.style.display = '';
+  if (typeof gtag === 'function') gtag('event','match_reused',{app:'intern', fields:fields.join(',')});
+}
+function clearInternMatch(){
+  if (window.MSMatch) { try { window.MSMatch.clearMatch(); } catch(e){} }
+  if (typeof gtag === 'function') gtag('event','match_cleared',{app:'intern'});
+  quizFilter = null;
+  document.querySelectorAll('#chips .chip').forEach(function(x){ x.classList.remove('active'); });
+  var allChip = document.querySelector('#chips .chip[data-ind="all"]');
+  if (allChip) allChip.classList.add('active');
+  renderInternMatchBanner();
+  resetPage(); render();
+}
+function urlHasFilterParam(){
+  try {
+    var p = new URLSearchParams(location.search);
+    return !!(p.get('industry') || p.get('field'));
+  } catch(_){ return false; }
+}
+
 function checkInternDeepLink(){
   try {
     var params = new URLSearchParams(location.search);
@@ -1597,7 +1750,13 @@ function checkInternDeepLink(){
 /* ── Init ──────────────────────────────── */
 fetch(SB+'/rest/v1/internships?is_visible=eq.true&order=company.asc',{headers:{apikey:SK,Authorization:'Bearer '+SK}})
   .then(r=>{if(!r.ok)throw new Error(r.status);return r.json()})
-  .then(d=>{DATA=d;document.querySelector('.hs-num').textContent=DATA.length;buildChips();render();injectJobSchema(DATA);checkInternDeepLink();gtag('event','intern_loaded',{count:DATA.length})})
+  .then(d=>{DATA=d;document.querySelector('.hs-num').textContent=DATA.length;buildChips();
+    /* Phase 2c: apply carried match before first render if no URL filter is present */
+    if (!urlHasFilterParam()) applyCarriedMatch();
+    render();injectJobSchema(DATA);
+    checkInternDeepLink();
+    if (!urlHasFilterParam()) renderInternMatchBanner();
+    gtag('event','intern_loaded',{count:DATA.length})})
   .catch(e=>{console.error(e);document.getElementById('feed').innerHTML='<div class="empty">Failed to load. Please refresh.</div>'});
 
 /* ══════════════════════════════════════════════════════════════
