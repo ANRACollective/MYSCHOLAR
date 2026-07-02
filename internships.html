@@ -686,6 +686,10 @@ document.addEventListener('keydown', function(e) {
         </div>
       </div>
 
+      <label class="ls-label" for="lsSsm">SSM / business registration no.</label>
+      <input type="text" class="iss-input ls-full" id="lsSsm" placeholder="e.g. 202301012345 (1234567-X)">
+      <p class="iss-privacy" style="margin:4px 0 0">A quick verification step. We check every new company before listing.</p>
+
       <label class="ls-label" for="lsRoles">Role / position</label>
       <input type="text" class="iss-input ls-full" id="lsRoles" placeholder="e.g. Digital Operations & Community Intern">
 
@@ -1749,6 +1753,7 @@ async function submitListing(){
     company:company,
     contact_name:(document.getElementById('lsContactName').value||'').trim()||null,
     contact_email:email,
+    ssm:(document.getElementById('lsSsm').value||'').trim()||null,
     roles:(document.getElementById('lsRoles').value||'').trim()||null,
     industry:(document.getElementById('lsIndustry').value||'').trim()||null,
     stipend:(document.getElementById('lsStipend').value||'').trim()||null,
