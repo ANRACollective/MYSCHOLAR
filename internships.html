@@ -653,6 +653,9 @@ document.addEventListener('keydown', function(e) {
 .ls-full{width:100%;box-sizing:border-box}
 .ls-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media(max-width:520px){.ls-grid{grid-template-columns:1fr}}
+/* Reveal link: keeps the page clean by hiding the form until a company clicks */
+.ls-reveal{display:inline-block;margin-top:8px;background:none;border:none;color:#38bdf8;font-size:14px;font-weight:600;cursor:pointer;padding:6px 0;font-family:inherit}
+.ls-reveal:hover{text-decoration:underline}
 </style>
 <div class="iss-wrap">
   <div class="iss" style="max-width:640px">
@@ -662,7 +665,10 @@ document.addEventListener('keydown', function(e) {
     <div class="iss-title">Are you a company? List your internship</div>
     <p class="iss-sub">Listing is free. Send us the details and we'll review and publish, usually within a few days. Every listing is checked by hand.</p>
 
-    <div id="lsForm" style="text-align:left;margin-top:6px">
+    <!-- Reveal link keeps the page clean; the full form is hidden until clicked -->
+    <button type="button" class="ls-reveal" id="lsToggle" onclick="document.getElementById('lsForm').style.display='block';this.style.display='none';if(window.gtag)gtag('event','intern_list_form_open')">Want to list an internship? Click here &#8594;</button>
+
+    <div id="lsForm" style="text-align:left;margin-top:6px;display:none">
       <!-- honeypot: hidden from people, bots tend to fill it -->
       <input type="text" id="lsHp" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;height:0;width:0">
 
