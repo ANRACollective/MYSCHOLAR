@@ -925,8 +925,8 @@ document.addEventListener('keydown', function(e) {
   <h1 data-i18n="heroH1">Find Your<br><em>Scholarship.</em></h1>
   <p class="hero-sub" data-i18n="heroSub">A free directory of scholarships, financial aid, and study loans for Malaysian students — SPM to postgraduate.</p>
   <div class="hero-stats">
-    <div><div class="hs-num" id="heroCount">0</div><div class="hs-lbl">Programmes</div></div>
-    <div><div class="hs-num">100%</div><div class="hs-lbl">Free</div></div>
+    <div><div class="hs-num">200+</div><div class="hs-lbl" data-i18n="heroStatScholarships">Scholarships</div></div>
+    <div><div class="hs-num" data-i18n="heroStatFreeNum">Free</div><div class="hs-lbl" data-i18n="heroStatFreeLbl">to search · no sign-up</div></div>
   </div>
   <div class="hero-cta">
     <button class="btn-match" onclick="openQuiz()">
@@ -1755,7 +1755,6 @@ function showLoadingState() {
         <div style="height:14px;background:#e4ebfa;border-radius:4px;width:40%"></div>
       </div>
     </div>`).join('');
-  document.getElementById('heroCount').textContent = '…';
   document.getElementById('countDisplay').textContent = '…';
   const _np1 = document.getElementById('navPill'); if (_np1) _np1.textContent = '…';
 }
@@ -1853,8 +1852,6 @@ async function initData() {
 
     log(`✅ MyScholar loaded ${DATA.length} scholarships from Supabase`);
 
-    // Update hero count
-    document.getElementById('heroCount').textContent = DATA.length;
     updateBookmarkCount();
 
     // New features
@@ -3919,6 +3916,7 @@ const TRANSLATIONS = {
     heroH1:'Find Your<br><em>Scholarship.</em>',
     heroSub:'A free directory of scholarships, financial aid, and study loans for Malaysian students — SPM to postgraduate.',
     heroStatProg:'Programmes', heroStatCat:'Categories', heroStatPath:'Exam Pathways', heroStatFree:'Free',
+    heroStatScholarships:'Scholarships', heroStatFreeNum:'Free', heroStatFreeLbl:'to search · no sign-up',
     heroBtnMatch:'Find My Match', heroBtnBrowse:'Browse All →',
     bannerCta:'Show open only →',
     tabAll:'All', tabGov:'Government', tabGlc:'GLC / Yayasan', tabBank:'Banking',
@@ -4003,6 +4001,7 @@ const TRANSLATIONS = {
     heroStatCat:'Kategori',
     heroStatPath:'Laluan Peperiksaan',  // standard education BM term
     heroStatFree:'Percuma',
+    heroStatScholarships:'Biasiswa', heroStatFreeNum:'Percuma', heroStatFreeLbl:'untuk cari · tanpa daftar',
     heroBtnMatch:'Cari Padanan Saya',   // natural, not robotic
     heroBtnBrowse:'Semak Semua →',
     bannerCta:'Tunjuk yang terbuka sahaja →',
