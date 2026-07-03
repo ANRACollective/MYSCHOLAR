@@ -393,6 +393,16 @@ nav {
   background: rgba(255,255,255,.1);
 }
 
+/* Search microcopy — explains what the hero search is scoped to */
+.search-microcopy {
+  font-size: 12px;
+  color: rgba(255,255,255,.5);
+  margin-top: 10px;
+  text-align: center;
+  letter-spacing: .02em;
+  font-weight: 500;
+}
+
 /* Try: chips */
 .try-row {
   display: flex;
@@ -1049,7 +1059,7 @@ footer {
         <span class="pd-phase teal">Plan</span>
         <span class="pd-name">MyJourney</span>
       </div>
-      <div class="pd-desc" data-i18n="planDesc">Map your career pathway</div>
+      <div class="pd-desc" data-i18n="planDesc">Pick a career direction</div>
     </div>
   </a>
 
@@ -1062,7 +1072,7 @@ footer {
         <span class="pd-phase coral">Fund</span>
         <span class="pd-name">MyScholar</span>
       </div>
-      <div class="pd-desc" data-i18n="fundDesc">Find scholarships for your studies</div>
+      <div class="pd-desc" data-i18n="fundDesc">Find scholarships that fund it</div>
     </div>
     <div class="pd-badge here" data-i18n="hereLabel">Here</div>
   </a>
@@ -1076,7 +1086,7 @@ footer {
         <span class="pd-phase sky">Launch</span>
         <span class="pd-name">MyIntern</span>
       </div>
-      <div class="pd-desc" data-i18n="launchDesc">Discover internship opportunities</div>
+      <div class="pd-desc" data-i18n="launchDesc">Land the internship that starts it</div>
     </div>
   </a>
 
@@ -1088,7 +1098,7 @@ footer {
   <p class="hero-eyebrow" data-i18n="heroEyebrow">MALAYSIA · SCHOLARSHIPS FOR MALAYSIAN STUDENTS</p>
   <h1 data-i18n="heroH1">Find Your<br><span class="coral">Scholarship.</span></h1>
 
-  <p class="hero-sub" data-i18n="heroSub">A free directory of scholarships, financial aid, and study loans for Malaysian students — SPM to postgraduate.</p>
+  <p class="hero-sub" data-i18n="heroSub">Scholarships first. The careers they fund and the internships that come after — free, for Malaysian students.</p>
 
   <!-- Search -->
   <div class="search-wrap">
@@ -1110,6 +1120,7 @@ footer {
       <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
     </svg>
   </div>
+  <p class="search-microcopy" data-i18n="searchMicrocopy">Searching 200+ scholarships</p>
 
   <!-- Try: chips -->
   <div class="try-row" aria-label="Top searches">
@@ -1154,7 +1165,7 @@ footer {
       <div class="prod-phase teal" data-i18n="phasePlan">Plan</div>
       <div class="prod-name">MyJourney</div>
       <p class="prod-desc">
-        <span data-i18n="planCardDesc">Not sure what to do after SPM? Answer a few questions and find careers that fit you.</span>
+        <span data-i18n="planCardDesc">See which careers fit you — and which you want a scholarship for.</span>
       </p>
       <div class="prod-cta prod-cta-plan" data-i18n="planCta">Explore careers →</div>
     </a>
@@ -1164,7 +1175,7 @@ footer {
       <div class="prod-phase coral" data-i18n="phaseFund">Fund</div>
       <div class="prod-name">MyScholar</div>
       <p class="prod-desc">
-        <span data-i18n="scholarCardDesc">200+ scholarships filtered by field, eligibility, and deadline — all free.</span>
+        <span data-i18n="scholarCardDesc">200+ scholarships that pay for your studies — filter by field, eligibility, deadline.</span>
       </p>
       <div class="prod-cta prod-cta-primary" data-i18n="scholarCardCta">Browse scholarships →</div>
     </a>
@@ -1174,7 +1185,7 @@ footer {
       <div class="prod-phase sky" data-i18n="phaseLaunch">Launch</div>
       <div class="prod-name">MyIntern</div>
       <p class="prod-desc">
-        <span data-i18n="internCardDesc">Verified internships. Free CV builder. Start your career here.</span>
+        <span data-i18n="internCardDesc">Land the internships that start your career — once you're funded.</span>
       </p>
       <div class="prod-cta-launch" data-i18n="internCardCta">Browse internships →</div>
     </a>
@@ -1291,23 +1302,24 @@ const TRANSLATIONS = {
   en: {
     heroEyebrow:   'MALAYSIA · SCHOLARSHIPS FOR MALAYSIAN STUDENTS',
     heroH1:        'Find Your<br><span class=\'coral\'>Scholarship.</span>',
-    heroSub:       'A free directory of scholarships, financial aid, and study loans for Malaysian students — SPM to postgraduate.',
+    heroSub:       'Scholarships first. The careers they fund and the internships that come after — free, for Malaysian students.',
     searchPlaceholder: 'Search by name, field, or provider…',
+    searchMicrocopy: 'Searching 200+ scholarships',
     tryLabel:      'TRY:',
     toolsBtn:      'Explore',
-    planDesc:      'Map your career pathway',
-    fundDesc:      'Find scholarships for your studies',
-    launchDesc:    'Discover internship opportunities',
+    planDesc:      'Pick a career direction',
+    fundDesc:      'Find scholarships that fund it',
+    launchDesc:    'Land the internship that starts it',
     comingSoon:    'Coming soon',
     planCta:       'Explore careers →',
     hereLabel:     'Here',
     phasePlan:     'Plan',
     phaseFund:     'Fund',
     phaseLaunch:   'Launch',
-    planCardDesc:  'Not sure what to do after SPM? Answer a few questions and find careers that fit you.',
-    scholarCardDesc: '200+ scholarships filtered by field, eligibility, and deadline — all free.',
+    planCardDesc:  'See which careers fit you — and which you want a scholarship for.',
+    scholarCardDesc: '200+ scholarships that pay for your studies — filter by field, eligibility, deadline.',
     scholarCardCta: 'Browse scholarships →',
-    internCardDesc: 'Verified internships. Free CV builder. Start your career here.',
+    internCardDesc: 'Land the internships that start your career — once you\'re funded.',
     internCardCta: 'Browse internships →',
     aboutEyebrow:  'About this project',
     aboutH2:       'Built for Malaysian students.',
@@ -1320,22 +1332,23 @@ const TRANSLATIONS = {
   bm: {
     heroEyebrow:   'MALAYSIA · BIASISWA UNTUK PELAJAR MALAYSIA',
     heroH1:        'Cari<br><span class=\'coral\'>Biasiswa Anda.</span>',
-    heroSub:       'Direktori percuma biasiswa, bantuan kewangan, dan pinjaman pengajian untuk pelajar Malaysia — SPM hingga pascasiswazah.',
+    heroSub:       'Biasiswa dahulu. Kerjaya yang dibiayai dan latihan industri yang menyusul — percuma, untuk pelajar Malaysia.',
     searchPlaceholder: 'Cari mengikut nama, bidang, atau pemberi…',
+    searchMicrocopy: 'Mencari 200+ biasiswa',
     tryLabel:      'CUBA:',
     toolsBtn:      'Terokai',
-    planDesc:      'Petakan laluan kerjaya anda',
-    fundDesc:      'Cari biasiswa untuk pengajian anda',
-    launchDesc:    'Terokai peluang latihan industri',
+    planDesc:      'Pilih arah kerjaya',
+    fundDesc:      'Cari biasiswa yang membiayainya',
+    launchDesc:    'Dapatkan latihan industri yang memulakannya',
     comingSoon:    'Akan datang',
     hereLabel:     'Di sini',
     phasePlan:     'Rancang',
     phaseFund:     'Biayai',
     phaseLaunch:   'Mulakan',
-    planCardDesc:  'Kenalpasti kerjaya yang sesuai dan kelayakan yang diperlukan untuk sampai ke sana.',
-    scholarCardDesc: '200+ biasiswa ditapis mengikut bidang, kelayakan, dan tarikh tutup — semuanya percuma.',
+    planCardDesc:  'Lihat kerjaya yang sesuai — dan mana yang ingin dibiayai.',
+    scholarCardDesc: '200+ biasiswa yang membiayai pengajian anda — tapis mengikut bidang, kelayakan, tarikh tutup.',
     scholarCardCta: 'Lihat biasiswa →',
-    internCardDesc: 'Cari peluang latihan industri yang sesuai dengan kursus dan waktu anda.',
+    internCardDesc: 'Dapatkan latihan industri yang memulakan kerjaya anda — selepas dibiayai.',
     internCardCta: 'Cari latihan industri →',
     aboutEyebrow:  'Tentang projek ini',
     aboutH2:       'Dibina untuk pelajar Malaysia.',

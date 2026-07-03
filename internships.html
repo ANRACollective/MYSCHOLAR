@@ -431,7 +431,9 @@ nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:
 .mcrosslink:active{transform:scale(.98)}
 .btn-cv{font-family:var(--sans);font-size:14px;font-weight:500;background:rgba(255,255,255,.1);color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:14px 24px;cursor:pointer;transition:all .18s;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
 .btn-cv:hover{background:rgba(255,255,255,.18);color:#fff}
-@media(max-width:680px){.btn-fit,.btn-cv{width:100%;justify-content:center}}
+@media(max-width:680px){.btn-fit,.btn-fit-secondary,.btn-cv{width:100%;justify-content:center}}
+/* Phase 4d: CV builder is desktop-only. Hide the hero CV CTA and the nudge modal on mobile — cv-builder.html itself shows an "open on a larger screen" message so deep links don't dead-end. */
+@media(max-width:768px){.btn-cv{display:none}}
 /* Quiz overlay — same pattern as internship detail modal */
 .qz-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:1000;justify-content:center;align-items:flex-end}
 .qz-ov.open{display:flex}
@@ -1830,6 +1832,14 @@ var _nudgeTimer=null,_nudgeScroll=null;
 
 function initNudge(){
   if(localStorage.getItem(NUDGE_KEY))return;
+  /* Phase 4d: CV builder is desktop-only. Don't trigger the nudge modal on
+     mobile; instead emit one telemetry event so we can measure the demand
+     we're deferring and decide later whether a mobile CV builder is worth
+     the investment. */
+  if(window.matchMedia&&window.matchMedia('(max-width: 768px)').matches){
+    if(typeof gtag==='function')gtag('event','cv_builder_mobile_blocked',{surface:'nudge_suppressed'});
+    return;
+  }
   _nudgeTimer=setTimeout(function(){showNudge('timer')},12000);
   _nudgeScroll=function(){
     if(window.scrollY>400)showNudge('scroll');
