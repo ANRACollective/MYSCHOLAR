@@ -393,6 +393,16 @@ nav {
   background: rgba(255,255,255,.1);
 }
 
+/* Search microcopy — explains what the hero search is scoped to */
+.search-microcopy {
+  font-size: 12px;
+  color: rgba(255,255,255,.5);
+  margin-top: 10px;
+  text-align: center;
+  letter-spacing: .02em;
+  font-weight: 500;
+}
+
 /* Try: chips */
 .try-row {
   display: flex;
@@ -1088,7 +1098,7 @@ footer {
   <p class="hero-eyebrow" data-i18n="heroEyebrow">MALAYSIA · SCHOLARSHIPS FOR MALAYSIAN STUDENTS</p>
   <h1 data-i18n="heroH1">Find Your<br><span class="coral">Scholarship.</span></h1>
 
-  <p class="hero-sub" data-i18n="heroSub">A free directory of scholarships, financial aid, and study loans for Malaysian students — SPM to postgraduate.</p>
+  <p class="hero-sub" data-i18n="heroSub">Scholarships first. The careers they fund and the internships that come after — free, for Malaysian students.</p>
 
   <!-- Search -->
   <div class="search-wrap">
@@ -1110,6 +1120,7 @@ footer {
       <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
     </svg>
   </div>
+  <p class="search-microcopy" data-i18n="searchMicrocopy">Searching 200+ scholarships</p>
 
   <!-- Try: chips -->
   <div class="try-row" aria-label="Top searches">
@@ -1291,8 +1302,9 @@ const TRANSLATIONS = {
   en: {
     heroEyebrow:   'MALAYSIA · SCHOLARSHIPS FOR MALAYSIAN STUDENTS',
     heroH1:        'Find Your<br><span class=\'coral\'>Scholarship.</span>',
-    heroSub:       'A free directory of scholarships, financial aid, and study loans for Malaysian students — SPM to postgraduate.',
+    heroSub:       'Scholarships first. The careers they fund and the internships that come after — free, for Malaysian students.',
     searchPlaceholder: 'Search by name, field, or provider…',
+    searchMicrocopy: 'Searching 200+ scholarships',
     tryLabel:      'TRY:',
     toolsBtn:      'Explore',
     planDesc:      'Pick a career direction',
@@ -1320,8 +1332,9 @@ const TRANSLATIONS = {
   bm: {
     heroEyebrow:   'MALAYSIA · BIASISWA UNTUK PELAJAR MALAYSIA',
     heroH1:        'Cari<br><span class=\'coral\'>Biasiswa Anda.</span>',
-    heroSub:       'Direktori percuma biasiswa, bantuan kewangan, dan pinjaman pengajian untuk pelajar Malaysia — SPM hingga pascasiswazah.',
+    heroSub:       'Biasiswa dahulu. Kerjaya yang dibiayai dan latihan industri yang menyusul — percuma, untuk pelajar Malaysia.',
     searchPlaceholder: 'Cari mengikut nama, bidang, atau pemberi…',
+    searchMicrocopy: 'Mencari 200+ biasiswa',
     tryLabel:      'CUBA:',
     toolsBtn:      'Terokai',
     planDesc:      'Pilih arah kerjaya',
