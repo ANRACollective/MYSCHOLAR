@@ -2891,6 +2891,23 @@ function render(){
   }
   grid.innerHTML = pageItems.map((s,i) => buildCard(s,i)).join('');
 
+  // Phase 5: fire card_freshness_shown once per page load with tone counts,
+  // so we can measure how much of the feed actually carries a freshness date
+  // and how much of it is aging / stale on first impression.
+  if (!window._freshnessLogged && typeof gtag !== 'undefined') {
+    const counts = { fresh: 0, aging: 0, stale: 0, none: 0 };
+    pageItems.forEach(s => {
+      const f = freshnessSignal(s.last_verified);
+      if (f) counts[f.tone]++; else counts.none++;
+    });
+    gtag('event', 'card_freshness_shown', {
+      app: 'scholarships',
+      fresh: counts.fresh, aging: counts.aging, stale: counts.stale, none: counts.none,
+      total: pageItems.length
+    });
+    window._freshnessLogged = true;
+  }
+
   // Render pagination
   renderPagination(totalPages);
 
