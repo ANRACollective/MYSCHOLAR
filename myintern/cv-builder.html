@@ -12,8 +12,38 @@
 <link rel="stylesheet" href="shared/myintern-common.css">
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZETBRDDMTV"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-ZETBRDDMTV');</script>
+<style>
+/* Phase 4d: CV builder is desktop-only on this release. Below 768px, hide
+   the phone-mock experience entirely and show a short gate telling the
+   student to switch devices, so a mobile deep link doesn't dead-end. */
+#mobileGate{display:none}
+@media(max-width:768px){
+  #phone{display:none !important}
+  #mobileGate{display:flex;position:fixed;inset:0;background:#0b1120;color:#f1f5f9;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;text-align:center;font-family:'DM Sans',system-ui,sans-serif;z-index:9999}
+  #mobileGate .mg-eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#38bdf8;font-weight:700;margin-bottom:14px}
+  #mobileGate h1{font-family:'Playfair Display',Georgia,serif;font-size:26px;font-weight:700;line-height:1.25;margin-bottom:12px;color:#f1f5f9}
+  #mobileGate p{font-size:14px;line-height:1.6;color:rgba(255,255,255,.7);max-width:340px;margin-bottom:26px}
+  #mobileGate a.mg-back{background:transparent;border:1px solid rgba(255,255,255,.2);color:#f1f5f9;padding:11px 22px;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;transition:background .15s;font-family:inherit}
+  #mobileGate a.mg-back:hover{background:rgba(255,255,255,.08)}
+}
+</style>
 </head>
 <body>
+<div id="mobileGate" role="alertdialog" aria-labelledby="mgTitle">
+  <div class="mg-eyebrow">MyIntern · CV Builder</div>
+  <h1 id="mgTitle">Open on a larger screen to build your CV.</h1>
+  <p>The step-by-step builder needs more room than a phone gives it. Bookmark this page and finish it on a laptop or tablet — we'll keep everything you save so far.</p>
+  <a class="mg-back" href="/internships">← Back to internships</a>
+</div>
+<script>
+/* Fire once on mobile so we can measure how much desktop-only demand
+   the gate is deferring, and decide later whether to invest in a real
+   mobile CV builder. Guarded so it only fires when the media query
+   actually matches — not on desktop reloads. */
+if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(max-width: 768px)').matches) {
+  try { gtag('event','cv_builder_mobile_blocked',{surface:'cv_builder_page'}); } catch(_){}
+}
+</script>
 <div class="phone has-bottom-nav" id="phone">
   <div class="status-bar">9:41</div>
   <a class="close-x" href="/internships" title="Back to internships">&times;</a>
