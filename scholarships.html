@@ -2477,12 +2477,11 @@ function buildCard(s,i){
     : eligScore === 'maybe'
     ? '<span class="elig-badge elig-maybe">⚠ Check requirements</span>'
     : '';
-  // Phase 3: freshness token from last_verified (30/90-day thresholds, month-year format)
-  const fresh = freshnessSignal(s.last_verified);
-  const freshHtml = fresh
-    ? `<span class="card-fresh ${fresh.tone}" title="Verified on ${fresh.absDate}"><span class="card-fresh-dot"></span>${fresh.label}</span>`
-    : '';
-  const metaLine = (freshHtml || eligBadge) ? `<div class="card-meta">${freshHtml}${eligBadge}</div>` : '';
+  // Freshness is still computed for the card_freshness_shown telemetry
+  // (Phase 5a) but no longer rendered on the card — the visible "Verified …"
+  // line was flagged as clutter. Bring it back later if the tone data
+  // supports it.
+  const metaLine = eligBadge ? `<div class="card-meta">${eligBadge}</div>` : '';
   // 3-chip hard cap: Category + Coverage + Scope. No Bond and Global live in the modal.
   const categoryLabel = s.cat || 'Other';
   const coverageLabel = s.cov === 'Full' ? 'Full' : 'Partial';
