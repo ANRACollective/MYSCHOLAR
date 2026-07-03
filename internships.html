@@ -1427,6 +1427,23 @@ function render(){
     feed.appendChild(el);
   });
 
+  // Phase 5: fire card_freshness_shown once per page load with tone counts,
+  // so we can see how much of the intern feed carries last_verified and how
+  // recent it is on first impression.
+  if (!window._freshnessLogged && typeof gtag !== 'undefined') {
+    var fCounts = { fresh: 0, aging: 0, stale: 0, none: 0 };
+    pageItems.forEach(function(p){
+      var f = freshnessSignal(p.item.last_verified);
+      if (f) fCounts[f.tone]++; else fCounts.none++;
+    });
+    gtag('event', 'card_freshness_shown', {
+      app: 'intern',
+      fresh: fCounts.fresh, aging: fCounts.aging, stale: fCounts.stale, none: fCounts.none,
+      total: pageItems.length
+    });
+    window._freshnessLogged = true;
+  }
+
   // ── Step 5: render pagination bar ─────────────────────────────────────────
   renderPagination(totalPages);
 }
