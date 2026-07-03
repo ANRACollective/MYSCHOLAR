@@ -1405,11 +1405,8 @@ function render(){
     const tipPrev=item.tips?'<span class="tip-prev">'+escapeHtml(item.tips.slice(0,80))+(item.tips.length>80?'&hellip;':'')+'</span>':'';
     const intake=fmtIntake(item);
     const metaItems='<span class="mi">'+fmtDur(item)+'</span>'+(intake?'<span class="mi">'+intake+'</span>':'')+(careersNote?careersNote:'');
-    /* Freshness signal from last_verified — same fresh/aging/stale spec as scholarships */
-    const fresh=freshnessSignal(item.last_verified);
-    const freshHtml=fresh
-      ? '<div class="card-meta"><span class="card-fresh '+fresh.tone+'" title="Verified on '+fresh.absDate+'"><span class="card-fresh-dot"></span>'+fresh.label+'</span></div>'
-      : '';
+    /* Freshness is still counted for card_freshness_shown telemetry (Phase 5a)
+       via the render-level pass below, but no longer rendered on the card. */
     const coSafe=escapeHtml((item.company||'').replace(/'/g,''));
     el.innerHTML='<div class="row-stripe"></div>'
       +'<div class="row-body">'
@@ -1418,7 +1415,6 @@ function render(){
       +'<div class="meta">'+metaItems+'</div>'
       +quals
       +tipPrev
-      +freshHtml
       +'<div class="act-row"><a href="'+escapeHtml(item.url||'#')+'" target="_blank" rel="noopener" class="gbtn" onclick="event.stopPropagation();gtag(\'event\',\'intern_apply_click\',{co:\''+coSafe+'\',url_type:\''+(item.url_type||'')+'\',source:\'card\'})">'+applyBtnLabel(item)+' <span class="arr">&rarr;</span></a>'
       +'<button class="save-btn'+(savedInternships.has(item.id)?' saved':'')+'" onclick="event.stopPropagation();toggleSaved('+item.id+',this)" aria-label="Save internship"><svg width="16" height="16" fill="'+(savedInternships.has(item.id)?'currentColor':'none')+'" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button>'
       +'<button class="share-btn" onclick="shareInternship('+item.id+',this,event)" aria-label="Copy link to this internship" title="Copy link"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/></svg></button>'
