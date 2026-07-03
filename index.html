@@ -555,6 +555,15 @@ nav {
   flex: 1;
   margin-bottom: 24px;
 }
+/* Live urgency line on the FUND card — populated by loadFundClosingCount() */
+.prod-desc-urgency {
+  display: block;
+  margin-top: 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--coral);
+  letter-spacing: .01em;
+}
 
 .prod-cta {
   font-family: var(--sans);
@@ -1143,19 +1152,6 @@ footer {
 
 </section>
 
-<!-- ── CLOSING SOON STRIP ─────────────────────────────────── -->
-<section class="closing-soon" id="closingSoon">
-  <div class="cs-inner">
-    <div class="cs-header">
-      <p class="cs-eyebrow">Closing soon</p>
-      <a href="scholarships" class="cs-see-all-link">See all scholarships →</a>
-    </div>
-    <div class="cs-grid" id="csGrid">
-      <!-- Populated by JS from Supabase -->
-    </div>
-  </div>
-</section>
-
 <!-- ── PRODUCT CARDS ─────────────────────────────────────── -->
 <section class="products" id="products">
   <div class="products-grid">
@@ -1176,6 +1172,7 @@ footer {
       <div class="prod-name">MyScholar</div>
       <p class="prod-desc">
         <span data-i18n="scholarCardDesc">200+ scholarships that pay for your studies — filter by field, eligibility, deadline.</span>
+        <span class="prod-desc-urgency" id="fundClosingCount" style="display:none"></span>
       </p>
       <div class="prod-cta prod-cta-primary" data-i18n="scholarCardCta">Browse scholarships →</div>
     </a>
@@ -1637,93 +1634,34 @@ function fillSearch(chipEl) {
   });
 })();
 
-// ── Closing soon strip (with fallback to recently added) ────
-(async function loadClosingSoon() {
-  const grid    = document.getElementById('csGrid');
-  const eyebrow = document.querySelector('.cs-eyebrow');
-  const section = document.getElementById('closingSoon');
-  if (!grid) return;
-
-  const headers = { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}` };
-
-  function escape(str) {
-    return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/'/g,'&#39;');
-  }
-
-  function daysUntil(dateStr) {
-    const diff = Math.ceil((new Date(dateStr) - new Date()) / 86400000);
-    return diff <= 0 ? 'Today' : diff === 1 ? 'Tomorrow' : `${diff} days left`;
-  }
-
-  function addedLabel(createdAt) {
-    // Returns "Added today", "Added yesterday", "Added 5 days ago"
-    const diff = Math.floor((new Date() - new Date(createdAt)) / 86400000);
-    if (diff <= 0) return 'Added today';
-    if (diff === 1) return 'Added yesterday';
-    return `Added ${diff} days ago`;
-  }
-
-  function renderCards(data, mode) {
-    if (eyebrow) eyebrow.textContent = mode === 'deadline' ? 'Closing soon' : 'Recently added';
-    if (section) section.style.display = '';
-    grid.innerHTML = data.map(s => {
-      const href   = s.url ? s.url : `scholarships?q=${encodeURIComponent(s.name)}`;
-      const target = s.url ? ' target="_blank" rel="noopener"' : '';
-      const label  = mode === 'deadline' ? daysUntil(s.deadline_date) : addedLabel(s.created_at);
-      // Coral label for deadline urgency; muted for recently added
-      const labelStyle = mode === 'deadline' ? '' : ' style="color:rgba(255,255,255,.45)"';
-      // Store name + url as data attrs so the delegated listener below can call logClick
-      // (avoids inline onclick and the apostrophe-escaping bug that broke tracking in Apr 2026)
-      return `<a class="cs-card" href="${href}"${target} data-id="${s.id}" data-name="${escape(s.name)}" data-url="${s.url ? escape(s.url) : ''}">
-        <div class="cs-deadline"${labelStyle}>${escape(label)}</div>
-        <div class="cs-name">${escape(s.name)}</div>
-        <div class="cs-provider">${escape(s.provider)}</div>
-      </a>`;
-    }).join('');
-    // Wire up outbound click tracking — only fires for cards with a real external URL
-    grid.querySelectorAll('.cs-card').forEach(card => {
-      if (!card.dataset.url) return;
-      card.addEventListener('click', () => {
-        logClick(
-          parseInt(card.dataset.id) || null,
-          card.dataset.name,
-          card.dataset.url
-        );
-      });
-    });
-  }
-
+// ── FUND card live urgency counter ──────────────────────────────────────────
+// Queries Supabase for scholarships whose deadline_date falls in the next 7
+// days, then appends "N closing this week." to the FUND product card's
+// description. Runs on every page load, so the count is always current for
+// today's window — no cron, no staleness. Silently no-ops on any failure so
+// the card copy stays legible if Supabase is down.
+(async function loadFundClosingCount() {
+  const el = document.getElementById('fundClosingCount');
+  if (!el) return;
   try {
-    // First try: scholarships with a known future deadline
-    const today = new Date().toISOString().split('T')[0];
-    const urlDeadline = `${SB_URL}/rest/v1/scholarships?select=id,name,provider,deadline_date,deadline_text,url` +
-                        `&deadline_date=gte.${today}&is_active=eq.true&order=deadline_date.asc&limit=6`;
-    const res1 = await fetch(urlDeadline, { headers });
-    if (!res1.ok) throw new Error('fetch failed');
-    const deadlineData = await res1.json();
-
-    if (deadlineData.length) {
-      renderCards(deadlineData, 'deadline');
-      return;
-    }
-
-    // Fallback: most recently added scholarships (include created_at for label)
-    const urlRecent = `${SB_URL}/rest/v1/scholarships?select=id,name,provider,created_at,url` +
-                      `&is_active=eq.true&order=created_at.desc&limit=6`;
-    const res2 = await fetch(urlRecent, { headers });
-    if (!res2.ok) throw new Error('fetch failed');
-    const recentData = await res2.json();
-
-    if (recentData.length) {
-      renderCards(recentData, 'recent');
-    } else {
-      if (section) section.style.display = 'none';
-    }
-
-  } catch(e) {
-    // Silently hide the section if fetch fails — never break the page
-    if (section) section.style.display = 'none';
-  }
+    const today   = new Date().toISOString().split('T')[0];
+    const weekOut = new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0];
+    // limit=200 is a safety cap; there's never realistically 200 scholarships
+    // closing in one week. Counting returned rows avoids relying on
+    // Content-Range being CORS-exposed (which Supabase may not enable).
+    const url = `${SB_URL}/rest/v1/scholarships?select=id` +
+                `&deadline_date=gte.${today}&deadline_date=lte.${weekOut}` +
+                `&is_active=eq.true&limit=200`;
+    const res = await fetch(url, {
+      headers: { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}` }
+    });
+    if (!res.ok) return;
+    const rows = await res.json();
+    const total = Array.isArray(rows) ? rows.length : 0;
+    if (total <= 0) return;
+    el.textContent = total + (total === 1 ? ' closing this week.' : ' closing this week.');
+    el.style.display = '';
+  } catch (_) { /* silent — description alone still reads fine */ }
 })();
 
 // ── Scroll cue ──────────────────────────────────────────────
