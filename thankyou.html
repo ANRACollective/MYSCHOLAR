@@ -294,9 +294,20 @@
     .eco{grid-template-columns:1fr;}
     .ecocard:nth-child(2){transform:rotate(.8deg);}
     .barrow .lbl{width:98px; font-size:12px;}
-    .row{gap:5vw;}
     .ring{display:none;}
     .stick .l{max-width:120px;}
+    /* declutter: the loose decorative swirls/squiggles overlap content on small screens */
+    .swirl{display:none;}
+    .ghost{opacity:.45;}
+    /* ledger: stack number over label so the label isn't crushed into a sliver */
+    .row, .row:nth-child(even){flex-direction:column; align-items:flex-start; text-align:left; gap:2px; padding-top:24px; padding-bottom:24px;}
+    .row:nth-child(odd) .mega, .row:nth-child(even) .mega{margin-left:0; margin-right:0;}
+    .mega{font-size:clamp(58px,17vw,120px);}
+    .row .lab{padding-bottom:0;}
+    /* keep the giant tilted "400+" from forcing sideways scroll */
+    .slab .to{margin-right:0; font-size:clamp(80px,28vw,300px);}
+    .slab{transform:rotate(-1.2deg) scale(1.02);}
+    .big{margin-right:calc(var(--pad) * -0.6);}
   }
   @media (prefers-reduced-motion:reduce){
     *{animation:none !important; transition:none !important;}
