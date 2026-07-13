@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>100 Days of MyScholar — Thank You</title>
+<meta name="description" content="MyScholar just passed its first 100 days. A thank you to the students who made it real.">
+<meta property="og:title" content="100 Days of MyScholar — Thank You">
+<meta property="og:description" content="19,000 students. 400+ scholarships. 100 days. Thank you for being here early.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://myscholar.my/thankyou">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;900&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --navy:#1e3a6e; --navy-deep:#0f2143; --orange:#e8551e; --ice:#eef4ff;
+    --mint:#12b981; --blue:#2f6df6; --gold:#f59e0b; --pink:#ff7a9c;
+    --ink:#12233f; --muted:#5a6b86;
+    --funky:'Unbounded',system-ui,sans-serif;          /* the big-number font */
+    --head:'Bricolage Grotesque',system-ui,sans-serif; /* headings */
+    --body:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    --pad:clamp(20px,6vw,84px); /* asymmetric page gutter */
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:var(--body); color:var(--ink); background:#fff; overflow-x:hidden;}
+
+  #progress{position:fixed; top:0; left:0; height:4px; width:0; z-index:60;
+    background:linear-gradient(90deg,var(--orange),var(--gold),var(--mint)); transition:width .1s linear;}
+  #confetti{position:fixed; inset:0; pointer-events:none; z-index:50;}
+
+  /* ============ CRAZY LAYER ============ */
+  ::selection{background:var(--orange); color:#fff;}
+  html{scrollbar-color:var(--orange) #eef2fb;}
+  /* film grain over everything */
+  .noise{position:fixed; inset:-50%; width:200%; height:200%; pointer-events:none; z-index:55; opacity:.05;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    animation:grain 8s steps(10) infinite;}
+  @keyframes grain{0%,100%{transform:translate(0,0);}10%{transform:translate(-5%,-8%);}30%{transform:translate(3%,-4%);}50%{transform:translate(-7%,5%);}70%{transform:translate(6%,8%);}90%{transform:translate(-3%,3%);}}
+  /* blend-mode cursor (desktop only) */
+  #cursor{display:none; position:fixed; width:22px; height:22px; border-radius:50%; background:#fff; mix-blend-mode:difference;
+    pointer-events:none; z-index:70; transform:translate(-50%,-50%); transition:width .25s, height .25s;}
+  @media (pointer:fine){#cursor{display:block;}}
+  #cursor.hot{width:64px; height:64px;}
+  /* giant ghost outline words drifting behind sections */
+  .ghost{position:absolute; top:44%; left:-4%; font-family:var(--funky); font-weight:900;
+    font-size:clamp(130px,30vw,420px); letter-spacing:-.04em; line-height:1; white-space:nowrap;
+    color:transparent; -webkit-text-stroke:2px rgba(30,58,110,.08); pointer-events:none; user-select:none; z-index:0; will-change:transform;}
+  .ghost.light{-webkit-text-stroke:2px rgba(255,255,255,.09);}
+  .mega{will-change:transform;} /* velocity skew target */
+  /* footer mega word */
+  .bigfoot{font-family:var(--funky); font-weight:900; font-size:clamp(56px,13vw,190px); letter-spacing:-.04em; line-height:.95;
+    color:transparent; -webkit-text-stroke:2px rgba(255,255,255,.2); white-space:nowrap; margin:0 0 34px -4px; cursor:pointer;
+    transition:color .4s, -webkit-text-stroke .4s;}
+  .bigfoot:hover{color:var(--orange); -webkit-text-stroke:2px var(--orange);}
+  @media (prefers-reduced-motion:reduce){.noise{animation:none;} .ghost{transform:none !important;} .mega{transform:none !important;}}
+
+  /* ============ decorative swirls / squiggles ============ */
+  .swirl{position:absolute; pointer-events:none; z-index:1;}
+  .swirl path{fill:none; stroke-linecap:round;}
+  .spin-slow{animation:spin 40s linear infinite; transform-origin:center;}
+  .spin-rev{animation:spin 55s linear infinite reverse; transform-origin:center;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .floaty{animation:floaty 7s ease-in-out infinite;}
+  .floaty.d2{animation-delay:-2.5s;} .floaty.d4{animation-delay:-4.5s;}
+  @keyframes floaty{0%,100%{translate:0 0;}50%{translate:0 -18px;}}
+  /* self-drawing squiggle underline */
+  .squig{display:block; width:min(260px,60%); height:18px; margin-top:10px;}
+  .squig path{fill:none; stroke:var(--orange); stroke-width:5; stroke-linecap:round;
+    stroke-dasharray:340; stroke-dashoffset:340; transition:stroke-dashoffset 1.2s ease .2s;}
+  .in .squig path{stroke-dashoffset:0;}
+
+  /* ============ HERO — full-bleed, left-anchored ============ */
+  .hero{position:relative; min-height:100svh; overflow:hidden; color:#fff;
+    background:radial-gradient(140% 110% at 85% -10%, #2c548f 0%, var(--navy) 42%, var(--navy-deep) 100%);
+    display:flex; flex-direction:column; justify-content:center; padding:90px var(--pad) 110px;}
+  .orb{position:absolute; border-radius:50%; filter:blur(70px); opacity:.5; z-index:0; animation:drift 16s ease-in-out infinite;}
+  .orb.a{width:440px;height:440px;background:var(--orange);top:-140px;right:-90px;}
+  .orb.b{width:380px;height:380px;background:var(--blue);bottom:-140px;left:-120px;animation-delay:-5s;}
+  .orb.c{width:300px;height:300px;background:var(--mint);top:45%;left:64%;animation-delay:-9s;opacity:.3;}
+  @keyframes drift{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(-30px,40px) scale(1.12);}}
+  #particles{position:absolute; inset:0; z-index:1; pointer-events:none;}
+
+  .wordmark{position:absolute; top:24px; left:var(--pad); z-index:5; font-family:var(--head); font-weight:800; font-size:20px; letter-spacing:-.02em;}
+  .wordmark .o{color:var(--orange);} .wordmark .d{opacity:.45;}
+
+  /* rotating text ring, top right */
+  .ring{position:absolute; top:26px; right:calc(var(--pad) - 10px); width:118px; height:118px; z-index:4; animation:spin 18s linear infinite;}
+  .ring text{font-family:var(--funky); font-size:11.5px; font-weight:700; letter-spacing:.22em; fill:#bcd0f5;}
+  .ring .mid{position:absolute; inset:0; display:grid; place-items:center; font-size:26px;}
+
+  .hero-inner{position:relative; z-index:3; max-width:none;}
+  .kicker{font-family:var(--funky); font-weight:700; letter-spacing:.3em; text-transform:uppercase; font-size:clamp(11px,1.6vw,14px); color:#ffd9c7; margin-bottom:8px; opacity:0; animation:fadeUp .8s .1s forwards;}
+  /* the giant 100 bleeds off the right edge */
+  .big{font-family:var(--funky); font-weight:900; line-height:.84; letter-spacing:-.05em;
+    font-size:clamp(150px,38vw,520px); white-space:nowrap;
+    margin-right:calc(var(--pad) * -1.4);
+    background:linear-gradient(110deg,#fff 15%, #ffd9c7 45%, var(--orange) 68%, #fff 92%);
+    background-size:250% auto; -webkit-background-clip:text; background-clip:text; color:transparent;
+    opacity:0; animation:fadeUp 1s .25s forwards, shimmer 6s linear 1.2s infinite;
+    text-shadow:0 24px 90px rgba(232,85,30,.25);}
+  @keyframes shimmer{to{background-position:250% center;}}
+  .big-sub{font-family:var(--head); font-weight:800; font-size:clamp(24px,6vw,54px); letter-spacing:-.02em; margin-top:6px; opacity:0; animation:fadeUp 1s .4s forwards;}
+  .thankyou{margin-top:22px; font-size:clamp(16px,2.4vw,21px); color:#dce7fb; max-width:560px; line-height:1.6; opacity:0; animation:fadeUp 1s .6s forwards;}
+  .daycount{margin-top:24px; display:inline-flex; align-items:center; gap:9px; font-family:var(--funky); font-weight:700; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#bcd0f5; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.16); padding:10px 18px; border-radius:99px; opacity:0; animation:fadeUp 1s .8s forwards;}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--mint);animation:beat 2s infinite;}
+  @keyframes beat{0%{box-shadow:0 0 0 0 rgba(18,185,129,.6);}70%{box-shadow:0 0 0 10px rgba(18,185,129,0);}100%{box-shadow:0 0 0 0 rgba(18,185,129,0);}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(26px);}to{opacity:1;transform:translateY(0);}}
+  /* wavy bottom edge of hero */
+  .wave{position:absolute; bottom:-2px; left:0; right:0; z-index:2; display:block;}
+
+  /* ============ MARQUEE ============ */
+  .marquee{background:var(--orange); color:#fff; overflow:hidden; white-space:nowrap; padding:14px 0; font-family:var(--funky); font-weight:700;}
+  .marquee.m2{background:var(--navy); transform:rotate(-1.2deg) scale(1.02); margin-top:-6px; position:relative; z-index:2;}
+  .marquee .track{display:inline-block; animation:scrollx 24s linear infinite;}
+  .marquee.m2 .track{animation-duration:30s; animation-direction:reverse;}
+  .marquee span{padding:0 26px; font-size:14px; letter-spacing:.06em;}
+  .marquee .s{opacity:.55;}
+  @keyframes scrollx{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+  /* ============ sections ============ */
+  section{position:relative; padding:clamp(64px,10vw,130px) 0; overflow:hidden;}
+  .gutter{padding-left:var(--pad); padding-right:var(--pad);}
+  .eyebrow{font-family:var(--funky); font-weight:700; letter-spacing:.26em; text-transform:uppercase; font-size:12px; color:var(--orange); margin-bottom:12px;}
+  .h2{font-family:var(--head); font-weight:800; font-size:clamp(30px,6vw,58px); letter-spacing:-.03em; line-height:1.02; color:var(--navy);}
+  .lede{color:var(--muted); font-size:clamp(15px,2.2vw,18px); max-width:560px; margin-top:16px; line-height:1.65;}
+  .right .eyebrow,.right .h2,.right .lede{text-align:right; margin-left:auto;}
+  .right .squig{margin-left:auto;}
+
+  .reveal{opacity:0; transform:translateY(36px); transition:opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1);}
+  .reveal.in{opacity:1; transform:none;}
+
+  /* ============ MEGA NUMBER LEDGER — full-bleed rows ============ */
+  .ledger{margin-top:44px; border-top:2px solid #e4ecfb;}
+  .row{position:relative; display:flex; align-items:baseline; gap:4vw; border-bottom:2px solid #e4ecfb; padding:clamp(10px,2vw,22px) var(--pad); overflow:hidden;}
+  .row:nth-child(even){flex-direction:row-reverse; text-align:right;}
+  .mega{font-family:var(--funky); font-weight:900; letter-spacing:-.05em; line-height:1;
+    font-size:clamp(64px,15vw,210px); color:var(--navy); white-space:nowrap; flex:none;}
+  .row:nth-child(even) .mega{margin-right:calc(var(--pad) * -0.5);} /* bleed off right */
+  .row:nth-child(odd) .mega{margin-left:calc(var(--pad) * -0.5);}   /* bleed off left */
+  .mega.orange{color:var(--orange);}
+  .mega.hollow{color:transparent; -webkit-text-stroke:3px var(--navy);}
+  .mega.hollow-o{color:transparent; -webkit-text-stroke:3px var(--orange);}
+  .row .lab{font-family:var(--head); font-weight:600; font-size:clamp(14px,2.6vw,24px); color:var(--muted); padding-bottom:clamp(6px,1.4vw,18px);}
+  .row .lab b{color:var(--ink); display:block; font-weight:800; font-size:clamp(16px,3vw,28px); letter-spacing:-.01em;}
+
+  /* ============ GROWTH — full-bleed tilted navy slab ============ */
+  .slab{background:linear-gradient(115deg,var(--navy) 20%,var(--navy-deep)); color:#fff;
+    transform:rotate(-1.4deg) scale(1.04); padding:clamp(48px,8vw,96px) var(--pad); position:relative; overflow:hidden;}
+  .slab-inner{transform:rotate(1.4deg); position:relative; z-index:2; max-width:none;}
+  .slab .from{font-family:var(--head); font-weight:800; font-size:clamp(24px,5vw,44px);}
+  .slab .from b{color:#ffd9c7;}
+  .slab .to{font-family:var(--funky); font-weight:900; font-size:clamp(90px,24vw,300px); letter-spacing:-.05em; line-height:.9;
+    background:linear-gradient(180deg,#fff,var(--orange)); -webkit-background-clip:text; background-clip:text; color:transparent;
+    margin-right:-8vw; white-space:nowrap;}
+  .slab .cap{color:#c7d6f2; margin-top:16px; font-size:15px; max-width:520px;}
+
+  /* ============ STICKERS — engagement chips, scattered ============ */
+  .stickers{display:flex; flex-wrap:wrap; gap:18px; margin-top:48px; align-items:flex-start;}
+  .stick{background:#fff; border:2px solid var(--ink); border-radius:18px; padding:20px 24px; box-shadow:6px 6px 0 var(--ink);
+    transition:transform .18s, box-shadow .18s;}
+  .stick:hover{transform:translate(-2px,-4px) rotate(0deg) !important; box-shadow:9px 10px 0 var(--ink);}
+  .stick:nth-child(1){transform:rotate(-2.5deg);} .stick:nth-child(2){transform:rotate(1.8deg); margin-top:26px;}
+  .stick:nth-child(3){transform:rotate(-1.2deg); margin-top:8px;} .stick:nth-child(4){transform:rotate(2.4deg); margin-top:34px;}
+  .stick:nth-child(5){transform:rotate(-3deg); margin-top:14px;}
+  .stick .n{font-family:var(--funky); font-weight:900; font-size:clamp(26px,5vw,44px); letter-spacing:-.03em; color:var(--orange);}
+  .stick:nth-child(2) .n{color:var(--blue);} .stick:nth-child(3) .n{color:var(--mint);}
+  .stick:nth-child(4) .n{color:var(--gold);} .stick:nth-child(5) .n{color:var(--pink);}
+  .stick .l{font-size:13px; color:var(--muted); font-weight:600; margin-top:4px; max-width:150px;}
+
+  /* ============ BARS ============ */
+  .bars{margin-top:44px; max-width:760px;}
+  .right .bars{margin-left:auto;}
+  .barrow{display:flex; align-items:center; gap:14px; margin:16px 0;}
+  .barrow .lbl{width:140px; text-align:right; font-size:13.5px; font-weight:600; flex:none;}
+  .bartrack{flex:1; background:#e6edfb; border-radius:99px; height:20px; overflow:hidden;}
+  .barfill{height:100%; width:0; border-radius:99px; transition:width 1.3s cubic-bezier(.2,.8,.2,1);}
+  .barrow .val{width:56px; font-size:13px; color:var(--muted); flex:none; font-variant-numeric:tabular-nums; font-family:var(--funky); font-weight:700;}
+  .c-navy{background:linear-gradient(90deg,var(--navy),var(--blue));}
+  .c-orange{background:linear-gradient(90deg,var(--orange),var(--gold));}
+  .c-mint{background:linear-gradient(90deg,#0d9488,var(--mint));}
+  .note{color:var(--muted); font-size:14px; margin-top:26px; max-width:560px;}
+  .note b{color:var(--navy);}
+  .right .note{margin-left:auto; text-align:right;}
+
+  /* ============ FLAGS ============ */
+  .flagwrap{display:flex; flex-wrap:wrap; gap:12px; margin-top:44px; max-width:820px;}
+  .flagchip{display:flex; align-items:center; gap:9px; background:#fff; border:2px solid var(--ink); border-radius:99px; padding:8px 16px 8px 9px;
+    box-shadow:4px 4px 0 var(--ink); opacity:0; transform:scale(.8) translateY(12px) rotate(-4deg); transition:opacity .45s, transform .45s;}
+  .flagchip.in{opacity:1; transform:none;}
+  .flagchip:hover{transform:translateY(-3px) rotate(2deg);}
+  .flagchip img{width:28px; height:21px; object-fit:cover; border-radius:4px;}
+  .flagchip .cn{font-family:var(--head); font-weight:700; font-size:14px;}
+  .flagchip.lead{padding:12px 24px 12px 12px; background:var(--navy); border-color:var(--navy-deep); box-shadow:5px 5px 0 var(--orange);}
+  .flagchip.lead img{width:40px; height:30px;}
+  .flagchip.lead .cn{color:#fff; font-size:18px;}
+
+  /* ============ TIMELINE ============ */
+  .tl{margin-top:48px; position:relative; padding-left:34px; max-width:720px;}
+  .tl::before{content:""; position:absolute; left:9px; top:6px; bottom:6px; width:3px; border-radius:3px; background:linear-gradient(var(--orange),var(--blue),var(--mint));}
+  .tlrow{position:relative; padding-bottom:32px;}
+  .tlrow::before{content:""; position:absolute; left:-32px; top:2px; width:15px; height:15px; border-radius:50%; background:#fff; border:3px solid var(--orange); box-shadow:0 0 0 5px rgba(232,85,30,.12);}
+  .tlrow:nth-child(2)::before{border-color:var(--blue);} .tlrow:nth-child(3)::before{border-color:var(--mint);}
+  .tlrow:nth-child(4)::before{border-color:var(--gold);} .tlrow:nth-child(5)::before{border-color:var(--pink);}
+  .tlday{font-family:var(--funky); font-weight:700; font-size:13px; color:var(--orange); letter-spacing:.06em; text-transform:uppercase;}
+  .tlrow h4{font-family:var(--head); font-weight:800; font-size:21px; color:var(--navy); margin:4px 0; letter-spacing:-.01em;}
+  .tlrow p{font-size:14.5px; color:var(--muted); line-height:1.6; max-width:480px;}
+
+  /* ============ ECOSYSTEM ============ */
+  .eco{display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:48px;}
+  .ecocard{border-radius:24px; padding:30px 24px; color:#fff; position:relative; overflow:hidden; min-height:210px;
+    display:flex; flex-direction:column; justify-content:flex-end; transition:transform .2s;}
+  .ecocard:nth-child(1){transform:rotate(-1.6deg);} .ecocard:nth-child(2){transform:rotate(.8deg) translateY(14px);} .ecocard:nth-child(3){transform:rotate(1.8deg);}
+  .ecocard:hover{transform:rotate(0) translateY(-6px);}
+  .ecocard h3{font-family:var(--head); font-weight:800; font-size:23px;}
+  .ecocard .bignum{font-family:var(--funky); font-weight:900; font-size:40px; letter-spacing:-.03em;}
+  .ecocard p{font-size:14px; opacity:.92; margin-top:6px; line-height:1.5;}
+  .ecocard .tag{position:absolute; top:20px; left:24px; font-family:var(--funky); font-size:11px; letter-spacing:.16em; text-transform:uppercase; opacity:.85; font-weight:700;}
+  .eco1{background:linear-gradient(150deg,#1e3a6e,#2f6df6);}
+  .eco2{background:linear-gradient(150deg,#0f2143,#1e3a6e);}
+  .eco3{background:linear-gradient(150deg,#e8551e,#f59e0b);}
+
+  /* ============ STORY + CTA ============ */
+  .story{max-width:680px; font-size:clamp(17px,2.6vw,22px); line-height:1.7; font-family:var(--head); font-weight:600;}
+  .story p{margin-bottom:22px;}
+  .story .quiet{color:var(--muted); font-size:16px; font-family:var(--body); font-weight:400;}
+  .cta{display:flex; gap:14px; flex-wrap:wrap; margin-top:40px;}
+  .btn{display:inline-flex; align-items:center; gap:8px; font-family:var(--funky); font-weight:700; font-size:14px; text-decoration:none; padding:16px 26px; border-radius:16px; transition:transform .15s; border:none; cursor:pointer;}
+  .btn:hover{transform:translateY(-3px) rotate(-1deg);}
+  .btn-p{background:var(--orange); color:#fff; box-shadow:5px 5px 0 var(--navy);}
+  .btn-s{background:var(--navy); color:#fff; box-shadow:5px 5px 0 var(--orange);}
+  .btn-g{background:#fff; color:var(--navy); border:2px solid var(--navy); box-shadow:5px 5px 0 #d6e0f5;}
+
+  /* ============ WHAT'S NEXT ============ */
+  .next{background:linear-gradient(120deg,var(--navy),var(--navy-deep)); color:#fff; position:relative; overflow:hidden;}
+  .next .h2{color:#fff;}
+  .next .lede{color:#c7d6f2;}
+  /* rotating teaser words */
+  .rotator{font-family:var(--funky); font-weight:900; font-size:clamp(34px,8vw,86px); letter-spacing:-.04em; line-height:1.05; height:1.15em; overflow:hidden; margin-top:26px;}
+  .rotator ul{list-style:none; animation:spinwords 12s cubic-bezier(.8,0,.2,1) infinite;}
+  .rotator li{height:1.15em; display:flex; align-items:center;}
+  .rotator li:nth-child(odd){color:var(--orange);}
+  .rotator li:nth-child(even){color:#7fd8ff;}
+  @keyframes spinwords{
+    0%,14%{transform:translateY(0);}
+    20%,34%{transform:translateY(-1.15em);}
+    40%,54%{transform:translateY(-2.3em);}
+    60%,74%{transform:translateY(-3.45em);}
+    80%,94%{transform:translateY(-4.6em);}
+    100%{transform:translateY(-5.75em);}
+  }
+  .next .subline{margin-top:30px; font-size:16px; color:#dce7fb; max-width:520px; line-height:1.65;}
+  .next .subline b{color:#ffd9c7;}
+  /* huge subscriber hook */
+  .subhook{margin-top:44px;}
+  .subhook .n{font-family:var(--funky); font-weight:900; font-size:clamp(80px,20vw,240px); letter-spacing:-.05em; line-height:.9;
+    background:linear-gradient(180deg,#fff,var(--orange)); -webkit-background-clip:text; background-clip:text; color:transparent;
+    text-shadow:0 20px 90px rgba(232,85,30,.35); animation:hookpulse 2.6s ease-in-out infinite;}
+  @keyframes hookpulse{0%,100%{transform:scale(1);}50%{transform:scale(1.03);}}
+  .subhook .t{font-family:var(--head); font-weight:800; font-size:clamp(20px,4vw,34px); letter-spacing:-.01em; margin-top:6px;}
+  .subhook .t span{color:#ffd9c7;}
+
+  footer{background:var(--navy-deep); color:#9fb6e3; padding:52px var(--pad); font-size:13px; position:relative; overflow:hidden;}
+  footer a{color:#dce7fb; text-decoration:none;}
+  footer .fw{font-family:var(--head); font-weight:800; font-size:20px; color:#fff; margin-bottom:8px;}
+  footer .fw .o{color:var(--orange);} footer .fw .d{opacity:.45;}
+
+  @media (max-width:720px){
+    .eco{grid-template-columns:1fr;}
+    .ecocard:nth-child(2){transform:rotate(.8deg);}
+    .barrow .lbl{width:98px; font-size:12px;}
+    .row{gap:5vw;}
+    .ring{display:none;}
+    .stick .l{max-width:120px;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none !important; transition:none !important;}
+    .reveal{opacity:1; transform:none;}
+    .squig path{stroke-dashoffset:0;}
+    .big{background-position:0 center;}
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+<canvas id="confetti"></canvas>
+<div class="noise" aria-hidden="true"></div>
+<div id="cursor" aria-hidden="true"></div>
+
+<!-- ===================== HERO ===================== -->
+<header class="hero">
+  <div class="orb a"></div><div class="orb b"></div><div class="orb c"></div>
+  <canvas id="particles"></canvas>
+
+  <!-- swirls -->
+  <svg class="swirl spin-slow" style="top:8%; right:12%; width:180px; opacity:.5;" viewBox="0 0 100 100">
+    <path d="M50 50 m0 -4 a4 4 0 1 1 -4 4 a8 8 0 1 1 8 -8 a14 14 0 1 1 -14 14 a22 22 0 1 1 22 -22 a32 32 0 1 1 -32 32 a44 44 0 1 1 44 -44" stroke="#ffd9c7" stroke-width="1.6"/>
+  </svg>
+  <svg class="swirl spin-rev" style="bottom:14%; left:4%; width:130px; opacity:.4;" viewBox="0 0 100 100">
+    <path d="M50 50 m0 -4 a4 4 0 1 1 -4 4 a8 8 0 1 1 8 -8 a14 14 0 1 1 -14 14 a22 22 0 1 1 22 -22 a32 32 0 1 1 -32 32" stroke="#7fd8ff" stroke-width="1.8"/>
+  </svg>
+  <svg class="swirl floaty" style="top:22%; left:38%; width:90px; opacity:.55;" viewBox="0 0 100 40">
+    <path d="M4 20 Q 16 4 28 20 T 52 20 T 76 20 T 96 20" stroke="#12b981" stroke-width="4"/>
+  </svg>
+
+  <div class="wordmark">My<span class="o">Scholar</span><span class="d">.my</span></div>
+
+  <!-- rotating text ring -->
+  <div style="position:absolute; top:26px; right:calc(var(--pad) - 10px); width:118px; height:118px; z-index:4;">
+    <svg class="ring" style="position:absolute; inset:0; top:0; right:0;" viewBox="0 0 120 120">
+      <defs><path id="circ" d="M60,60 m-46,0 a46,46 0 1,1 92,0 a46,46 0 1,1 -92,0"/></defs>
+      <text><textPath href="#circ">100 DAYS • THANK YOU • MYSCHOLAR • </textPath></text>
+    </svg>
+    <div class="mid" style="position:absolute; inset:0; display:grid; place-items:center; font-size:26px;">🎓</div>
+  </div>
+
+  <div class="hero-inner">
+    <div class="kicker">The first</div>
+    <div class="big">100</div>
+    <div class="big-sub">days of MyScholar</div>
+    <p class="thankyou">To every student who searched, clicked, and found something they didn't know existed — thank you for being here early.</p>
+    <div class="daycount"><span class="dot"></span> Day 100 &nbsp;·&nbsp; 13 July 2026</div>
+  </div>
+
+  <svg class="wave" viewBox="0 0 1440 70" preserveAspectRatio="none" height="70">
+    <path d="M0,40 C240,80 480,0 720,30 C960,60 1200,10 1440,45 L1440,70 L0,70 Z" fill="#e8551e"/>
+  </svg>
+</header>
+
+<!-- ===================== DOUBLE MARQUEE ===================== -->
+<div class="marquee" aria-hidden="true"><div class="track">
+  <span>100 DAYS</span><span class="s">✦</span><span>19,000 STUDENTS</span><span class="s">✦</span><span>400+ SCHOLARSHIPS</span><span class="s">✦</span><span>150+ INTERNSHIPS</span><span class="s">✦</span><span>200+ CAREER PATHS</span><span class="s">✦</span><span>FREE FOREVER</span><span class="s">✦</span><span>100 DAYS</span><span class="s">✦</span><span>19,000 STUDENTS</span><span class="s">✦</span><span>400+ SCHOLARSHIPS</span><span class="s">✦</span><span>150+ INTERNSHIPS</span><span class="s">✦</span><span>200+ CAREER PATHS</span><span class="s">✦</span><span>FREE FOREVER</span><span class="s">✦</span>
+</div></div>
+<div class="marquee m2" aria-hidden="true"><div class="track">
+  <span>TERIMA KASIH</span><span class="s">★</span><span>THANK YOU</span><span class="s">★</span><span>NO LOGIN</span><span class="s">★</span><span>NO PAYWALL</span><span class="s">★</span><span>BUILT FOR STUDENTS</span><span class="s">★</span><span>TERIMA KASIH</span><span class="s">★</span><span>THANK YOU</span><span class="s">★</span><span>NO LOGIN</span><span class="s">★</span><span>NO PAYWALL</span><span class="s">★</span><span>BUILT FOR STUDENTS</span><span class="s">★</span>
+</div></div>
+
+<!-- ===================== MEGA NUMBER LEDGER ===================== -->
+<section style="padding-bottom:0;">
+  <div class="ghost" data-speed="0.8">BIASISWA</div>
+  <svg class="swirl spin-slow" style="top:40px; right:-40px; width:160px; opacity:.25;" viewBox="0 0 100 100">
+    <path d="M50 50 m0 -4 a4 4 0 1 1 -4 4 a8 8 0 1 1 8 -8 a14 14 0 1 1 -14 14 a22 22 0 1 1 22 -22 a32 32 0 1 1 -32 32 a44 44 0 1 1 44 -44" stroke="#e8551e" stroke-width="1.6"/>
+  </svg>
+  <div class="gutter">
+    <div class="eyebrow reveal">100 days, in numbers</div>
+    <h2 class="h2 reveal">What we built together
+      <svg class="squig" viewBox="0 0 300 20"><path d="M4 12 Q 22 2 40 12 T 76 12 T 112 12 T 148 12 T 184 12 T 220 12 T 256 12 T 292 12"/></svg>
+    </h2>
+    <p class="lede reveal">Started with one page and about 20 scholarships. Here's the ledger, 100 days in.</p>
+  </div>
+  <div class="ledger">
+    <div class="row reveal"><div class="mega orange" data-target="19000" data-suffix="+">0</div><div class="lab"><b>students reached</b>most of them on their phones</div></div>
+    <div class="row reveal"><div class="mega hollow" data-target="335000" data-suffix="+">0</div><div class="lab"><b>interactions</b>searches, taps, clicks, opens</div></div>
+    <div class="row reveal"><div class="mega" data-target="400" data-suffix="+">0</div><div class="lab"><b>scholarships</b>from 20 on day one</div></div>
+    <div class="row reveal"><div class="mega hollow-o" data-target="150" data-suffix="+">0</div><div class="lab"><b>internships</b>on MyIntern</div></div>
+    <div class="row reveal"><div class="mega orange" data-target="200" data-suffix="+">0</div><div class="lab"><b>career paths</b>on MyJourney</div></div>
+  </div>
+</section>
+
+<!-- ===================== GROWTH SLAB ===================== -->
+<section style="padding:clamp(80px,12vw,150px) 0;">
+  <div class="slab reveal">
+    <div class="ghost light" data-speed="-0.6" style="top:8%;">100 HARI</div>
+    <svg class="swirl spin-rev" style="top:-30px; right:6%; width:200px; opacity:.25;" viewBox="0 0 100 100">
+      <path d="M50 50 m0 -4 a4 4 0 1 1 -4 4 a8 8 0 1 1 8 -8 a14 14 0 1 1 -14 14 a22 22 0 1 1 22 -22 a32 32 0 1 1 -32 32 a44 44 0 1 1 44 -44" stroke="#7fd8ff" stroke-width="1.4"/>
+    </svg>
+    <div class="slab-inner">
+      <div class="from">From <b>20 scholarships</b> to</div>
+      <div class="to">400+</div>
+      <div class="cap">in 100 days. Free, no login, no paywall — the way it started, the way it stays.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== REACH (right-aligned) ===================== -->
+<section class="right">
+  <div class="ghost" data-speed="0.6">MALAYSIA</div>
+  <svg class="swirl floaty d4" style="top:60px; left:6%; width:100px; opacity:.5;" viewBox="0 0 100 40">
+    <path d="M4 20 Q 16 4 28 20 T 52 20 T 76 20 T 96 20" stroke="#f59e0b" stroke-width="4"/>
+  </svg>
+  <div class="gutter">
+    <div class="eyebrow reveal">Where you're reading from</div>
+    <h2 class="h2 reveal">Students, all across Malaysia
+      <svg class="squig" viewBox="0 0 300 20"><path d="M4 12 Q 22 2 40 12 T 76 12 T 112 12 T 148 12 T 184 12 T 220 12 T 256 12 T 292 12"/></svg>
+    </h2>
+    <p class="lede reveal">From the Klang Valley to Sabah and Sarawak, students showed up from everywhere.</p>
+    <div class="bars">
+      <div class="barrow reveal"><div class="lbl">Kuala Lumpur</div><div class="bartrack"><div class="barfill c-navy" data-pct="100"></div></div><div class="val">8.8k</div></div>
+      <div class="barrow reveal"><div class="lbl">Shah Alam</div><div class="bartrack"><div class="barfill c-navy" data-pct="16"></div></div><div class="val">673</div></div>
+      <div class="barrow reveal"><div class="lbl">Petaling Jaya</div><div class="bartrack"><div class="barfill c-navy" data-pct="12"></div></div><div class="val">485</div></div>
+      <div class="barrow reveal"><div class="lbl">Johor Bahru</div><div class="bartrack"><div class="barfill c-navy" data-pct="11"></div></div><div class="val">471</div></div>
+      <div class="barrow reveal"><div class="lbl">Kajang</div><div class="bartrack"><div class="barfill c-navy" data-pct="10"></div></div><div class="val">431</div></div>
+      <div class="barrow reveal"><div class="lbl">Kota Kinabalu</div><div class="bartrack"><div class="barfill c-navy" data-pct="9"></div></div><div class="val">383</div></div>
+      <div class="barrow reveal"><div class="lbl">Kuching</div><div class="bartrack"><div class="barfill c-navy" data-pct="9"></div></div><div class="val">377</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FLAGS / COUNTRIES ===================== -->
+<section id="countries" style="background:var(--ice);">
+  <div class="ghost" data-speed="-0.7">DUNIA</div>
+  <svg class="swirl spin-rev" style="top:-40px; right:4%; width:150px; opacity:.25;" viewBox="0 0 100 100">
+    <path d="M50 50 m0 -4 a4 4 0 1 1 -4 4 a8 8 0 1 1 8 -8 a14 14 0 1 1 -14 14 a22 22 0 1 1 22 -22 a32 32 0 1 1 -32 32 a44 44 0 1 1 44 -44" stroke="#12b981" stroke-width="1.6"/>
+  </svg>
+  <div class="gutter">
+    <div class="eyebrow reveal">Around the world</div>
+    <h2 class="h2 reveal">Students from <span id="ctCount">many</span> countries
+      <svg class="squig" viewBox="0 0 300 20"><path d="M4 12 Q 22 2 40 12 T 76 12 T 112 12 T 148 12 T 184 12 T 220 12 T 256 12 T 292 12"/></svg>
+    </h2>
+    <p class="lede reveal">Rooted in Malaysia, opened from wherever Malaysian students are.</p>
+    <div class="flagwrap" id="flagwrap"></div>
+  </div>
+</section>
+
+<!-- ===================== TIMELINE ===================== -->
+<section>
+  <div class="gutter">
+    <div class="eyebrow reveal">100 days, start to now</div>
+    <h2 class="h2 reveal">How it unfolded
+      <svg class="squig" viewBox="0 0 300 20"><path d="M4 12 Q 22 2 40 12 T 76 12 T 112 12 T 148 12 T 184 12 T 220 12 T 256 12 T 292 12"/></svg>
+    </h2>
+    <div class="tl">
+      <div class="tlrow reveal"><div class="tlday">Day 1 · April</div><h4>MyScholar goes live</h4><p>One HTML page, about 20 scholarships, and a simple promise: free for students, always.</p></div>
+      <div class="tlrow reveal"><div class="tlday">Day 12</div><h4>First students start searching</h4><p>Real traffic arrives. The search bar starts telling us what students actually need.</p></div>
+      <div class="tlrow reveal"><div class="tlday">Day 22 · May</div><h4>MyJourney takes shape</h4><p>Career paths get added, so students can see what they're aiming for, not just how to fund it.</p></div>
+      <div class="tlrow reveal"><div class="tlday">June</div><h4>MyIntern crosses 150</h4><p>The internship directory grows past 150 programmes. Scholarships push past 400.</p></div>
+      <div class="tlrow reveal"><div class="tlday">Day 100 · 13 July</div><h4>19,000 students later</h4><p>Three tools, one place, still run by one person. This page is the thank-you.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== ECOSYSTEM ===================== -->
+<section style="background:var(--ice);">
+  <div class="gutter">
+    <div class="eyebrow reveal">One place, three tools</div>
+    <h2 class="h2 reveal">Plan it, fund it, launch it
+      <svg class="squig" viewBox="0 0 300 20"><path d="M4 12 Q 22 2 40 12 T 76 12 T 112 12 T 148 12 T 184 12 T 220 12 T 256 12 T 292 12"/></svg>
+    </h2>
+    <div class="eco">
+      <div class="ecocard eco1 reveal"><div class="tag">Fund it</div><div class="bignum">400+</div><h3>MyScholar</h3><p>Scholarships, financial aid and loans, all searchable and free.</p></div>
+      <div class="ecocard eco2 reveal"><div class="tag">Launch it</div><div class="bignum">150+</div><h3>MyIntern</h3><p>Internship programmes for students who want real experience.</p></div>
+      <div class="ecocard eco3 reveal"><div class="tag">Plan it</div><div class="bignum">200+</div><h3>MyJourney</h3><p>Career paths, so you know what you're aiming for.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== WHAT'S NEXT ===================== -->
+<section class="next">
+  <svg class="swirl spin-slow" style="top:-40px; right:6%; width:190px; opacity:.22;" viewBox="0 0 100 100">
+    <path d="M50 50 m0 -4 a4 4 0 1 1 -4 4 a8 8 0 1 1 8 -8 a14 14 0 1 1 -14 14 a22 22 0 1 1 22 -22 a32 32 0 1 1 -32 32 a44 44 0 1 1 44 -44" stroke="#ffd9c7" stroke-width="1.4"/>
+  </svg>
+  <svg class="swirl floaty d2" style="bottom:14%; left:5%; width:100px; opacity:.4;" viewBox="0 0 100 40">
+    <path d="M4 20 Q 16 4 28 20 T 52 20 T 76 20 T 96 20" stroke="#12b981" stroke-width="4"/>
+  </svg>
+  <div class="gutter">
+    <div class="eyebrow reveal" style="color:#ffd9c7;">Stay tuned</div>
+    <h2 class="h2 reveal">The first 100 days were just the setup.</h2>
+    <div class="rotator reveal" aria-hidden="true">
+      <ul>
+        <li>More scholarships.</li>
+        <li>Deadline reminders.</li>
+        <li>Bahasa Melayu.</li>
+        <li>A CV builder.</li>
+        <li>More internships.</li>
+        <li>More scholarships.</li>
+      </ul>
+    </div>
+    <div class="subhook reveal">
+      <div class="n" data-target="650" data-suffix="+">0</div>
+      <div class="t">students get it first. <span>Be one.</span></div>
+    </div>
+    <div class="cta reveal">
+      <a class="btn btn-p" href="https://myscholar.my">Join the newsletter →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== STORY + CTA ===================== -->
+<section>
+  <svg class="swirl spin-slow" style="bottom:-30px; right:-30px; width:180px; opacity:.2;" viewBox="0 0 100 100">
+    <path d="M50 50 m0 -4 a4 4 0 1 1 -4 4 a8 8 0 1 1 8 -8 a14 14 0 1 1 -14 14 a22 22 0 1 1 22 -22 a32 32 0 1 1 -32 32 a44 44 0 1 1 44 -44" stroke="#e8551e" stroke-width="1.6"/>
+  </svg>
+  <div class="gutter">
+    <div class="story reveal">
+      <p>None of these numbers are the point on their own. The point is that somewhere a student found a scholarship they qualified for and didn't know existed.</p>
+      <p class="quiet">It's still early days and I'm adding more regularly, but it's already usable. If it helped you, the best thing you can do is send it to one person who needs it.</p>
+    </div>
+    <div class="cta reveal">
+      <a class="btn btn-p" href="https://myscholar.my">Browse scholarships →</a>
+      <a class="btn btn-s" href="https://myscholar.my/internships">Browse internships →</a>
+      <button class="btn btn-g" id="shareBtn">Share this page</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <svg class="swirl spin-rev" style="top:-50px; right:10%; width:140px; opacity:.25;" viewBox="0 0 100 100">
+    <path d="M50 50 m0 -4 a4 4 0 1 1 -4 4 a8 8 0 1 1 8 -8 a14 14 0 1 1 -14 14 a22 22 0 1 1 22 -22 a32 32 0 1 1 -32 32" stroke="#7fd8ff" stroke-width="1.6"/>
+  </svg>
+  <div class="bigfoot" id="bigfoot" title="Terima kasih!">TERIMA KASIH</div>
+  <div class="fw">My<span class="o">Scholar</span><span class="d">.my</span></div>
+  Thank you for being here early.<br>
+  <a href="https://myscholar.my">myscholar.my</a>
+</footer>
+
+<script>
+  // ---- scroll progress ----
+  var prog = document.getElementById('progress');
+  addEventListener('scroll', function(){
+    var h = document.documentElement;
+    prog.style.width = (h.scrollTop/(h.scrollHeight-h.clientHeight)*100) + '%';
+  }, {passive:true});
+
+  // ---- count-up ----
+  function fmt(n,s){ return (n>=1000 ? n.toLocaleString('en-US') : n)+(s||''); }
+  function animateCount(el){
+    var t=parseInt(el.getAttribute('data-target'),10), s=el.getAttribute('data-suffix')||'', d=1700, t0=null;
+    function step(ts){ if(!t0)t0=ts; var p=Math.min(1,(ts-t0)/d), e=1-Math.pow(1-p,3);
+      el.textContent=fmt(Math.round(t*e),s); if(p<1)requestAnimationFrame(step); else el.textContent=fmt(t,s); }
+    requestAnimationFrame(step);
+  }
+
+  // ---- reveal + counters + bars, staggered ----
+  var counted = new WeakSet();
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(!e.isIntersecting) return;
+      var el=e.target; el.classList.add('in');
+      el.querySelectorAll('[data-target]').forEach(function(num){
+        if(!counted.has(num)){ counted.add(num); animateCount(num); }
+      });
+      var fill=el.querySelector && el.querySelector('.barfill');
+      if(fill){ fill.style.width=fill.getAttribute('data-pct')+'%'; }
+      io.unobserve(el);
+    });
+  },{threshold:.22});
+  document.querySelectorAll('.reveal').forEach(function(el,i){
+    el.style.transitionDelay=((i%6)*0.06)+'s'; io.observe(el);
+  });
+
+  // ---- hero particles ----
+  (function(){
+    if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var c=document.getElementById('particles'),ctx=c.getContext('2d'),W,H,pts=[];
+    function size(){W=c.width=c.offsetWidth;H=c.height=c.offsetHeight;} size(); addEventListener('resize',size);
+    for(var i=0;i<46;i++){pts.push({x:Math.random(),y:Math.random(),r:Math.random()*2+.5,s:Math.random()*.0004+.0001});}
+    (function loop(){ctx.clearRect(0,0,W,H);
+      pts.forEach(function(p){p.y-=p.s;if(p.y<0)p.y=1;
+        ctx.beginPath();ctx.arc(p.x*W,p.y*H,p.r,0,6.28);ctx.fillStyle='rgba(255,255,255,'+(0.15+p.r*0.15)+')';ctx.fill();});
+      requestAnimationFrame(loop);})();
+  })();
+
+  // ---- confetti ----
+  function burst(){
+    if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var c=document.getElementById('confetti'),ctx=c.getContext('2d');
+    var W=c.width=innerWidth,H=c.height=innerHeight;
+    var cols=['#e8551e','#1e3a6e','#2f6df6','#12b981','#ffd9c7','#f59e0b','#ff7a9c'],bits=[];
+    for(var i=0;i<160;i++){bits.push({x:W/2+(Math.random()-.5)*W*.6,y:-20-Math.random()*H*.3,r:4+Math.random()*6,c:cols[i%cols.length],vy:2+Math.random()*3.5,vx:(Math.random()-.5)*2.4,rot:Math.random()*6.28,vr:(Math.random()-.5)*.3});}
+    var f=0;(function draw(){ctx.clearRect(0,0,W,H);
+      bits.forEach(function(b){b.y+=b.vy;b.x+=b.vx;b.rot+=b.vr;b.vy+=.02;
+        ctx.save();ctx.translate(b.x,b.y);ctx.rotate(b.rot);ctx.fillStyle=b.c;ctx.fillRect(-b.r/2,-b.r/2,b.r,b.r*.6);ctx.restore();});
+      f++;if(f<270)requestAnimationFrame(draw);else ctx.clearRect(0,0,W,H);})();
+  }
+  addEventListener('load',burst);
+
+  // ==== COUNTRIES ====
+  // REAL GA4 data, 1 Apr – 13 Jul 2026 (Demographic details: Country).
+  // 100 rows incl. "(not set)" => 99 countries. Top countries by active users:
+  var COUNTRY_TOTAL = 99;
+  var COUNTRIES=[
+    {code:'my',name:'Malaysia',lead:true},   // 17,933
+    {code:'sg',name:'Singapore'},            // 288
+    {code:'us',name:'United States'},        // 262
+    {code:'id',name:'Indonesia'},            // 104
+    {code:'gb',name:'United Kingdom'},       // 80
+    {code:'in',name:'India'},                // 54
+    {code:'au',name:'Australia'},            // 51
+    {code:'cn',name:'China'},                // 51
+    {code:'pk',name:'Pakistan'}              // 47
+  ];
+  (function(){
+    var wrap=document.getElementById('flagwrap'); if(!wrap) return;
+    COUNTRIES.forEach(function(c){
+      var chip=document.createElement('div');
+      chip.className='flagchip'+(c.lead?' lead':'');
+      var w=c.lead?160:80;
+      chip.innerHTML='<img loading="lazy" width="'+(c.lead?40:28)+'" src="https://flagcdn.com/w'+w+'/'+c.code+'.png" alt="'+c.name+' flag"><span class="cn">'+c.name+'</span>';
+      wrap.appendChild(chip);
+    });
+    // "+90 more" chip after the named ones
+    var more=document.createElement('div');
+    more.className='flagchip';
+    more.innerHTML='<span class="cn" style="padding-left:8px;">+ '+(COUNTRY_TOTAL-COUNTRIES.length)+' more</span>';
+    wrap.appendChild(more);
+    var cc=document.getElementById('ctCount'); if(cc) cc.textContent=COUNTRY_TOTAL;
+    var chips=wrap.querySelectorAll('.flagchip');
+    var fio=new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(!e.isIntersecting) return;
+        chips.forEach(function(ch,i){ setTimeout(function(){ch.classList.add('in');},i*70); });
+        fio.disconnect();
+      });
+    },{threshold:.15});
+    fio.observe(wrap);
+  })();
+
+  // ==== CRAZY LAYER ====
+  // blend-mode cursor (desktop pointers only)
+  (function(){
+    var cur=document.getElementById('cursor');
+    if(!cur||!window.matchMedia('(pointer:fine)').matches) return;
+    addEventListener('mousemove',function(e){cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px';});
+    document.querySelectorAll('a,button,.flagchip,.bigfoot').forEach(function(el){
+      el.addEventListener('mouseenter',function(){cur.classList.add('hot');});
+      el.addEventListener('mouseleave',function(){cur.classList.remove('hot');});
+    });
+  })();
+
+  // ghost-word parallax + scroll-velocity skew on the mega numbers
+  (function(){
+    if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var ghosts=[].slice.call(document.querySelectorAll('.ghost'));
+    var megas=[].slice.call(document.querySelectorAll('.mega'));
+    var lastY=scrollY, vel=0;
+    (function loop(){
+      var y=scrollY, d=y-lastY; lastY=y;
+      vel+=(Math.max(-5,Math.min(5,d*.22))-vel)*.12;
+      megas.forEach(function(el){el.style.transform='skewY('+vel.toFixed(2)+'deg)';});
+      ghosts.forEach(function(g){
+        var host=g.parentElement, r=host.getBoundingClientRect();
+        var p=(innerHeight-r.top)/(innerHeight+r.height);
+        g.style.transform='translateX('+((p-.5)*parseFloat(g.dataset.speed||0.6)*340)+'px)';
+      });
+      requestAnimationFrame(loop);
+    })();
+  })();
+
+  // 3D tilt on ecosystem cards (desktop only)
+  document.querySelectorAll('.ecocard').forEach(function(card){
+    card.addEventListener('pointermove',function(e){
+      if(!window.matchMedia('(pointer:fine)').matches) return;
+      var r=card.getBoundingClientRect();
+      var x=(e.clientX-r.left)/r.width-.5, y=(e.clientY-r.top)/r.height-.5;
+      card.style.transform='perspective(700px) rotateY('+(x*10).toFixed(1)+'deg) rotateX('+(-y*10).toFixed(1)+'deg) translateY(-4px)';
+    });
+    card.addEventListener('pointerleave',function(){card.style.transform='';});
+  });
+
+  // confetti when the timeline reaches Day 100
+  (function(){
+    var last=document.querySelector('.tl .tlrow:last-child'); if(!last) return;
+    var fired=false;
+    new IntersectionObserver(function(es,obs){
+      es.forEach(function(e){ if(e.isIntersecting&&!fired){ fired=true; burst(); obs.disconnect(); } });
+    },{threshold:.6}).observe(last);
+  })();
+
+  // TERIMA KASIH easter egg: click = confetti
+  var bf=document.getElementById('bigfoot');
+  if(bf) bf.addEventListener('click',burst);
+
+  // ---- share ----
+  document.getElementById('shareBtn').addEventListener('click',function(){
+    var data={title:'100 Days of MyScholar',text:'19,000 students. 400+ scholarships. 100 days.',url:'https://myscholar.my/thankyou'};
+    if(navigator.share){navigator.share(data).catch(function(){});}
+    else if(navigator.clipboard){navigator.clipboard.writeText(data.url);this.textContent='Link copied ✓';var b=this;setTimeout(function(){b.textContent='Share this page';},2000);}
+    burst();
+  });
+</script>
+</body>
+</html>
