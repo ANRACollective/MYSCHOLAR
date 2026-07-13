@@ -9,6 +9,20 @@
 <meta property="og:description" content="19,000 students. 400+ scholarships. 100 days. Thank you for being here early.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://myscholar.my/thankyou">
+<meta property="og:image" content="https://myscholar.my/og-thankyou.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://myscholar.my/og-thankyou.jpg">
+
+<!-- GA4 — same property as the rest of the site; page views of /thankyou count every visit -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZETBRDDMTV"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-ZETBRDDMTV');
+</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -262,6 +276,14 @@
   @keyframes hookpulse{0%,100%{transform:scale(1);}50%{transform:scale(1.03);}}
   .subhook .t{font-family:var(--head); font-weight:800; font-size:clamp(20px,4vw,34px); letter-spacing:-.01em; margin-top:6px;}
   .subhook .t span{color:#ffd9c7;}
+  /* inline subscribe form */
+  .subform{display:flex; gap:12px; flex-wrap:wrap; margin-top:34px; max-width:560px;}
+  .subform input{flex:1; min-width:220px; padding:15px 18px; border-radius:14px; border:2px solid rgba(255,255,255,.25);
+    background:rgba(255,255,255,.08); color:#fff; font-family:var(--body); font-size:16px; outline:none; transition:border-color .2s;}
+  .subform input::placeholder{color:#9fb6e3;}
+  .subform input:focus{border-color:var(--orange);}
+  .submsg{margin-top:14px; font-size:15px; color:#7cf0c8; font-weight:600; min-height:22px;}
+  .submsg.err{color:#ffb4a1;}
 
   footer{background:var(--navy-deep); color:#9fb6e3; padding:52px var(--pad); font-size:13px; position:relative; overflow:hidden;}
   footer a{color:#dce7fb; text-decoration:none;}
@@ -307,7 +329,7 @@
     <path d="M4 20 Q 16 4 28 20 T 52 20 T 76 20 T 96 20" stroke="#12b981" stroke-width="4"/>
   </svg>
 
-  <div class="wordmark">My<span class="o">Scholar</span><span class="d">.my</span></div>
+  <a class="wordmark" href="https://myscholar.my" style="text-decoration:none; color:#fff;">My<span class="o">Scholar</span><span class="d">.my</span></a>
 
   <!-- rotating text ring -->
   <div style="position:absolute; top:26px; right:calc(var(--pad) - 10px); width:118px; height:118px; z-index:4;">
@@ -473,9 +495,12 @@
       <div class="n" data-target="650" data-suffix="+">0</div>
       <div class="t">students get it first. <span>Be one.</span></div>
     </div>
-    <div class="cta reveal">
-      <a class="btn btn-p" href="https://myscholar.my">Join the newsletter →</a>
-    </div>
+    <form class="subform reveal" id="subForm" autocomplete="off">
+      <input type="email" id="subEmail" placeholder="your@email.com" required
+        aria-label="Email address" inputmode="email">
+      <button class="btn btn-p" type="submit" id="subBtn">Subscribe →</button>
+    </form>
+    <p class="submsg" id="subMsg" role="status" aria-live="polite"></p>
   </div>
 </section>
 
@@ -662,6 +687,65 @@
   // TERIMA KASIH easter egg: click = confetti
   var bf=document.getElementById('bigfoot');
   if(bf) bf.addEventListener('click',burst);
+
+  // ==== SUBSCRIBE (writes straight to the same Supabase table as the homepage) ====
+  // Loss-proofing: 3 retries with backoff; if all fail, the email is stashed in
+  // localStorage and re-sent automatically on the next visit. Errors are visible.
+  var SB_URL = 'https://ywvfvjvxwhcfprfrkgqm.supabase.co';
+  var SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl3dmZ2anZ4d2hjZnByZnJrZ3FtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwNTQ5MzEsImV4cCI6MjA5MDYzMDkzMX0.5EzrJuW1fdPca2ZEKGPXXgbd_XYDqKzzu6e-iRQT9po'; // anon key, read/insert only — same as homepage
+  var PENDING_KEY = 'ms_pending_sub';
+
+  function sbInsert(email){
+    return fetch(SB_URL + '/rest/v1/subscribers', {
+      method:'POST',
+      headers:{ 'apikey':SB_KEY, 'Authorization':'Bearer '+SB_KEY,
+        'Content-Type':'application/json', 'Prefer':'return=minimal' },
+      body: JSON.stringify({ email:email, source:'thankyou_page',
+        internship_interest:false, tuition_interest:false })
+    });
+  }
+
+  async function trySubscribe(email){
+    for(var i=0; i<3; i++){
+      try{
+        var res = await sbInsert(email);
+        if(res.ok || res.status===409) return true; // 409 = already subscribed, that's fine
+      }catch(e){}
+      await new Promise(function(r){ setTimeout(r, 800*(i+1)); });
+    }
+    return false;
+  }
+
+  // flush a previously-failed email, if any (so nothing is ever lost)
+  (function(){
+    var pending = localStorage.getItem(PENDING_KEY);
+    if(pending){ trySubscribe(pending).then(function(ok){ if(ok) localStorage.removeItem(PENDING_KEY); }); }
+  })();
+
+  var subForm = document.getElementById('subForm');
+  if(subForm) subForm.addEventListener('submit', async function(e){
+    e.preventDefault();
+    var input = document.getElementById('subEmail');
+    var btn = document.getElementById('subBtn');
+    var msg = document.getElementById('subMsg');
+    var email = (input.value||'').trim().toLowerCase();
+    if(!email) return;
+    btn.disabled = true; btn.textContent = 'Sending…'; msg.textContent=''; msg.classList.remove('err');
+    if(typeof gtag==='function') gtag('event','subscribe_submit',{page:'thankyou'});
+    var ok = await trySubscribe(email);
+    if(ok){
+      localStorage.removeItem(PENDING_KEY);
+      msg.textContent = "You're in. New scholarships and deadlines, straight to your inbox.";
+      input.value=''; btn.textContent='Subscribed ✓';
+      if(typeof gtag==='function') gtag('event','subscribe_success',{page:'thankyou'});
+      burst();
+    } else {
+      localStorage.setItem(PENDING_KEY, email); // saved — auto-retries next visit
+      msg.classList.add('err');
+      msg.textContent = "Couldn't connect — your email is saved on this device and will be sent automatically. Or just try again.";
+      btn.disabled=false; btn.textContent='Subscribe →';
+    }
+  });
 
   // ---- share ----
   document.getElementById('shareBtn').addEventListener('click',function(){
