@@ -2740,13 +2740,44 @@ async function checkModalUrl(id, url){
 }
 
 // Called when student clicks Visit — logs as a visit
-function recordVisit(id, name){
+// source tells us WHERE they clicked from: 'scholarships' = detail modal, 'compare' = compare table
+function recordVisit(id, name, source){
+  // Look up the full record so we always have the name and url, even when
+  // the caller only passed an id (the compare table does this)
+  const s = DATA.find(x => x.id === id);
+
+  // ── GA4 EVENT (existing) ──────────────────────────────────────────
   if(typeof gtag !== 'undefined'){
     gtag('event','visit_official_website',{
       scholarship_id: id,
-      scholarship_name: name || ''
+      scholarship_name: name || (s ? s.name : ''),
+      source: source || 'scholarships'
     });
   }
+
+  // ── SUPABASE LOG ──────────────────────────────────────────────────
+  // Writes the click to outbound_clicks so you can analyse which
+  // scholarships students actually visit. INSERT only — anon key
+  // cannot read this table back.
+  fetch(`${SUPABASE_URL}/rest/v1/outbound_clicks`, {
+    method: 'POST',
+    // keepalive lets the request finish even if the browser is busy
+    // opening the new tab — makes logging more reliable
+    keepalive: true,
+    headers: {
+      'Content-Type': 'application/json',
+      'apikey': SUPABASE_ANON_KEY,
+      'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+      'Prefer': 'return=minimal'
+    },
+    body: JSON.stringify({
+      scholarship_id:   id || null,
+      scholarship_name: name || (s ? s.name : ''),
+      url:              s ? s.url : null,
+      source:           source || 'scholarships',
+      session_id:       _sessionId
+    })
+  }).catch(() => {}); // Silent fail — tracking must never break the UI
 }
 
 // AI Fix for a single scholarship from modal
@@ -4038,7 +4069,7 @@ function buildCompareTable(){
 
   // Official links
   html += row('Official site', scholarships.map(s =>
-    s.url ? `<a class="compare-visit-btn" href="${s.url}" target="_blank" rel="noopener">Visit →</a>` : '—'
+    s.url ? `<a class="compare-visit-btn" href="${s.url}" target="_blank" rel="noopener" onclick="recordVisit(${s.id},null,'compare')">Visit →</a>` : '—'
   ));
 
   html += '</tbody>';
