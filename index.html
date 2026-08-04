@@ -34,7 +34,8 @@
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<!-- Unbounded 900 added for the About mega-number ledger — same big-number font as /thankyou -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Unbounded:wght@900&display=swap" rel="stylesheet">
 <style>
 
 /* ─────────────────────────────────────────────
@@ -546,6 +547,37 @@ nav {
   letter-spacing: -0.2px;
 }
 
+/* ── LOUD live count — the card's visual anchor ──────────────
+   Same Unbounded count-up treatment as the About ledger, tinted
+   in each product's colour. Values hydrate live from Supabase
+   (loadAboutStats); the HTML data-targets are fallback floors. */
+.prod-count {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 2px 0 12px;
+}
+.prod-count-num {
+  font-family: 'Unbounded', var(--sans);
+  font-weight: 900;
+  font-size: clamp(40px, 4.6vw, 58px);
+  letter-spacing: -.04em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.prod-count-num.teal  { color: var(--teal); }
+.prod-count-num.coral { color: var(--coral); }
+.prod-count-num.sky   { color: var(--sky); }
+.prod-count-label {
+  font-size: 10.5px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: rgba(255,255,255,.5);
+}
+
 .prod-desc {
   font-family: var(--sans);
   font-size: 13px;
@@ -616,15 +648,6 @@ nav {
   margin: 0 auto;
 }
 
-.about-eyebrow {
-  font-size: 12px;
-  letter-spacing: .16em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,.55); /* was .3 — failed WCAG 1.4.3 contrast */
-  font-weight: 600;
-  margin-bottom: 16px;
-}
-
 .about h2 {
   font-family: var(--serif);
   font-size: clamp(26px, 4vw, 34px);
@@ -632,6 +655,71 @@ nav {
   color: var(--white);
   margin-bottom: 18px;
   line-height: 1.1;
+}
+
+/* ── Mega number ledger — same visual language as /thankyou ──
+   Huge Unbounded numbers that count up from 0 when the row scrolls
+   into view (see msAnimateCount() in the scripts section).
+   Product counts are hydrated LIVE from Supabase; the data-target
+   values hard-coded in the HTML are safe fallback floors. */
+.about-ledger {
+  max-width: 1080px;
+  margin: 0 auto 30px;
+  display: flex;
+  flex-wrap: wrap;                       /* tiles flow into 2 rows on narrower screens */
+  justify-content: center;
+  align-items: flex-start;
+  gap: 26px 58px;                        /* row-gap column-gap */
+}
+/* Each stat is a tile: big number on top, label under it,
+   tiles laid out side by side across the section. */
+.ledger-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+  text-align: center;
+}
+.ledger-num {
+  font-family: 'Unbounded', var(--sans); /* the /thankyou big-number font */
+  font-weight: 900;
+  font-size: clamp(34px, 4vw, 52px);
+  letter-spacing: -.04em;
+  line-height: 1;
+  color: var(--white);
+  font-variant-numeric: tabular-nums;    /* digits keep equal width mid-animation */
+  white-space: nowrap;
+}
+.ledger-num.coral  { color: var(--coral); }
+.ledger-num.hollow { color: transparent; -webkit-text-stroke: 2px rgba(255,255,255,.8); }
+.ledger-lab {
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: rgba(255,255,255,.55);          /* clears WCAG 1.4.3 on #090f1c */
+}
+
+/* Live "on the site right now" row — hidden until the Supabase RPC
+   returns a real number, so a failed fetch never shows a fake 0. */
+.ledger-live { display: none; }
+.ledger-live.on { display: flex; }
+.live-dot {
+  display: inline-block;
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  background: #12b981;                   /* same mint as the /thankyou live dot */
+  vertical-align: middle;
+  margin-right: 7px;
+  animation: livebeat 2s infinite;
+}
+@keyframes livebeat {
+  0%   { box-shadow: 0 0 0 0 rgba(18,185,129,.6); }
+  70%  { box-shadow: 0 0 0 10px rgba(18,185,129,0); }
+  100% { box-shadow: 0 0 0 0 rgba(18,185,129,0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .live-dot { animation: none; }
 }
 
 /* Trust signal lines — match PDF exactly */
@@ -739,6 +827,13 @@ footer {
   .prod-card.active      { order: 2; }  /* MyScholar (Fund) */
   .prod-card:last-child  { order: 3; }  /* MyIntern (Launch) */
   .about { padding: 56px 20px; }
+  /* Ledger on a 390px screen: two tiles per row, live counter full-width
+     at the end so the pulsing number gets its own moment. */
+  .about-ledger { margin: 0 0 22px; gap: 24px 0; }
+  .ledger-row { flex: 0 0 50%; gap: 7px; padding: 0 4px; box-sizing: border-box; }
+  .ledger-live { flex-basis: 100%; }
+  .ledger-num { font-size: clamp(30px, 9vw, 40px); }
+  .ledger-lab { font-size: 9.5px; letter-spacing: .1em; }
   .footer-social-row { padding: 20px 16px; }
   footer { padding: 14px 16px; flex-direction: column; align-items: center; text-align: center; gap: 4px; }
   .footer-right { display: none; }
@@ -1160,6 +1255,10 @@ footer {
     <a href="journey" class="prod-card" aria-label="MyJourney — explore careers and find your path">
       <div class="prod-phase teal" data-i18n="phasePlan">Plan</div>
       <div class="prod-name">MyJourney</div>
+      <div class="prod-count">
+        <span class="prod-count-num teal" id="cardCareers" data-target="200" data-suffix="+">0</span>
+        <span class="prod-count-label" data-i18n="statCareerLabel">career guides</span>
+      </div>
       <p class="prod-desc">
         <span data-i18n="planCardDesc">See which careers fit you — and which you want a scholarship for.</span>
       </p>
@@ -1167,11 +1266,15 @@ footer {
     </a>
 
     <!-- FUND: MyScholar (current — active state) -->
-    <a href="scholarships" class="prod-card active" aria-label="MyScholar — browse 200+ scholarships">
+    <a href="scholarships" class="prod-card active" aria-label="MyScholar — browse scholarships">
       <div class="prod-phase coral" data-i18n="phaseFund">Fund</div>
       <div class="prod-name">MyScholar</div>
+      <div class="prod-count">
+        <span class="prod-count-num coral" id="cardScholarships" data-target="350" data-suffix="+">0</span>
+        <span class="prod-count-label" data-i18n="statScholLabel">scholarships live</span>
+      </div>
       <p class="prod-desc">
-        <span data-i18n="scholarCardDesc">200+ scholarships that pay for your studies — filter by field, eligibility, deadline.</span>
+        <span data-i18n="scholarCardDesc">Scholarships that pay for your studies — filter by field, eligibility, deadline.</span>
         <span class="prod-desc-urgency" id="fundClosingCount" style="display:none"></span>
       </p>
       <div class="prod-cta prod-cta-primary" data-i18n="scholarCardCta">Browse scholarships →</div>
@@ -1181,6 +1284,10 @@ footer {
     <a href="internships" class="prod-card" aria-label="MyIntern — browse verified internships">
       <div class="prod-phase sky" data-i18n="phaseLaunch">Launch</div>
       <div class="prod-name">MyIntern</div>
+      <div class="prod-count">
+        <span class="prod-count-num sky" id="cardInternships" data-target="110" data-suffix="+">0</span>
+        <span class="prod-count-label" data-i18n="statInternLabel">internships live</span>
+      </div>
       <p class="prod-desc">
         <span data-i18n="internCardDesc">Land the internships that start your career — once you're funded.</span>
       </p>
@@ -1210,14 +1317,44 @@ footer {
 
 <!-- ── ABOUT + GET UPDATES ────────────────────────────────── -->
 <section class="about">
+  <!-- Audience ledger — /thankyou style count-ups. The three PRODUCT counts
+         now live inside the Plan/Fund/Launch cards above (hydrated live by
+         loadAboutStats); this section keeps the audience stats. Students /
+         countries / subscribers are verified GA4 + DB figures, updated by
+         hand — floors only, never rounded up. The live counter comes from
+         the live_students_30m() RPC.
+         IMPORTANT: number spans have NO data-i18n — applyLocale() rewrites
+         innerHTML of data-i18n elements, which would wipe live numbers on
+         language toggle. Only the labels are translated. -->
+    <div class="about-ledger" id="aboutStats">
+      <div class="ledger-row">
+        <span class="ledger-num coral" data-target="19000" data-suffix="+">0</span>
+        <span class="ledger-lab" data-i18n="statStudentsLabel">students since April 2026</span>
+      </div>
+      <div class="ledger-row">
+        <span class="ledger-num hollow" data-target="99">0</span>
+        <span class="ledger-lab" data-i18n="statCountriesLabel">countries</span>
+      </div>
+      <div class="ledger-row">
+        <span class="ledger-num hollow" data-target="800" data-suffix="+">0</span>
+        <span class="ledger-lab" data-i18n="statSubsLabel">email subscribers</span>
+      </div>
+      <!-- Live counter: distinct sessions active across MyScholar in the
+           last 30 minutes, from our own Supabase logs (pings + searches +
+           clicks). Hidden until the RPC returns a real number ≥ 1 — we
+           never show a fake or a zero. Refreshes every 60s. -->
+      <div class="ledger-row ledger-live" id="liveRow">
+        <span class="ledger-num coral" id="statLive" data-target="1">0</span>
+        <span class="ledger-lab"><span class="live-dot" aria-hidden="true"></span><span data-i18n="statLiveLabel">on the site in the last 30 min</span></span>
+      </div>
+    </div>
+
   <div class="about-inner">
-    <p class="about-eyebrow" data-i18n="aboutEyebrow">About this project</p>
-    <h2 data-i18n="aboutH2">Built for Malaysian students.</h2>
     <p class="about-trust">
       <span data-i18n="aboutTrust">Built by <strong>ANRA</strong> · Free, no ads, no login · Not affiliated with any scholarship body or government agency</span>
     </p>
     <p class="about-data">
-      <span data-i18n="aboutData">Listings reviewed regularly · last full review <span id="aboutLastReviewed">22 Jun 2026</span> · always verify on the official site</span>
+      <span data-i18n="aboutData">Listings reviewed regularly · last full review <span id="aboutLastReviewed">03 Aug 2026</span> · always verify on the official site</span>
     </p>
     <div class="about-cta">
       <button class="updates-btn" onclick="openPopup()">
@@ -1314,12 +1451,17 @@ const TRANSLATIONS = {
     phaseFund:     'Fund',
     phaseLaunch:   'Launch',
     planCardDesc:  'See which careers fit you — and which you want a scholarship for.',
-    scholarCardDesc: '200+ scholarships that pay for your studies — filter by field, eligibility, deadline.',
+    scholarCardDesc: 'Scholarships that pay for your studies — filter by field, eligibility, deadline.',
     scholarCardCta: 'Browse scholarships →',
     internCardDesc: 'Land the internships that start your career — once you\'re funded.',
     internCardCta: 'Browse internships →',
-    aboutEyebrow:  'About this project',
-    aboutH2:       'Built for Malaysian students.',
+    statStudentsLabel:  'students since April 2026',
+    statScholLabel:     'scholarships live',
+    statInternLabel:    'internships live',
+    statCareerLabel:    'career guides',
+    statCountriesLabel: 'countries',
+    statSubsLabel:      'email subscribers',
+    statLiveLabel:      'on the site in the last 30 min',
     aboutTrust:    'Built by <strong>ANRA</strong> · Free, no ads, no login · Not affiliated with any scholarship body or government agency',
     aboutData:     'Listings reviewed regularly · last full review <span id="aboutLastReviewed">{date}</span> · always verify on the official site',
     aboutCta:      'Get updates',
@@ -1343,12 +1485,17 @@ const TRANSLATIONS = {
     phaseFund:     'Biayai',
     phaseLaunch:   'Mulakan',
     planCardDesc:  'Lihat kerjaya yang sesuai — dan mana yang ingin dibiayai.',
-    scholarCardDesc: '200+ biasiswa yang membiayai pengajian anda — tapis mengikut bidang, kelayakan, tarikh tutup.',
+    scholarCardDesc: 'Biasiswa yang membiayai pengajian anda — tapis mengikut bidang, kelayakan, tarikh tutup.',
     scholarCardCta: 'Lihat biasiswa →',
     internCardDesc: 'Dapatkan latihan industri yang memulakan kerjaya anda — selepas dibiayai.',
     internCardCta: 'Cari latihan industri →',
-    aboutEyebrow:  'Tentang projek ini',
-    aboutH2:       'Dibina untuk pelajar Malaysia.',
+    statStudentsLabel:  'pelajar sejak April 2026',
+    statScholLabel:     'biasiswa aktif',
+    statInternLabel:    'latihan industri aktif',
+    statCareerLabel:    'panduan kerjaya',
+    statCountriesLabel: 'negara',
+    statSubsLabel:      'pelanggan e-mel',
+    statLiveLabel:      'di laman ini dalam 30 minit terakhir',
     aboutTrust:    'Dibina oleh <strong>ANRA</strong> · Percuma, tanpa iklan, tanpa log masuk · Tidak berafiliasi dengan mana-mana badan biasiswa atau agensi kerajaan',
     aboutData:     'Senarai disemak secara berkala · semakan penuh terakhir <span id="aboutLastReviewed">{date}</span> · sentiasa sahkan di portal rasmi',
     aboutCta:      'Dapatkan kemaskini',
@@ -1357,7 +1504,10 @@ const TRANSLATIONS = {
   }
 };
 
-let reviewedDate = '22 Jun 2026';  // fallback until Supabase site_config loads (see fetch below)
+// Fallback only — the REAL date is fetched from Supabase site_config on every
+// page load (updated automatically by the Monday review routine). This string
+// only ever shows if that fetch fails, so keep it roughly current when editing.
+let reviewedDate = '03 Aug 2026';
 function applyLocale(lang) {
   const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
   // innerHTML elements
@@ -1662,6 +1812,170 @@ function fillSearch(chipEl) {
     el.textContent = total + (total === 1 ? ' closing this week.' : ' closing this week.');
     el.style.display = '';
   } catch (_) { /* silent — description alone still reads fine */ }
+})();
+
+// ── ABOUT mega number ledger ────────────────────────────────────────────────
+// Count-up engine ported from /thankyou: each .ledger-num animates from 0 to
+// its data-target the first time it scrolls into view. Live Supabase counts
+// update data-target BEFORE the user usually scrolls this far; if the fetch
+// returns after the animation already ran, the text is swapped in place.
+
+// Format: thousands get commas ("19,000"), suffix is usually "+" or "".
+function msFmt(n, s) { return (n >= 1000 ? n.toLocaleString('en-US') : n) + (s || ''); }
+
+// Animate one number from 0 → data-target over ~1.6s with ease-out cubic.
+// IMPORTANT: target/suffix are re-read from the dataset on EVERY frame.
+// The Supabase hydration can land mid-animation (it updates data-target from
+// the floor "350+" to the exact "353"); reading fresh each frame means the
+// count-up simply glides to the new number instead of the animation's last
+// frame clobbering the live value with the stale floor.
+function msAnimateCount(el) {
+  const dur = 1600;
+  let t0 = null;
+  function step(ts) {
+    if (!t0) t0 = ts;
+    const target = parseInt(el.dataset.target, 10) || 0;
+    const suffix = el.dataset.suffix || '';
+    const p = Math.min(1, (ts - t0) / dur);
+    const e = 1 - Math.pow(1 - p, 3);                 // ease-out cubic — fast start, gentle landing
+    el.textContent = msFmt(Math.round(target * e), suffix);
+    if (p < 1) requestAnimationFrame(step);
+    else el.textContent = msFmt(target, suffix);      // land exactly on the (latest) target
+  }
+  requestAnimationFrame(step);
+}
+
+// Tracks which numbers already animated, so live updates know whether to
+// re-animate (no) or just swap the text (yes).
+const msCounted = new WeakSet();
+
+(function initLedgerCountups() {
+  // Covers BOTH the About ledger numbers and the big product-card numbers.
+  const nums = document.querySelectorAll('#aboutStats .ledger-num, .prod-count-num');
+  if (!nums.length) return;
+  const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // No IntersectionObserver support or reduced motion → show final values, no animation.
+  if (reduced || !('IntersectionObserver' in window)) {
+    nums.forEach(el => {
+      msCounted.add(el);
+      el.textContent = msFmt(parseInt(el.dataset.target, 10) || 0, el.dataset.suffix || '');
+    });
+    return;
+  }
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      if (!msCounted.has(e.target)) { msCounted.add(e.target); msAnimateCount(e.target); }
+      io.unobserve(e.target);
+    });
+  }, { threshold: .5 });
+  nums.forEach(el => io.observe(el));
+})();
+
+// Hydrate the three product counts with exact live numbers from Supabase.
+// Same proven pattern as loadFundClosingCount(): fetch id-only rows and count
+// them client-side (Content-Range may not be CORS-exposed). On ANY failure
+// the hard-coded floors ("350+") stay — never a blank, never a zero.
+(async function loadAboutStats() {
+  // [element id, table, PostgREST filter matching what each product page shows]
+  // These ids live on the big numbers inside the Plan/Fund/Launch cards.
+  const stats = [
+    ['cardScholarships', 'scholarships', 'is_active=eq.true'],
+    ['cardInternships',  'internships',  'is_active=eq.true&is_visible=eq.true'],
+    ['cardCareers',      'careers',      'is_active=eq.true&is_built=eq.true']
+  ];
+  stats.forEach(async ([elId, table, filter]) => {
+    try {
+      const res = await fetch(`${SB_URL}/rest/v1/${table}?select=id&${filter}&limit=1000`, {
+        headers: { 'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}` }
+      });
+      if (!res.ok) return;
+      const rows = await res.json();
+      const total = Array.isArray(rows) ? rows.length : 0;
+      // Sanity floor: a broken filter returning "3 scholarships" would be
+      // worse than the fallback — anything under 50 is treated as a bad fetch.
+      if (total < 50) return;
+      const el = document.getElementById(elId);
+      if (!el) return;
+      el.dataset.target = total;                 // exact count, e.g. 353
+      el.dataset.suffix = '';                    // exact numbers drop the "+"
+      if (msCounted.has(el)) el.textContent = msFmt(total, ''); // already animated — swap in place
+    } catch (_) { /* silent — fallback floor stays */ }
+  });
+})();
+
+// ── LIVE "on the site in the last 30 min" counter ──────────────────────────
+// 1) Sends one anonymous heartbeat ping (session_id only — no personal data)
+//    to page_pings, so homepage visitors count even if they never search.
+// 2) Calls the live_students_30m() RPC: distinct sessions active in the last
+//    30 minutes across pings + searches + clicks, site-wide.
+// The row stays hidden until a real number ≥ 1 comes back — a failed fetch
+// or an empty site never shows a fake count. Refreshes every 60s while the
+// tab is visible, so the number genuinely moves as the user watches.
+(function liveCounter() {
+  const row = document.getElementById('liveRow');
+  const num = document.getElementById('statLive');
+  if (!row || !num) return;
+
+  // Heartbeat — fire and forget, never blocks or breaks the page.
+  try {
+    fetch(`${SB_URL}/rest/v1/page_pings`, {
+      method: 'POST',
+      headers: {
+        'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}`,
+        'Content-Type': 'application/json', 'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({ session_id: getSessionId(), page: 'home' })
+    }).catch(() => {});
+  } catch (_) {}
+
+  async function refresh() {
+    try {
+      const res = await fetch(`${SB_URL}/rest/v1/rpc/live_students_30m`, {
+        method: 'POST',
+        headers: {
+          'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        body: '{}'
+      });
+      if (!res.ok) return;
+      const n = await res.json();
+      if (typeof n !== 'number' || n < 1) return;  // never show 0 or garbage
+      num.dataset.target = n;
+      num.dataset.suffix = '';
+      if (msCounted.has(num)) num.textContent = msFmt(n, ''); // already animated — swap in place
+      row.classList.add('on');                     // reveal the row (observer picks it up for the count-up)
+    } catch (_) { /* silent — row stays hidden */ }
+  }
+  refresh();
+  // Re-poll every 60s, but only while the tab is actually visible.
+  setInterval(() => { if (document.visibilityState === 'visible') refresh(); }, 60000);
+})();
+
+// GA4: product_card_click — which of the three loud-number cards students
+// actually tap. Param `product` = MyJourney | MyScholar | MyIntern.
+document.querySelectorAll('.prod-card').forEach(card => {
+  card.addEventListener('click', () => {
+    if (typeof gtag !== 'undefined') {
+      const nameEl = card.querySelector('.prod-name');
+      gtag('event', 'product_card_click', { product: nameEl ? nameEl.textContent.trim() : 'unknown' });
+    }
+  });
+});
+
+// GA4: fire once when the stat row actually enters the viewport, so we can
+// see in GA4 how many visitors scroll far enough to meet the trust numbers.
+(function trackAboutStatsView() {
+  const target = document.getElementById('aboutStats');
+  if (!target || !('IntersectionObserver' in window)) return;
+  const obs = new IntersectionObserver(function(entries) {
+    if (entries[0].isIntersecting) {
+      if (typeof gtag !== 'undefined') gtag('event', 'about_stats_view');
+      obs.disconnect(); // once per page load
+    }
+  }, { threshold: 0.5 });
+  obs.observe(target);
 })();
 
 // ── Scroll cue ──────────────────────────────────────────────
