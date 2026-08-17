@@ -2349,7 +2349,34 @@ const TOKEN_ALIASES = {
   'aircraft':   'aviation',    // "aircraft scholarship" → aviation / aerospace records
   'politeknik': 'polytechnic', // BM word for polytechnic
   'politenik':  'polytechnic', // common BM misspelling of politeknik
+  'kadet':      'cadet',       // BM for cadet — "program kadet" → MAG/AirAsia/ALAM Cadet records
+  'akaun':      'accounting',  // BM for accounts — → KPMG/Deloitte/MICPA/PwC records
+  'perakaunan': 'accounting',  // BM for accountancy
+  'kejuruteraan':'engineering',// BM for engineering
+  'perubatan':  'medicine',    // BM for medicine
+  'undang':     'law',         // BM for law (bare token, after phrase aliasing)
+  'biasiswa':   'scholarship', // BM for scholarship
+  'pinjaman':   'loan',        // BM for loan
 };
+
+// Tokens that carry no matching value. Students include them naturally
+// ("yayasan NEGERI selangor", "degree IN accounting") but they are almost
+// never present in the stored record, so requiring them kills the whole match.
+const NOISE_TOKENS = new Set([
+  'negeri','the','of','for','in','a','an','and','to','my','me','i',
+  'dan','di','untuk','yang','ke','dari','pada'
+]);
+
+// Strip punctuation so "al azha" matches "Al-Azhar" and "(TESP)" matches "tesp".
+// Applied identically to both the query and the record blob.
+function normaliseText(t) {
+  return (t || '')
+    .toLowerCase()
+    .replace(/[''`]/g, '')       // drop apostrophes entirely: "student's" → "students"
+    .replace(/[^a-z0-9]+/g, ' ') // every other separator becomes a space
+    .replace(/\s+/g, ' ')
+    .trim();
+}
 
 function normaliseQuery(q) {
   // Step 1 — replace known multi-word phrases before splitting into tokens
@@ -2357,8 +2384,13 @@ function normaliseQuery(q) {
   for (const [phrase, target] of Object.entries(PHRASE_ALIASES)) {
     if (out.includes(phrase)) out = out.split(phrase).join(target);
   }
-  // Step 2 — replace individual tokens
-  out = out.split(/\s+/).map(tok => TOKEN_ALIASES[tok] || tok).join(' ');
+  // Step 2 — flatten punctuation so tokens split cleanly
+  out = normaliseText(out);
+  // Step 3 — replace individual tokens, then drop noise words
+  out = out.split(' ')
+           .map(tok => TOKEN_ALIASES[tok] || tok)
+           .filter(tok => tok && !NOISE_TOKENS.has(tok))
+           .join(' ');
   return out.trim();
 }
 
@@ -2366,8 +2398,15 @@ function normaliseQuery(q) {
 function matches(s){
   const q=normaliseQuery(document.getElementById('si').value.toLowerCase().trim());
   if(q){
-    const blob=[s.name,s.prov,s.cat,s.fields.join(' '),s.notes,s.quals.join(' '),s.grade,s.elig.join(' ')].join(' ').toLowerCase();
-    if(!blob.includes(q))return false;
+    // Punctuation-flattened blob so "Al-Azhar" and "(TESP)" are reachable
+    const blob=normaliseText([s.name,s.prov,s.cat,s.fields.join(' '),s.notes,s.quals.join(' '),s.grade,s.elig.join(' ')].join(' '));
+    // TOKEN matching, not phrase matching. Every token in the query must appear
+    // somewhere in the blob, in any order. This is the fix for students typing
+    // "tesp mara" (right words, wrong order) and getting zero results.
+    const tokens=q.split(' ').filter(Boolean);
+    for(const tok of tokens){
+      if(!blob.includes(tok))return false;
+    }
   }
   if(activeCat!=='all'&&s.cat!==activeCat)return false;
 
