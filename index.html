@@ -1319,24 +1319,28 @@ footer {
 <section class="about">
   <!-- Audience ledger — /thankyou style count-ups. The three PRODUCT counts
          now live inside the Plan/Fund/Launch cards above (hydrated live by
-         loadAboutStats); this section keeps the audience stats. Students /
-         countries / subscribers are verified GA4 + DB figures, updated by
-         hand — floors only, never rounded up. The live counter comes from
-         the live_students_30m() RPC.
+         loadAboutStats); this section keeps the audience stats.
+         Students + countries come from GA4 (not queryable from the browser),
+         so they are hand-maintained snapshots: rounded DOWN to a whole
+         number with "+", never rounded up. Last refreshed 26 Oct 2026
+         (GA4: 49,136 users, 122 countries since 1 Apr 2026).
+         Subscribers hydrate live from the subscriber_count() RPC (see
+         loadSubscriberCount), rounded down to the nearest 100 with "+".
+         The live counter comes from the live_students_30m() RPC.
          IMPORTANT: number spans have NO data-i18n — applyLocale() rewrites
          innerHTML of data-i18n elements, which would wipe live numbers on
          language toggle. Only the labels are translated. -->
     <div class="about-ledger" id="aboutStats">
       <div class="ledger-row">
-        <span class="ledger-num coral" data-target="19000" data-suffix="+">0</span>
+        <span class="ledger-num coral" id="statStudents" data-target="49000" data-suffix="+">0</span>
         <span class="ledger-lab" data-i18n="statStudentsLabel">students since April 2026</span>
       </div>
       <div class="ledger-row">
-        <span class="ledger-num hollow" data-target="99">0</span>
+        <span class="ledger-num hollow" id="statCountries" data-target="120" data-suffix="+">0</span>
         <span class="ledger-lab" data-i18n="statCountriesLabel">countries</span>
       </div>
       <div class="ledger-row">
-        <span class="ledger-num hollow" data-target="800" data-suffix="+">0</span>
+        <span class="ledger-num hollow" id="statSubs" data-target="1300" data-suffix="+">0</span>
         <span class="ledger-lab" data-i18n="statSubsLabel">email subscribers</span>
       </div>
       <!-- Live counter: distinct sessions active across MyScholar in the
@@ -1354,7 +1358,7 @@ footer {
       <span data-i18n="aboutTrust">Built by <strong>ANRA</strong> · Free, no ads, no login · Not affiliated with any scholarship body or government agency</span>
     </p>
     <p class="about-data">
-      <span data-i18n="aboutData">Listings reviewed regularly · last full review <span id="aboutLastReviewed">03 Aug 2026</span> · always verify on the official site</span>
+      <span data-i18n="aboutData">Listings reviewed regularly · last full review <span id="aboutLastReviewed">26 Oct 2026</span> · always verify on the official site</span>
     </p>
     <div class="about-cta">
       <button class="updates-btn" onclick="openPopup()">
@@ -1507,7 +1511,7 @@ const TRANSLATIONS = {
 // Fallback only — the REAL date is fetched from Supabase site_config on every
 // page load (updated automatically by the Monday review routine). This string
 // only ever shows if that fetch fails, so keep it roughly current when editing.
-let reviewedDate = '03 Aug 2026';
+let reviewedDate = '26 Oct 2026';
 function applyLocale(lang) {
   const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
   // innerHTML elements
@@ -1902,6 +1906,36 @@ const msCounted = new WeakSet();
       if (msCounted.has(el)) el.textContent = msFmt(total, ''); // already animated — swap in place
     } catch (_) { /* silent — fallback floor stays */ }
   });
+})();
+
+// ── Email subscribers: live count, rounded DOWN to a whole number ─────────
+// The subscribers table is INSERT-only for anon (emails must never be
+// readable from the browser), so a plain PostgREST count returns nothing.
+// subscriber_count() is a SECURITY DEFINER RPC that returns one integer
+// (active subscribers only). We floor it to the nearest 100 and keep the
+// "+" so the ledger reads "1,300+" rather than an exact figure that changes
+// every day. On ANY failure the hard-coded floor in the HTML stays.
+(async function loadSubscriberCount() {
+  const el = document.getElementById('statSubs');
+  if (!el) return;
+  try {
+    const res = await fetch(`${SB_URL}/rest/v1/rpc/subscriber_count`, {
+      method: 'POST',
+      headers: {
+        'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: '{}'
+    });
+    if (!res.ok) return;
+    const n = await res.json();
+    // Sanity floor: anything under 500 means a broken RPC, not a real count.
+    if (typeof n !== 'number' || n < 500) return;
+    const rounded = Math.floor(n / 100) * 100;   // 1,396 -> 1,300
+    el.dataset.target = rounded;
+    el.dataset.suffix = '+';
+    if (msCounted.has(el)) el.textContent = msFmt(rounded, '+'); // already animated — swap in place
+  } catch (_) { /* silent — fallback floor stays */ }
 })();
 
 // ── LIVE "on the site in the last 30 min" counter ──────────────────────────
