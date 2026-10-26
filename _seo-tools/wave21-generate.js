@@ -366,7 +366,7 @@ sitemapPaths.forEach(function(smPath) {
   let sm;
   try { sm = fs.readFileSync(smPath, 'utf8'); } catch(e) { console.log('  ! sitemap not found: ' + smPath); return; }
   ALL.forEach(function(e) {
-    const re = new RegExp('^.*<loc>https://myscholar\\.my/seo/' + e.slug.replace(/[-]/g, '\\-') + '</loc>.*$\\n?', 'm');
+    const re = new RegExp('^.*<loc>https://myscholar\\.my/seo/' + e.slug.replace(/[-]/g, '\\-') + '</loc>.*$\\n?', 'mg'); // global: remove every copy, not just the first
     sm = sm.replace(re, '');
   });
   // Dedupe any repeated <url> lines left over from earlier waves (8 known).
