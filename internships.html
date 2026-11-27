@@ -257,6 +257,25 @@ nav{position:sticky;top:0;z-index:200;background:#0f1f3d;padding:0 20px;display:
 .row-chips{display:flex;gap:5px;margin-bottom:10px;flex-wrap:wrap;align-items:center}
 .row-chip{font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px;text-transform:uppercase;letter-spacing:.05em;line-height:1.4}
 .row-chip.chip-paid{background:rgba(52,211,153,.15);color:var(--green);border:1px solid rgba(52,211,153,.3)}
+/* "New" / "Intake open" chip: sky accent so it reads differently from the green Paid chip */
+.row-chip.chip-new{background:var(--accent-g);color:var(--accent);border:1px solid rgba(56,189,248,.35)}
+/* ── New this month strip (sits between the hero and the search box) ──
+   Mobile first: one row that scrolls sideways with snap, so it never
+   pushes the search box far down a 390px screen. Hidden when empty. */
+.new-strip{max-width:720px;margin:28px auto 0;padding:0 20px}
+.new-strip[hidden]{display:none}
+.new-strip-hd{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.new-strip-title{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--t1)}
+.new-strip-sub{font-size:12px;color:var(--t3)}
+.new-strip-row{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:8px;-webkit-overflow-scrolling:touch}
+.new-card{flex:0 0 236px;width:236px;max-width:236px;overflow:hidden;scroll-snap-align:start;display:flex;gap:10px;align-items:flex-start;text-align:left;padding:12px;border-radius:14px;background:var(--glass);border:1px solid var(--glass-b);color:var(--t1);font-family:var(--sans);cursor:pointer;transition:border-color .2s,background .2s}
+.new-card:hover,.new-card:focus-visible{border-color:var(--accent);background:var(--glass-h);outline:none}
+.new-card .logo-w{width:36px;height:36px;border-radius:10px}
+.new-card-body{flex:1 1 0;min-width:0;overflow:hidden;display:flex;flex-direction:column;gap:3px}
+.new-card-co{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.new-card-prog{font-size:12px;color:var(--t2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.new-card-tag{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--accent);margin-top:2px}
+@media(min-width:768px){.new-strip{max-width:1100px}}
 /* Freshness signal (mirrors scholarships.html classes) */
 .card-meta{display:flex;align-items:center;gap:10px;margin-top:10px;font-size:11.5px;line-height:1;min-height:14px}
 .card-fresh{display:inline-flex;align-items:center;gap:5px;font-weight:600;letter-spacing:.02em}
@@ -769,6 +788,16 @@ document.addEventListener('keydown', function(e) {
   </div>
 </div>
 
+
+<!-- New this month strip: recently added listings + intakes that just opened.
+     Stays hidden until renderNewStrip() finds something to show. -->
+<section class="new-strip" id="newStrip" hidden aria-labelledby="newStripTitle">
+  <div class="new-strip-hd">
+    <h2 class="new-strip-title" id="newStripTitle" data-i18n="newStripTitle">New this month</h2>
+    <span class="new-strip-sub" data-i18n="newStripSub">Listings just added, and intakes that just opened.</span>
+  </div>
+  <div class="new-strip-row" id="newStripRow"></div>
+</section>
 
 <div class="search-w">
   <label for="search" class="sr-only">Search internships</label>
@@ -1326,6 +1355,70 @@ let filteredData = [];  // [{item, dataIdx}] — rebuilt on every render()
 
 function resetPage(){ currentPage = 1; }
 
+/* ── Freshness: what counts as "new" ─────────────────────────────────────
+   A listing is fresh if EITHER
+     - it was added to the directory in the last 30 days (created_at), or
+     - its intake was seen freshly open in the last 30 days
+       (intake_refreshed_at, a date Matt's weekly run fills in).
+   Returns null when not fresh, otherwise {kind:'new'|'intake', ts:<ms>}. */
+const FRESH_DAYS = 30;
+function freshInfo(item){
+  const now=Date.now(), win=FRESH_DAYS*86400000;
+  // within(): turn a date string into ms, or NaN if missing / outside the window
+  const within=v=>{if(!v)return NaN;const t=new Date(v).getTime();return (isNaN(t)||now-t>win||t-now>86400000)?NaN:t;};
+  const c=within(item.created_at), r=within(item.intake_refreshed_at);
+  if(!isNaN(c))return {kind:'new',ts:c};      // newly added wins over "intake open"
+  if(!isNaN(r))return {kind:'intake',ts:r};
+  return null;
+}
+/* Default order: fresh listings first (most recent first), then everyone
+   else in the A to Z order the database already returned. Array.sort is
+   stable, so returning 0 for two non-fresh items keeps their A to Z order. */
+function sortFreshFirst(){
+  DATA.sort((a,b)=>{
+    const fa=freshInfo(a), fb=freshInfo(b);
+    if(fa&&fb)return fb.ts-fa.ts;
+    if(fa)return -1;
+    if(fb)return 1;
+    return 0;
+  });
+}
+/* Short date for the strip, e.g. "22 Nov" (or the BM equivalent). */
+function fmtShortDate(ts){
+  return new Date(ts).toLocaleDateString(currentLang==='bm'?'ms-MY':'en-MY',{day:'numeric',month:'short'});
+}
+/* Builds the "New this month" strip: up to 6 fresh listings, newest first.
+   Ignores the search box and filters on purpose, so the strip always shows
+   what is new. If nothing is fresh the whole section stays hidden. */
+function renderNewStrip(){
+  const wrap=document.getElementById('newStrip'), row=document.getElementById('newStripRow');
+  if(!wrap||!row)return;
+  const fresh=DATA.map((item,dataIdx)=>({item,dataIdx,f:freshInfo(item)})).filter(x=>x.f).slice(0,6); // DATA is already fresh-first
+  row.innerHTML='';
+  if(!fresh.length){wrap.hidden=true;return;}
+  fresh.forEach((x,pos)=>{
+    const btn=document.createElement('button');
+    btn.type='button';btn.className='new-card';
+    const tag=(x.f.kind==='new'?(T?T.badgeNew:'New'):(T?T.badgeIntake:'Intake open'))+' · '+fmtShortDate(x.f.ts);
+    btn.innerHTML='<div class="logo-w">'+logoHTML(x.item)+'</div>'
+      +'<div class="new-card-body"><span class="new-card-co">'+escapeHtml(x.item.company)+'</span>'
+      +'<span class="new-card-prog">'+escapeHtml(x.item.programme_name)+'</span>'
+      +'<span class="new-card-tag">'+escapeHtml(tag)+'</span></div>';
+    // Opens the same detail modal as a normal card, and logs which strip slot was tapped
+    btn.onclick=()=>{
+      gtag('event','intern_new_card_click',{co:x.item.company,id:x.item.id,position:pos+1,kind:x.f.kind});
+      openModal(x.dataIdx);
+    };
+    row.appendChild(btn);
+  });
+  wrap.hidden=false;
+  // Log once per page load how many fresh listings the student was shown
+  if(!window._newStripLogged&&typeof gtag!=='undefined'){
+    gtag('event','intern_new_strip_view',{count:fresh.length,new_count:fresh.filter(x=>x.f.kind==='new').length,intake_count:fresh.filter(x=>x.f.kind==='intake').length});
+    window._newStripLogged=true;
+  }
+}
+
 /* ── Render ─────────────────────────────── */
 function render(){
   const feed=document.getElementById('feed');
@@ -1337,7 +1430,6 @@ function render(){
   const dipl=document.getElementById('diplomaT').classList.contains('on');
   const newOnly=document.getElementById('newT').classList.contains('on');
   const careersOnly=document.getElementById('careersT').classList.contains('on');
-  const thirtyDaysAgo=new Date(Date.now()-30*24*60*60*1000);
   const today=new Date();today.setHours(0,0,0,0);
   const q=document.getElementById('search').value.toLowerCase().trim();
 
@@ -1353,8 +1445,8 @@ function render(){
     if(po&&!hasPay(item))return;
     // diplomaT: only show if study_level is 'Diploma' or 'Any' (null treated as Any)
     if(dipl){const sl=item.study_level||'Any';if(sl!=='Diploma'&&sl!=='Any')return;}
-    // New this month: created_at within last 30 days
-    if(newOnly&&(!item.created_at||new Date(item.created_at)<thirtyDaysAgo))return;
+    // New this month: added in the last 30 days OR intake freshly opened (see freshInfo)
+    if(newOnly&&!freshInfo(item))return;
     // Careers page: only show careers_page url_type
     if(careersOnly&&item.url_type!=='careers_page')return;
     // openT fix: rolling items are always "open"; others check deadline_date if available
@@ -1398,7 +1490,10 @@ function render(){
     const catName=item.industry&&item.industry[0]?(IS[item.industry[0]]||item.industry[0]):'General';
     const catChip='<span class="row-chip pill p-'+k+'">'+escapeHtml(catName)+'</span>';
     const paidChip=hasPay(item)?'<span class="row-chip chip-paid" title="'+escapeHtml(item.allowance_text||'')+'">Paid</span>':'';
-    const chipsRow='<div class="row-chips">'+catChip+paidChip+'</div>';
+    // New / Intake open chip: only on fresh listings, so the card cap stays at 3 chips
+    const fInfo=freshInfo(item);
+    const newChip=fInfo?'<span class="row-chip chip-new">'+escapeHtml(fInfo.kind==='new'?(T?T.badgeNew:'New'):(T?T.badgeIntake:'Intake open'))+'</span>':'';
+    const chipsRow='<div class="row-chips">'+catChip+paidChip+newChip+'</div>';
     /* Paid stipend text drops off the meta row since it's now a chip */
     const careersNote=item.url_type==='careers_page'?'<span class="mi careers-note">Check website — availability varies</span>':'';
     const quals=fmtQuals(item);
@@ -1618,6 +1713,8 @@ const INTERN_LANG = {
     filterInd:'Industry', filterPref:'Preferences',
     chipAll:'All',
     prefPaid:'Paid Only', prefOpen:'Open Now', prefDiploma:'Diploma OK', prefNew:'New this month', prefCareers:'Careers page',
+    newStripTitle:'New this month', newStripSub:'Listings just added, and intakes that just opened.',
+    badgeNew:'New', badgeIntake:'Intake open',
 
     applyBtn:'Apply', careersPageBtn:'Careers page', tapDetails:'Tap for details', rollingLabel:'Rolling',
     foundSingular:'internship found', foundPlural:'internships found',
@@ -1637,6 +1734,8 @@ const INTERN_LANG = {
     filterInd:'Industri', filterPref:'Keutamaan',
     chipAll:'Semua',
     prefPaid:'Berbayar Sahaja', prefOpen:'Terbuka Sekarang', prefDiploma:'Diploma OK', prefNew:'Baru bulan ini', prefCareers:'Halaman kerjaya',
+    newStripTitle:'Baru bulan ini', newStripSub:'Senarai yang baru ditambah, dan pengambilan yang baru dibuka.',
+    badgeNew:'Baru', badgeIntake:'Pengambilan dibuka',
 
     applyBtn:'Mohon', careersPageBtn:'Halaman kerjaya', tapDetails:'Ketuk untuk butiran', rollingLabel:'Berterusan',
     foundSingular:'internship dijumpai', foundPlural:'internship dijumpai',
@@ -1666,7 +1765,7 @@ function setLang(lang) {
   const si=document.getElementById('search');
   if(si)si.placeholder=T.searchPlaceholder;
   // Re-render cards so Apply/Rolling labels update immediately
-  if(DATA&&DATA.length)render();
+  if(DATA&&DATA.length){render();renderNewStrip();} // strip labels and dates follow the language too
   gtag('event','intern_lang',{lang});
 }
 
@@ -1826,10 +1925,10 @@ function checkInternDeepLink(){
 /* ── Init ──────────────────────────────── */
 fetch(SB+'/rest/v1/internships?is_visible=eq.true&order=company.asc',{headers:{apikey:SK,Authorization:'Bearer '+SK}})
   .then(r=>{if(!r.ok)throw new Error(r.status);return r.json()})
-  .then(d=>{DATA=d;document.querySelector('.hs-num').textContent=DATA.length;buildChips();
+  .then(d=>{DATA=d;sortFreshFirst();/* fresh listings first, rest stay A to Z */document.querySelector('.hs-num').textContent=DATA.length;buildChips();
     /* Phase 2c: apply carried match before first render if no URL filter is present */
     if (!urlHasFilterParam()) applyCarriedMatch();
-    render();injectJobSchema(DATA);
+    render();renderNewStrip();injectJobSchema(DATA);
     checkInternDeepLink();
     if (!urlHasFilterParam()) renderInternMatchBanner();
     gtag('event','intern_loaded',{count:DATA.length})})
